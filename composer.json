@@ -1,0 +1,19 @@
+{
+    "name": "somoza/corellian",
+	"description": "Generic, implementation-agnostic migration library.",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Gabriel Somoza",
+            "email": "gabriel@somoza.me"
+        }
+    ],
+    "require": {
+		"php": ">= 5.3"
+	},
+	"autoload": {
+		"psr-4": {
+			"Corellian\\": "lib/"
+		}
+	}
+}
