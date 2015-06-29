@@ -1,48 +1,78 @@
 <?php
 
-namespace Corellian;
+namespace Baleen;
+use Baleen\Migration\MigrationInterface;
+use Baleen\Version\VersionInterface;
 
 /**
- * @author Gabriel Somoza
+ * @{inheritDoc}
  */
-class Version {
-
-    /**
-     * 
-     */
-    public function __construct() {
-    }
+class Version implements VersionInterface
+{
 
     /**
      * @var string
      */
-    public $id;
+    protected $id;
 
     /**
      * @var bool
      */
-    public $migrated;
+    protected $migrated;
 
     /**
-     * @return string
+     * @var MigrationInterface
      */
-    public function getId() {
-        // TODO implement here
+    protected $migration;
+
+    /**
+     * Constructor
+     *
+     * @param $id string
+     */
+    public function __construct($id)
+    {
+        $this->id = (string) $id;
     }
 
     /**
-     * @return bool
+     * @{inheritDoc}
      */
-    public function isMigrated() {
-        // TODO implement here
-        return null;
+    public function getId()
+    {
+        return $this->id;
     }
 
     /**
-     * @param bool $migrated
+     * @{inheritDoc}
      */
-    public function setMigrated($migrated) {
-        // TODO implement here
+    public function isMigrated()
+    {
+        return $this->migrated;
     }
 
+    /**
+     * @{inheritDoc}
+     */
+    public function setMigrated($migrated)
+    {
+        $this->migrated = (bool) $migrated;
+    }
+
+    /**
+     * @{inheritDoc}
+     */
+    public function setMigration(MigrationInterface $migration)
+    {
+        $this->migration = $migration;
+    }
+
+    /**
+     * Returns the migration associated with this version.
+     * @return null|MigrationInterface
+     */
+    public function getMigration()
+    {
+        return $this->migration;
+    }
 }

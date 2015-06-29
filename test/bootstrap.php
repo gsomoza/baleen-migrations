@@ -1,3 +1,5 @@
 <?php
 define('TEST_BASE_DIR', __DIR__);
-require_once TEST_BASE_DIR . '/../vendor/autoload.php';
+/** @var \Composer\Autoload\ClassLoader $loader */
+$loader = require __DIR__ . '/../vendor/autoload.php';
+$loader->addPsr4('BaleenTest\\', __DIR__);

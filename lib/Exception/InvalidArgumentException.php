@@ -1,7 +1,7 @@
 <?php
 
-namespace Corellian\Exception;
+namespace Baleen\Exception;
 
-class InvalidArgumentException extends CorellianException {
+class InvalidArgumentException extends BaleenException {
 
 }

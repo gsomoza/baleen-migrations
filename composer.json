@@ -1,19 +1,28 @@
 {
-    "name": "somoza/corellian",
+    "name": "baleen/migrations",
 	"description": "Generic, implementation-agnostic migration library.",
     "license": "MIT",
     "authors": [
-        {
-            "name": "Gabriel Somoza",
-            "email": "gabriel@somoza.me"
-        }
+		{
+			"name": "Mike Simonson",
+			"email": "contact@mikesimonson.com"
+		},
+		{
+			"name": "Gabriel Somoza",
+			"email": "gabriel@somoza.me"
+		}
     ],
     "require": {
-		"php": ">= 5.3"
+		"php": ">= 5.4",
+        "zendframework/zend-code": "^2.5"
 	},
 	"autoload": {
 		"psr-4": {
-			"Corellian\\": "lib/"
+			"Baleen\\": "lib/"
 		}
-	}
+	},
+    "require-dev": {
+        "phpunit/phpunit": "^4.7",
+        "mockery/mockery": "^0.9.4"
+    }
 }

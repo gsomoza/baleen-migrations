@@ -1,7 +1,7 @@
 <?php
 
-namespace Corellian\Exception;
+namespace Baleen\Exception;
 
-class CorellianException extends \Exception {
+class BaleenException extends \Exception {
 
 }

@@ -1,25 +1,18 @@
 <?php
 
-namespace Corellian\Migration;
+namespace Baleen\Migration;
 
 /**
- * 
+ * @author Gabriel Somoza <gabriel@strategery.io>
  */
 interface MigrationInterface {
 
-    /**
-     * 
-     */
     public function up();
 
-    /**
-     * 
-     */
     public function down();
 
-    /**
-     * @return \\VersionInterface
-     */
-    public function getVersion();
+    public function abort();
+
+    public function setRunOptions(RunOptions $options);
 
 }

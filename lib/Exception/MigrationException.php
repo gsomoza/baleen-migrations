@@ -1,10 +1,8 @@
 <?php
 
-namespace Corellian\Exception;
+namespace Baleen\Exception;
 
-/**
- * 
- */
-class MigrationExceptionInterface extends CorellianException {
+class MigrationException extends BaleenException
+{
 
 }

@@ -1,50 +1,62 @@
 <?php
 
-namespace Corellian\Storage;
-use Corellian\Exception\InvalidArgumentException;
-use Corellian\Version;
+namespace Baleen\Storage;
+use Baleen\Exception\InvalidArgumentException;
+use Baleen\Version;
 
 /**
- * @author Gabriel Somoza
+ * @{inheritdoc}
  */
-class FileStorage implements StorageInterface {
+class FileStorage implements StorageInterface
+{
 
-    private $events;
-    private $path;
+    protected $path;
 
     /**
      * @param $path
-     * @param $events
      * @throws InvalidArgumentException
      */
-    public function __construct($path, $events) {
-        if (!is_file($path) || !is_writeable($path)) {
+    public function __construct($path) {
+        if (!is_file($path) && !is_writeable(realpath(dirname($path)))) {
             throw new InvalidArgumentException('Argument "path" must be a valid path to a file which must be writable.');
         }
         $this->path = $path;
-        $this->events = $events;
     }
 
     /**
-     * @return array Array of VersionInterface instances.
+     * Reads versions from the storage file.
+     * @return \Baleen\Version\Collection
      */
-    public function getRunVersions() {
-        // TODO implement here
-        return [];
-    }
-
-    /**
-     * @param Version $version
-     */
-    public function hasRun(Version $version) {
-        // TODO implement here
-    }
-
-    /**
-     * @return \Corellian\VersionInterface
-     */
-    public function getFinishedVersions()
+    public function readMigratedVersions()
     {
-        // TODO: Implement getFinishedVersions() method.
+        $contents = explode("\n", file_get_contents($this->path));
+        $versions = [];
+        foreach($contents as $versionId) {
+            $versionId = trim($versionId);
+            if (!empty($versionId)) { // skip empty lines
+                $version = new Version($versionId);
+                $version->setMigrated(true);
+                $versions[]= $version;
+            }
+        }
+        return $versions;
+    }
+
+    /**
+     * Write a collection of versions to the storage file.
+     * @param array $versions
+     * @return int
+     */
+    public function writeMigratedVersions(array $versions)
+    {
+        $ids = [];
+        foreach($versions as $version) {
+            /** @var Version $version */
+            if ($version->isMigrated()) {
+                $ids[] = $version->getId();
+            }
+        }
+        $contents = implode("\n", $ids);
+        return file_put_contents($this->path, $contents) !== false;
     }
 }
