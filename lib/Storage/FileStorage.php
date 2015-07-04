@@ -14,7 +14,7 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the MIT license. For more information, see
- * <http://www.doctrine-project.org>.
+ * <https://github.com/baleen/migrations>.
  */
 
 namespace Baleen\Storage;
@@ -46,7 +46,7 @@ class FileStorage implements StorageInterface
 
     /**
      * Reads versions from the storage file.
-     * @return \Baleen\Version\Collection
+     * @return array
      */
     public function readMigratedVersions()
     {
