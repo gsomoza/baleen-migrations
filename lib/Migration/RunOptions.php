@@ -48,9 +48,9 @@ class RunOptions
             self::DIRECTION_DOWN,
         ];
         $this->setDirection($direction);
-        $this->forced = (bool) $forced;
-        $this->dryRun = (bool) $dryRun;
-        $this->custom = $custom;
+        $this->setForced($forced);
+        $this->setDryRun($dryRun);
+        $this->setCustom($custom);
     }
 
     /**

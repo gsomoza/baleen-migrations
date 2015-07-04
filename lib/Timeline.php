@@ -125,9 +125,10 @@ class Timeline implements TimelineInterface
         reset($this->versions);
         $this->upTowards($goalVersion, $options);
         // the for-each in upTowards should be pointing to the goalVersion...
-        next($this->versions);
         $newGoal = current($this->versions); // ...so make the next item the goal for downTowards
-        $this->downTowards($newGoal, $options);
+        if ($newGoal !== false) { // are we at the end of the array?
+            $this->downTowards($newGoal, $options);
+        }
     }
 
     /**

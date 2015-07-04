@@ -18,6 +18,12 @@ class DirectoryRepositoryTest extends BaseTestCase
         $this->assertInstanceOf('Baleen\Repository\RepositoryInterface', $instance);
     }
 
+    public function testDirectoryMustExist()
+    {
+        $this->setExpectedException('Baleen\Exception\InvalidArgumentException');
+        new DirectoryRepository('/non/existent');
+    }
+
     /**
      * @param $directory
      * @param $count

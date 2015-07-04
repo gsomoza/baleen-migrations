@@ -109,6 +109,32 @@ class TimelineTest extends BaseTestCase
         }
     }
 
+    /**
+     * @param $versions
+     * @param $goal
+     *
+     * @dataProvider versionsAndGoalsProvider
+     */
+    public function testGoTowards($versions, $goal)
+    {
+        $instance = $this->getInstance($versions);
+        $instance->goTowards($goal);
+
+        $afterGoal = false;
+        $versions = $this->getInstanceVersions($instance);
+        foreach ($versions as $version) {
+            /** @var V $version */
+            if (!$afterGoal) {
+                $this->assertTrue($version->isMigrated(), sprintf('Expected version %s to be migrated', $version->getId()));
+            } else {
+                $this->assertFalse($version->isMigrated(), sprintf('Expected version %s not to be migrated', $version->getId()));
+            }
+            if ($version->getId() == $goal) {
+                $afterGoal = true;
+            }
+        }
+    }
+
     public function getAllMigratedVersionsFixture()
     {
         return $this->getFixtureFor([

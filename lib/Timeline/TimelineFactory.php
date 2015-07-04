@@ -32,7 +32,7 @@ class TimelineFactory {
     {
         foreach($this->migratedVersions as $version) {
             /** @var \Baleen\Version $version */
-            if (!empty($this->availableVersions[$version])) {
+            if (!empty($this->availableVersions[$version->getId()])) {
                 /** @var \Baleen\Version $availableVersion */
                 $availableVersion = $this->availableVersions[$version->getId()];
                 $availableVersion->setMigrated(true);

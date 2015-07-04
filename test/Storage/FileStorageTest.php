@@ -16,6 +16,12 @@ class FileStorageTest extends BaseTestCase
      */
     protected $versionIds = ['201507020508', '201507020509', '1015', '1', '301507020508'];
 
+    public function testInvalidDirectoryInConstructor()
+    {
+        $this->setExpectedException('Baleen\Exception\InvalidArgumentException');
+        new FileStorage('/non/existent/file');
+    }
+
     /**
      * @param $file
      * @param array $versionIds
