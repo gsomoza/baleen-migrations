@@ -35,7 +35,7 @@ class TimelineFactoryTest extends BaseTestCase
         $timeline = $factory->create();
         $prop = new \ReflectionProperty($timeline, 'versions');
         $prop->setAccessible(true);
-        $versions = $prop->getValue($timeline);
+        $versions = $prop->getValue($timeline)->toArray();
         $expectedMigrated = [1 => 1, 2 => 0, 3 => 1, 4 => 1, 0];
         $this->assertEquals($expectedMigrated, array_map(function (V $v) {
             return $v->isMigrated() ? 1 : 0;

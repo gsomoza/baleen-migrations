@@ -21,6 +21,7 @@ namespace Baleen\Timeline;
 
 use Baleen\Exception\MigrationMissingException;
 use Baleen\Timeline;
+use Baleen\Version\Collection;
 
 /**
  * @author Gabriel Somoza <gabriel@strategery.io>
@@ -28,18 +29,24 @@ use Baleen\Timeline;
 class TimelineFactory
 {
 
-    /** @var array */
+    /** @var Collection */
     private $availableVersions;
 
-    /** @var array */
+    /** @var Collection */
     private $migratedVersions;
 
     /**
      * @param array $availableVersions
      * @param array $migratedVersions
      */
-    public function __construct(array $availableVersions, array $migratedVersions)
+    public function __construct($availableVersions, $migratedVersions = [])
     {
+        if (is_array($availableVersions)) {
+            $availableVersions = new Collection($availableVersions);
+        }
+        if (is_array($migratedVersions)) {
+            $migratedVersions = new Collection($migratedVersions);
+        }
         $this->availableVersions = $availableVersions;
         $this->migratedVersions = $migratedVersions;
     }
@@ -55,9 +62,9 @@ class TimelineFactory
     {
         foreach ($this->migratedVersions as $version) {
             /** @var \Baleen\Version $version */
-            if (!empty($this->availableVersions[$version->getId()])) {
+            if ($this->availableVersions->has($version)) {
                 /** @var \Baleen\Version $availableVersion */
-                $availableVersion = $this->availableVersions[$version->getId()];
+                $availableVersion = $this->availableVersions->get($version);
                 $availableVersion->setMigrated(true);
             } else {
                 throw new MigrationMissingException(

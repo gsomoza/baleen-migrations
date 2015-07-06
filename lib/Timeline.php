@@ -27,6 +27,7 @@ use Baleen\Migration\Command\MigrateCommand;
 use Baleen\Migration\MigrationInterface;
 use Baleen\Migration\MigrateOptions;
 use Baleen\Timeline\TimelineInterface;
+use Baleen\Version\Collection;
 use Baleen\Version\Comparator\DefaultComparator;
 use League\Tactician\CommandBus;
 
@@ -38,7 +39,7 @@ class Timeline implements TimelineInterface
 
     protected $allowedDirections;
 
-    /** @var array */
+    /** @var Collection */
     protected $versions;
 
     /** @var callable */
@@ -48,32 +49,22 @@ class Timeline implements TimelineInterface
     protected $migrationBus;
 
     /**
-     * @param array $versions
+     * @param array|Collection $versions
      * @param callable $comparator
      */
-    public function __construct(array $versions, callable $comparator = null)
+    public function __construct($versions, callable $comparator = null)
     {
         $this->migrationBus = MigrationBusFactory::create();
 
+        if (is_array($versions)) {
+            $versions = new Collection($versions);
+        }
         if (null === $comparator) {
             $comparator = new DefaultComparator();
         }
+        $versions->sortWith($comparator);
         $this->comparator = $comparator;
-        $indexedVersions = [];
-        foreach ($versions as $version) {
-            /** @var Version $version */
-            $indexedVersions[$version->getId()] = $version;
-        }
-        $this->versions = $indexedVersions;
-        $this->reOrder();
-    }
-
-    /**
-     *
-     */
-    protected function reOrder()
-    {
-        return uasort($this->versions, $this->comparator);
+        $this->versions = $versions;
     }
 
     /**
@@ -86,10 +77,9 @@ class Timeline implements TimelineInterface
         if (null === $options) {
             $options = new MigrateOptions(MigrateOptions::DIRECTION_UP);
         }
-        $goalVersion = $this->getVersionObject($goalVersion);
+        $goalVersion = $this->versions->getOrException($goalVersion);
         $options->setDirection(MigrateOptions::DIRECTION_UP); // make sure its right
         foreach ($this->versions as $version) {
-            /** @var Version $version */
             if ($options->isForced() || !$version->isMigrated()) {
                 $migration = $version->getMigration();
                 if (null === $migration) {
@@ -115,12 +105,10 @@ class Timeline implements TimelineInterface
         if (null === $options) {
             $options = new MigrateOptions(MigrateOptions::DIRECTION_DOWN);
         }
-        $goalVersion = $this->getVersionObject($goalVersion);
+        $goalVersion = $this->versions->getOrException($goalVersion);
         $options->setDirection(MigrateOptions::DIRECTION_DOWN); // make sure its right
-        $goalReached = false;
-        end($this->versions);
-        while (!$goalReached) {
-            $version = current($this->versions);
+        $reversed = $this->versions->getReverse();
+        foreach($reversed as $version) {
             /** @var Version $version */
             if ($options->isForced() || $version->isMigrated()) {
                 if (null === $version->getMigration()) {
@@ -130,9 +118,10 @@ class Timeline implements TimelineInterface
                 $version->setMigrated(false); // won't get executed if an exception is thrown
             }
             $goalReached = call_user_func($this->comparator, $goalVersion, $version) === 0;
-            prev($this->versions);
+            if ($goalReached) {
+                break;
+            }
         }
-        reset($this->versions);
     }
 
     /**
@@ -148,10 +137,10 @@ class Timeline implements TimelineInterface
         if (null === $options) {
             $options = new MigrateOptions(MigrateOptions::DIRECTION_UP);
         }
-        reset($this->versions);
+        $this->versions->rewind();
         $this->upTowards($goalVersion, $options);
-        // the for-each in upTowards should be pointing to the goalVersion...
-        $newGoal = current($this->versions); // ...so make the next item the goal for downTowards
+        $this->versions->next(); // advance to the next element...
+        $newGoal = $this->versions->current(); // ... and make it the goal for downTowards
         if ($newGoal !== false) { // are we at the end of the array?
             $this->downTowards($newGoal, $options);
         }
@@ -194,25 +183,5 @@ class Timeline implements TimelineInterface
     {
         $command = new MigrateCommand($migration, $options);
         $this->migrationBus->handle($command);
-    }
-
-    /**
-     * @param $version
-     * @return mixed A Version object or a string representing the version's ID.
-     * @throws BaleenException
-     */
-    protected function getVersionObject($version)
-    {
-        if (is_scalar($version)) {
-            $version = (string)$version;
-            if (!empty($this->versions[$version])) {
-                $version = $this->versions[$version];
-            } else {
-                throw new BaleenException(
-                    sprintf('Version "%s" not found in timeline.', $version)
-                );
-            }
-        }
-        return $version;
     }
 }

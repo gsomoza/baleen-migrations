@@ -52,31 +52,6 @@ class TimelineTest extends BaseTestCase
         $this->assertInstanceOf('Baleen\Timeline\TimelineInterface', $this->getInstance());
     }
 
-    public function testReOrder()
-    {
-        $flag = false;
-        $callable = function (V $v1, V $v2) use (&$flag) {
-            $flag = true;
-            return $v1->getId() - $v2->getId();
-        };
-        $testArray = ['987', '123', '1'];
-        $expectedArray = ['1' => '1', '123' => '123', '987' => '987'];
-        $testArray = $this->arrayToVersions($testArray);
-        $instance = $this->getInstance($testArray, $callable);
-        $method = new \ReflectionMethod($instance, 'reOrder');
-        $method->setAccessible(true);
-        $method->invoke($instance);
-
-        $versions = $this->getInstanceVersions($instance);
-        $versions = array_map(function (V $v) {
-            return $v->getId();
-        }, $versions);
-
-        $this->assertTrue($flag, 'Callback must have been called at least once.');
-
-        $this->assertEquals($expectedArray, $versions);
-    }
-
     public function arrayToVersions(array $array)
     {
         $result = [];
@@ -257,6 +232,6 @@ class TimelineTest extends BaseTestCase
         $prop = new \ReflectionProperty($instance, 'versions');
         $prop->setAccessible(true);
         $versions = $prop->getValue($instance);
-        return $versions;
+        return $versions->toArray();
     }
 }

@@ -59,7 +59,8 @@ class DirectoryRepository implements RepositoryInterface
     }
 
     /**
-     * Returns all migrations available to the repository
+     * Returns all migrations available to the repository.
+     *
      * @return array Array of Versions, each with a MigrationInstance object
      */
     public function fetchAll()
