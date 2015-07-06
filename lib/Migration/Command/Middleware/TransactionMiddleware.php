@@ -14,42 +14,38 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the MIT license. For more information, see
- * <http://www.doctrine-project.org>.
+ * <https://github.com/baleen/migrations>.
  */
 
-namespace BaleenTest\Migrations\CustomRegex;
+namespace Baleen\Migration\Command\Middleware;
 
-use Baleen\Migration\MigrationInterface;
-use Baleen\Migration\MigrateOptions;
+use Baleen\Migration\Capabilities\TransactionAwareInterface;
+use League\Tactician\Middleware;
 
 /**
- * Use the following regex to load this class with the DirectoryRepository: /Version_([0-9]+).*?/
+ * Wraps the migration in a transaction if the migration implements
+ * TransactionAwareInterface.
  *
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
-class Version_201507020433_CustomRegex implements MigrationInterface
+class TransactionMiddleware implements Middleware
 {
     /**
-     *
+     * {@inheritDoc}
      */
-    public function up()
+    public function execute($command, callable $next)
     {
-    }
-
-    /**
-     *
-     */
-    public function down()
-    {
-    }
-
-    public function abort()
-    {
-        // TODO: Implement abort() method.
-    }
-
-    public function setRunOptions(MigrateOptions $options)
-    {
-        // TODO: Implement setOptions() method.
+        $migration = $command->getMigration();
+        if ($migration instanceof TransactionAwareInterface) {
+            try {
+                $migration->begin();
+                $next($command);
+                $migration->finish();
+            } catch (\Exception $e) {
+                $migration->abort($e);
+            }
+        } else {
+            $next($command);
+        }
     }
 }

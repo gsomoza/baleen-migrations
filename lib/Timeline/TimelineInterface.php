@@ -19,7 +19,7 @@
 
 namespace Baleen\Timeline;
 
-use Baleen\Migration\RunOptions;
+use Baleen\Migration\MigrateOptions;
 use Baleen\Version;
 
 /**
@@ -32,38 +32,38 @@ interface TimelineInterface
 {
 
     /**
-     * Runs all versions up, starting from the oldes and until (and including) the specified version.
+     * Runs all versions up, starting from the oldest and until (and including) the specified version.
      *
      * @param string|\Baleen\Version $version
-     * @param \Baleen\Migration\RunOptions $options
+     * @param \Baleen\Migration\MigrateOptions $options
      * @return void
      */
-    public function upTowards($version, RunOptions $options);
+    public function upTowards($version, MigrateOptions $options);
 
     /**
      * Runs all versions down, starting from the newest and until (and including) the specified version.
      *
      * @param string|\Baleen\Version $version
-     * @param \Baleen\Migration\RunOptions $options
+     * @param \Baleen\Migration\MigrateOptions $options
      * @return void
      */
-    public function downTowards($version, RunOptions $options);
+    public function downTowards($version, MigrateOptions $options);
 
     /**
      * Runs migrations up/down so that all versions *before and including* the specified version are "up" and
      * all versions *after* the specified version are "down".
      *
      * @param $goalVersion
-     * @param \Baleen\Migration\RunOptions $options
+     * @param \Baleen\Migration\MigrateOptions $options
      * @return void
      */
-    public function goTowards($goalVersion, RunOptions $options);
+    public function goTowards($goalVersion, MigrateOptions $options);
 
     /**
      * @param \Baleen\Version $version
-     * @param \Baleen\Migration\RunOptions $options
+     * @param \Baleen\Migration\MigrateOptions $options
      * @return
      */
-    public function runSingle($version, RunOptions $options);
+    public function runSingle($version, MigrateOptions $options);
 
 }

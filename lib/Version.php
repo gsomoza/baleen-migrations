@@ -56,7 +56,7 @@ class Version implements VersionInterface
     }
 
     /**
-     * @{inheritDoc}
+     * {@inheritDoc}
      */
     public function getId()
     {
@@ -64,7 +64,7 @@ class Version implements VersionInterface
     }
 
     /**
-     * @{inheritDoc}
+     * {@inheritDoc}
      */
     public function isMigrated()
     {
@@ -72,7 +72,7 @@ class Version implements VersionInterface
     }
 
     /**
-     * @{inheritDoc}
+     * {@inheritDoc}
      */
     public function setMigrated($migrated)
     {
@@ -80,7 +80,7 @@ class Version implements VersionInterface
     }
 
     /**
-     * @{inheritDoc}
+     * {@inheritDoc}
      */
     public function setMigration(MigrationInterface $migration)
     {

@@ -14,42 +14,70 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the MIT license. For more information, see
- * <http://www.doctrine-project.org>.
+ * <https://github.com/baleen/migrations>.
  */
 
-namespace BaleenTest\Migrations\CustomRegex;
-
+namespace Baleen\Migration\Command;
 use Baleen\Migration\MigrationInterface;
 use Baleen\Migration\MigrateOptions;
 
 /**
- * Use the following regex to load this class with the DirectoryRepository: /Version_([0-9]+).*?/
+ * Class MigrateCommand
  *
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
-class Version_201507020433_CustomRegex implements MigrationInterface
+class MigrateCommand
 {
-    /**
-     *
-     */
-    public function up()
-    {
-    }
 
     /**
-     *
+     * @var MigrationInterface
      */
-    public function down()
+    private $migration;
+
+    /**
+     * @var MigrateOptions
+     */
+    private $options;
+
+    /**
+     * @param MigrationInterface $migration
+     * @param MigrateOptions $options
+     */
+    function __construct(MigrationInterface $migration, MigrateOptions $options)
     {
+        $this->migration = $migration;
+        $this->options = $options;
     }
 
-    public function abort()
+    /**
+     * @return MigrationInterface
+     */
+    public function getMigration()
     {
-        // TODO: Implement abort() method.
+        return $this->migration;
     }
 
-    public function setRunOptions(MigrateOptions $options)
+    /**
+     * @param MigrationInterface $migration
+     */
+    public function setMigration(MigrationInterface $migration)
     {
-        // TODO: Implement setOptions() method.
+        $this->migration = $migration;
+    }
+
+    /**
+     * @return MigrateOptions
+     */
+    public function getOptions()
+    {
+        return $this->options;
+    }
+
+    /**
+     * @param MigrateOptions $options
+     */
+    public function setOptions(MigrateOptions $options)
+    {
+        $this->options = $options;
     }
 }

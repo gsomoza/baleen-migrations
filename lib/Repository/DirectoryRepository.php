@@ -20,6 +20,7 @@
 namespace Baleen\Repository;
 
 use Baleen\Exception\InvalidArgumentException;
+use Baleen\Migration\MigrationInterface;
 use Baleen\Version;
 use Zend\Code\Scanner\DerivedClassScanner;
 use Zend\Code\Scanner\DirectoryScanner;
@@ -68,13 +69,14 @@ class DirectoryRepository implements RepositoryInterface
         foreach ($classes as $class) {
             /** @var DerivedClassScanner $class */
             $className = $class->getName();
-            if ($class->isInstantiable()
-                && in_array('Baleen\Migration\MigrationInterface', $class->getInterfaces())
-            ) {
+            if ($class->isInstantiable()) {
+                $migration = new $className();
                 $matches = [];
-                if (preg_match($this->classNameRegex, $className, $matches) && isset($matches[1])) {
+                if ($migration instanceof MigrationInterface
+                    && preg_match($this->classNameRegex, $className, $matches)
+                    && isset($matches[1])
+                ) {
                     /** @var \Baleen\Migration\MigrationInterface $migration */
-                    $migration = new $className();
                     $version = new Version($matches[1]);
                     $version->setMigration($migration);
                     $versions[] = $version;

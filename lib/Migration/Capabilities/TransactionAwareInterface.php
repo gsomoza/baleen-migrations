@@ -14,42 +14,25 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the MIT license. For more information, see
- * <http://www.doctrine-project.org>.
+ * <https://github.com/baleen/migrations>.
  */
 
-namespace BaleenTest\Migrations\CustomRegex;
-
-use Baleen\Migration\MigrationInterface;
-use Baleen\Migration\MigrateOptions;
+namespace Baleen\Migration\Capabilities;
 
 /**
- * Use the following regex to load this class with the DirectoryRepository: /Version_([0-9]+).*?/
+ * Interface TransactionAwareInterface
  *
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
-class Version_201507020433_CustomRegex implements MigrationInterface
+interface TransactionAwareInterface
 {
-    /**
-     *
-     */
-    public function up()
-    {
-    }
+    public function begin();
+
+    public function finish();
 
     /**
-     *
+     * @param \Exception $e
+     * @return mixed
      */
-    public function down()
-    {
-    }
-
-    public function abort()
-    {
-        // TODO: Implement abort() method.
-    }
-
-    public function setRunOptions(MigrateOptions $options)
-    {
-        // TODO: Implement setOptions() method.
-    }
+    public function abort(\Exception $e);
 }

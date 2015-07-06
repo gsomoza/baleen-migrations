@@ -20,7 +20,7 @@
 namespace BaleenTest\Migrations\NoneValid;
 
 use Baleen\Migration\MigrationInterface;
-use Baleen\Migration\RunOptions;
+use Baleen\Migration\MigrateOptions;
 
 /**
  * Should not be considered a migration because it doesn't conform to the DirectoryReopsitory's default pattern
@@ -48,8 +48,8 @@ class vNonConformantClassName implements MigrationInterface
         // TODO: Implement abort() method.
     }
 
-    public function setRunOptions(RunOptions $options)
+    public function setRunOptions(MigrateOptions $options)
     {
-        // TODO: Implement setRunOptions() method.
+        // TODO: Implement setOptions() method.
     }
 }

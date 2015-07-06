@@ -30,7 +30,7 @@ class DefaultComparator implements ComparatorInterface
 {
 
     /**
-     * @{inheritDoc}
+     * {@inheritDoc}
      */
     public function __invoke(VersionInterface $version1, VersionInterface $version2)
     {

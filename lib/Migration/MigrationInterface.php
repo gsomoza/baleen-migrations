@@ -31,8 +31,4 @@ interface MigrationInterface
 
     public function down();
 
-    public function abort();
-
-    public function setRunOptions(RunOptions $options);
-
 }

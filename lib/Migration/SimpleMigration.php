@@ -14,42 +14,36 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the MIT license. For more information, see
- * <http://www.doctrine-project.org>.
+ * <https://github.com/baleen/migrations>.
  */
 
-namespace BaleenTest\Migrations\CustomRegex;
+namespace Baleen\Migration;
 
-use Baleen\Migration\MigrationInterface;
-use Baleen\Migration\MigrateOptions;
+use Baleen\Migration\Capabilities\OptionsAwareInterface;
 
 /**
- * Use the following regex to load this class with the DirectoryRepository: /Version_([0-9]+).*?/
+ * An extremely simple migration base class. To be used for examples and tests or
+ * extended by more complex classes.
  *
- * @author Gabriel Somoza <gabriel@strategery.io>
+ * @package Baleen\Migration
  */
-class Version_201507020433_CustomRegex implements MigrationInterface
+abstract class SimpleMigration implements MigrationInterface, OptionsAwareInterface
 {
-    /**
-     *
-     */
-    public function up()
-    {
-    }
+    /** @var MigrateOptions */
+    protected $options;
 
     /**
-     *
+     * @param MigrateOptions $options
      */
-    public function down()
-    {
+    public function setOptions(MigrateOptions $options) {
+        $this->options = $options;
     }
 
-    public function abort()
+    /**
+     * @return MigrateOptions
+     */
+    public function getOptions()
     {
-        // TODO: Implement abort() method.
-    }
-
-    public function setRunOptions(MigrateOptions $options)
-    {
-        // TODO: Implement setOptions() method.
+        return $this->options;
     }
 }

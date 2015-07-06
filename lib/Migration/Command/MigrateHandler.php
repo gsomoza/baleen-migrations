@@ -14,42 +14,29 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the MIT license. For more information, see
- * <http://www.doctrine-project.org>.
+ * <https://github.com/baleen/migrations>.
  */
 
-namespace BaleenTest\Migrations\CustomRegex;
-
-use Baleen\Migration\MigrationInterface;
-use Baleen\Migration\MigrateOptions;
+namespace Baleen\Migration\Command;
+use League\Tactician\Middleware;
 
 /**
- * Use the following regex to load this class with the DirectoryRepository: /Version_([0-9]+).*?/
+ * Class MigrateHandler
  *
- * @author Gabriel Somoza <gabriel@strategery.io>
+ * @author Gabriel Somoza <gabriel@stragery.io>
  */
-class Version_201507020433_CustomRegex implements MigrationInterface
+class MigrateHandler implements Middleware
 {
-    /**
-     *
-     */
-    public function up()
-    {
-    }
 
     /**
-     *
+     * {@inheritDoc}
      */
-    public function down()
+    public function execute($command, callable $next)
     {
+        $migration = $command->getMigration();
+        $direction = $command->getOptions()->getDirection();
+
+        $migration->$direction();
     }
 
-    public function abort()
-    {
-        // TODO: Implement abort() method.
-    }
-
-    public function setRunOptions(MigrateOptions $options)
-    {
-        // TODO: Implement setOptions() method.
-    }
 }

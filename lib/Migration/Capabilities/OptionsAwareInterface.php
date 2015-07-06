@@ -14,42 +14,20 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the MIT license. For more information, see
- * <http://www.doctrine-project.org>.
+ * <https://github.com/baleen/migrations>.
  */
 
-namespace BaleenTest\Migrations\CustomRegex;
+namespace Baleen\Migration\Capabilities;
 
-use Baleen\Migration\MigrationInterface;
 use Baleen\Migration\MigrateOptions;
 
 /**
- * Use the following regex to load this class with the DirectoryRepository: /Version_([0-9]+).*?/
+ * Interface OptionsAwareInterface
  *
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
-class Version_201507020433_CustomRegex implements MigrationInterface
-{
-    /**
-     *
-     */
-    public function up()
-    {
-    }
+interface OptionsAwareInterface {
 
-    /**
-     *
-     */
-    public function down()
-    {
-    }
+    public function setOptions(MigrateOptions $options);
 
-    public function abort()
-    {
-        // TODO: Implement abort() method.
-    }
-
-    public function setRunOptions(MigrateOptions $options)
-    {
-        // TODO: Implement setOptions() method.
-    }
 }

@@ -20,14 +20,13 @@
 namespace BaleenTest\Migrations\AllValid;
 
 use Baleen\Migration\MigrationInterface;
-use Baleen\Migration\RunOptions;
+use Baleen\Migration\MigrateOptions;
 
 /**
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
-class v201507020419_AnotherTest implements MigrationInterface
+class v201507020419_InterfaceTest implements MigrationInterface
 {
-
     /**
      *
      */
@@ -42,15 +41,5 @@ class v201507020419_AnotherTest implements MigrationInterface
     public function down()
     {
         echo "Do something going DOWN.";
-    }
-
-    public function abort()
-    {
-        // TODO: Implement abort() method.
-    }
-
-    public function setRunOptions(RunOptions $options)
-    {
-        // TODO: Implement setRunOptions() method.
     }
 }

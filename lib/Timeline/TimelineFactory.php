@@ -19,6 +19,7 @@
 
 namespace Baleen\Timeline;
 
+use Baleen\Exception\MigrationMissingException;
 use Baleen\Timeline;
 
 /**
@@ -48,6 +49,7 @@ class TimelineFactory
      * be marked accordingly.
      *
      * @return Timeline
+     * @throws MigrationMissingException
      */
     public function create()
     {
@@ -57,7 +59,11 @@ class TimelineFactory
                 /** @var \Baleen\Version $availableVersion */
                 $availableVersion = $this->availableVersions[$version->getId()];
                 $availableVersion->setMigrated(true);
-            } //TODO: else throw an exception
+            } else {
+                throw new MigrationMissingException(
+                    sprintf('Version "%s" is reported as migrated but a corresponding migration could not be found.', $version->getId())
+                );
+            }
         }
         return new Timeline($this->availableVersions);
     }

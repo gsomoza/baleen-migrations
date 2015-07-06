@@ -14,42 +14,29 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the MIT license. For more information, see
- * <http://www.doctrine-project.org>.
+ * <https://github.com/baleen/migrations>.
  */
 
-namespace BaleenTest\Migrations\CustomRegex;
+namespace Baleen\Migration\Command;
 
-use Baleen\Migration\MigrationInterface;
-use Baleen\Migration\MigrateOptions;
+use Baleen\Migration\Command\Middleware\SetOptionsMiddleware;
+use Baleen\Migration\Command\Middleware\TransactionMiddleware;
+use League\Tactician\CommandBus;
 
 /**
- * Use the following regex to load this class with the DirectoryRepository: /Version_([0-9]+).*?/
+ * Class CommandBusFactory
  *
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
-class Version_201507020433_CustomRegex implements MigrationInterface
+class MigrationBusFactory
 {
-    /**
-     *
-     */
-    public function up()
-    {
-    }
 
-    /**
-     *
-     */
-    public function down()
+    public static function create()
     {
-    }
-
-    public function abort()
-    {
-        // TODO: Implement abort() method.
-    }
-
-    public function setRunOptions(MigrateOptions $options)
-    {
-        // TODO: Implement setOptions() method.
+        return new CommandBus([
+            new SetOptionsMiddleware(),
+            new TransactionMiddleware(),
+            new MigrateHandler(),
+        ]);
     }
 }

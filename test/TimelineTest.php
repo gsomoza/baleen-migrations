@@ -220,7 +220,7 @@ class TimelineTest extends BaseTestCase
         $migrationMock->shouldReceive('up')->zeroOrMoreTimes();
         $migrationMock->shouldReceive('down')->zeroOrMoreTimes();
         $migrationMock->shouldReceive('abort')->zeroOrMoreTimes();
-        $migrationMock->shouldReceive('setRunOptions')->zeroOrMoreTimes();
+        $migrationMock->shouldReceive('setOptions')->zeroOrMoreTimes();
         $this->migrationMock = $migrationMock;
         return array_map(function ($arr) use (&$migrationMock) {
             $v = new V($arr['id']);

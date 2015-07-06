@@ -21,10 +21,14 @@ namespace Baleen;
 
 use Baleen\Exception\BaleenException;
 use Baleen\Exception\MigrationException;
+use Baleen\Exception\MigrationMissingException;
+use Baleen\Migration\Command\MigrationBusFactory;
+use Baleen\Migration\Command\MigrateCommand;
 use Baleen\Migration\MigrationInterface;
-use Baleen\Migration\RunOptions;
+use Baleen\Migration\MigrateOptions;
 use Baleen\Timeline\TimelineInterface;
 use Baleen\Version\Comparator\DefaultComparator;
+use League\Tactician\CommandBus;
 
 /**
  * @author Gabriel Somoza <gabriel@strategery.io>
@@ -40,22 +44,27 @@ class Timeline implements TimelineInterface
     /** @var callable */
     protected $comparator;
 
+    /** @var CommandBus */
+    protected $migrationBus;
+
     /**
      * @param array $versions
      * @param callable $comparator
      */
     public function __construct(array $versions, callable $comparator = null)
     {
+        $this->migrationBus = MigrationBusFactory::create();
+
         if (null === $comparator) {
             $comparator = new DefaultComparator();
         }
         $this->comparator = $comparator;
-        $keyedVersions = [];
+        $indexedVersions = [];
         foreach ($versions as $version) {
             /** @var Version $version */
-            $keyedVersions[$version->getId()] = $version;
+            $indexedVersions[$version->getId()] = $version;
         }
-        $this->versions = $keyedVersions;
+        $this->versions = $indexedVersions;
         $this->reOrder();
     }
 
@@ -69,22 +78,22 @@ class Timeline implements TimelineInterface
 
     /**
      * @param Version|string $goalVersion
-     * @param RunOptions $options
-     * @throws \Exception
+     * @param MigrateOptions $options
+     * @throws MigrationMissingException
      */
-    public function upTowards($goalVersion, RunOptions $options = null)
+    public function upTowards($goalVersion, MigrateOptions $options = null)
     {
         if (null === $options) {
-            $options = new RunOptions(RunOptions::DIRECTION_UP);
+            $options = new MigrateOptions(MigrateOptions::DIRECTION_UP);
         }
         $goalVersion = $this->getVersionObject($goalVersion);
-        $options->setDirection(RunOptions::DIRECTION_UP); // make sure its right
+        $options->setDirection(MigrateOptions::DIRECTION_UP); // make sure its right
         foreach ($this->versions as $version) {
             /** @var Version $version */
             if ($options->isForced() || !$version->isMigrated()) {
                 $migration = $version->getMigration();
                 if (null === $migration) {
-                    throw new MigrationException('Migration object missing for registered version "%s".', $version->getId());
+                    throw new MigrationMissingException('Migration object missing for registered version "%s".', $version->getId());
                 }
                 $this->doRun($migration, $options);
                 $version->setMigrated(true); // won't get executed if an exception is thrown
@@ -98,16 +107,16 @@ class Timeline implements TimelineInterface
 
     /**
      * @param Version|string $goalVersion
-     * @param RunOptions $options
+     * @param MigrateOptions $options
      * @throws \Exception
      */
-    public function downTowards($goalVersion, RunOptions $options = null)
+    public function downTowards($goalVersion, MigrateOptions $options = null)
     {
         if (null === $options) {
-            $options = new RunOptions(RunOptions::DIRECTION_DOWN);
+            $options = new MigrateOptions(MigrateOptions::DIRECTION_DOWN);
         }
         $goalVersion = $this->getVersionObject($goalVersion);
-        $options->setDirection(RunOptions::DIRECTION_DOWN); // make sure its right
+        $options->setDirection(MigrateOptions::DIRECTION_DOWN); // make sure its right
         $goalReached = false;
         end($this->versions);
         while (!$goalReached) {
@@ -131,13 +140,13 @@ class Timeline implements TimelineInterface
      * all versions *after* the specified version are "down".
      *
      * @param $goalVersion
-     * @param \Baleen\Migration\RunOptions $options
+     * @param \Baleen\Migration\MigrateOptions $options
      * @return mixed
      */
-    public function goTowards($goalVersion, RunOptions $options = null)
+    public function goTowards($goalVersion, MigrateOptions $options = null)
     {
         if (null === $options) {
-            $options = new RunOptions(RunOptions::DIRECTION_UP);
+            $options = new MigrateOptions(MigrateOptions::DIRECTION_UP);
         }
         reset($this->versions);
         $this->upTowards($goalVersion, $options);
@@ -150,13 +159,13 @@ class Timeline implements TimelineInterface
 
     /**
      * @param \Baleen\Version $version
-     * @param RunOptions $options
+     * @param MigrateOptions $options
      * @throws MigrationException
      */
-    public function runSingle($version, RunOptions $options)
+    public function runSingle($version, MigrateOptions $options)
     {
         switch ($options->getDirection()) {
-            case RunOptions::DIRECTION_UP:
+            case MigrateOptions::DIRECTION_UP:
                 if (!$options->isForced() && $version->isMigrated()) {
                     throw new MigrationException(
                         sprintf("Cowardly refusing to run up() on a version that has already been migrated (%s).", $version->getId())
@@ -164,7 +173,7 @@ class Timeline implements TimelineInterface
                 }
                 break;
 
-            case RunOptions::DIRECTION_DOWN:
+            case MigrateOptions::DIRECTION_DOWN:
                 if (!$options->isForced() && !$version->isMigrated()) {
                     throw new MigrationException(
                         sprintf("Cowardly refusing to run down() on a version that hasn't been migrated yet (%s).", $version->getId())
@@ -178,21 +187,13 @@ class Timeline implements TimelineInterface
 
     /**
      * @param MigrationInterface $migration
-     * @param RunOptions $options
+     * @param MigrateOptions $options
      * @return bool
-     * @throws \Exception
      */
-    protected function doRun(MigrationInterface $migration, RunOptions $options)
+    protected function doRun(MigrationInterface $migration, MigrateOptions $options)
     {
-        try {
-            $direction = $options->getDirection();
-            $migration->setRunOptions($options);
-            $migration->$direction();
-            return true;
-        } catch (\Exception $e) {
-            $migration->abort();
-            throw $e;
-        }
+        $command = new MigrateCommand($migration, $options);
+        $this->migrationBus->handle($command);
     }
 
     /**

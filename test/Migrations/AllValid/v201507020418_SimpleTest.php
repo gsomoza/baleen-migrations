@@ -19,13 +19,13 @@
 
 namespace BaleenTest\Migrations\AllValid;
 
-use Baleen\Migration\MigrationInterface;
-use Baleen\Migration\RunOptions;
+use Baleen\Migration\MigrateOptions;
+use Baleen\Migration\SimpleMigration;
 
 /**
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
-class v201507020418_SimpleTest implements MigrationInterface
+class v201507020418_SimpleTest extends SimpleMigration
 {
 
     /**
@@ -49,8 +49,8 @@ class v201507020418_SimpleTest implements MigrationInterface
         // TODO: Implement abort() method.
     }
 
-    public function setRunOptions(RunOptions $options)
+    public function setOptions(MigrateOptions $options)
     {
-        // TODO: Implement setRunOptions() method.
+        // TODO: Implement setOptions() method.
     }
 }
