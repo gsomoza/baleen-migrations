@@ -55,10 +55,11 @@ class TimelineFactory
      * Creates a Timeline instance with all available versions. Those versions that have already been migrated will
      * be marked accordingly.
      *
+     * @param callable $comparator
      * @return Timeline
      * @throws MigrationMissingException
      */
-    public function create()
+    public function create(callable $comparator = null)
     {
         foreach ($this->migratedVersions as $version) {
             /** @var \Baleen\Version $version */
@@ -72,7 +73,7 @@ class TimelineFactory
                 );
             }
         }
-        return new Timeline($this->availableVersions);
+        return new Timeline($this->availableVersions, $comparator);
     }
 
 }
