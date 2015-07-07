@@ -17,11 +17,11 @@
  * <https://github.com/baleen/migrations>.
  */
 
-namespace Baleen\Timeline;
+namespace Baleen\Migrations\Timeline;
 
-use Baleen\Exception\MigrationMissingException;
-use Baleen\Timeline;
-use Baleen\Version\Collection;
+use Baleen\Migrations\Exception\MigrationMissingException;
+use Baleen\Migrations\Timeline;
+use Baleen\Migrations\Version\Collection;
 
 /**
  * @author Gabriel Somoza <gabriel@strategery.io>

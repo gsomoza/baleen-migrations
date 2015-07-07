@@ -17,8 +17,8 @@
  * <http://www.doctrine-project.org>.
  */
 
-use Baleen\Version as V;
-use BaleenTest\BaseTestCase;
+use Baleen\Migrations\Version as V;
+use BaleenTest\Migrations\BaseTestCase;
 
 /**
  * @author Gabriel Somoza <gabriel@strategery.io>
@@ -28,7 +28,7 @@ class TimelineFactoryTest extends BaseTestCase
 
     public function testCreate()
     {
-        $factory = new \Baleen\Timeline\TimelineFactory(
+        $factory = new \Baleen\Migrations\Timeline\TimelineFactory(
             [1 => new V(1), 2 => new V(2), 3 => new V(3), 4 => new V(4), 5 => new V(5)],
             [1 => new V(1), 3 => new V(3), 4 => new V(4)]
         );

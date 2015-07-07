@@ -17,18 +17,18 @@
  * <https://github.com/baleen/migrations>.
  */
 
-namespace Baleen;
+namespace Baleen\Migrations;
 
-use Baleen\Exception\BaleenException;
-use Baleen\Exception\MigrationException;
-use Baleen\Exception\MigrationMissingException;
-use Baleen\Migration\Command\MigrationBusFactory;
-use Baleen\Migration\Command\MigrateCommand;
-use Baleen\Migration\MigrationInterface;
-use Baleen\Migration\MigrateOptions;
-use Baleen\Timeline\TimelineInterface;
-use Baleen\Version\Collection;
-use Baleen\Version\Comparator\DefaultComparator;
+use Baleen\Migrations\Exception\BaleenException;
+use Baleen\Migrations\Exception\MigrationException;
+use Baleen\Migrations\Exception\MigrationMissingException;
+use Baleen\Migrations\Migration\Command\MigrationBusFactory;
+use Baleen\Migrations\Migration\Command\MigrateCommand;
+use Baleen\Migrations\Migration\MigrationInterface;
+use Baleen\Migrations\Migration\MigrateOptions;
+use Baleen\Migrations\Timeline\TimelineInterface;
+use Baleen\Migrations\Version\Collection;
+use Baleen\Migrations\Version\Comparator\DefaultComparator;
 use League\Tactician\CommandBus;
 
 /**

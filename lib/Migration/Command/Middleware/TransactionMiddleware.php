@@ -17,9 +17,9 @@
  * <https://github.com/baleen/migrations>.
  */
 
-namespace Baleen\Migration\Command\Middleware;
+namespace Baleen\Migrations\Migration\Command\Middleware;
 
-use Baleen\Migration\Capabilities\TransactionAwareInterface;
+use Baleen\Migrations\Migration\Capabilities\TransactionAwareInterface;
 use League\Tactician\Middleware;
 
 /**

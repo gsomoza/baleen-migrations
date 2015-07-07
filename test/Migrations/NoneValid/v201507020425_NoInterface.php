@@ -17,7 +17,7 @@
  * <http://www.doctrine-project.org>.
  */
 
-namespace BaleenTest\Migrations\NoneValid;
+namespace BaleenTest\Migrations\Migrations\NoneValid;
 
 /**
  * @author Gabriel Somoza <gabriel@strategery.io>

@@ -17,10 +17,10 @@
  * <http://www.doctrine-project.org>.
  */
 
-namespace BaleenTest\Migrations\CustomRegex;
+namespace BaleenTest\Migrations\Migrations\CustomRegex;
 
-use Baleen\Migration\MigrationInterface;
-use Baleen\Migration\MigrateOptions;
+use Baleen\Migrations\Migration\MigrationInterface;
+use Baleen\Migrations\Migration\MigrateOptions;
 
 /**
  * Use the following regex to load this class with the DirectoryRepository: /Version_([0-9]+).*?/

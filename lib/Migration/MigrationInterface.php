@@ -17,7 +17,7 @@
  * <https://github.com/baleen/migrations>.
  */
 
-namespace Baleen\Migration;
+namespace Baleen\Migrations\Migration;
 
 /**
  * Interface to be implemented by all migration classes in the end-project

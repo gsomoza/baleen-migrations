@@ -17,7 +17,7 @@
  * <https://github.com/baleen/migrations>.
  */
 
-namespace Baleen\Migration\Command;
+namespace Baleen\Migrations\Migration\Command;
 use League\Tactician\Middleware;
 
 /**

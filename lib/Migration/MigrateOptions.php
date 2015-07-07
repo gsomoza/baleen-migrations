@@ -17,9 +17,9 @@
  * <https://github.com/baleen/migrations>.
  */
 
-namespace Baleen\Migration;
+namespace Baleen\Migrations\Migration;
 
-use Baleen\Exception\InvalidArgumentException;
+use Baleen\Migrations\Exception\InvalidArgumentException;
 
 /**
  * @author Gabriel Somoza <gabriel@strategery.io>

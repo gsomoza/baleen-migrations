@@ -17,9 +17,9 @@
  * <https://github.com/baleen/migrations>.
  */
 
-namespace Baleen\Migration\Command;
-use Baleen\Migration\MigrationInterface;
-use Baleen\Migration\MigrateOptions;
+namespace Baleen\Migrations\Migration\Command;
+use Baleen\Migrations\Migration\MigrationInterface;
+use Baleen\Migrations\Migration\MigrateOptions;
 
 /**
  * Class MigrateCommand

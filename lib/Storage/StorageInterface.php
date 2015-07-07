@@ -17,7 +17,7 @@
  * <https://github.com/baleen/migrations>.
  */
 
-namespace Baleen\Storage;
+namespace Baleen\Migrations\Storage;
 
 /**
  * Provides a collection of Versions that have been migrated.

@@ -17,7 +17,7 @@
  * <http://www.doctrine-project.org>.
  */
 
-namespace BaleenTest;
+namespace BaleenTest\Migrations;
 
 /**
  * @author Gabriel Somoza <gabriel@strategery.io>

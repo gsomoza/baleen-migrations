@@ -17,11 +17,11 @@
  * <https://github.com/baleen/migrations>.
  */
 
-namespace Baleen\Repository;
+namespace Baleen\Migrations\Repository;
 
-use Baleen\Exception\InvalidArgumentException;
-use Baleen\Migration\MigrationInterface;
-use Baleen\Version;
+use Baleen\Migrations\Exception\InvalidArgumentException;
+use Baleen\Migrations\Migration\MigrationInterface;
+use Baleen\Migrations\Version;
 use Zend\Code\Scanner\DerivedClassScanner;
 use Zend\Code\Scanner\DirectoryScanner;
 

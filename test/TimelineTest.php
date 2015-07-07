@@ -17,10 +17,10 @@
  * <http://www.doctrine-project.org>.
  */
 
-namespace BaleenTest;
+namespace BaleenTest\Migrations;
 
-use Baleen\Version as V;
-use Baleen\Version\Comparator\DefaultComparator;
+use Baleen\Migrations\Version as V;
+use Baleen\Migrations\Version\Comparator\DefaultComparator;
 use Mockery as m;
 
 /**
@@ -37,19 +37,19 @@ class TimelineTest extends BaseTestCase
     /**
      * @param array $versions
      * @param null $callable
-     * @return m\Mock|\Baleen\Timeline
+     * @return m\Mock|\Baleen\Migrations\Timeline
      */
     public function getInstance($versions = [], $callable = null)
     {
         if (null === $callable) {
             $callable = new DefaultComparator();
         }
-        return m::mock('Baleen\Timeline', [$versions, $callable])->makePartial()->shouldAllowMockingProtectedMethods();
+        return m::mock('Baleen\Migrations\Timeline', [$versions, $callable])->makePartial()->shouldAllowMockingProtectedMethods();
     }
 
     public function testConstructor()
     {
-        $this->assertInstanceOf('Baleen\Timeline\TimelineInterface', $this->getInstance());
+        $this->assertInstanceOf('Baleen\Migrations\Timeline\TimelineInterface', $this->getInstance());
     }
 
     public function arrayToVersions(array $array)
@@ -191,7 +191,7 @@ class TimelineTest extends BaseTestCase
      */
     public function getFixtureFor(array $versions)
     {
-        $migrationMock = m::mock('Baleen\Migration\MigrationInterface');
+        $migrationMock = m::mock('Baleen\Migrations\Migration\MigrationInterface');
         $migrationMock->shouldReceive('up')->zeroOrMoreTimes();
         $migrationMock->shouldReceive('down')->zeroOrMoreTimes();
         $migrationMock->shouldReceive('abort')->zeroOrMoreTimes();

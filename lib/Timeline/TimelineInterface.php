@@ -17,10 +17,10 @@
  * <https://github.com/baleen/migrations>.
  */
 
-namespace Baleen\Timeline;
+namespace Baleen\Migrations\Timeline;
 
-use Baleen\Migration\MigrateOptions;
-use Baleen\Version;
+use Baleen\Migrations\Migration\MigrateOptions;
+use Baleen\Migrations\Version;
 
 /**
  * The Timeline is responsible of emitting MigrateCommands based on how the user wants to navigate the timeline

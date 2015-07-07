@@ -17,9 +17,9 @@
  * <https://github.com/baleen/migrations>.
  */
 
-namespace Baleen\Version\Comparator;
+namespace Baleen\Migrations\Version\Comparator;
 
-use Baleen\Version\VersionInterface;
+use Baleen\Migrations\Version\VersionInterface;
 
 /**
  * Compares two version with each other.

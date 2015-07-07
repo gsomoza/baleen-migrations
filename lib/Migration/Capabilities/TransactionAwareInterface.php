@@ -17,7 +17,7 @@
  * <https://github.com/baleen/migrations>.
  */
 
-namespace Baleen\Migration\Capabilities;
+namespace Baleen\Migrations\Migration\Capabilities;
 
 /**
  * Interface TransactionAwareInterface

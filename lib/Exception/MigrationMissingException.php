@@ -1,5 +1,5 @@
 <?php
-namespace Baleen\Exception;
+namespace Baleen\Migrations\Exception;
 
 class MigrationMissingException extends MigrationException
 {

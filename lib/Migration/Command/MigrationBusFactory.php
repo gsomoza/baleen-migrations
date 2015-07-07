@@ -17,10 +17,10 @@
  * <https://github.com/baleen/migrations>.
  */
 
-namespace Baleen\Migration\Command;
+namespace Baleen\Migrations\Migration\Command;
 
-use Baleen\Migration\Command\Middleware\SetOptionsMiddleware;
-use Baleen\Migration\Command\Middleware\TransactionMiddleware;
+use Baleen\Migrations\Migration\Command\Middleware\SetOptionsMiddleware;
+use Baleen\Migrations\Migration\Command\Middleware\TransactionMiddleware;
 use League\Tactician\CommandBus;
 
 /**

@@ -17,9 +17,9 @@
  * <https://github.com/baleen/migrations>.
  */
 
-namespace Baleen\Migration\Capabilities;
+namespace Baleen\Migrations\Migration\Capabilities;
 
-use Baleen\Migration\MigrateOptions;
+use Baleen\Migrations\Migration\MigrateOptions;
 
 /**
  * Interface OptionsAwareInterface

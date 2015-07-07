@@ -17,10 +17,10 @@
  * <http://www.doctrine-project.org>.
  */
 
-namespace BaleenTest\Migrations\AllValid;
+namespace BaleenTest\Migrations\Migrations\AllValid;
 
-use Baleen\Migration\MigrateOptions;
-use Baleen\Migration\SimpleMigration;
+use Baleen\Migrations\Migration\MigrateOptions;
+use Baleen\Migrations\Migration\SimpleMigration;
 
 /**
  * @author Gabriel Somoza <gabriel@strategery.io>

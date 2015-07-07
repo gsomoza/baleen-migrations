@@ -17,10 +17,10 @@
  * <https://github.com/baleen/migrations>.
  */
 
-namespace Baleen\Storage;
+namespace Baleen\Migrations\Storage;
 
-use Baleen\Exception\InvalidArgumentException;
-use Baleen\Version;
+use Baleen\Migrations\Exception\InvalidArgumentException;
+use Baleen\Migrations\Version;
 
 /**
  * {@inheritDoc}

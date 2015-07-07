@@ -17,12 +17,12 @@
  * <http://www.doctrine-project.org>.
  */
 
-namespace BaleenTest\Storage;
+namespace BaleenTest\Migrations\Storage;
 
-use Baleen\Storage\FileStorage;
-use Baleen\Version;
-use Baleen\Version\Collection;
-use BaleenTest\BaseTestCase;
+use Baleen\Migrations\Storage\FileStorage;
+use Baleen\Migrations\Version;
+use Baleen\Migrations\Version\Collection;
+use BaleenTest\Migrations\BaseTestCase;
 use Mockery as m;
 
 /**
@@ -38,7 +38,7 @@ class FileStorageTest extends BaseTestCase
 
     public function testInvalidDirectoryInConstructor()
     {
-        $this->setExpectedException('Baleen\Exception\InvalidArgumentException');
+        $this->setExpectedException('Baleen\Migrations\Exception\InvalidArgumentException');
         new FileStorage('/non/existent/file');
     }
 
@@ -54,7 +54,7 @@ class FileStorageTest extends BaseTestCase
         $versions = $instance->readMigratedVersions();
         $this->assertCount(count($versionIds), $versions);
         foreach ($versions as $version) {
-            /** @var \Baleen\Version\VersionInterface $version */
+            /** @var \Baleen\Migrations\Version\VersionInterface $version */
             $this->assertContains($version->getId(), $versionIds);
         }
     }

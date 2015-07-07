@@ -17,9 +17,9 @@
  * <https://github.com/baleen/migrations>.
  */
 
-namespace Baleen\Version;
+namespace Baleen\Migrations\Version;
 
-use Baleen\Migration\MigrationInterface;
+use Baleen\Migrations\Migration\MigrationInterface;
 
 /**
  * Holds meta information about a migration, especially that which is related to its status (i.e. anything that can't

@@ -17,10 +17,10 @@
  * <http://www.doctrine-project.org>.
  */
 
-namespace BaleenTest\Repository;
+namespace BaleenTest\Migrations\Repository;
 
-use Baleen\Repository\DirectoryRepository;
-use BaleenTest\BaseTestCase;
+use Baleen\Migrations\Repository\DirectoryRepository;
+use BaleenTest\Migrations\BaseTestCase;
 use Mockery as m;
 
 /**
@@ -35,12 +35,12 @@ class DirectoryRepositoryTest extends BaseTestCase
     public function testInstanceOfRepositoryInterface()
     {
         $instance = new DirectoryRepository(__DIR__);
-        $this->assertInstanceOf('Baleen\Repository\RepositoryInterface', $instance);
+        $this->assertInstanceOf('Baleen\Migrations\Repository\RepositoryInterface', $instance);
     }
 
     public function testDirectoryMustExist()
     {
-        $this->setExpectedException('Baleen\Exception\InvalidArgumentException');
+        $this->setExpectedException('Baleen\Migrations\Exception\InvalidArgumentException');
         new DirectoryRepository('/non/existent');
     }
 

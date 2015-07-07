@@ -17,8 +17,8 @@
  * <https://github.com/baleen/migrations>.
  */
 
-namespace Baleen\Version;
-use Baleen\Version;
+namespace Baleen\Migrations\Version;
+use Baleen\Migrations\Version;
 use EBT\Collection\CollectionDirectAccessInterface;
 use EBT\Collection\CountableTrait;
 use EBT\Collection\EmptyTrait;
@@ -27,7 +27,7 @@ use EBT\Collection\IterableTrait;
 use EBT\Collection\ResourceNotFoundException;
 use Traversable;
 use Zend\Stdlib\ArrayUtils;
-use Baleen\Exception\MigrationException;
+use Baleen\Migrations\Exception\MigrationException;
 
 /**
  * A collection of Versions

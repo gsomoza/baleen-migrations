@@ -17,7 +17,7 @@
  * <https://github.com/baleen/migrations>.
  */
 
-namespace Baleen\Repository;
+namespace Baleen\Migrations\Repository;
 
 /**
  * In charge of loading Migration files and instantiating them.

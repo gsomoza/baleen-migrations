@@ -17,10 +17,10 @@
  * <http://www.doctrine-project.org>.
  */
 
-namespace BaleenTest\Migrations\NoneValid;
+namespace BaleenTest\Migrations\Migrations\NoneValid;
 
-use Baleen\Migration\MigrationInterface;
-use Baleen\Migration\MigrateOptions;
+use Baleen\Migrations\Migration\MigrationInterface;
+use Baleen\Migrations\Migration\MigrateOptions;
 
 /**
  * Should not be considered a migration because it doesn't conform to the DirectoryReopsitory's default pattern

@@ -17,12 +17,12 @@
  * <http://www.doctrine-project.org>.
  */
 
-namespace BaleenTest\Version;
+namespace BaleenTest\Migrations\Version;
 
-use Baleen\Timeline\TimelineFactory;
-use Baleen\Version;
-use Baleen\Version\Collection;
-use BaleenTest\BaseTestCase;
+use Baleen\Migrations\Timeline\TimelineFactory;
+use Baleen\Migrations\Version;
+use Baleen\Migrations\Version\Collection;
+use BaleenTest\Migrations\BaseTestCase;
 use Mockery as m;
 
 /**
@@ -42,7 +42,7 @@ class TimelineFactoryTest extends BaseTestCase
     public function testConstructor()
     {
         $instance = new TimelineFactory($this->availableMock, $this->migratedMock);
-        $this->assertInstanceOf('Baleen\Timeline\TimelineFactory', $instance);
+        $this->assertInstanceOf('Baleen\Migrations\Timeline\TimelineFactory', $instance);
     }
 
     /**
@@ -56,7 +56,7 @@ class TimelineFactoryTest extends BaseTestCase
     {
         $instance = new TimelineFactory($migrated, $available);
         $result = $instance->create();
-        $this->assertInstanceOf('Baleen\Timeline', $result);
+        $this->assertInstanceOf('Baleen\Migrations\Timeline', $result);
     }
 
     public function createProvider()

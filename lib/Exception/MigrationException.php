@@ -17,7 +17,7 @@
  * <https://github.com/baleen/migrations>.
  */
 
-namespace Baleen\Exception;
+namespace Baleen\Migrations\Exception;
 
 /**
  * @author Gabriel Somoza <gabriel@strategery.io>

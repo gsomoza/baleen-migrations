@@ -17,10 +17,10 @@
  * <http://www.doctrine-project.org>.
  */
 
-namespace BaleenTest\Migrations\CustomRegex;
+namespace BaleenTest\Migrations\Migrations\CustomRegex;
 
-use Baleen\Migration\MigrationInterface;
-use Baleen\Migration\MigrateOptions;
+use Baleen\Migrations\Migration\MigrationInterface;
+use Baleen\Migrations\Migration\MigrateOptions;
 
 /**
  * @author Gabriel Somoza <gabriel@strategery.io>

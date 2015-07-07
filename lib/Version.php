@@ -17,10 +17,10 @@
  * <https://github.com/baleen/migrations>.
  */
 
-namespace Baleen;
+namespace Baleen\Migrations;
 
-use Baleen\Migration\MigrationInterface;
-use Baleen\Version\VersionInterface;
+use Baleen\Migrations\Migration\MigrationInterface;
+use Baleen\Migrations\Version\VersionInterface;
 
 /**
  * {@inheritDoc}

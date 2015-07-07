@@ -17,9 +17,9 @@
  * <https://github.com/baleen/migrations>.
  */
 
-namespace Baleen\Migration;
+namespace Baleen\Migrations\Migration;
 
-use Baleen\Migration\Capabilities\OptionsAwareInterface;
+use Baleen\Migrations\Migration\Capabilities\OptionsAwareInterface;
 
 /**
  * An extremely simple migration base class. To be used for examples and tests or

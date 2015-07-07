@@ -17,11 +17,11 @@
  * <http://www.doctrine-project.org>.
  */
 
-namespace BaleenTest;
+namespace BaleenTest\Migrations;
 
-namespace BaleenTest\Migrations\NoneValid;
+namespace BaleenTest\Migrations\Migrations\NoneValid;
 
-use Baleen\Migration\MigrationInterface;
+use Baleen\Migrations\Migration\MigrationInterface;
 
 /**
  * This should not be instantiable by the DirectoryRepository
