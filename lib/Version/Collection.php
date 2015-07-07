@@ -1,4 +1,5 @@
 <?php
+
 /*
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -18,6 +19,7 @@
  */
 
 namespace Baleen\Migrations\Version;
+
 use Baleen\Migrations\Version;
 use EBT\Collection\CollectionDirectAccessInterface;
 use EBT\Collection\CountableTrait;
@@ -30,7 +32,7 @@ use Zend\Stdlib\ArrayUtils;
 use Baleen\Migrations\Exception\MigrationException;
 
 /**
- * A collection of Versions
+ * A collection of Versions.
  *
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
@@ -48,6 +50,7 @@ class Collection implements CollectionDirectAccessInterface
 
     /**
      * @param array $versions
+     *
      * @throws MigrationException
      */
     public function __construct($versions = array())
@@ -62,10 +65,11 @@ class Collection implements CollectionDirectAccessInterface
             }
         }
         $versions = array_unique($versions, SORT_REGULAR);
-        foreach($versions as $version) {
+        foreach ($versions as $version) {
             if (!$version instanceof Version) {
                 throw new MigrationException(
-                    sprintf('Expected all versions to be of type "%s"', get_class(new Version('1'))) // wait until PHP 5.5 to do Version::class
+                    // wait until PHP 5.5 to do Version::class
+                    sprintf('Expected all versions to be of type "%s"', get_class(new Version('1')))
                 );
             }
             $this->items[$version->getId()] = $version;
@@ -74,7 +78,8 @@ class Collection implements CollectionDirectAccessInterface
 
     /**
      * @param Version $version
-     * @param bool $overwrite
+     * @param bool    $overwrite
+     *
      * @throws MigrationException
      */
     public function add(Version $version, $overwrite = false)
@@ -89,6 +94,7 @@ class Collection implements CollectionDirectAccessInterface
 
     /**
      * @param $version
+     *
      * @throws MigrationException
      */
     public function remove($version)
@@ -101,7 +107,9 @@ class Collection implements CollectionDirectAccessInterface
 
     /**
      * @param $idOrVersion
+     *
      * @return string
+     *
      * @throws MigrationException
      */
     protected function getVersionId($idOrVersion)
@@ -115,6 +123,7 @@ class Collection implements CollectionDirectAccessInterface
                 );
             }
         }
+
         return (string) $idOrVersion;
     }
 
@@ -152,6 +161,7 @@ class Collection implements CollectionDirectAccessInterface
 
     /**
      * @param $indexOrVersion
+     *
      * @return bool True if that index or version is present
      */
     public function has($indexOrVersion)
@@ -190,7 +200,7 @@ class Collection implements CollectionDirectAccessInterface
     }
 
     /**
-     * Set the internal pointer to the end of the array
+     * Set the internal pointer to the end of the array.
      */
     public function end()
     {
@@ -198,7 +208,7 @@ class Collection implements CollectionDirectAccessInterface
     }
 
     /**
-     * Returns the previous element
+     * Returns the previous element.
      *
      * @return mixed
      */

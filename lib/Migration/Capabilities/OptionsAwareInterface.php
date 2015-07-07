@@ -1,4 +1,5 @@
 <?php
+
 /*
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -22,12 +23,11 @@ namespace Baleen\Migrations\Migration\Capabilities;
 use Baleen\Migrations\Migration\MigrateOptions;
 
 /**
- * Interface OptionsAwareInterface
+ * Interface OptionsAwareInterface.
  *
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
-interface OptionsAwareInterface {
-
+interface OptionsAwareInterface
+{
     public function setOptions(MigrateOptions $options);
-
 }

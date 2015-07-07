@@ -1,4 +1,5 @@
 <?php
+
 /*
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -20,7 +21,7 @@
 namespace Baleen\Migrations\Migration\Capabilities;
 
 /**
- * Interface TransactionAwareInterface
+ * Interface TransactionAwareInterface.
  *
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
@@ -32,6 +33,7 @@ interface TransactionAwareInterface
 
     /**
      * @param \Exception $e
+     *
      * @return mixed
      */
     public function abort(\Exception $e);

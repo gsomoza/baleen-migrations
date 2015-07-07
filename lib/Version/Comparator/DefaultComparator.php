@@ -1,4 +1,5 @@
 <?php
+
 /*
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -28,13 +29,11 @@ use Baleen\Migrations\Version\VersionInterface;
  */
 class DefaultComparator implements ComparatorInterface
 {
-
     /**
      * {@inheritDoc}
      */
     public function __invoke(VersionInterface $version1, VersionInterface $version2)
     {
-        return (int)$version1->getId() - (int)$version2->getId();
+        return (int) $version1->getId() - (int) $version2->getId();
     }
-
 }

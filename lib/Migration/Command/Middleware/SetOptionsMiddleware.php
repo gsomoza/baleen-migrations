@@ -1,4 +1,5 @@
 <?php
+
 /*
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -37,7 +38,7 @@ class SetOptionsMiddleware implements Middleware
     {
         $migration = $command->getMigration();
         if ($migration instanceof OptionsAwareInterface) {
-            $migration->setRunOptions($command->getOptions());
+            $migration->setOptions($command->getOptions());
         }
         $next($command);
     }

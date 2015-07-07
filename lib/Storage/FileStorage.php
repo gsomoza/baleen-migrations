@@ -1,4 +1,5 @@
 <?php
+
 /*
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -29,23 +30,26 @@ use Baleen\Migrations\Version;
  */
 class FileStorage implements StorageInterface
 {
-
     protected $path;
 
     /**
      * @param $path
+     *
      * @throws InvalidArgumentException
      */
     public function __construct($path)
     {
         if (!is_file($path) && !is_writeable(realpath(dirname($path)))) {
-            throw new InvalidArgumentException('Argument "path" must be a valid path to a file which must be writable.');
+            throw new InvalidArgumentException(
+                'Argument "path" must be a valid path to a file which must be writable.'
+            );
         }
         $this->path = $path;
     }
 
     /**
      * Reads versions from the storage file.
+     *
      * @return array
      */
     public function readMigratedVersions()
@@ -60,12 +64,15 @@ class FileStorage implements StorageInterface
                 $versions[] = $version;
             }
         }
+
         return $versions;
     }
 
     /**
      * Write a collection of versions to the storage file.
+     *
      * @param array $versions
+     *
      * @return int
      */
     public function writeMigratedVersions(array $versions)
@@ -78,6 +85,7 @@ class FileStorage implements StorageInterface
             }
         }
         $contents = implode("\n", $ids);
+
         return file_put_contents($this->path, $contents) !== false;
     }
 }

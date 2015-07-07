@@ -1,4 +1,5 @@
 <?php
+
 /*
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -30,22 +31,19 @@ use Baleen\Migrations\Version;
  */
 interface TimelineInterface
 {
-
     /**
      * Runs all versions up, starting from the oldest and until (and including) the specified version.
      *
-     * @param string|\Baleen\Version $version
-     * @param \Baleen\Migration\MigrateOptions $options
-     * @return void
+     * @param string|\Baleen\Migrations\Version           $version
+     * @param \Baleen\Migrations\Migration\MigrateOptions $options
      */
     public function upTowards($version, MigrateOptions $options);
 
     /**
      * Runs all versions down, starting from the newest and until (and including) the specified version.
      *
-     * @param string|\Baleen\Version $version
-     * @param \Baleen\Migration\MigrateOptions $options
-     * @return void
+     * @param string|\Baleen\Migrations\Version           $version
+     * @param \Baleen\Migrations\Migration\MigrateOptions $options
      */
     public function downTowards($version, MigrateOptions $options);
 
@@ -54,16 +52,15 @@ interface TimelineInterface
      * all versions *after* the specified version are "down".
      *
      * @param $goalVersion
-     * @param \Baleen\Migration\MigrateOptions $options
-     * @return void
+     * @param \Baleen\Migrations\Migration\MigrateOptions $options
      */
     public function goTowards($goalVersion, MigrateOptions $options);
 
     /**
-     * @param \Baleen\Version $version
-     * @param \Baleen\Migration\MigrateOptions $options
+     * @param \Baleen\Migrations\Version                  $version
+     * @param \Baleen\Migrations\Migration\MigrateOptions $options
+     *
      * @return
      */
     public function runSingle($version, MigrateOptions $options);
-
 }

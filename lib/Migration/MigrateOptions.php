@@ -1,4 +1,5 @@
 <?php
+
 /*
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -56,12 +57,13 @@ class MigrateOptions
 
     /**
      * @param $direction
-     * @param bool $forced
-     * @param bool $dryRun
+     * @param bool  $forced
+     * @param bool  $dryRun
      * @param array $custom
+     *
      * @throws InvalidArgumentException
      */
-    function __construct($direction, $forced = false, $dryRun = false, $custom = [])
+    public function __construct($direction, $forced = false, $dryRun = false, $custom = [])
     {
         $this->allowedDirections = [
             self::DIRECTION_UP,
@@ -83,6 +85,7 @@ class MigrateOptions
 
     /**
      * @param string $direction
+     *
      * @throws InvalidArgumentException
      */
     public function setDirection($direction)
@@ -96,7 +99,7 @@ class MigrateOptions
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isForced()
     {
@@ -104,15 +107,15 @@ class MigrateOptions
     }
 
     /**
-     * @param boolean $forced
+     * @param bool $forced
      */
     public function setForced($forced)
     {
-        $this->forced = (bool)$forced;
+        $this->forced = (bool) $forced;
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isDryRun()
     {
@@ -120,11 +123,11 @@ class MigrateOptions
     }
 
     /**
-     * @param boolean $dryRun
+     * @param bool $dryRun
      */
     public function setDryRun($dryRun)
     {
-        $this->dryRun = (bool)$dryRun;
+        $this->dryRun = (bool) $dryRun;
     }
 
     /**
@@ -142,6 +145,4 @@ class MigrateOptions
     {
         $this->custom = $custom;
     }
-
-
 }

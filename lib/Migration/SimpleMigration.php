@@ -1,4 +1,5 @@
 <?php
+
 /*
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -24,8 +25,6 @@ use Baleen\Migrations\Migration\Capabilities\OptionsAwareInterface;
 /**
  * An extremely simple migration base class. To be used for examples and tests or
  * extended by more complex classes.
- *
- * @package Baleen\Migration
  */
 abstract class SimpleMigration implements MigrationInterface, OptionsAwareInterface
 {
@@ -35,7 +34,8 @@ abstract class SimpleMigration implements MigrationInterface, OptionsAwareInterf
     /**
      * @param MigrateOptions $options
      */
-    public function setOptions(MigrateOptions $options) {
+    public function setOptions(MigrateOptions $options)
+    {
         $this->options = $options;
     }
 

@@ -1,4 +1,5 @@
 <?php
+
 /*
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -26,16 +27,18 @@ namespace Baleen\Migrations\Storage;
  */
 interface StorageInterface
 {
-
     /**
      * Reads versions from the storage file.
+     *
      * @return array
      */
     public function readMigratedVersions();
 
     /**
      * Write a collection of versions to the storage file.
+     *
      * @param array $versions
+     *
      * @return bool Returns false on failure.
      */
     public function writeMigratedVersions(array $versions);

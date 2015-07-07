@@ -1,4 +1,5 @@
 <?php
+
 /*
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -28,7 +29,6 @@ use Baleen\Migrations\Version\Collection;
  */
 class TimelineFactory
 {
-
     /** @var Collection */
     private $availableVersions;
 
@@ -56,24 +56,29 @@ class TimelineFactory
      * be marked accordingly.
      *
      * @param callable $comparator
+     *
      * @return Timeline
+     *
      * @throws MigrationMissingException
      */
     public function create(callable $comparator = null)
     {
         foreach ($this->migratedVersions as $version) {
-            /** @var \Baleen\Version $version */
+            /** @var \Baleen\Migrations\Version $version */
             if ($this->availableVersions->has($version)) {
-                /** @var \Baleen\Version $availableVersion */
+                /** @var \Baleen\Migrations\Version $availableVersion */
                 $availableVersion = $this->availableVersions->get($version);
                 $availableVersion->setMigrated(true);
             } else {
                 throw new MigrationMissingException(
-                    sprintf('Version "%s" is reported as migrated but a corresponding migration could not be found.', $version->getId())
+                    sprintf(
+                        'Version "%s" is reported as migrated but a corresponding migration could not be found.',
+                        $version->getId()
+                    )
                 );
             }
         }
+
         return new Timeline($this->availableVersions, $comparator);
     }
-
 }

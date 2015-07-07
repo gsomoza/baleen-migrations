@@ -1,4 +1,5 @@
 <?php
+
 /*
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -18,16 +19,16 @@
  */
 
 namespace Baleen\Migrations\Migration\Command;
+
 use League\Tactician\Middleware;
 
 /**
- * Class MigrateHandler
+ * Class MigrateHandler.
  *
  * @author Gabriel Somoza <gabriel@stragery.io>
  */
 class MigrateHandler implements Middleware
 {
-
     /**
      * {@inheritDoc}
      */
@@ -38,5 +39,4 @@ class MigrateHandler implements Middleware
 
         $migration->$direction();
     }
-
 }

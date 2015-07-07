@@ -1,4 +1,5 @@
 <?php
+
 /*
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -29,7 +30,6 @@ use Baleen\Migrations\Version\VersionInterface;
  */
 class Version implements VersionInterface
 {
-
     /**
      * @var string
      */
@@ -46,13 +46,13 @@ class Version implements VersionInterface
     protected $migration;
 
     /**
-     * Constructor
+     * Constructor.
      *
      * @param $id string
      */
     public function __construct($id)
     {
-        $this->id = (string)$id;
+        $this->id = (string) $id;
     }
 
     /**
@@ -76,7 +76,7 @@ class Version implements VersionInterface
      */
     public function setMigrated($migrated)
     {
-        $this->migrated = (bool)$migrated;
+        $this->migrated = (bool) $migrated;
     }
 
     /**
@@ -89,6 +89,7 @@ class Version implements VersionInterface
 
     /**
      * Returns the migration associated with this version.
+     *
      * @return null|MigrationInterface
      */
     public function getMigration()

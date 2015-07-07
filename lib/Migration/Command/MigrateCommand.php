@@ -1,4 +1,5 @@
 <?php
+
 /*
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -18,17 +19,17 @@
  */
 
 namespace Baleen\Migrations\Migration\Command;
+
 use Baleen\Migrations\Migration\MigrationInterface;
 use Baleen\Migrations\Migration\MigrateOptions;
 
 /**
- * Class MigrateCommand
+ * Class MigrateCommand.
  *
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
 class MigrateCommand
 {
-
     /**
      * @var MigrationInterface
      */
@@ -41,9 +42,9 @@ class MigrateCommand
 
     /**
      * @param MigrationInterface $migration
-     * @param MigrateOptions $options
+     * @param MigrateOptions     $options
      */
-    function __construct(MigrationInterface $migration, MigrateOptions $options)
+    public function __construct(MigrationInterface $migration, MigrateOptions $options)
     {
         $this->migration = $migration;
         $this->options = $options;

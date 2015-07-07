@@ -1,4 +1,5 @@
 <?php
+
 /*
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -26,11 +27,10 @@ namespace Baleen\Migrations\Repository;
  */
 interface RepositoryInterface
 {
-
     /**
-     * Returns all migrations available to the repository
+     * Returns all migrations available to the repository.
+     *
      * @return array Array of MigrationInterface
      */
     public function fetchAll();
-
 }

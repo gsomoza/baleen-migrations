@@ -1,4 +1,5 @@
 <?php
+
 /*
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -19,7 +20,6 @@
 
 namespace Baleen\Migrations;
 
-use Baleen\Migrations\Exception\BaleenException;
 use Baleen\Migrations\Exception\MigrationException;
 use Baleen\Migrations\Exception\MigrationMissingException;
 use Baleen\Migrations\Migration\Command\MigrationBusFactory;
@@ -36,7 +36,6 @@ use League\Tactician\CommandBus;
  */
 class Timeline implements TimelineInterface
 {
-
     protected $allowedDirections;
 
     /** @var Collection */
@@ -50,7 +49,7 @@ class Timeline implements TimelineInterface
 
     /**
      * @param array|Collection $versions
-     * @param callable $comparator
+     * @param callable         $comparator
      */
     public function __construct($versions, callable $comparator = null)
     {
@@ -70,6 +69,7 @@ class Timeline implements TimelineInterface
     /**
      * @param Version|string $goalVersion
      * @param MigrateOptions $options
+     *
      * @throws MigrationMissingException
      */
     public function upTowards($goalVersion, MigrateOptions $options = null)
@@ -83,7 +83,10 @@ class Timeline implements TimelineInterface
             if ($options->isForced() || !$version->isMigrated()) {
                 $migration = $version->getMigration();
                 if (null === $migration) {
-                    throw new MigrationMissingException('Migration object missing for registered version "%s".', $version->getId());
+                    throw new MigrationMissingException(
+                        'Migration object missing for registered version "%s".',
+                        $version->getId()
+                    );
                 }
                 $this->doRun($migration, $options);
                 $version->setMigrated(true); // won't get executed if an exception is thrown
@@ -98,6 +101,7 @@ class Timeline implements TimelineInterface
     /**
      * @param Version|string $goalVersion
      * @param MigrateOptions $options
+     *
      * @throws \Exception
      */
     public function downTowards($goalVersion, MigrateOptions $options = null)
@@ -108,11 +112,14 @@ class Timeline implements TimelineInterface
         $goalVersion = $this->versions->getOrException($goalVersion);
         $options->setDirection(MigrateOptions::DIRECTION_DOWN); // make sure its right
         $reversed = $this->versions->getReverse();
-        foreach($reversed as $version) {
+        foreach ($reversed as $version) {
             /** @var Version $version */
             if ($options->isForced() || $version->isMigrated()) {
                 if (null === $version->getMigration()) {
-                    throw new MigrationException('Migration object missing for registered version "%s".', $version->getId());
+                    throw new MigrationException(
+                        'Migration object missing for registered version "%s".',
+                        $version->getId()
+                    );
                 }
                 $this->doRun($version->getMigration(), $options);
                 $version->setMigrated(false); // won't get executed if an exception is thrown
@@ -129,7 +136,8 @@ class Timeline implements TimelineInterface
      * all versions *after* the specified version are "down".
      *
      * @param $goalVersion
-     * @param \Baleen\Migration\MigrateOptions $options
+     * @param \Baleen\Migrations\Migration\MigrateOptions $options
+     *
      * @return mixed
      */
     public function goTowards($goalVersion, MigrateOptions $options = null)
@@ -147,8 +155,9 @@ class Timeline implements TimelineInterface
     }
 
     /**
-     * @param \Baleen\Version $version
-     * @param MigrateOptions $options
+     * @param \Baleen\Migrations\Version $version
+     * @param MigrateOptions  $options
+     *
      * @throws MigrationException
      */
     public function runSingle($version, MigrateOptions $options)
@@ -157,7 +166,10 @@ class Timeline implements TimelineInterface
             case MigrateOptions::DIRECTION_UP:
                 if (!$options->isForced() && $version->isMigrated()) {
                     throw new MigrationException(
-                        sprintf("Cowardly refusing to run up() on a version that has already been migrated (%s).", $version->getId())
+                        sprintf(
+                            'Cowardly refusing to run up() on a version that has already been migrated (%s).',
+                            $version->getId()
+                        )
                     );
                 }
                 break;
@@ -165,7 +177,10 @@ class Timeline implements TimelineInterface
             case MigrateOptions::DIRECTION_DOWN:
                 if (!$options->isForced() && !$version->isMigrated()) {
                     throw new MigrationException(
-                        sprintf("Cowardly refusing to run down() on a version that hasn't been migrated yet (%s).", $version->getId())
+                        sprintf(
+                            "Cowardly refusing to run down() on a version that hasn't been migrated yet (%s).",
+                            $version->getId()
+                        )
                     );
                 }
                 break;
@@ -176,7 +191,8 @@ class Timeline implements TimelineInterface
 
     /**
      * @param MigrationInterface $migration
-     * @param MigrateOptions $options
+     * @param MigrateOptions     $options
+     *
      * @return bool
      */
     protected function doRun(MigrationInterface $migration, MigrateOptions $options)

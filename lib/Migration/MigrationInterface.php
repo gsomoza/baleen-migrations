@@ -1,4 +1,5 @@
 <?php
+
 /*
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -20,15 +21,13 @@
 namespace Baleen\Migrations\Migration;
 
 /**
- * Interface to be implemented by all migration classes in the end-project
+ * Interface to be implemented by all migration classes in the end-project.
  *
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
 interface MigrationInterface
 {
-
     public function up();
 
     public function down();
-
 }

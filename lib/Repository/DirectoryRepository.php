@@ -1,4 +1,5 @@
 <?php
+
 /*
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -30,7 +31,6 @@ use Zend\Code\Scanner\DirectoryScanner;
  */
 class DirectoryRepository implements RepositoryInterface
 {
-
     const PATTERN_DEFAULT = '/v([0-9]+).*/';
 
     /**
@@ -45,7 +45,9 @@ class DirectoryRepository implements RepositoryInterface
 
     /**
      * @param $path
-     * @param string $classNameRegex Regexp used to extract ID from a Migration class name. The first match must be the ID.
+     * @param string $classNameRegex Regexp used to extract ID from a Migration class name. The first match must be
+     *                               the ID.
+     *
      * @throws InvalidArgumentException
      */
     public function __construct($path, $classNameRegex = self::PATTERN_DEFAULT)
@@ -68,7 +70,7 @@ class DirectoryRepository implements RepositoryInterface
         $versions = [];
         $classes = $this->scanner->getClasses(true);
         foreach ($classes as $class) {
-            /** @var DerivedClassScanner $class */
+            /* @var DerivedClassScanner $class */
             $className = $class->getName();
             if ($class->isInstantiable()) {
                 $migration = new $className();
@@ -77,13 +79,14 @@ class DirectoryRepository implements RepositoryInterface
                     && preg_match($this->classNameRegex, $className, $matches)
                     && isset($matches[1])
                 ) {
-                    /** @var \Baleen\Migration\MigrationInterface $migration */
+                    /* @var \Baleen\Migrations\Migration\MigrationInterface $migration */
                     $version = new Version($matches[1]);
                     $version->setMigration($migration);
                     $versions[] = $version;
                 }
             }
         }
+
         return $versions;
     }
 }

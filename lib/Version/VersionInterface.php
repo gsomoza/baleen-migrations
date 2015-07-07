@@ -1,4 +1,5 @@
 <?php
+
 /*
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -29,7 +30,6 @@ use Baleen\Migrations\Migration\MigrationInterface;
  */
 interface VersionInterface
 {
-
     /**
      * Returns the ID of the version.
      *
@@ -52,14 +52,17 @@ interface VersionInterface
     public function setMigrated($migrated);
 
     /**
-     * Sets the migration class this version corresponds to
+     * Sets the migration class this version corresponds to.
+     *
      * @param MigrationInterface $migration
+     *
      * @return mixed
      */
     public function setMigration(MigrationInterface $migration);
 
     /**
      * Returns the migration associated with this version.
+     *
      * @return null|MigrationInterface
      */
     public function getMigration();

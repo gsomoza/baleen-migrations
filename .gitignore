@@ -30,3 +30,6 @@ data/tmp/
 ## Plugin-specific files:
 # mpeltonen/sbt-idea plugin
 .idea_modules/
+
+build/pdepend
+build/logs
