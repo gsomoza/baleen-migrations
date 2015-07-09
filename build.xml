@@ -12,7 +12,7 @@
     </fileset>
 
     <target name="build"
-            depends="prepare,lint,phploc-ci,pdepend,phpmd-ci,phpcs-ci,phpcpd-ci,phpunit"
+            depends="prepare,lint,phploc-ci,pdepend,phpmd-ci,phpcs-ci,phpcpd-ci,phpunit-ci"
             description=""/>
 
     <target name="build-parallel"
@@ -165,8 +165,6 @@
         <exec executable="${toolsdir}phpcpd" taskname="phpcpd" failonerror="true">
             <arg value="--log-pmd" />
             <arg path="${basedir}/build/logs/pmd-cpd.xml" />
-            <arg value="--coverage-clover" />
-            <arg path="${basedir}/build/logs/coverage.clover" />
             <arg path="${basedir}/lib" />
         </exec>
 
@@ -181,6 +179,18 @@
         </exec>
 
         <property name="phpunit.done" value="true"/>
+    </target>
+
+    <target name="phpunit-ci"
+            unless="phpunit-ci.done"
+            depends="prepare"
+            description="Run unit tests with PHPUnit">
+        <exec executable="${toolsdir}phpunit" failonerror="true" taskname="phpunit">
+            <arg value="--coverage-clover"/>
+            <arg path="${basedir}/build/logs/coverage.xml" />
+        </exec>
+
+        <property name="phpunit-ci.done" value="true"/>
     </target>
 
     <!--<target name="phpdox"
