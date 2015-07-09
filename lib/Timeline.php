@@ -78,6 +78,7 @@ class Timeline implements TimelineInterface
      * @param Version|string $goalVersion
      * @param MigrateOptions $options
      *
+     * @return Collection A collection of modified versions
      * @throws MigrationMissingException
      */
     public function upTowards($goalVersion, MigrateOptions $options = null)
@@ -88,13 +89,14 @@ class Timeline implements TimelineInterface
         }
         $options->setDirection(MigrateOptions::DIRECTION_UP); // make sure its right
 
-        $this->runCollection($goalVersion, $options, $this->versions);
+        return $this->runCollection($goalVersion, $options, $this->versions);;
     }
 
     /**
      * @param Version|string $goalVersion
      * @param MigrateOptions $options
      *
+     * @return Collection A collection of modified versions
      * @throws \Exception
      */
     public function downTowards($goalVersion, MigrateOptions $options = null)
@@ -104,7 +106,7 @@ class Timeline implements TimelineInterface
             $options->setExceptionOnSkip(false);
         }
         $options->setDirection(MigrateOptions::DIRECTION_DOWN); // make sure its right
-        $this->runCollection($goalVersion, $options, $this->versions->getReverse());
+        return $this->runCollection($goalVersion, $options, $this->versions->getReverse());
     }
 
     /**
@@ -114,7 +116,7 @@ class Timeline implements TimelineInterface
      * @param $goalVersion
      * @param \Baleen\Migrations\Migration\MigrateOptions $options
      *
-     * @return mixed
+     * @return Collection
      */
     public function goTowards($goalVersion, MigrateOptions $options = null)
     {
@@ -129,16 +131,19 @@ class Timeline implements TimelineInterface
         if ($newGoal !== false) { // unless we're at the end of the queue (no migrations can go down)
             $this->downTowards($newGoal, $options);
         }
+        return $this->versions;
     }
 
     /**
      * @param \Baleen\Migrations\Version $version
-     * @param MigrateOptions             $options
+     * @param MigrateOptions $options
      *
+     * @return Version|null
      * @throws MigrationException
      */
     public function runSingle($version, MigrateOptions $options)
     {
+        $version = $this->versions->getOrException($version);
         $migration = $version->getMigration();
         if (null === $migration) {
             throw new MigrationException(
@@ -179,7 +184,7 @@ class Timeline implements TimelineInterface
         }
 
         if ($skip) {
-            return;
+            return null;
         }
 
         // Dispatch MIGRATE_BEFORE
@@ -190,6 +195,8 @@ class Timeline implements TimelineInterface
 
         // Dispatch MIGRATE_AFTER
         $this->getDispatcher()->dispatchMigrationAfter($version, $options);
+
+        return $version;
     }
 
     /**
@@ -218,6 +225,8 @@ class Timeline implements TimelineInterface
      * @param $goalVersion
      * @param MigrateOptions $options
      * @param $collection
+     *
+     * @return Collection
      * @throws MigrationException
      */
     protected function runCollection($goalVersion, MigrateOptions $options, Collection $collection)
@@ -227,8 +236,12 @@ class Timeline implements TimelineInterface
         // dispatch COLLECTION_BEFORE
         $this->getDispatcher()->dispatchCollectionBefore($goalVersion, $options, $collection);
 
+        $modified = new Collection();
         foreach ($collection as $version) {
-            $this->runSingle($version, $options);
+            $result = $this->runSingle($version, $options);
+            if ($result) {
+                $modified->add($version);
+            }
             $goalReached = call_user_func($this->comparator, $goalVersion, $version) === 0;
             if ($goalReached) {
                 break;
@@ -236,6 +249,8 @@ class Timeline implements TimelineInterface
         }
 
         // dispatch COLLECTION_AFTER
-        $this->getDispatcher()->dispatchCollectionAfter($goalVersion, $options, $collection);
+        $this->getDispatcher()->dispatchCollectionAfter($goalVersion, $options, $modified);
+
+        return $modified;
     }
 }

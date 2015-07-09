@@ -128,6 +128,33 @@ class Collection implements CollectionDirectAccessInterface
     }
 
     /**
+     * Adds a new version to the collection if it doesn't exist, or it updates the existing version if it does.
+     * @param Version $version
+     */
+    public function addOrUpdate(Version $version)
+    {
+        if ($this->has($version)) {
+            $this->items[$version->getId()] = $version; // replace
+        } else {
+            $this->add($version);
+        }
+    }
+
+    /**
+     * Merges another collection into this collection, replacing versions that exist and adding those that don't.
+     * @param Collection $collection
+     *
+     * @return $this
+     */
+    public function merge(Collection $collection)
+    {
+        foreach ($collection as $version) {
+            $this->addOrUpdate($version);
+        }
+        return $this;
+    }
+
+    /**
      * @param mixed $idOrVersion
      * @param mixed $defaultValue Will be returned if the index is not present at collection
      *

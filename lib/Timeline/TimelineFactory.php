@@ -64,9 +64,7 @@ class TimelineFactory
     public function create(callable $comparator = null)
     {
         foreach ($this->migratedVersions as $version) {
-            /** @var \Baleen\Migrations\Version $version */
             if ($this->availableVersions->has($version)) {
-                /** @var \Baleen\Migrations\Version $availableVersion */
                 $availableVersion = $this->availableVersions->get($version);
                 $availableVersion->setMigrated(true);
             } else {
