@@ -253,4 +253,12 @@ class Timeline implements TimelineInterface
 
         return $modified;
     }
+
+    /**
+     * @return Collection
+     */
+    public function getVersions()
+    {
+        return $this->versions;
+    }
 }
