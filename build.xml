@@ -165,6 +165,8 @@
         <exec executable="${toolsdir}phpcpd" taskname="phpcpd" failonerror="true">
             <arg value="--log-pmd" />
             <arg path="${basedir}/build/logs/pmd-cpd.xml" />
+            <arg value="--coverage-clover" />
+            <arg path="${basedir}/build/logs/coverage.clover" />
             <arg path="${basedir}/lib" />
         </exec>
 

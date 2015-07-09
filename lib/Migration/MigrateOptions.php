@@ -91,6 +91,22 @@ class MigrateOptions
     }
 
     /**
+     * @return bool
+     */
+    public function isDirectionUp()
+    {
+        return $this->direction == self::DIRECTION_UP;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isDirectionDown()
+    {
+        return $this->direction == self::DIRECTION_DOWN;
+    }
+
+    /**
      * @param string $direction
      *
      * @throws InvalidArgumentException

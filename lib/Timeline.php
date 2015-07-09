@@ -20,60 +20,20 @@
 
 namespace Baleen\Migrations;
 
-use Baleen\Migrations\Event\HasEmitterTrait;
-use Baleen\Migrations\Event\EmitterInterface;
 use Baleen\Migrations\Exception\MigrationException;
 use Baleen\Migrations\Exception\MigrationMissingException;
-use Baleen\Migrations\Migration\Command\MigrationBusFactory;
-use Baleen\Migrations\Migration\Command\MigrateCommand;
-use Baleen\Migrations\Migration\MigrationInterface;
 use Baleen\Migrations\Migration\MigrateOptions;
+use Baleen\Migrations\Timeline\AbstractTimeline;
 use Baleen\Migrations\Timeline\TimelineEmitter;
-use Baleen\Migrations\Timeline\TimelineInterface;
 use Baleen\Migrations\Version\Collection;
-use Baleen\Migrations\Version\Comparator\DefaultComparator;
-use League\Tactician\CommandBus;
 
 /**
  * @author Gabriel Somoza <gabriel@strategery.io>
  *
  * @method TimelineEmitter getEmitter()
  */
-class Timeline implements TimelineInterface
+class Timeline extends AbstractTimeline
 {
-    use HasEmitterTrait;
-
-    /** @var string[] */
-    protected $allowedDirections;
-
-    /** @var Collection */
-    protected $versions;
-
-    /** @var callable */
-    protected $comparator;
-
-    /** @var CommandBus */
-    protected $migrationBus;
-
-    /**
-     * @param array|Collection $versions
-     * @param callable         $comparator
-     */
-    public function __construct($versions, callable $comparator = null)
-    {
-        $this->migrationBus = MigrationBusFactory::create();
-
-        if (is_array($versions)) {
-            $versions = new Collection($versions);
-        }
-        if (null === $comparator) {
-            $comparator = new DefaultComparator();
-        }
-        $versions->sortWith($comparator);
-        $this->comparator = $comparator;
-        $this->versions = $versions;
-    }
-
     /**
      * @param Version|string $goalVersion
      * @param MigrateOptions $options
@@ -151,114 +111,30 @@ class Timeline implements TimelineInterface
                 $version->getId()
             );
         }
-        $isMigratedResult = $version->isMigrated();
-        $skip = false;
-        $exceptionMessage = false;
-        switch ($options->getDirection()) {
-            case MigrateOptions::DIRECTION_UP:
-                $isMigratedResult = true;
-                $skip = !$options->isForced() && $version->isMigrated();
-                if ($skip && $options->isExceptionOnSkip()) {
-                    $exceptionMessage = sprintf(
-                        'Cowardly refusing to run up() on a version that has already been migrated (%s).',
-                        $version->getId()
-                    );
-                }
-                break;
 
-            case MigrateOptions::DIRECTION_DOWN:
-                $isMigratedResult = false;
-                $skip = !$options->isForced() && !$version->isMigrated();
-                if ($skip && $options->isExceptionOnSkip()) {
-                    $exceptionMessage = sprintf(
-                        'Cowardly refusing to run up() on a version that has already been migrated (%s).',
-                        $version->getId()
-                    );
-                }
-                break;
-            default:
-        }
-
-        if ($exceptionMessage !== false) {
-            throw new MigrationException($exceptionMessage);
-        }
-
-        if ($skip) {
-            return null;
+        if (!$this->shouldMigrate($version, $options)) {
+            if ($options->isExceptionOnSkip()) {
+                throw new MigrationException(sprintf(
+                    'Cowardly refusing to run %s() on a version is already "%s" (ID: %s).',
+                    $options->getDirection(),
+                    $options->getDirection(),
+                    $version->getId()
+                ));
+            }
+            return null; // skip
         }
 
         // Dispatch MIGRATE_BEFORE
         $this->getEmitter()->dispatchMigrationBefore($version, $options);
 
         $this->doRun($migration, $options);
-        $version->setMigrated($isMigratedResult); // won't get executed if an exception is thrown
+
+        // won't get executed if an exception is thrown
+        $version->setMigrated($options->isDirectionUp());
 
         // Dispatch MIGRATE_AFTER
         $this->getEmitter()->dispatchMigrationAfter($version, $options);
 
         return $version;
-    }
-
-    /**
-     * @param MigrationInterface $migration
-     * @param MigrateOptions     $options
-     *
-     * @return bool
-     */
-    protected function doRun(MigrationInterface $migration, MigrateOptions $options)
-    {
-        $command = new MigrateCommand($migration, $options);
-        $this->migrationBus->handle($command);
-    }
-
-    /**
-     * Must create and return a default specialised dispatcher
-     *
-     * @return EmitterInterface
-     */
-    protected function createEmitter()
-    {
-        return new TimelineEmitter();
-    }
-
-    /**
-     * @param $goalVersion
-     * @param MigrateOptions $options
-     * @param $collection
-     *
-     * @return Collection
-     * @throws MigrationException
-     */
-    protected function runCollection($goalVersion, MigrateOptions $options, Collection $collection)
-    {
-        $goalVersion = $this->versions->getOrException($goalVersion);
-
-        // dispatch COLLECTION_BEFORE
-        $this->getEmitter()->dispatchCollectionBefore($goalVersion, $options, $collection);
-
-        $modified = new Collection();
-        foreach ($collection as $version) {
-            $result = $this->runSingle($version, $options);
-            if ($result) {
-                $modified->add($version);
-            }
-            $goalReached = call_user_func($this->comparator, $goalVersion, $version) === 0;
-            if ($goalReached) {
-                break;
-            }
-        }
-
-        // dispatch COLLECTION_AFTER
-        $this->getEmitter()->dispatchCollectionAfter($goalVersion, $options, $modified);
-
-        return $modified;
-    }
-
-    /**
-     * @return Collection
-     */
-    public function getVersions()
-    {
-        return $this->versions;
     }
 }
