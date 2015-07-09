@@ -156,7 +156,7 @@ class Timeline implements TimelineInterface
 
     /**
      * @param \Baleen\Migrations\Version $version
-     * @param MigrateOptions  $options
+     * @param MigrateOptions             $options
      *
      * @throws MigrationException
      */

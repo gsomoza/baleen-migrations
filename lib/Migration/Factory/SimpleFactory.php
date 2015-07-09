@@ -18,31 +18,31 @@
  * <https://github.com/baleen/migrations>.
  */
 
-namespace Baleen\Migrations\Repository;
+namespace Baleen\Migrations\Migration\Factory;
 
-use Baleen\Migrations\Migration\Factory\FactoryInterface;
-use Baleen\Migrations\Migration\MigrationInterface;
+use Baleen\Migrations\Exception\InvalidArgumentException;
 
 /**
- * In charge of loading Migration files and instantiating them.
- *
- * @author Gabriel Somoza <gabriel@strategery.io>
+ * @inheritdoc
  */
-interface RepositoryInterface
+class SimpleFactory implements FactoryInterface
 {
     /**
-     * Returns all migrations available to the repository. It must use a factory (default or supplied by
-     * 'setMigrationFactory' to instantiate a Migration.
+     * @inheritdoc
      *
-     * @return MigrationInterface[] Array of MigrationInterface objects
+     * @param $class
+     *
+     * @throws InvalidArgumentException
      */
-    public function fetchAll();
+    public function create($class)
+    {
+        $class = (string) $class;
+        if (empty($class)) {
+            throw new InvalidArgumentException(
+                'Cannot create a migration from an empty class name!'
+            );
+        }
 
-    /**
-     * Use a custom factory to create migrations. Useful to inject migration instances with additional dependencies
-     * (e.g. database adapters).
-     *
-     * @param FactoryInterface $factory
-     */
-    public function setMigrationFactory(FactoryInterface $factory);
+        return new $class();
+    }
 }

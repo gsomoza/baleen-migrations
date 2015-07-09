@@ -18,31 +18,21 @@
  * <https://github.com/baleen/migrations>.
  */
 
-namespace Baleen\Migrations\Repository;
-
-use Baleen\Migrations\Migration\Factory\FactoryInterface;
-use Baleen\Migrations\Migration\MigrationInterface;
+namespace Baleen\Migrations\Migration\Factory;
 
 /**
- * In charge of loading Migration files and instantiating them.
+ * Interface for a Migrations Factory.
  *
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
-interface RepositoryInterface
+interface FactoryInterface
 {
     /**
-     * Returns all migrations available to the repository. It must use a factory (default or supplied by
-     * 'setMigrationFactory' to instantiate a Migration.
+     * Creates a Migration based on a class name.
      *
-     * @return MigrationInterface[] Array of MigrationInterface objects
-     */
-    public function fetchAll();
-
-    /**
-     * Use a custom factory to create migrations. Useful to inject migration instances with additional dependencies
-     * (e.g. database adapters).
+     * @param $class
      *
-     * @param FactoryInterface $factory
+     * @return \Baleen\Migrations\Migration\MigrationInterface
      */
-    public function setMigrationFactory(FactoryInterface $factory);
+    public function create($class);
 }
