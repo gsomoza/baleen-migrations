@@ -217,6 +217,9 @@ class Collection implements CollectionDirectAccessInterface
         return prev($this->getItems());
     }
 
+    /**
+     * @return static
+     */
     public function getReverse()
     {
         return new static(array_reverse($this->items));

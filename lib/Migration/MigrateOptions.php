@@ -56,14 +56,20 @@ class MigrateOptions
     protected $custom;
 
     /**
+     * @var bool
+     */
+    protected $exceptionOnSkip;
+
+    /**
      * @param $direction
-     * @param bool  $forced
-     * @param bool  $dryRun
+     * @param bool $forced
+     * @param bool $dryRun
+     * @param bool $exceptionOnSkip
      * @param array $custom
      *
      * @throws InvalidArgumentException
      */
-    public function __construct($direction, $forced = false, $dryRun = false, $custom = [])
+    public function __construct($direction, $forced = false, $dryRun = false, $exceptionOnSkip = true, $custom = [])
     {
         $this->allowedDirections = [
             self::DIRECTION_UP,
@@ -72,6 +78,7 @@ class MigrateOptions
         $this->setDirection($direction);
         $this->setForced($forced);
         $this->setDryRun($dryRun);
+        $this->setExceptionOnSkip($exceptionOnSkip);
         $this->setCustom($custom);
     }
 
@@ -145,4 +152,21 @@ class MigrateOptions
     {
         $this->custom = $custom;
     }
+
+    /**
+     * @return boolean
+     */
+    public function isExceptionOnSkip()
+    {
+        return $this->exceptionOnSkip;
+    }
+
+    /**
+     * @param boolean $exceptionOnSkip
+     */
+    public function setExceptionOnSkip($exceptionOnSkip)
+    {
+        $this->exceptionOnSkip = (bool) $exceptionOnSkip;
+    }
+
 }
