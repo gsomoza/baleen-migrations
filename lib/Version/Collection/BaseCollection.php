@@ -1,4 +1,5 @@
 <?php
+
 namespace Baleen\Migrations\Version\Collection;
 
 use Baleen\Migrations\Exception\MigrationException;
@@ -12,7 +13,7 @@ use EBT\Collection\ResourceNotFoundException;
 use Zend\Stdlib\ArrayUtils;
 
 /**
- * Class BaseCollection
+ * Class BaseCollection.
  *
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
@@ -48,7 +49,7 @@ class BaseCollection implements CollectionDirectAccessInterface
         foreach ($versions as $version) {
             if (!$version instanceof Version) {
                 throw new MigrationException(
-                // wait until PHP 5.5 to do Version::class
+                    // wait until PHP 5.5 to do Version::class
                     sprintf('Expected all versions to be of type "%s"', get_class(new Version('1')))
                 );
             }
@@ -93,7 +94,6 @@ class BaseCollection implements CollectionDirectAccessInterface
     {
         return prev($this->getItems());
     }
-
 
     /**
      * @param mixed $idOrVersion

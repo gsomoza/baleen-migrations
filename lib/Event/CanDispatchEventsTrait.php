@@ -1,4 +1,5 @@
 <?php
+
 /*
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -52,7 +53,7 @@ trait CanDispatchEventsTrait
     }
 
     /**
-     * Dispatches an event if an EventDispatcher is available
+     * Dispatches an event if an EventDispatcher is available.
      *
      * @param $name
      * @param Event $event

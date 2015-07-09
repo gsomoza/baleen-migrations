@@ -21,14 +21,14 @@
 namespace Baleen\Migrations\Event;
 
 /**
- * Interface MigrationsEvent
+ * Interface MigrationsEvent.
  *
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
 interface EventInterface
 {
     const COLLECTION_BEFORE = 'baleen.migrate.before';
-    const COLLECTION_AFTER  = 'baleen.migrate.after';
+    const COLLECTION_AFTER = 'baleen.migrate.after';
     const MIGRATION_BEFORE = 'baleen.single.before';
-    const MIGRATION_AFTER  = 'baleen.single.after';
+    const MIGRATION_AFTER = 'baleen.single.after';
 }

@@ -73,6 +73,7 @@ class FileStorage implements StorageInterface
      * Write a collection of versions to the storage file.
      *
      * @param Collection $versions
+     *
      * @return int
      */
     public function writeMigratedVersions(Collection $versions)

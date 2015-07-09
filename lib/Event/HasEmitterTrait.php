@@ -65,6 +65,7 @@ trait HasEmitterTrait
         if (!$this->emitter) {
             $this->emitter = $this->createEmitter();
         }
+
         return $this->emitter;
     }
 
@@ -79,7 +80,7 @@ trait HasEmitterTrait
     }
 
     /**
-     * Must create and return a default emitter
+     * Must create and return a default emitter.
      *
      * @return EmitterInterface
      */

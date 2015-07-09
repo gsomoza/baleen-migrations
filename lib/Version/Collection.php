@@ -22,7 +22,6 @@ namespace Baleen\Migrations\Version;
 
 use Baleen\Migrations\Version;
 use Baleen\Migrations\Version\Collection\BaseCollection;
-use Zend\Stdlib\ArrayUtils;
 use Baleen\Migrations\Exception\MigrationException;
 
 /**
@@ -63,6 +62,7 @@ class Collection extends BaseCollection
 
     /**
      * Adds a new version to the collection if it doesn't exist, or it updates the existing version if it does.
+     *
      * @param Version $version
      */
     public function addOrUpdate(Version $version)
@@ -76,6 +76,7 @@ class Collection extends BaseCollection
 
     /**
      * Merges another collection into this collection, replacing versions that exist and adding those that don't.
+     *
      * @param Collection $collection
      *
      * @return $this
@@ -85,6 +86,7 @@ class Collection extends BaseCollection
         foreach ($collection as $version) {
             $this->addOrUpdate($version);
         }
+
         return $this;
     }
 

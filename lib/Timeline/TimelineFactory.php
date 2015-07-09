@@ -57,9 +57,10 @@ class TimelineFactory
      * be marked accordingly.
      *
      * @param callable $comparator
-     * @param bool $useInternalDispatcher Whether to create an internal event dispatcher.
+     * @param bool     $useInternalDispatcher Whether to create an internal event dispatcher.
      *
      * @return Timeline
+     *
      * @throws MigrationMissingException
      */
     public function create(callable $comparator = null, $useInternalDispatcher = true)
@@ -82,6 +83,7 @@ class TimelineFactory
         if ($useInternalDispatcher) {
             $timeline->setEventDispatcher(new EventDispatcher());
         }
+
         return $timeline;
     }
 }

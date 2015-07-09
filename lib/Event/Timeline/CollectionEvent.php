@@ -27,7 +27,8 @@ use Baleen\Migrations\Version\Collection;
 use Symfony\Component\EventDispatcher\Event;
 
 /**
- * Class CollectionEvent
+ * Class CollectionEvent.
+ *
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
 class CollectionEvent extends MigrationEvent implements EventInterface
@@ -39,9 +40,10 @@ class CollectionEvent extends MigrationEvent implements EventInterface
 
     /**
      * CollectionEvent constructor.
-     * @param Version $targetVersion
+     *
+     * @param Version        $targetVersion
      * @param MigrateOptions $options
-     * @param Collection $versions
+     * @param Collection     $versions
      */
     public function __construct(Version $targetVersion, MigrateOptions $options, Collection $versions)
     {

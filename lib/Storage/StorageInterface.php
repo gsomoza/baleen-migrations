@@ -19,6 +19,7 @@
  */
 
 namespace Baleen\Migrations\Storage;
+
 use Baleen\Migrations\Version\Collection;
 
 /**
@@ -39,6 +40,7 @@ interface StorageInterface
      * Write a collection of versions to the storage file.
      *
      * @param Collection $versions
+     *
      * @return bool Returns false on failure.
      */
     public function writeMigratedVersions(Collection $versions);

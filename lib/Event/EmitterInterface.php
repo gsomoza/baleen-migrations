@@ -23,7 +23,8 @@ namespace Baleen\Migrations\Event;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
- * Interface EmitterInterface
+ * Interface EmitterInterface.
+ *
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
 interface EmitterInterface

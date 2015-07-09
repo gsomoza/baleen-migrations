@@ -39,6 +39,7 @@ class Timeline extends AbstractTimeline
      * @param MigrateOptions $options
      *
      * @return Collection A collection of modified versions
+     *
      * @throws MigrationMissingException
      */
     public function upTowards($goalVersion, MigrateOptions $options = null)
@@ -57,6 +58,7 @@ class Timeline extends AbstractTimeline
      * @param MigrateOptions $options
      *
      * @return Collection A collection of modified versions
+     *
      * @throws \Exception
      */
     public function downTowards($goalVersion, MigrateOptions $options = null)
@@ -91,14 +93,16 @@ class Timeline extends AbstractTimeline
         if ($newGoal !== false) { // unless we're at the end of the queue (no migrations can go down)
             $this->downTowards($newGoal, $options);
         }
+
         return $this->versions;
     }
 
     /**
      * @param \Baleen\Migrations\Version $version
-     * @param MigrateOptions $options
+     * @param MigrateOptions             $options
      *
      * @return Version|null
+     *
      * @throws MigrationException
      */
     public function runSingle($version, MigrateOptions $options)
@@ -121,7 +125,8 @@ class Timeline extends AbstractTimeline
                     $version->getId()
                 ));
             }
-            return null; // skip
+
+            return; // skip
         }
 
         // Dispatch MIGRATE_BEFORE

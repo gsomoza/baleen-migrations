@@ -1,4 +1,5 @@
 <?php
+
 /*
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -29,18 +30,16 @@ use Baleen\Migrations\Version;
 use Baleen\Migrations\Version\Collection;
 
 /**
- * Dispatches Timeline events
- *
- * @package Baleen\Migrations\Timeline
+ * Dispatches Timeline events.
  */
 class TimelineEmitter implements EmitterInterface
 {
     use CanDispatchEventsTrait;
 
     /**
-     * @param Version $targetVersion
+     * @param Version        $targetVersion
      * @param MigrateOptions $options
-     * @param Collection $versions
+     * @param Collection     $versions
      */
     public function dispatchCollectionBefore(Version $targetVersion, MigrateOptions $options, Collection $versions)
     {

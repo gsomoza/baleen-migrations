@@ -36,7 +36,6 @@ use Baleen\Migrations\Version\Comparator\DefaultComparator;
  */
 abstract class AbstractTimeline implements TimelineInterface
 {
-
     use HasEmitterTrait;
 
     /** @var \League\Tactician\CommandBus */
@@ -71,8 +70,9 @@ abstract class AbstractTimeline implements TimelineInterface
     }
 
     /**
-     * @param Version $version
+     * @param Version        $version
      * @param MigrateOptions $options
+     *
      * @return bool
      */
     protected function shouldMigrate(Version $version, MigrateOptions $options)
@@ -83,7 +83,7 @@ abstract class AbstractTimeline implements TimelineInterface
     }
 
     /**
-     * Must create and return a default specialised dispatcher
+     * Must create and return a default specialised dispatcher.
      *
      * @return \Baleen\Migrations\Event\EmitterInterface
      */

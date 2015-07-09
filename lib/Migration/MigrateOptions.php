@@ -62,9 +62,9 @@ class MigrateOptions
 
     /**
      * @param $direction
-     * @param bool $forced
-     * @param bool $dryRun
-     * @param bool $exceptionOnSkip
+     * @param bool  $forced
+     * @param bool  $dryRun
+     * @param bool  $exceptionOnSkip
      * @param array $custom
      *
      * @throws InvalidArgumentException
@@ -170,7 +170,7 @@ class MigrateOptions
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isExceptionOnSkip()
     {
@@ -178,11 +178,10 @@ class MigrateOptions
     }
 
     /**
-     * @param boolean $exceptionOnSkip
+     * @param bool $exceptionOnSkip
      */
     public function setExceptionOnSkip($exceptionOnSkip)
     {
         $this->exceptionOnSkip = (bool) $exceptionOnSkip;
     }
-
 }
