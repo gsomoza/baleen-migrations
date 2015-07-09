@@ -74,6 +74,7 @@ class FileStorageTest extends BaseTestCase
      */
     public function testWriteMigratedVersions($file, $versions)
     {
+        $versions = new Collection($versions);
         $instance = new FileStorage($file);
         $instance->writeMigratedVersions($versions);
         $this->assertFileExists($file);
@@ -81,7 +82,7 @@ class FileStorageTest extends BaseTestCase
         foreach ($contents as $line) {
             $line = trim($line);
             if (!empty($line)) {
-                $this->assertTrue(!empty($versions[$line]), sprintf("File had version '%s', which was not registered in the original collection", $line));
+                $this->assertTrue($versions->has($line), sprintf("File had version '%s', which was not registered in the original collection", $line));
             }
         }
         @unlink($file);

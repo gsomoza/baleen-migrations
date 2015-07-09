@@ -20,6 +20,9 @@
 
 namespace Baleen\Migrations\Repository;
 
+use Baleen\Migrations\Migration\Factory\FactoryInterface;
+use Baleen\Migrations\Migration\MigrationInterface;
+
 /**
  * In charge of loading Migration files and instantiating them.
  *
@@ -28,9 +31,18 @@ namespace Baleen\Migrations\Repository;
 interface RepositoryInterface
 {
     /**
-     * Returns all migrations available to the repository.
+     * Returns all migrations available to the repository. It must use a factory (default or supplied by
+     * 'setMigrationFactory' to instantiate a Migration.
      *
-     * @return array Array of MigrationInterface
+     * @return MigrationInterface[] Array of MigrationInterface objects
      */
     public function fetchAll();
+
+    /**
+     * Use a custom factory to create migrations. Useful to inject migration instances with additional dependencies
+     * (e.g. database adapters).
+     *
+     * @param FactoryInterface $factory
+     */
+    public function setMigrationFactory(FactoryInterface $factory);
 }

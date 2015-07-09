@@ -18,30 +18,55 @@
  * <https://github.com/baleen/migrations>.
  */
 
-namespace Baleen\Migrations\Storage;
+namespace Baleen\Migrations\Event\Timeline;
 
-use Baleen\Migrations\Version\Collection;
+use Baleen\Migrations\Event\EventInterface;
+use Baleen\Migrations\Migration\MigrateOptions;
+use Baleen\Migrations\Version;
+use Symfony\Component\EventDispatcher\Event;
 
 /**
- * Provides a collection of Versions that have been migrated.
+ * Class MigrationEvent.
  *
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
-interface StorageInterface
+class MigrationEvent extends Event implements EventInterface
 {
     /**
-     * Reads versions from the storage file.
-     *
-     * @return array
+     * @var MigrateOptions
      */
-    public function readMigratedVersions();
+    protected $options;
 
     /**
-     * Write a collection of versions to the storage file.
-     *
-     * @param Collection $versions
-     *
-     * @return bool Returns false on failure.
+     * @var Version
      */
-    public function writeMigratedVersions(Collection $versions);
+    protected $version;
+
+    /**
+     * CollectionEvent constructor.
+     *
+     * @param Version        $version
+     * @param MigrateOptions $options
+     */
+    public function __construct(Version $version, MigrateOptions $options)
+    {
+        $this->options = $options;
+        $this->version = $version;
+    }
+
+    /**
+     * @return MigrateOptions
+     */
+    public function getOptions()
+    {
+        return $this->options;
+    }
+
+    /**
+     * @return Version
+     */
+    public function getVersion()
+    {
+        return $this->version;
+    }
 }

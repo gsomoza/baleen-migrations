@@ -18,30 +18,31 @@
  * <https://github.com/baleen/migrations>.
  */
 
-namespace Baleen\Migrations\Storage;
+namespace Baleen\Migrations\Migration\Factory;
 
-use Baleen\Migrations\Version\Collection;
+use Baleen\Migrations\Exception\InvalidArgumentException;
 
 /**
- * Provides a collection of Versions that have been migrated.
- *
- * @author Gabriel Somoza <gabriel@strategery.io>
+ * @inheritdoc
  */
-interface StorageInterface
+class SimpleFactory implements FactoryInterface
 {
     /**
-     * Reads versions from the storage file.
+     * @inheritdoc
      *
-     * @return array
+     * @param $class
+     *
+     * @throws InvalidArgumentException
      */
-    public function readMigratedVersions();
+    public function create($class)
+    {
+        $class = (string) $class;
+        if (empty($class)) {
+            throw new InvalidArgumentException(
+                'Cannot create a migration from an empty class name!'
+            );
+        }
 
-    /**
-     * Write a collection of versions to the storage file.
-     *
-     * @param Collection $versions
-     *
-     * @return bool Returns false on failure.
-     */
-    public function writeMigratedVersions(Collection $versions);
+        return new $class();
+    }
 }

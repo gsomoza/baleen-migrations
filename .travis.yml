@@ -4,7 +4,6 @@ sudo: false
 language: php
 
 php:
-  - 5.4
   - 5.5
   - 5.6
   - 7.0
@@ -14,7 +13,7 @@ matrix:
   allow_failures:
     - php: 7.0
   include:
-    - php: 5.4
+    - php: 5.5
       env: deps=low
 
 env:
@@ -27,7 +26,7 @@ install:
 
 script:
   - mkdir -p build/logs
-  - ./vendor/bin/phpunit
+  - ./vendor/bin/phpunit --coverage-clover build/logs/coverage.xml
 
 before_install:
   - composer self-update
@@ -36,6 +35,5 @@ before_install:
   - if [[ ! $GITHUB_TOKEN ]]; then flag=--prefer-source; fi
 
 after_script:
-  - if [[ $TRAVIS_PHP_VERSION = '5.6' ]]; then php vendor/bin/coveralls -v ; fi
   - wget https://scrutinizer-ci.com/ocular.phar
-  - php ocular.phar code-coverage:upload --format=php-clover build/logs/clover.xml
+  - php ocular.phar code-coverage:upload --format=php-clover build/logs/coverage.xml

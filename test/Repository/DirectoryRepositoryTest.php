@@ -53,7 +53,8 @@ class DirectoryRepositoryTest extends BaseTestCase
      */
     public function testFetchAll($directory, $count, $regex = DirectoryRepository::PATTERN_DEFAULT)
     {
-        $instance = new DirectoryRepository($directory, $regex);
+        $instance = new DirectoryRepository($directory);
+        $instance->setClassNameRegex($regex);
         $migrations = $instance->fetchAll();
         $this->assertCount($count, $migrations);
     }

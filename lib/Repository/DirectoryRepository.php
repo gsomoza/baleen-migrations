@@ -21,6 +21,8 @@
 namespace Baleen\Migrations\Repository;
 
 use Baleen\Migrations\Exception\InvalidArgumentException;
+use Baleen\Migrations\Migration\Factory\FactoryInterface;
+use Baleen\Migrations\Migration\Factory\SimpleFactory;
 use Baleen\Migrations\Migration\MigrationInterface;
 use Baleen\Migrations\Version;
 use Zend\Code\Scanner\DerivedClassScanner;
@@ -44,20 +46,29 @@ class DirectoryRepository implements RepositoryInterface
     private $classNameRegex;
 
     /**
+     * @var FactoryInterface
+     */
+    private $factory;
+
+    /**
      * @param $path
-     * @param string $classNameRegex Regexp used to extract ID from a Migration class name. The first match must be
-     *                               the ID.
+     * @param FactoryInterface $migrationFactory
      *
      * @throws InvalidArgumentException
      */
-    public function __construct($path, $classNameRegex = self::PATTERN_DEFAULT)
+    public function __construct($path, FactoryInterface $migrationFactory = null)
     {
         if (empty($path) || !is_dir($path)) {
             throw new InvalidArgumentException('Argument "path" is empty or directory does not exist.');
         }
         $this->scanner = new DirectoryScanner($path);
 
-        $this->classNameRegex = $classNameRegex;
+        $this->classNameRegex = self::PATTERN_DEFAULT;
+
+        if (null === $migrationFactory) {
+            $migrationFactory = new SimpleFactory();
+        }
+        $this->factory = $migrationFactory;
     }
 
     /**
@@ -72,13 +83,12 @@ class DirectoryRepository implements RepositoryInterface
         foreach ($classes as $class) {
             /* @var DerivedClassScanner $class */
             $className = $class->getName();
-            if ($class->isInstantiable()) {
-                $migration = new $className();
-                $matches = [];
-                if ($migration instanceof MigrationInterface
-                    && preg_match($this->classNameRegex, $className, $matches)
-                    && isset($matches[1])
-                ) {
+            $matches = [];
+            if ($class->isInstantiable()
+                && preg_match($this->classNameRegex, $className, $matches)
+                && isset($matches[1])) {
+                $migration = $this->factory->create($className);
+                if ($migration instanceof MigrationInterface) {
                     /* @var \Baleen\Migrations\Migration\MigrationInterface $migration */
                     $version = new Version($matches[1]);
                     $version->setMigration($migration);
@@ -88,5 +98,29 @@ class DirectoryRepository implements RepositoryInterface
         }
 
         return $versions;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function setMigrationFactory(FactoryInterface $factory)
+    {
+        $this->factory = $factory;
+    }
+
+    /**
+     * @return string
+     */
+    public function getClassNameRegex()
+    {
+        return $this->classNameRegex;
+    }
+
+    /**
+     * @param string $classNameRegex
+     */
+    public function setClassNameRegex($classNameRegex)
+    {
+        $this->classNameRegex = (string) $classNameRegex;
     }
 }

@@ -18,30 +18,24 @@
  * <https://github.com/baleen/migrations>.
  */
 
-namespace Baleen\Migrations\Storage;
+namespace Baleen\Migrations\Event;
 
-use Baleen\Migrations\Version\Collection;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
- * Provides a collection of Versions that have been migrated.
+ * Interface EmitterInterface.
  *
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
-interface StorageInterface
+interface EmitterInterface
 {
     /**
-     * Reads versions from the storage file.
-     *
-     * @return array
+     * @param EventDispatcherInterface $eventDispatcher
      */
-    public function readMigratedVersions();
+    public function setEventDispatcher(EventDispatcherInterface $eventDispatcher);
 
     /**
-     * Write a collection of versions to the storage file.
-     *
-     * @param Collection $versions
-     *
-     * @return bool Returns false on failure.
+     * @return EventDispatcherInterface
      */
-    public function writeMigratedVersions(Collection $versions);
+    public function getEventDispatcher();
 }

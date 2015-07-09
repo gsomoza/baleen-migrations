@@ -18,30 +18,17 @@
  * <https://github.com/baleen/migrations>.
  */
 
-namespace Baleen\Migrations\Storage;
-
-use Baleen\Migrations\Version\Collection;
+namespace Baleen\Migrations\Event;
 
 /**
- * Provides a collection of Versions that have been migrated.
+ * Interface MigrationsEvent.
  *
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
-interface StorageInterface
+interface EventInterface
 {
-    /**
-     * Reads versions from the storage file.
-     *
-     * @return array
-     */
-    public function readMigratedVersions();
-
-    /**
-     * Write a collection of versions to the storage file.
-     *
-     * @param Collection $versions
-     *
-     * @return bool Returns false on failure.
-     */
-    public function writeMigratedVersions(Collection $versions);
+    const COLLECTION_BEFORE = 'baleen.migrate.before';
+    const COLLECTION_AFTER = 'baleen.migrate.after';
+    const MIGRATION_BEFORE = 'baleen.single.before';
+    const MIGRATION_AFTER = 'baleen.single.after';
 }

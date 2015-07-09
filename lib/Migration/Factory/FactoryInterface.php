@@ -18,30 +18,21 @@
  * <https://github.com/baleen/migrations>.
  */
 
-namespace Baleen\Migrations\Storage;
-
-use Baleen\Migrations\Version\Collection;
+namespace Baleen\Migrations\Migration\Factory;
 
 /**
- * Provides a collection of Versions that have been migrated.
+ * Interface for a Migrations Factory.
  *
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
-interface StorageInterface
+interface FactoryInterface
 {
     /**
-     * Reads versions from the storage file.
+     * Creates a Migration based on a class name.
      *
-     * @return array
+     * @param $class
+     *
+     * @return \Baleen\Migrations\Migration\MigrationInterface
      */
-    public function readMigratedVersions();
-
-    /**
-     * Write a collection of versions to the storage file.
-     *
-     * @param Collection $versions
-     *
-     * @return bool Returns false on failure.
-     */
-    public function writeMigratedVersions(Collection $versions);
+    public function create($class);
 }

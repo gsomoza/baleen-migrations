@@ -22,53 +22,23 @@ namespace Baleen\Migrations;
 
 use Baleen\Migrations\Exception\MigrationException;
 use Baleen\Migrations\Exception\MigrationMissingException;
-use Baleen\Migrations\Migration\Command\MigrationBusFactory;
-use Baleen\Migrations\Migration\Command\MigrateCommand;
-use Baleen\Migrations\Migration\MigrationInterface;
 use Baleen\Migrations\Migration\MigrateOptions;
-use Baleen\Migrations\Timeline\TimelineInterface;
+use Baleen\Migrations\Timeline\AbstractTimeline;
+use Baleen\Migrations\Timeline\TimelineEmitter;
 use Baleen\Migrations\Version\Collection;
-use Baleen\Migrations\Version\Comparator\DefaultComparator;
-use League\Tactician\CommandBus;
 
 /**
  * @author Gabriel Somoza <gabriel@strategery.io>
+ *
+ * @method TimelineEmitter getEmitter()
  */
-class Timeline implements TimelineInterface
+class Timeline extends AbstractTimeline
 {
-    protected $allowedDirections;
-
-    /** @var Collection */
-    protected $versions;
-
-    /** @var callable */
-    protected $comparator;
-
-    /** @var CommandBus */
-    protected $migrationBus;
-
-    /**
-     * @param array|Collection $versions
-     * @param callable         $comparator
-     */
-    public function __construct($versions, callable $comparator = null)
-    {
-        $this->migrationBus = MigrationBusFactory::create();
-
-        if (is_array($versions)) {
-            $versions = new Collection($versions);
-        }
-        if (null === $comparator) {
-            $comparator = new DefaultComparator();
-        }
-        $versions->sortWith($comparator);
-        $this->comparator = $comparator;
-        $this->versions = $versions;
-    }
-
     /**
      * @param Version|string $goalVersion
      * @param MigrateOptions $options
+     *
+     * @return Collection A collection of modified versions
      *
      * @throws MigrationMissingException
      */
@@ -76,31 +46,18 @@ class Timeline implements TimelineInterface
     {
         if (null === $options) {
             $options = new MigrateOptions(MigrateOptions::DIRECTION_UP);
+            $options->setExceptionOnSkip(false);
         }
-        $goalVersion = $this->versions->getOrException($goalVersion);
         $options->setDirection(MigrateOptions::DIRECTION_UP); // make sure its right
-        foreach ($this->versions as $version) {
-            if ($options->isForced() || !$version->isMigrated()) {
-                $migration = $version->getMigration();
-                if (null === $migration) {
-                    throw new MigrationMissingException(
-                        'Migration object missing for registered version "%s".',
-                        $version->getId()
-                    );
-                }
-                $this->doRun($migration, $options);
-                $version->setMigrated(true); // won't get executed if an exception is thrown
-            }
-            $goalReached = call_user_func($this->comparator, $goalVersion, $version) === 0;
-            if ($goalReached) {
-                break;
-            }
-        }
+
+        return $this->runCollection($goalVersion, $options, $this->versions);
     }
 
     /**
      * @param Version|string $goalVersion
      * @param MigrateOptions $options
+     *
+     * @return Collection A collection of modified versions
      *
      * @throws \Exception
      */
@@ -108,27 +65,10 @@ class Timeline implements TimelineInterface
     {
         if (null === $options) {
             $options = new MigrateOptions(MigrateOptions::DIRECTION_DOWN);
+            $options->setExceptionOnSkip(false);
         }
-        $goalVersion = $this->versions->getOrException($goalVersion);
         $options->setDirection(MigrateOptions::DIRECTION_DOWN); // make sure its right
-        $reversed = $this->versions->getReverse();
-        foreach ($reversed as $version) {
-            /** @var Version $version */
-            if ($options->isForced() || $version->isMigrated()) {
-                if (null === $version->getMigration()) {
-                    throw new MigrationException(
-                        'Migration object missing for registered version "%s".',
-                        $version->getId()
-                    );
-                }
-                $this->doRun($version->getMigration(), $options);
-                $version->setMigrated(false); // won't get executed if an exception is thrown
-            }
-            $goalReached = call_user_func($this->comparator, $goalVersion, $version) === 0;
-            if ($goalReached) {
-                break;
-            }
-        }
+        return $this->runCollection($goalVersion, $options, $this->versions->getReverse());
     }
 
     /**
@@ -138,66 +78,68 @@ class Timeline implements TimelineInterface
      * @param $goalVersion
      * @param \Baleen\Migrations\Migration\MigrateOptions $options
      *
-     * @return mixed
+     * @return Collection
      */
     public function goTowards($goalVersion, MigrateOptions $options = null)
     {
         if (null === $options) {
             $options = new MigrateOptions(MigrateOptions::DIRECTION_UP);
+            $options->setExceptionOnSkip(false);
         }
         $this->versions->rewind();
         $this->upTowards($goalVersion, $options);
         $this->versions->next(); // advance to the next element...
         $newGoal = $this->versions->current(); // ... and make it the goal for downTowards
-        if ($newGoal !== false) { // are we at the end of the array?
+        if ($newGoal !== false) { // unless we're at the end of the queue (no migrations can go down)
             $this->downTowards($newGoal, $options);
         }
+
+        return $this->versions;
     }
 
     /**
      * @param \Baleen\Migrations\Version $version
-     * @param MigrateOptions  $options
+     * @param MigrateOptions             $options
+     *
+     * @return Version|null
      *
      * @throws MigrationException
      */
     public function runSingle($version, MigrateOptions $options)
     {
-        switch ($options->getDirection()) {
-            case MigrateOptions::DIRECTION_UP:
-                if (!$options->isForced() && $version->isMigrated()) {
-                    throw new MigrationException(
-                        sprintf(
-                            'Cowardly refusing to run up() on a version that has already been migrated (%s).',
-                            $version->getId()
-                        )
-                    );
-                }
-                break;
-
-            case MigrateOptions::DIRECTION_DOWN:
-                if (!$options->isForced() && !$version->isMigrated()) {
-                    throw new MigrationException(
-                        sprintf(
-                            "Cowardly refusing to run down() on a version that hasn't been migrated yet (%s).",
-                            $version->getId()
-                        )
-                    );
-                }
-                break;
-            default:
+        $version = $this->versions->getOrException($version);
+        $migration = $version->getMigration();
+        if (null === $migration) {
+            throw new MigrationException(
+                'Migration object missing for registered version "%s".',
+                $version->getId()
+            );
         }
-        $this->doRun($version->getMigration(), $options);
-    }
 
-    /**
-     * @param MigrationInterface $migration
-     * @param MigrateOptions     $options
-     *
-     * @return bool
-     */
-    protected function doRun(MigrationInterface $migration, MigrateOptions $options)
-    {
-        $command = new MigrateCommand($migration, $options);
-        $this->migrationBus->handle($command);
+        if (!$this->shouldMigrate($version, $options)) {
+            if ($options->isExceptionOnSkip()) {
+                throw new MigrationException(sprintf(
+                    'Cowardly refusing to run %s() on a version is already "%s" (ID: %s).',
+                    $options->getDirection(),
+                    $options->getDirection(),
+                    $version->getId()
+                ));
+            }
+
+            return; // skip
+        }
+
+        // Dispatch MIGRATE_BEFORE
+        $this->getEmitter()->dispatchMigrationBefore($version, $options);
+
+        $this->doRun($migration, $options);
+
+        // won't get executed if an exception is thrown
+        $version->setMigrated($options->isDirectionUp());
+
+        // Dispatch MIGRATE_AFTER
+        $this->getEmitter()->dispatchMigrationAfter($version, $options);
+
+        return $version;
     }
 }
