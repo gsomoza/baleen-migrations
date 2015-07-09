@@ -4,10 +4,12 @@ namespace Baleen\Migrations\Event\Timeline;
 
 use Baleen\Migrations\Event\EventInterface;
 use Baleen\Migrations\Migration\MigrateOptions;
+use Baleen\Migrations\Migration\MigrationInterface;
 use Baleen\Migrations\Version;
 use Baleen\Migrations\Version\Collection;
+use Symfony\Component\EventDispatcher\Event;
 
-class MigrationEvent extends \Symfony\Component\EventDispatcher\Event implements EventInterface
+class MigrationEvent extends Event implements EventInterface
 {
     /**
      * @var MigrateOptions
@@ -15,25 +17,19 @@ class MigrationEvent extends \Symfony\Component\EventDispatcher\Event implements
     protected $options;
 
     /**
-     * @var Collection
-     */
-    protected $versions;
-
-    /**
      * @var Version
      */
-    protected $goal;
+    protected $version;
 
     /**
-     * MigrationEvent constructor.
-     * @param Version $goal
+     * CollectionEvent constructor.
+     * @param Version $version
      * @param MigrateOptions $options
-     * @param Collection $versions
      */
-    public function __construct(Version $goal, MigrateOptions $options, Collection &$versions)
+    public function __construct(Version $version, MigrateOptions $options)
     {
         $this->options = $options;
-        $this->versions = $versions;
+        $this->version = $version;
     }
 
     /**
@@ -45,18 +41,10 @@ class MigrationEvent extends \Symfony\Component\EventDispatcher\Event implements
     }
 
     /**
-     * @return Collection
-     */
-    public function getVersions()
-    {
-        return $this->versions;
-    }
-
-    /**
      * @return Version
      */
-    public function getGoal()
+    public function getVersion()
     {
-        return $this->goal;
+        return $this->version;
     }
 }

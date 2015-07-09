@@ -27,8 +27,8 @@ namespace Baleen\Migrations\Event;
  */
 interface EventInterface
 {
-    const MIGRATE_BEFORE = 'baleen.migrate.before';
-    const MIGRATE_AFTER  = 'baleen.migrate.after';
-    const SINGLE_BEFORE = 'baleen.single.before';
-    const SINGLE_AFTER  = 'baleen.single.after';
+    const COLLECTION_BEFORE = 'baleen.migrate.before';
+    const COLLECTION_AFTER  = 'baleen.migrate.after';
+    const MIGRATION_BEFORE = 'baleen.single.before';
+    const MIGRATION_AFTER  = 'baleen.single.after';
 }

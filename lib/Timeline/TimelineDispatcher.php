@@ -22,6 +22,7 @@ namespace Baleen\Migrations\Timeline;
 use Baleen\Migrations\Event\CanDispatchEventsTrait;
 use Baleen\Migrations\Event\EventInterface;
 use Baleen\Migrations\Event\SpecialisedDispatcher;
+use Baleen\Migrations\Event\Timeline\CollectionEvent;
 use Baleen\Migrations\Event\Timeline\MigrationEvent;
 use Baleen\Migrations\Migration\MigrateOptions;
 use Baleen\Migrations\Version;
@@ -37,19 +38,31 @@ class TimelineDispatcher implements SpecialisedDispatcher
     use CanDispatchEventsTrait;
 
     /**
-     * @param Version $goal
+     * @param Version $targetVersion
      * @param MigrateOptions $options
      * @param Collection $versions
      */
-    public function dispatchMigrateBefore(Version $goal, MigrateOptions $options, Collection &$versions)
+    public function dispatchCollectionBefore(Version $targetVersion, MigrateOptions $options, Collection $versions)
     {
-        $event = new MigrationEvent($goal, $options, $versions);
-        $this->dispatchEvent(EventInterface::MIGRATE_BEFORE, $event);
+        $event = new CollectionEvent($targetVersion, $options, $versions);
+        $this->dispatchEvent(EventInterface::COLLECTION_BEFORE, $event);
     }
 
-    public function dispatchMigrateAfter(Version $goal, MigrateOptions $options, Collection &$versions)
+    public function dispatchCollectionAfter(Version $targetVersion, MigrateOptions $options, Collection $versions)
     {
-        $event = new MigrationEvent($goal, $options, $versions);
-        $this->dispatchEvent(EventInterface::MIGRATE_AFTER, $event);
+        $event = new CollectionEvent($targetVersion, $options, $versions);
+        $this->dispatchEvent(EventInterface::COLLECTION_AFTER, $event);
+    }
+
+    public function dispatchMigrationBefore(Version $version, MigrateOptions $options)
+    {
+        $event = new MigrationEvent($version, $options);
+        $this->dispatchEvent(EventInterface::MIGRATION_BEFORE, $event);
+    }
+
+    public function dispatchMigrationAfter(Version $version, MigrateOptions $options)
+    {
+        $event = new MigrationEvent($version, $options);
+        $this->dispatchEvent(EventInterface::MIGRATION_AFTER, $event);
     }
 }

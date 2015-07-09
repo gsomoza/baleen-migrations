@@ -36,12 +36,12 @@ use League\Tactician\CommandBus;
 
 /**
  * @author Gabriel Somoza <gabriel@strategery.io>
+ *
+ * @method TimelineDispatcher getDispatcher()
  */
 class Timeline implements TimelineInterface
 {
-    use HasSpecialisedDispatcherTrait {
-        getDispatcher as traitGetDispatcher;
-    }
+    use HasSpecialisedDispatcherTrait;
 
     /** @var string[] */
     protected $allowedDirections;
@@ -86,22 +86,9 @@ class Timeline implements TimelineInterface
             $options = new MigrateOptions(MigrateOptions::DIRECTION_UP);
             $options->setExceptionOnSkip(false);
         }
-        $goalVersion = $this->versions->getOrException($goalVersion);
         $options->setDirection(MigrateOptions::DIRECTION_UP); // make sure its right
 
-        // dispatch MIGRATE_BEFORE
-        $this->getDispatcher()->dispatchMigrateBefore($goalVersion, $options, $this->versions);
-
-        foreach ($this->versions as $version) {
-            $this->runSingle($version, $options);
-            $goalReached = call_user_func($this->comparator, $goalVersion, $version) === 0;
-            if ($goalReached) {
-                break;
-            }
-        }
-
-        // dispatch MIGRATE_AFTER
-        $this->getDispatcher()->dispatchMigrateAfter($goalVersion, $options, $this->versions);
+        $this->runCollection($goalVersion, $options, $this->versions);
     }
 
     /**
@@ -116,23 +103,8 @@ class Timeline implements TimelineInterface
             $options = new MigrateOptions(MigrateOptions::DIRECTION_DOWN);
             $options->setExceptionOnSkip(false);
         }
-        $goalVersion = $this->versions->getOrException($goalVersion);
         $options->setDirection(MigrateOptions::DIRECTION_DOWN); // make sure its right
-        $reversed = $this->versions->getReverse();
-
-        // dispatch MIGRATE_BEFORE
-        $this->getDispatcher()->dispatchMigrateBefore($goalVersion, $options, $reversed);
-
-        foreach ($reversed as $version) {
-            $this->runSingle($version, $options);
-            $goalReached = call_user_func($this->comparator, $goalVersion, $version) === 0;
-            if ($goalReached) {
-                break;
-            }
-        }
-
-        // dispatch MIGRATE_AFTER
-        $this->getDispatcher()->dispatchMigrateAfter($goalVersion, $options, $reversed);
+        $this->runCollection($goalVersion, $options, $this->versions->getReverse());
     }
 
     /**
@@ -154,7 +126,7 @@ class Timeline implements TimelineInterface
         $this->upTowards($goalVersion, $options);
         $this->versions->next(); // advance to the next element...
         $newGoal = $this->versions->current(); // ... and make it the goal for downTowards
-        if ($newGoal !== false) { // are we at the end of the array?
+        if ($newGoal !== false) { // unless we're at the end of the queue (no migrations can go down)
             $this->downTowards($newGoal, $options);
         }
     }
@@ -210,8 +182,14 @@ class Timeline implements TimelineInterface
             return;
         }
 
+        // Dispatch MIGRATE_BEFORE
+        $this->getDispatcher()->dispatchMigrationBefore($version, $options);
+
         $this->doRun($migration, $options);
         $version->setMigrated($isMigratedResult); // won't get executed if an exception is thrown
+
+        // Dispatch MIGRATE_AFTER
+        $this->getDispatcher()->dispatchMigrationAfter($version, $options);
     }
 
     /**
@@ -237,10 +215,27 @@ class Timeline implements TimelineInterface
     }
 
     /**
-     * @return TimelineDispatcher
+     * @param $goalVersion
+     * @param MigrateOptions $options
+     * @param $collection
+     * @throws MigrationException
      */
-    protected function getDispatcher()
+    protected function runCollection($goalVersion, MigrateOptions $options, Collection $collection)
     {
-        return $this->traitGetDispatcher();
+        $goalVersion = $this->versions->getOrException($goalVersion);
+
+        // dispatch COLLECTION_BEFORE
+        $this->getDispatcher()->dispatchCollectionBefore($goalVersion, $options, $collection);
+
+        foreach ($collection as $version) {
+            $this->runSingle($version, $options);
+            $goalReached = call_user_func($this->comparator, $goalVersion, $version) === 0;
+            if ($goalReached) {
+                break;
+            }
+        }
+
+        // dispatch COLLECTION_AFTER
+        $this->getDispatcher()->dispatchCollectionAfter($goalVersion, $options, $collection);
     }
 }
