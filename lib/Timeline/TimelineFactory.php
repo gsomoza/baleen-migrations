@@ -23,6 +23,7 @@ namespace Baleen\Migrations\Timeline;
 use Baleen\Migrations\Exception\MigrationMissingException;
 use Baleen\Migrations\Timeline;
 use Baleen\Migrations\Version\Collection;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 
 /**
  * @author Gabriel Somoza <gabriel@strategery.io>
@@ -56,12 +57,12 @@ class TimelineFactory
      * be marked accordingly.
      *
      * @param callable $comparator
+     * @param bool $useInternalDispatcher Whether to create an internal event dispatcher.
      *
      * @return Timeline
-     *
      * @throws MigrationMissingException
      */
-    public function create(callable $comparator = null)
+    public function create(callable $comparator = null, $useInternalDispatcher = true)
     {
         foreach ($this->migratedVersions as $version) {
             if ($this->availableVersions->has($version)) {
@@ -77,6 +78,10 @@ class TimelineFactory
             }
         }
 
-        return new Timeline($this->availableVersions, $comparator);
+        $timeline = new Timeline($this->availableVersions, $comparator);
+        if ($useInternalDispatcher) {
+            $timeline->setEventDispatcher(new EventDispatcher());
+        }
+        return $timeline;
     }
 }

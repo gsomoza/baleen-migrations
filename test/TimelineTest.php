@@ -19,9 +19,14 @@
 
 namespace BaleenTest\Migrations;
 
+use Baleen\Migrations\Event\EventInterface;
+use Baleen\Migrations\Event\Timeline\MigrationEvent;
+use Baleen\Migrations\Migration\MigrateOptions;
+use Baleen\Migrations\Migration\MigrationInterface;
 use Baleen\Migrations\Version as V;
 use Baleen\Migrations\Version\Comparator\DefaultComparator;
 use Mockery as m;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 
 /**
  * @author Gabriel Somoza <gabriel@strategery.io>
@@ -233,5 +238,38 @@ class TimelineTest extends BaseTestCase
         $prop->setAccessible(true);
         $versions = $prop->getValue($instance);
         return $versions->toArray();
+    }
+
+    /**
+     * Integration tests to see if Timeline can emmit events
+     */
+    public function testEmitsEvents()
+    {
+        $self = $this;
+        $listened = false;
+        $version = new V('1');
+        $migration = m::mock(MigrationInterface::class);
+        $migration->shouldReceive('up')->once();
+        $version->setMigration($migration);
+        $options = new MigrateOptions(MigrateOptions::DIRECTION_UP);
+
+        $dispatcher = new EventDispatcher();
+        $dispatcher->addListener(
+            EventInterface::MIGRATION_BEFORE,
+            function($event) use ($version, $options, &$listened, $self) {
+                $listened = true;
+                $self->assertInstanceOf(EventInterface::class, $event);
+                $self->assertInstanceOf(MigrationEvent::class, $event);
+                /** @var MigrationEvent $event */
+                $self->assertSame($options, $event->getOptions());
+                $self->assertSame($version, $event->getVersion());
+            }
+        );
+
+        $timeline = $this->getInstance([$version]);
+        $timeline->setEventDispatcher($dispatcher);
+        $timeline->runSingle($version, $options);
+
+        $this->assertTrue($listened, 'Expected Timeline to dispatch EventInterface::MIGRATION_BEFORE');
     }
 }
