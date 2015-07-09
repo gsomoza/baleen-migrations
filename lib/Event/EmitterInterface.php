@@ -5,10 +5,10 @@ namespace Baleen\Migrations\Event;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
- * Interface SpecialisedDispatcher
+ * Interface EmitterInterface
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
-interface SpecialisedDispatcher
+interface EmitterInterface
 {
     /**
      * @param EventDispatcherInterface $eventDispatcher

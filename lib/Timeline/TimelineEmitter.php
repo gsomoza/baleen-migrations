@@ -21,7 +21,7 @@ namespace Baleen\Migrations\Timeline;
 
 use Baleen\Migrations\Event\CanDispatchEventsTrait;
 use Baleen\Migrations\Event\EventInterface;
-use Baleen\Migrations\Event\SpecialisedDispatcher;
+use Baleen\Migrations\Event\EmitterInterface;
 use Baleen\Migrations\Event\Timeline\CollectionEvent;
 use Baleen\Migrations\Event\Timeline\MigrationEvent;
 use Baleen\Migrations\Migration\MigrateOptions;
@@ -33,7 +33,7 @@ use Baleen\Migrations\Version\Collection;
  *
  * @package Baleen\Migrations\Timeline
  */
-class TimelineDispatcher implements SpecialisedDispatcher
+class TimelineEmitter implements EmitterInterface
 {
     use CanDispatchEventsTrait;
 

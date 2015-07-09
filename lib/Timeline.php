@@ -20,15 +20,15 @@
 
 namespace Baleen\Migrations;
 
-use Baleen\Migrations\Event\HasSpecialisedDispatcherTrait;
-use Baleen\Migrations\Event\SpecialisedDispatcher;
+use Baleen\Migrations\Event\HasEmitterTrait;
+use Baleen\Migrations\Event\EmitterInterface;
 use Baleen\Migrations\Exception\MigrationException;
 use Baleen\Migrations\Exception\MigrationMissingException;
 use Baleen\Migrations\Migration\Command\MigrationBusFactory;
 use Baleen\Migrations\Migration\Command\MigrateCommand;
 use Baleen\Migrations\Migration\MigrationInterface;
 use Baleen\Migrations\Migration\MigrateOptions;
-use Baleen\Migrations\Timeline\TimelineDispatcher;
+use Baleen\Migrations\Timeline\TimelineEmitter;
 use Baleen\Migrations\Timeline\TimelineInterface;
 use Baleen\Migrations\Version\Collection;
 use Baleen\Migrations\Version\Comparator\DefaultComparator;
@@ -37,11 +37,11 @@ use League\Tactician\CommandBus;
 /**
  * @author Gabriel Somoza <gabriel@strategery.io>
  *
- * @method TimelineDispatcher getDispatcher()
+ * @method TimelineEmitter getEmitter()
  */
 class Timeline implements TimelineInterface
 {
-    use HasSpecialisedDispatcherTrait;
+    use HasEmitterTrait;
 
     /** @var string[] */
     protected $allowedDirections;
@@ -89,7 +89,7 @@ class Timeline implements TimelineInterface
         }
         $options->setDirection(MigrateOptions::DIRECTION_UP); // make sure its right
 
-        return $this->runCollection($goalVersion, $options, $this->versions);;
+        return $this->runCollection($goalVersion, $options, $this->versions);
     }
 
     /**
@@ -188,13 +188,13 @@ class Timeline implements TimelineInterface
         }
 
         // Dispatch MIGRATE_BEFORE
-        $this->getDispatcher()->dispatchMigrationBefore($version, $options);
+        $this->getEmitter()->dispatchMigrationBefore($version, $options);
 
         $this->doRun($migration, $options);
         $version->setMigrated($isMigratedResult); // won't get executed if an exception is thrown
 
         // Dispatch MIGRATE_AFTER
-        $this->getDispatcher()->dispatchMigrationAfter($version, $options);
+        $this->getEmitter()->dispatchMigrationAfter($version, $options);
 
         return $version;
     }
@@ -214,11 +214,11 @@ class Timeline implements TimelineInterface
     /**
      * Must create and return a default specialised dispatcher
      *
-     * @return SpecialisedDispatcher
+     * @return EmitterInterface
      */
-    protected function createDefaultDispatcher()
+    protected function createEmitter()
     {
-        return new TimelineDispatcher();
+        return new TimelineEmitter();
     }
 
     /**
@@ -234,7 +234,7 @@ class Timeline implements TimelineInterface
         $goalVersion = $this->versions->getOrException($goalVersion);
 
         // dispatch COLLECTION_BEFORE
-        $this->getDispatcher()->dispatchCollectionBefore($goalVersion, $options, $collection);
+        $this->getEmitter()->dispatchCollectionBefore($goalVersion, $options, $collection);
 
         $modified = new Collection();
         foreach ($collection as $version) {
@@ -249,7 +249,7 @@ class Timeline implements TimelineInterface
         }
 
         // dispatch COLLECTION_AFTER
-        $this->getDispatcher()->dispatchCollectionAfter($goalVersion, $options, $modified);
+        $this->getEmitter()->dispatchCollectionAfter($goalVersion, $options, $modified);
 
         return $modified;
     }
