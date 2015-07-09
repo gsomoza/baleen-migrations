@@ -16,7 +16,8 @@
 		"php": ">= 5.4",
         "zendframework/zend-code": "^2.5",
         "league/tactician": "^0.6.0",
-        "ebidtech/collection": "^2.0"
+        "ebidtech/collection": "^2.0",
+        "symfony/event-dispatcher": "^2.7"
 	},
 	"autoload": {
 		"psr-4": {
