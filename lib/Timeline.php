@@ -22,6 +22,7 @@ namespace Baleen\Migrations;
 
 use Baleen\Migrations\Exception\MigrationException;
 use Baleen\Migrations\Exception\MigrationMissingException;
+use Baleen\Migrations\Exception\TimelineException;
 use Baleen\Migrations\Migration\MigrateOptions;
 use Baleen\Migrations\Timeline\AbstractTimeline;
 use Baleen\Migrations\Timeline\TimelineEmitter;
@@ -99,11 +100,11 @@ class Timeline extends AbstractTimeline
 
     /**
      * @param \Baleen\Migrations\Version $version
-     * @param MigrateOptions             $options
-     *
-     * @return Version|null
+     * @param MigrateOptions $options
+     * @return Version|false
      *
      * @throws MigrationException
+     * @throws TimelineException
      */
     public function runSingle($version, MigrateOptions $options)
     {
@@ -118,15 +119,15 @@ class Timeline extends AbstractTimeline
 
         if (!$this->shouldMigrate($version, $options)) {
             if ($options->isExceptionOnSkip()) {
-                throw new MigrationException(sprintf(
-                    'Cowardly refusing to run %s() on a version is already "%s" (ID: %s).',
+                throw new TimelineException(sprintf(
+                    'Cowardly refusing to run %s() on a version that is already "%s" (ID: %s).',
                     $options->getDirection(),
                     $options->getDirection(),
                     $version->getId()
                 ));
             }
 
-            return; // skip
+            return false; // skip
         }
 
         // Dispatch MIGRATE_BEFORE

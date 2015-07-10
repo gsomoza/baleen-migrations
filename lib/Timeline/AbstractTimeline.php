@@ -33,6 +33,8 @@ use Baleen\Migrations\Version\Comparator\DefaultComparator;
  * Encapsulates the lower-level methods of a Timeline, leaving the actual timeline logic to the extending class.
  *
  * @author Gabriel Somoza <gabriel@strategery.io>
+ *
+ * @method TimelineEmitter getEmitter()
  */
 abstract class AbstractTimeline implements TimelineInterface
 {
