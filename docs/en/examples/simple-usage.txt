@@ -1,0 +1,45 @@
+Usage Example
+=============
+
+The following example illustrates how you can use Baleen migrations from within your code to trigger a set of
+*existing* migrations.
+
+.. code-block:: php
+
+    <?php
+    #!/bin/env/php
+
+    require __DIR__ . '/vendor/autoload.php';
+
+    // The repository is in charge of loading all available migrations.
+    $repository = new DirectoryRepository(__DIR__ . '/migrations');
+    $availableMigrations = $repository->getAllAvailableMigrations();
+
+    /* The Storage retrieves a list of versions that have already been run.
+       Here we're loading from a file, but it could also be a DB table, API call, etc. */
+    $storage = new FileStorage(__DIR__ . '/versions.txt');
+    $alreadyRun = $storage->readMigratedVersions();
+
+    /* The Timeline sorts migrations in order and runs them based on their status */
+    $timeline = new Timeline($availableMigrations, $alreadyRun);
+
+    // Say we want to make sure all migrations up to and including v015 are UP:
+    $timeline->upTowards('v015');
+
+    // Now lets revert all migrations down to version 13 (inclusive)
+    $timeline->downTowards('v013'); // will revert 15, 14 and 13 - in that order
+
+    /* You can also run a single migration in any direction and pass custom arguments
+       to the Migration. */
+    use Baleen\Migration\RunOptions;
+    $options = new RunOptions(RunOptions::UP);
+    $options->setCustom([
+        'notifyEmail' => 'jon@doe.me',
+    ]);
+    $timeline->runSingle('v100', $options);
+
+    /* Version 'v100' will receive an instance of RunOptions through the setOptions
+       method. You can also pass RunOptions to most of the other Timeline methods. */
+
+
+To see how you can put migration files into the `./migrations` directory refer to :doc:`sample-migrations`.

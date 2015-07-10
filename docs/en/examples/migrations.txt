@@ -1,0 +1,77 @@
+Migrations
+==========
+
+For the purposes of this example, imagine the following classes are each located on a separate file under a folder in
+your project called ``./migrations``.
+
+File ``./migrations/AbstractPDOMigration.php`` :
+
+.. code-block:: php
+
+    <?php
+    use Baleen\Migration\MigrationInterface;
+    use Baleen\Migration\RunOptions;
+
+    /**
+     * You can be as creative as you want here. The only requirement here is to implement
+     * MigrationInterface.
+     */
+    class AbstractPDOMigration implements MigrationInterface
+    {
+        protected $connection; // gets set on the constructor
+
+        /** @var RunOptions **/
+        protected $options;
+
+        public function begin() {
+            $this->connection->beginTransaction();
+        }
+
+        public function finish() {
+            $this->connection->commit();
+        }
+
+        public function abort() {
+            $this->connection->rollBack();
+        }
+
+        public function setOptions(RunOptions $options) {
+            $this->options = $options;
+        }
+    }
+
+File ``./migrations/v001_AddHireDateToStaff.php`` :
+
+.. code-block:: php
+
+    <?php
+    class v001_AddHireDateToStaff extends AbstractPDOMigration
+    {
+        public function up() {
+            $this->connection->exec("ALTER TABLE staff ADD hire_date date");
+        }
+
+        public function down() {
+            $this->connection->exec("ALTER TABLE staff ADD hire_date date");
+        }
+    }
+
+File ``./migrations/v002_SeedJoeBloggs.php`` :
+
+.. code-block:: php
+
+    <?php
+    class v002_SeedJoeBloggs extends AbstractPDOMigration
+    {
+        public function up() {
+            $this->connection->exec(
+                "INSERT INTO staff (id, first, last) VALUES (23, 'Joe', 'Bloggs')"
+            );
+        }
+
+        public function down() {
+            $this->connection->exec("DELETE FROM staff WHERE id = 23");
+        }
+    }
+
+    // ... etc - for the purposes of this example imagine there are 100 migrations

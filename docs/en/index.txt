@@ -1,0 +1,31 @@
+Baleen Migrations
+=================
+
+Baleen Migrations is a project that seeks to abstract the domain logic of performing migrations of any kind into a
+single package. Its simple goal is to excel at one single task: provide an intuitive, well-tested framework to migrate
+from point A to point B (or vice-versa if going down).
+
+In other words, we take care of WHICH migrations are run and in what ORDER. Everything else is left up to the
+implementation:
+
+* WHAT is going to be migrated? It could be a database, images, documents, etc.
+* HOW its going to be migrated? You can wrap each migration into DB transactions. Or not, its up to you.
+* What to do when a migration fails? We'll let you know WHEN it happens, but its up to you to decide what to do
+  (e.g. cancel the transaction).
+
+Contents:
+
+.. toctree::
+   :glob:
+   :maxdepth: 2
+
+   getting-started
+   implementations
+   examples
+   examples/*
+
+Indices and tables
+==================
+
+* :ref:`genindex`
+
