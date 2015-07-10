@@ -1,4 +1,5 @@
 <?php
+
 /*
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -14,22 +15,37 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the MIT license. For more information, see
- * <http://www.doctrine-project.org>.
+ * <https://github.com/baleen/migrations>.
  */
 
-namespace BaleenTest\Migrations;
+namespace BaleenTest\Migrations\Migration\Command\Middleware;
 
+use Baleen\Migrations\Exception\InvalidArgumentException;
+use Baleen\Migrations\Migration\Command\Middleware\AbstractMiddleware;
+use BaleenTest\Migrations\BaseTestCase;
+use League\Tactician\Middleware;
 use Mockery as m;
 
 /**
+ * Class AbstractMiddlewareTest
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
-class BaseTestCase extends \PHPUnit_Framework_TestCase
+class AbstractMiddlewareTest extends BaseTestCase
 {
 
-    public function tearDown()
+
+    public function testIsMiddleware()
     {
-        m::close();
+        $instance = m::mock(AbstractMiddleware::class)->makePartial();
+        $this->assertInstanceOf(Middleware::class, $instance);
+    }
+
+    public function testExecuteFailsIfNotMigrationCommand()
+    {
+        $instance = m::mock(AbstractMiddleware::class)->makePartial();
+
+        $this->setExpectedException(InvalidArgumentException::class);
+        $instance->execute('test', function(){});
     }
 
 }

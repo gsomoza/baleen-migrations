@@ -20,34 +20,42 @@
 
 namespace Baleen\Migrations\Migration\Command\Middleware;
 
-use Baleen\Migrations\Migration\Capabilities\TransactionAwareInterface;
+use Baleen\Migrations\Exception\InvalidArgumentException;
 use Baleen\Migrations\Migration\Command\MigrateCommand;
 use League\Tactician\Middleware;
 
 /**
- * Wraps the migration in a transaction if the migration implements
- * TransactionAwareInterface.
+ * Enforces command type checking, to make sure that all commands ran by these Middleware classes
+ * are able to handle MigrateCommand.
  *
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
-class TransactionMiddleware extends AbstractMiddleware
+abstract class AbstractMiddleware implements Middleware
 {
+
     /**
-     * {@inheritDoc}
+     * @param object $command
+     * @param callable $next
+     *
+     * @return mixed
+     * @throws InvalidArgumentException
      */
-    public function doExecute(MigrateCommand $command, callable $next)
+    public function execute($command, callable $next)
     {
-        $migration = $command->getMigration();
-        if ($migration instanceof TransactionAwareInterface) {
-            try {
-                $migration->begin();
-                $next($command);
-                $migration->finish();
-            } catch (\Exception $e) {
-                $migration->abort($e);
-            }
-        } else {
-            $next($command);
+        if (!is_object($command) || !$command instanceof MigrateCommand) {
+            throw new InvalidArgumentException(
+                'Expected $command to be an instance of MigrateCommand.'
+            );
         }
+        return $this->doExecute($command, $next);
     }
+
+    /**
+     * Concrete handling of the MigrateCommand
+     *
+     * @param MigrateCommand $command
+     * @param callable $next
+     * @return mixed
+     */
+    abstract protected function doExecute(MigrateCommand $command, callable $next);
 }

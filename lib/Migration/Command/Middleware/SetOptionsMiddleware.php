@@ -21,6 +21,7 @@
 namespace Baleen\Migrations\Migration\Command\Middleware;
 
 use Baleen\Migrations\Migration\Capabilities\OptionsAwareInterface;
+use Baleen\Migrations\Migration\Command\MigrateCommand;
 use League\Tactician\Middleware;
 
 /**
@@ -29,12 +30,12 @@ use League\Tactician\Middleware;
  *
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
-class SetOptionsMiddleware implements Middleware
+class SetOptionsMiddleware extends AbstractMiddleware
 {
     /**
      * {@inheritDoc}
      */
-    public function execute($command, callable $next)
+    public function doExecute(MigrateCommand $command, callable $next)
     {
         $migration = $command->getMigration();
         if ($migration instanceof OptionsAwareInterface) {

@@ -85,7 +85,7 @@ class DirectoryRepository implements RepositoryInterface
             $className = $class->getName();
             $matches = [];
             if ($class->isInstantiable()
-                && preg_match($this->classNameRegex, $className, $matches)
+                && preg_match($this->getClassNameRegex(), $className, $matches)
                 && isset($matches[1])) {
                 $migration = $this->factory->create($className);
                 if ($migration instanceof MigrationInterface) {
