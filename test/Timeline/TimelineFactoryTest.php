@@ -17,7 +17,10 @@
  * <http://www.doctrine-project.org>.
  */
 
+use Baleen\Migrations\Exception\MigrationMissingException;
+use Baleen\Migrations\Timeline\TimelineFactory;
 use Baleen\Migrations\Version as V;
+use Baleen\Migrations\Version;
 use BaleenTest\Migrations\BaseTestCase;
 
 /**
@@ -28,17 +31,28 @@ class TimelineFactoryTest extends BaseTestCase
 
     public function testCreate()
     {
-        $factory = new \Baleen\Migrations\Timeline\TimelineFactory(
-            [1 => new V(1), 2 => new V(2), 3 => new V(3), 4 => new V(4), 5 => new V(5)],
-            [1 => new V(1), 3 => new V(3), 4 => new V(4)]
+        $factory = new TimelineFactory(
+            Version::fromArray('1', '2', '3', '4', '5'),
+            Version::fromArray('1', '3', '4')
         );
         $timeline = $factory->create();
         $prop = new \ReflectionProperty($timeline, 'versions');
         $prop->setAccessible(true);
         $versions = $prop->getValue($timeline)->toArray();
-        $expectedMigrated = [1 => 1, 2 => 0, 3 => 1, 4 => 1, 0];
+        $expectedMigrated = [1 => true, 2 => false, 3 => true, 4 => true, 5 => false];
         $this->assertEquals($expectedMigrated, array_map(function (V $v) {
-            return $v->isMigrated() ? 1 : 0;
+            return $v->isMigrated();
         }, $versions));
+    }
+
+    public function testCreateThrowsException()
+    {
+        $factory = new TimelineFactory(
+            Version::fromArray('1', '2', '3', '4', '5'),
+            Version::fromArray('1', '2', '3', '4', '5', '6') // has an additional version
+        );
+
+        $this->setExpectedException(MigrationMissingException::class);
+        $timeline = $factory->create();
     }
 }
