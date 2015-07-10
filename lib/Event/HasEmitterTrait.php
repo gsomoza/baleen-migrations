@@ -63,7 +63,7 @@ trait HasEmitterTrait
     protected function getEmitter()
     {
         if (!$this->emitter) {
-            $this->emitter = $this->createEmitter();
+            $this->setEmitter($this->createEmitter());
         }
 
         return $this->emitter;

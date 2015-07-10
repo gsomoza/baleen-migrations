@@ -20,12 +20,14 @@
 namespace BaleenTest\Migrations;
 
 use Baleen\Migrations\Event\EventInterface;
+use Baleen\Migrations\Event\Timeline\CollectionEvent;
 use Baleen\Migrations\Event\Timeline\MigrationEvent;
 use Baleen\Migrations\Migration\MigrateOptions;
 use Baleen\Migrations\Migration\MigrationInterface;
 use Baleen\Migrations\Version as V;
 use Baleen\Migrations\Version\Comparator\DefaultComparator;
 use Mockery as m;
+use phpDocumentor\Reflection\DocBlock\Type\Collection;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
 /**
@@ -243,10 +245,15 @@ class TimelineTest extends BaseTestCase
     /**
      * Integration tests to see if Timeline can emmit events
      */
-    public function testEmitsEvents()
+    public function testEmitsMigrationAndCollectionEvents()
     {
         $self = $this;
-        $listened = false;
+        $listened = [
+            EventInterface::COLLECTION_BEFORE => false,
+            EventInterface::COLLECTION_AFTER  => false,
+            EventInterface::MIGRATION_BEFORE  => false,
+            EventInterface::MIGRATION_AFTER   => false,
+        ];
         $version = new V('1');
         $migration = m::mock(MigrationInterface::class);
         $migration->shouldReceive('up')->once();
@@ -254,22 +261,65 @@ class TimelineTest extends BaseTestCase
         $options = new MigrateOptions(MigrateOptions::DIRECTION_UP);
 
         $dispatcher = new EventDispatcher();
+        $timeline = $this->getInstance([$version]);
+        $timeline->setEventDispatcher($dispatcher);
+
+        $this->assertSame($dispatcher, $timeline->getEventDispatcher());
+
+        $collection = $timeline->getVersions();
+
+        $dispatcher->addListener(
+            EventInterface::COLLECTION_BEFORE,
+            function($event, $name) use ($version, $options, $collection, &$listened, $self) {
+                $listened[$name] = true;
+                $self->assertInstanceOf(EventInterface::class, $event);
+                $self->assertInstanceOf(CollectionEvent::class, $event);
+                /** @var CollectionEvent $event */
+                $self->assertSame($options, $event->getOptions());
+                $self->assertSame($collection, $event->getCollection());
+                // the following also asserts that the version is NOT migrated
+                $self->assertSame($version, $event->getTarget());
+            }
+        );
         $dispatcher->addListener(
             EventInterface::MIGRATION_BEFORE,
-            function($event) use ($version, $options, &$listened, $self) {
-                $listened = true;
+            function($event, $name) use ($version, $options, &$listened, $self) {
+                $listened[$name] = true;
                 $self->assertInstanceOf(EventInterface::class, $event);
                 $self->assertInstanceOf(MigrationEvent::class, $event);
                 /** @var MigrationEvent $event */
                 $self->assertSame($options, $event->getOptions());
+                // the following also asserts that the version is NOT migrated
                 $self->assertSame($version, $event->getVersion());
             }
         );
+        $dispatcher->addListener(
+            EventInterface::MIGRATION_AFTER,
+            function($event, $name) use ($version, $options, &$listened, $self) {
+                $listened[$name] = true;
+                $self->assertInstanceOf(EventInterface::class, $event);
+                $self->assertInstanceOf(MigrationEvent::class, $event);
+                /** @var MigrationEvent $event */
+                $self->assertSame($options, $event->getOptions());
+                $self->assertTrue($event->getVersion()->isMigrated());
+            }
+        );
+        $dispatcher->addListener(
+            EventInterface::COLLECTION_AFTER,
+            function($event, $name) use ($version, $options, &$listened, $self) {
+                $listened[$name] = true;
+                $self->assertInstanceOf(EventInterface::class, $event);
+                $self->assertInstanceOf(CollectionEvent::class, $event);
+                /** @var CollectionEvent $event */
+                $self->assertSame($options, $event->getOptions());
+                $self->assertTrue($event->getTarget()->isMigrated());
+            }
+        );
 
-        $timeline = $this->getInstance([$version]);
-        $timeline->setEventDispatcher($dispatcher);
-        $timeline->runSingle($version, $options);
+        $timeline->upTowards($version, $options);
 
-        $this->assertTrue($listened, 'Expected Timeline to dispatch EventInterface::MIGRATION_BEFORE');
+        foreach ($listened as $name => $result) {
+            $this->assertTrue($result, sprintf('Expected Timeline to dispatch %s.', $name));
+        }
     }
 }

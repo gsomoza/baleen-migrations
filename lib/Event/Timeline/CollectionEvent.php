@@ -31,39 +31,58 @@ use Symfony\Component\EventDispatcher\Event;
  *
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
-class CollectionEvent extends MigrationEvent implements EventInterface
+class CollectionEvent extends Event implements EventInterface
 {
     /**
      * @var Collection
      */
-    protected $versions;
+    protected $collection;
+
+    /**
+     * @var MigrateOptions
+     */
+    protected $options;
+
+    /**
+     * @var Version
+     */
+    protected $target;
 
     /**
      * CollectionEvent constructor.
      *
-     * @param Version        $targetVersion
+     * @param Version        $target
      * @param MigrateOptions $options
      * @param Collection     $versions
      */
-    public function __construct(Version $targetVersion, MigrateOptions $options, Collection $versions)
+    public function __construct(Version $target, MigrateOptions $options, Collection $versions)
     {
-        parent::__construct($targetVersion, $options);
-        $this->versions = $versions;
+        $this->options = $options;
+        $this->target = $target;
+        $this->collection = $versions;
+    }
+
+    /**
+     * @return MigrateOptions
+     */
+    public function getOptions()
+    {
+        return $this->options;
     }
 
     /**
      * @return Collection
      */
-    public function getVersionCollection()
+    public function getCollection()
     {
-        return $this->versions;
+        return $this->collection;
     }
 
     /**
      * @return Version
      */
-    public function getTargetVersion()
+    public function getTarget()
     {
-        return $this->version;
+        return $this->target;
     }
 }
