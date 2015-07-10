@@ -104,7 +104,8 @@ class Version implements VersionInterface
      *
      * @return Version[]
      */
-    public static function fromArray($versionIds) {
+    public static function fromArray($versionIds)
+    {
         if (!is_array($versionIds)) {
             $versionIds = func_get_args();
         }

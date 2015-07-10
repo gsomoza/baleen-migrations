@@ -26,5 +26,4 @@ namespace Baleen\Migrations\Exception;
  */
 class TimelineException extends BaleenException
 {
-
 }

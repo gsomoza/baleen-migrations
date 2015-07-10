@@ -32,7 +32,6 @@ use League\Tactician\Middleware;
  */
 abstract class AbstractMiddleware implements Middleware
 {
-
     /**
      * @param object $command
      * @param callable $next
