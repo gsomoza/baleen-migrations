@@ -19,6 +19,8 @@
 
 namespace BaleenTest\Migrations\Repository;
 
+use Baleen\Migrations\Migration\Factory\FactoryInterface;
+use Baleen\Migrations\Migration\MigrationInterface;
 use Baleen\Migrations\Repository\DirectoryRepository;
 use BaleenTest\Migrations\BaseTestCase;
 use Mockery as m;
@@ -29,13 +31,18 @@ use Mockery as m;
 class DirectoryRepositoryTest extends BaseTestCase
 {
 
-    /**
-     * Test the repository implements RepositoryInterface
-     */
     public function testInstanceOfRepositoryInterface()
     {
         $instance = new DirectoryRepository(__DIR__);
         $this->assertInstanceOf('Baleen\Migrations\Repository\RepositoryInterface', $instance);
+    }
+
+    public function testProvidesDefaultFactory()
+    {
+        $instance = new DirectoryRepository(__DIR__);
+        $prop = new \ReflectionProperty($instance, 'factory');
+        $prop->setAccessible(true);
+        $this->assertInstanceOf(FactoryInterface::class, $prop->getValue($instance));
     }
 
     public function testDirectoryMustExist()
@@ -56,6 +63,21 @@ class DirectoryRepositoryTest extends BaseTestCase
         $instance = new DirectoryRepository($directory);
         $instance->setClassNameRegex($regex);
         $migrations = $instance->fetchAll();
+        $this->assertCount($count, $migrations);
+    }
+
+    public function testFetchAllUsesCustomFactoryToCreateMigrations()
+    {
+        // get first test case onlyi (all valid)
+        list($directory, $count) = $this->fetchAllProvider()[0];
+        $factory = m::mock(FactoryInterface::class);
+        $factory->shouldReceive('create')->andReturn(m::mock(MigrationInterface::class));
+
+        $instance = new DirectoryRepository($directory);
+        $instance->setMigrationFactory($factory);
+        $instance->setClassNameRegex(DirectoryRepository::PATTERN_DEFAULT);
+        $migrations = $instance->fetchAll();
+        $factory->shouldHaveReceived('create')->times($count);
         $this->assertCount($count, $migrations);
     }
 
