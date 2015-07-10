@@ -96,11 +96,11 @@ class CollectionTest extends BaseTestCase
         // test remove by version object
         $version = new V('1');
         $instance->remove($version);
-        $this->assertCount(--$originalCount, $instance);
+        $this->assertCount($originalCount - 1, $instance);
 
         // test remove by version id
         $instance->remove('2');
-        $this->assertEmpty($instance);
+        $this->assertCount($originalCount - 2, $instance);
     }
 
     public function testAddOrUpdate()
