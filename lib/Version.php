@@ -96,4 +96,22 @@ class Version implements VersionInterface
     {
         return $this->migration;
     }
+
+    /**
+     * Creates a list of versions based on specified IDs
+     *
+     * @param mixed $versionIds
+     *
+     * @return Version[]
+     */
+    public static function fromArray($versionIds) {
+        if (!is_array($versionIds)) {
+            $versionIds = func_get_args();
+        }
+        $results = [];
+        foreach ($versionIds as $id) {
+            $results[] = new static($id);
+        }
+        return $results;
+    }
 }

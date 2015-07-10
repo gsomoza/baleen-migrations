@@ -2,7 +2,7 @@
 
 namespace Baleen\Migrations\Version\Collection;
 
-use Baleen\Migrations\Exception\MigrationException;
+use Baleen\Migrations\Exception\InvalidArgumentException;
 use Baleen\Migrations\Version;
 use EBT\Collection\CollectionDirectAccessInterface;
 use EBT\Collection\CountableTrait;
@@ -17,7 +17,7 @@ use Zend\Stdlib\ArrayUtils;
  *
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
-class BaseCollection implements CollectionDirectAccessInterface
+abstract class BaseCollection implements CollectionDirectAccessInterface
 {
     use CountableTrait;
     use EmptyTrait;
@@ -32,7 +32,7 @@ class BaseCollection implements CollectionDirectAccessInterface
     /**
      * @param array $versions
      *
-     * @throws MigrationException
+     * @throws InvalidArgumentException
      */
     public function __construct($versions = array())
     {
@@ -40,20 +40,19 @@ class BaseCollection implements CollectionDirectAccessInterface
             if ($versions instanceof \Traversable) {
                 $versions = ArrayUtils::iteratorToArray($versions);
             } else {
-                throw new MigrationException(
+                throw new InvalidArgumentException(
                     "Constructor parameter 'versions' must be an array or traversable"
                 );
             }
         }
-        $versions = array_unique($versions, SORT_REGULAR);
         foreach ($versions as $version) {
             if (!$version instanceof Version) {
-                throw new MigrationException(
+                throw new InvalidArgumentException(
                     // wait until PHP 5.5 to do Version::class
                     sprintf('Expected all versions to be of type "%s"', get_class(new Version('1')))
                 );
             }
-            $this->items[$version->getId()] = $version;
+            $this->add($version);
         }
     }
 
@@ -141,10 +140,8 @@ class BaseCollection implements CollectionDirectAccessInterface
 
     /**
      * @param $idOrVersion
-     *
      * @return string
-     *
-     * @throws MigrationException
+     * @throws InvalidArgumentException
      */
     protected function getVersionId($idOrVersion)
     {
@@ -152,7 +149,7 @@ class BaseCollection implements CollectionDirectAccessInterface
             if ($idOrVersion instanceof Version) {
                 $idOrVersion = $idOrVersion->getId();
             } else {
-                throw new MigrationException(
+                throw new InvalidArgumentException(
                     sprintf('Invalid object of type "%" - expected \Baleen\Version', get_class($idOrVersion))
                 );
             }
@@ -168,4 +165,6 @@ class BaseCollection implements CollectionDirectAccessInterface
     {
         return $this->getItems();
     }
+
+    abstract public function add(Version $version);
 }

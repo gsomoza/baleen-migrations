@@ -20,9 +20,9 @@
 
 namespace Baleen\Migrations\Version;
 
+use Baleen\Migrations\Exception\CollectionException;
 use Baleen\Migrations\Version;
 use Baleen\Migrations\Version\Collection\BaseCollection;
-use Baleen\Migrations\Exception\MigrationException;
 
 /**
  * A collection of Versions.
@@ -33,14 +33,12 @@ class Collection extends BaseCollection
 {
     /**
      * @param Version $version
-     * @param bool    $overwrite
-     *
-     * @throws MigrationException
+     * @throws CollectionException
      */
-    public function add(Version $version, $overwrite = false)
+    public function add(Version $version)
     {
-        if (!$overwrite && $this->has($version->getId())) {
-            throw new MigrationException(
+        if ($this->has($version->getId())) {
+            throw new CollectionException(
                 sprintf('Item with id "%s" already exists', $version->getId())
             );
         }
@@ -49,8 +47,6 @@ class Collection extends BaseCollection
 
     /**
      * @param $version
-     *
-     * @throws MigrationException
      */
     public function remove($version)
     {
