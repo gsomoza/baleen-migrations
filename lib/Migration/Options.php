@@ -25,7 +25,7 @@ use Baleen\Migrations\Exception\InvalidArgumentException;
 /**
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
-class MigrateOptions
+class Options
 {
     const DIRECTION_UP = 'up';
     const DIRECTION_DOWN = 'down';

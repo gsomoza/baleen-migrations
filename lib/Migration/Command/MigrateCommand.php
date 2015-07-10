@@ -21,7 +21,7 @@
 namespace Baleen\Migrations\Migration\Command;
 
 use Baleen\Migrations\Migration\MigrationInterface;
-use Baleen\Migrations\Migration\MigrateOptions;
+use Baleen\Migrations\Migration\Options;
 
 /**
  * Class MigrateCommand.
@@ -36,15 +36,15 @@ class MigrateCommand
     private $migration;
 
     /**
-     * @var MigrateOptions
+     * @var Options
      */
     private $options;
 
     /**
      * @param MigrationInterface $migration
-     * @param MigrateOptions     $options
+     * @param Options     $options
      */
-    public function __construct(MigrationInterface $migration, MigrateOptions $options)
+    public function __construct(MigrationInterface $migration, Options $options)
     {
         $this->migration = $migration;
         $this->options = $options;
@@ -67,7 +67,7 @@ class MigrateCommand
     }
 
     /**
-     * @return MigrateOptions
+     * @return Options
      */
     public function getOptions()
     {
@@ -75,9 +75,9 @@ class MigrateCommand
     }
 
     /**
-     * @param MigrateOptions $options
+     * @param Options $options
      */
-    public function setOptions(MigrateOptions $options)
+    public function setOptions(Options $options)
     {
         $this->options = $options;
     }

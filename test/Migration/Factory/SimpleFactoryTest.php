@@ -1,4 +1,5 @@
 <?php
+
 /*
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -14,40 +15,34 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the MIT license. For more information, see
- * <http://www.doctrine-project.org>.
+ * <https://github.com/baleen/migrations>.
  */
 
-namespace BaleenTest\Migrations\Migrations\CustomRegex;
+namespace BaleenTest\Migrations\Migration\Factory;
 
-use Baleen\Migrations\Migration\MigrationInterface;
-use Baleen\Migrations\Migration\Options;
+use Baleen\Migrations\Exception\InvalidArgumentException;
+use Baleen\Migrations\Migration\Factory\SimpleFactory;
+use BaleenTest\Migrations\BaseTestCase;
 
 /**
+ * Class SimpleFactoryTest
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
-class v201507020437_DefaultRegex implements MigrationInterface
+class SimpleFactoryTest extends BaseTestCase
 {
-    /**
-     *
-     */
-    public function up()
+
+    public function testCreateSimple()
     {
+        $instance = new SimpleFactory();
+        $result = $instance->create(\stdClass::class);
+        $this->assertInstanceOf(\stdClass::class, $result);
     }
 
-    /**
-     *
-     */
-    public function down()
+    public function testCreateException()
     {
+        $instance = new SimpleFactory();
+        $this->setExpectedException(InvalidArgumentException::class);
+        $instance->create('');
     }
 
-    public function abort()
-    {
-        // TODO: Implement abort() method.
-    }
-
-    public function setRunOptions(Options $options)
-    {
-        // TODO: Implement setOptions() method.
-    }
 }

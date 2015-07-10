@@ -20,7 +20,7 @@
 namespace BaleenTest\Migrations\Migrations\CustomRegex;
 
 use Baleen\Migrations\Migration\MigrationInterface;
-use Baleen\Migrations\Migration\MigrateOptions;
+use Baleen\Migrations\Migration\Options;
 
 /**
  * @author Gabriel Somoza <gabriel@strategery.io>
@@ -46,7 +46,7 @@ class v201507020438_DefaultRegex2 implements MigrationInterface
         // TODO: Implement abort() method.
     }
 
-    public function setRunOptions(MigrateOptions $options)
+    public function setRunOptions(Options $options)
     {
         // TODO: Implement setOptions() method.
     }

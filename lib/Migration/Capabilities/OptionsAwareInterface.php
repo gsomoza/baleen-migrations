@@ -20,7 +20,7 @@
 
 namespace Baleen\Migrations\Migration\Capabilities;
 
-use Baleen\Migrations\Migration\MigrateOptions;
+use Baleen\Migrations\Migration\Options;
 
 /**
  * Interface OptionsAwareInterface.
@@ -29,5 +29,5 @@ use Baleen\Migrations\Migration\MigrateOptions;
  */
 interface OptionsAwareInterface
 {
-    public function setOptions(MigrateOptions $options);
+    public function setOptions(Options $options);
 }

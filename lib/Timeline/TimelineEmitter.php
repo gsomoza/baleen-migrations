@@ -25,7 +25,7 @@ use Baleen\Migrations\Event\EventInterface;
 use Baleen\Migrations\Event\EmitterInterface;
 use Baleen\Migrations\Event\Timeline\CollectionEvent;
 use Baleen\Migrations\Event\Timeline\MigrationEvent;
-use Baleen\Migrations\Migration\MigrateOptions;
+use Baleen\Migrations\Migration\Options;
 use Baleen\Migrations\Version;
 use Baleen\Migrations\Version\Collection;
 
@@ -38,28 +38,28 @@ class TimelineEmitter implements EmitterInterface
 
     /**
      * @param Version        $targetVersion
-     * @param MigrateOptions $options
+     * @param Options $options
      * @param Collection     $versions
      */
-    public function dispatchCollectionBefore(Version $targetVersion, MigrateOptions $options, Collection $versions)
+    public function dispatchCollectionBefore(Version $targetVersion, Options $options, Collection $versions)
     {
         $event = new CollectionEvent($targetVersion, $options, $versions);
         $this->dispatchEvent(EventInterface::COLLECTION_BEFORE, $event);
     }
 
-    public function dispatchCollectionAfter(Version $targetVersion, MigrateOptions $options, Collection $versions)
+    public function dispatchCollectionAfter(Version $targetVersion, Options $options, Collection $versions)
     {
         $event = new CollectionEvent($targetVersion, $options, $versions);
         $this->dispatchEvent(EventInterface::COLLECTION_AFTER, $event);
     }
 
-    public function dispatchMigrationBefore(Version $version, MigrateOptions $options)
+    public function dispatchMigrationBefore(Version $version, Options $options)
     {
         $event = new MigrationEvent($version, $options);
         $this->dispatchEvent(EventInterface::MIGRATION_BEFORE, $event);
     }
 
-    public function dispatchMigrationAfter(Version $version, MigrateOptions $options)
+    public function dispatchMigrationAfter(Version $version, Options $options)
     {
         $event = new MigrationEvent($version, $options);
         $this->dispatchEvent(EventInterface::MIGRATION_AFTER, $event);

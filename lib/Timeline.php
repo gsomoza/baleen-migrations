@@ -23,7 +23,7 @@ namespace Baleen\Migrations;
 use Baleen\Migrations\Exception\MigrationException;
 use Baleen\Migrations\Exception\MigrationMissingException;
 use Baleen\Migrations\Exception\TimelineException;
-use Baleen\Migrations\Migration\MigrateOptions;
+use Baleen\Migrations\Migration\Options;
 use Baleen\Migrations\Timeline\AbstractTimeline;
 use Baleen\Migrations\Timeline\TimelineEmitter;
 use Baleen\Migrations\Version\Collection;
@@ -37,38 +37,38 @@ class Timeline extends AbstractTimeline
 {
     /**
      * @param Version|string $goalVersion
-     * @param MigrateOptions $options
+     * @param Options $options
      *
      * @return Collection A collection of modified versions
      *
      * @throws MigrationMissingException
      */
-    public function upTowards($goalVersion, MigrateOptions $options = null)
+    public function upTowards($goalVersion, Options $options = null)
     {
         if (null === $options) {
-            $options = new MigrateOptions(MigrateOptions::DIRECTION_UP);
+            $options = new Options(Options::DIRECTION_UP);
             $options->setExceptionOnSkip(false);
         }
-        $options->setDirection(MigrateOptions::DIRECTION_UP); // make sure its right
+        $options->setDirection(Options::DIRECTION_UP); // make sure its right
 
         return $this->runCollection($goalVersion, $options, $this->versions);
     }
 
     /**
      * @param Version|string $goalVersion
-     * @param MigrateOptions $options
+     * @param Options $options
      *
      * @return Collection A collection of modified versions
      *
      * @throws \Exception
      */
-    public function downTowards($goalVersion, MigrateOptions $options = null)
+    public function downTowards($goalVersion, Options $options = null)
     {
         if (null === $options) {
-            $options = new MigrateOptions(MigrateOptions::DIRECTION_DOWN);
+            $options = new Options(Options::DIRECTION_DOWN);
             $options->setExceptionOnSkip(false);
         }
-        $options->setDirection(MigrateOptions::DIRECTION_DOWN); // make sure its right
+        $options->setDirection(Options::DIRECTION_DOWN); // make sure its right
         return $this->runCollection($goalVersion, $options, $this->versions->getReverse());
     }
 
@@ -77,14 +77,14 @@ class Timeline extends AbstractTimeline
      * all versions *after* the specified version are "down".
      *
      * @param $goalVersion
-     * @param \Baleen\Migrations\Migration\MigrateOptions $options
+     * @param \Baleen\Migrations\Migration\Options $options
      *
      * @return Collection
      */
-    public function goTowards($goalVersion, MigrateOptions $options = null)
+    public function goTowards($goalVersion, Options $options = null)
     {
         if (null === $options) {
-            $options = new MigrateOptions(MigrateOptions::DIRECTION_UP);
+            $options = new Options(Options::DIRECTION_UP);
             $options->setExceptionOnSkip(false);
         }
         $this->versions->rewind();
@@ -100,13 +100,13 @@ class Timeline extends AbstractTimeline
 
     /**
      * @param \Baleen\Migrations\Version $version
-     * @param MigrateOptions $options
+     * @param Options $options
      * @return Version|false
      *
      * @throws MigrationException
      * @throws TimelineException
      */
-    public function runSingle($version, MigrateOptions $options)
+    public function runSingle($version, Options $options)
     {
         $version = $this->versions->getOrException($version);
         $migration = $version->getMigration();

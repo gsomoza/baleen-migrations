@@ -24,7 +24,7 @@ use Baleen\Migrations\Event\Timeline\CollectionEvent;
 use Baleen\Migrations\Event\Timeline\MigrationEvent;
 use Baleen\Migrations\Exception\MigrationException;
 use Baleen\Migrations\Exception\TimelineException;
-use Baleen\Migrations\Migration\MigrateOptions as Options;
+use Baleen\Migrations\Migration\Options;
 use Baleen\Migrations\Migration\MigrationInterface;
 use Baleen\Migrations\Timeline;
 use Baleen\Migrations\Version as V;

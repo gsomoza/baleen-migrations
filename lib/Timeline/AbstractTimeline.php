@@ -23,7 +23,7 @@ namespace Baleen\Migrations\Timeline;
 use Baleen\Migrations\Event\HasEmitterTrait;
 use Baleen\Migrations\Migration\Command\MigrateCommand;
 use Baleen\Migrations\Migration\Command\MigrationBusFactory;
-use Baleen\Migrations\Migration\MigrateOptions;
+use Baleen\Migrations\Migration\Options;
 use Baleen\Migrations\Migration\MigrationInterface;
 use Baleen\Migrations\Version;
 use Baleen\Migrations\Version\Collection;
@@ -73,11 +73,11 @@ abstract class AbstractTimeline implements TimelineInterface
 
     /**
      * @param Version        $version
-     * @param MigrateOptions $options
+     * @param Options $options
      *
      * @return bool
      */
-    protected function shouldMigrate(Version $version, MigrateOptions $options)
+    protected function shouldMigrate(Version $version, Options $options)
     {
         return $options->isForced()
         || ($options->isDirectionUp()   && !$version->isMigrated())
@@ -96,11 +96,11 @@ abstract class AbstractTimeline implements TimelineInterface
 
     /**
      * @param MigrationInterface $migration
-     * @param MigrateOptions     $options
+     * @param Options     $options
      *
      * @return bool
      */
-    protected function doRun(MigrationInterface $migration, MigrateOptions $options)
+    protected function doRun(MigrationInterface $migration, Options $options)
     {
         $command = new MigrateCommand($migration, $options);
         $this->migrationBus->handle($command);
@@ -108,12 +108,12 @@ abstract class AbstractTimeline implements TimelineInterface
 
     /**
      * @param $goalVersion
-     * @param MigrateOptions $options
+     * @param Options $options
      * @param $collection
      *
      * @return Collection
      */
-    protected function runCollection($goalVersion, MigrateOptions $options, Collection $collection)
+    protected function runCollection($goalVersion, Options $options, Collection $collection)
     {
         $goalVersion = $this->versions->getOrException($goalVersion);
 
