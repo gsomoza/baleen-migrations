@@ -1,5 +1,11 @@
 Status
 ======
+[![Build Status](https://scrutinizer-ci.com/g/baleen/migrations/badges/build.png?b=master)](https://scrutinizer-ci.com/g/baleen/migrations/build-status/master)
+
+[![Code Coverage](https://scrutinizer-ci.com/g/baleen/migrations/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/baleen/migrations/?branch=master)
+
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/baleen/migrations/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/baleen/migrations/?branch=master)
+
 
 **NB!:** This project is still an early release. Please do not use in 
 production-critical environments. We do not guarantee the safety of your data - use
