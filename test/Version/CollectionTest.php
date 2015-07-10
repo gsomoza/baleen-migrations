@@ -63,7 +63,7 @@ class CollectionTest extends BaseTestCase
     {
         $instance = new Collection();
         $this->assertInstanceOf(BaseCollection::class, $instance);
-        $this->assertEmpty($instance);
+        $this->assertCount(0, $instance);
 
         $version = new V('1');
         $instance = new Collection([$version]);
