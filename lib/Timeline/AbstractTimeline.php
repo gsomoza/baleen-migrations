@@ -70,7 +70,9 @@ abstract class AbstractTimeline implements TimelineInterface
     }
 
     /**
-     * @param Version        $version
+     * Returns true if the operatin is forced, or if the direction is the opposite to the state of the migration.
+     *
+     * @param Version $version
      * @param Options $options
      *
      * @return bool
@@ -78,8 +80,7 @@ abstract class AbstractTimeline implements TimelineInterface
     protected function shouldMigrate(Version $version, Options $options)
     {
         return $options->isForced()
-        || ($options->isDirectionUp()   && !$version->isMigrated())
-        || ($options->isDirectionDown() &&  $version->isMigrated());
+        || ($options->isDirectionUp() xor $version->isMigrated()); // direction is opposite to state
     }
 
     /**
