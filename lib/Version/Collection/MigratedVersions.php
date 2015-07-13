@@ -36,9 +36,8 @@ class MigratedVersions extends SortableVersions
      */
     public function isAcceptable($version)
     {
-        parent::isAcceptable($version);
         /** @var Version $version */
-        if (!$version->isMigrated()) {
+        if (parent::isAcceptable($version) && !$version->isMigrated()) {
             throw new CollectionException(sprintf(
                 'Version "%s" must be migrated in order to be accepted into this collection.',
                 $version->getId()

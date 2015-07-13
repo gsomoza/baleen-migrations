@@ -42,9 +42,8 @@ class SortableVersions extends IndexedVersions
      */
     public function isAcceptable($version)
     {
-        parent::isAcceptable($version);
         /** @var Version $version */
-        if ($this->has($version->getId())) {
+        if (parent::isAcceptable($version) && $this->has($version->getId())) {
             throw new CollectionException(
                 sprintf('Item with id "%s" already exists', $version->getId())
             );

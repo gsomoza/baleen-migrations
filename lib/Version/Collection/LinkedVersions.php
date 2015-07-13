@@ -40,9 +40,8 @@ class LinkedVersions extends SortableVersions
      */
     public function isAcceptable($version)
     {
-        parent::isAcceptable($version);
         /** @var Version $version */
-        if (!$version->hasMigration()) {
+        if (parent::isAcceptable($version) && !$version->hasMigration()) {
             throw new MigrationMissingException(sprintf(
                 'Version "%s" must be associated with a Migration in order to be accepted into this collection.',
                 $version->getId()
