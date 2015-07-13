@@ -14,7 +14,7 @@ use EBT\Collection\IterableTrait;
 use Zend\Stdlib\ArrayUtils;
 
 /**
- * Class Versions.
+ * Class IndexedVersions.
  *
  * @author Gabriel Somoza <gabriel@strategery.io>
  *
@@ -22,7 +22,7 @@ use Zend\Stdlib\ArrayUtils;
  * @method Version[] getItems()
  * @method Version get($index, $defaultValue = null)
  */
-class Versions implements CollectionDirectAccessInterface
+class IndexedVersions implements CollectionDirectAccessInterface
 {
     use CountableTrait, EmptyTrait, IterableTrait, GetItemsTrait, DirectAccessTrait;
 
@@ -48,12 +48,6 @@ class Versions implements CollectionDirectAccessInterface
             }
         }
         foreach ($versions as $version) {
-            if (!$version instanceof Version) {
-                throw new InvalidArgumentException(
-                    // wait until PHP 5.5 to do Version::class
-                    sprintf('Expected all versions to be of type "%s"', get_class(new Version('1')))
-                );
-            }
             $this->add($version);
         }
     }
@@ -61,27 +55,34 @@ class Versions implements CollectionDirectAccessInterface
     /**
      * Returns true if the specified version is valid (can be added) to the collection. Otherwise, it MUST throw
      * an exception.
-     * @param $version
+     *
+     * @param mixed $version
      * @return bool
      * @throws InvalidArgumentException
      */
-    public function isAcceptable(Version $version)
+    public function isAcceptable($version)
     {
-        return (bool) $version; // always true
+        if (!is_object($version) || !$version instanceof Version) {
+            throw new InvalidArgumentException(
+                sprintf('Expected version to be of type "%s"', Version::class)
+            );
+        }
+        return true;
     }
 
     /**
-     * @param Version $version
+     * @param mixed $version
      * @throws CollectionException
      */
-    public function add(Version $version)
+    public function add($version)
     {
         if ($this->isAcceptable($version)) {
+            /** @var Version $version */
             $this->items[$version->getId()] = $version;
         } else {
             // this should never happen
             throw new CollectionException(
-                'For some reason isAcceptable returned a "falsy" value instead of throwing an exception.'
+                'For some reason isAcceptable returned a falsy value instead of throwing an exception.'
             );
         }
     }

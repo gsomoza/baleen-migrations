@@ -22,26 +22,28 @@ namespace Baleen\Migrations\Version\Collection;
 
 use Baleen\Migrations\Exception\CollectionException;
 use Baleen\Migrations\Version;
-use Baleen\Migrations\Version\Collection\Versions;
+use Baleen\Migrations\Version\Collection\IndexedVersions;
 
 /**
  * A collection of Versions.
  *
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
-class SortableVersions extends Versions
+class SortableVersions extends IndexedVersions
 {
 
     /**
      * This makes the collection behave like a set - throwing an exception if the version already exists in the set.
      *
-     * @param Version $version
+     * @param mixed $version
      * @return bool
      *
      * @throws CollectionException
      */
-    public function isAcceptable(Version $version)
+    public function isAcceptable($version)
     {
+        parent::isAcceptable($version);
+        /** @var Version $version */
         if ($this->has($version->getId())) {
             throw new CollectionException(
                 sprintf('Item with id "%s" already exists', $version->getId())

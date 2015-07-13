@@ -29,19 +29,21 @@ class MigratedVersions extends SortableVersions
     /**
      * This makes the collection behave like a set - throwing an exception if the version already exists in the set.
      *
-     * @param Version $version
+     * @param mixed $version
      * @return bool
      * @throws CollectionException
      * @throws MigrationMissingException
      */
-    public function isAcceptable(Version $version)
+    public function isAcceptable($version)
     {
+        parent::isAcceptable($version);
+        /** @var Version $version */
         if (!$version->isMigrated()) {
             throw new CollectionException(sprintf(
                 'Version "%s" must be migrated in order to be accepted into this collection.',
                 $version->getId()
             ));
         }
-        return parent::isAcceptable($version);
+        return true;
     }
 }

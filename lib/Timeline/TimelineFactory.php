@@ -66,6 +66,23 @@ class TimelineFactory
      */
     public function create(callable $comparator = null, $useInternalDispatcher = true)
     {
+        $this->prepareCollection();
+
+        $timeline = new Timeline($this->availableVersions, $comparator);
+        if ($useInternalDispatcher) {
+            $timeline->setEventDispatcher(new EventDispatcher());
+        }
+
+        return $timeline;
+    }
+
+    /**
+     * Sets versions in $this->availableVersions to migrated if they appear in $this->migratedVersions
+     *
+     * @throws MigrationMissingException
+     */
+    protected function prepareCollection()
+    {
         foreach ($this->migratedVersions as $version) {
             if ($this->availableVersions->has($version)) {
                 $availableVersion = $this->availableVersions->get($version);
@@ -79,12 +96,5 @@ class TimelineFactory
                 );
             }
         }
-
-        $timeline = new Timeline($this->availableVersions, $comparator);
-        if ($useInternalDispatcher) {
-            $timeline->setEventDispatcher(new EventDispatcher());
-        }
-
-        return $timeline;
     }
 }

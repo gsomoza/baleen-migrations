@@ -26,7 +26,7 @@ use Baleen\Migrations\Version as V;
 use Baleen\Migrations\Version;
 use Baleen\Migrations\Version\Collection\LinkedVersions;
 use Baleen\Migrations\Version\Collection\SortableVersions;
-use Baleen\Migrations\Version\Collection\Versions;
+use Baleen\Migrations\Version\Collection\IndexedVersions;
 use BaleenTest\Migrations\BaseTestCase;
 use EBT\Collection\ResourceNotFoundException;
 use Mockery as m;
@@ -42,7 +42,7 @@ class CollectionTest extends BaseTestCase
     {
         $this->setExpectedException(InvalidArgumentException::class);
         $instance = new SortableVersions('test');
-        $this->assertInstanceOf(Versions::class, $instance);
+        $this->assertInstanceOf(IndexedVersions::class, $instance);
     }
 
     public function testConstructorIterator()
@@ -57,19 +57,19 @@ class CollectionTest extends BaseTestCase
     {
         $versions = [new V('1'), '2', 3, new \stdClass()]; // only first one is valid
 
-        $this->setExpectedException(InvalidArgumentException::class);
+        $this->setExpectedException(\Exception::class);
         $instance = new SortableVersions($versions);
     }
 
     public function testConstructor()
     {
         $instance = new SortableVersions();
-        $this->assertInstanceOf(Versions::class, $instance);
+        $this->assertInstanceOf(IndexedVersions::class, $instance);
         $this->assertCount(0, $instance);
 
         $version = new V('1');
         $instance = new SortableVersions([$version]);
-        $this->assertInstanceOf(Versions::class, $instance);
+        $this->assertInstanceOf(IndexedVersions::class, $instance);
         $this->assertCount(1, $instance);
 
         return $instance;
