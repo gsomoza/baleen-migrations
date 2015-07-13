@@ -18,32 +18,12 @@
  * <https://github.com/baleen/migrations>.
  */
 
-namespace Baleen\Migrations\Repository;
-
-use Baleen\Migrations\Migration\Factory\FactoryInterface;
-use Baleen\Migrations\Version\Collection\LinkedVersions;
+namespace Baleen\Migrations\Exception;
 
 /**
- * In charge of loading Migration files and instantiating them.
- *
+ * Class RepositoryException
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
-interface RepositoryInterface
+class RepositoryException extends BaleenException
 {
-    /**
-     * Must fetch all versions available to the repository, load them with their migrations, and return them as a
-     * LinkedVersions collection. It must use a factory (default or supplied by 'setMigrationFactory()') to instantiate
-     * each of the migrations.
-     *
-     * @return LinkedVersions
-     */
-    public function fetchAll();
-
-    /**
-     * Use a custom factory to create migrations. Useful to inject migration instances with additional dependencies
-     * (e.g. database adapters).
-     *
-     * @param FactoryInterface $factory
-     */
-    public function setMigrationFactory(FactoryInterface $factory);
 }

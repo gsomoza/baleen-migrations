@@ -25,13 +25,14 @@ use Baleen\Migrations\Migration\Factory\FactoryInterface;
 use Baleen\Migrations\Migration\Factory\SimpleFactory;
 use Baleen\Migrations\Migration\MigrationInterface;
 use Baleen\Migrations\Version;
+use Baleen\Migrations\Version\Collection\LinkedVersions;
 use Zend\Code\Scanner\DerivedClassScanner;
 use Zend\Code\Scanner\DirectoryScanner;
 
 /**
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
-class DirectoryRepository implements RepositoryInterface
+class DirectoryRepository extends AbstractRepository
 {
     const PATTERN_DEFAULT = '/v([0-9]+).*/';
 
@@ -44,11 +45,6 @@ class DirectoryRepository implements RepositoryInterface
      * @var string
      */
     private $classNameRegex;
-
-    /**
-     * @var FactoryInterface
-     */
-    private $factory;
 
     /**
      * @param $path
@@ -72,13 +68,11 @@ class DirectoryRepository implements RepositoryInterface
     }
 
     /**
-     * Returns all migrations available to the repository.
-     *
-     * @return array Array of Versions, each with a MigrationInstance object
+     * @inheritdoc
      */
-    public function fetchAll()
+    public function doFetchAll()
     {
-        $versions = [];
+        $versions = new LinkedVersions();
         $classes = $this->scanner->getClasses(true);
         foreach ($classes as $class) {
             /* @var DerivedClassScanner $class */
@@ -89,23 +83,14 @@ class DirectoryRepository implements RepositoryInterface
                 && isset($matches[1])) {
                 $migration = $this->factory->create($className);
                 if ($migration instanceof MigrationInterface) {
-                    /* @var \Baleen\Migrations\Migration\MigrationInterface $migration */
                     $version = new Version($matches[1]);
                     $version->setMigration($migration);
-                    $versions[] = $version;
+                    $versions->add($version);
                 }
             }
         }
 
         return $versions;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function setMigrationFactory(FactoryInterface $factory)
-    {
-        $this->factory = $factory;
     }
 
     /**
