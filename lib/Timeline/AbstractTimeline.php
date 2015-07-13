@@ -53,19 +53,17 @@ abstract class AbstractTimeline implements TimelineInterface
     protected $comparator;
 
     /**
-     * @param array|LinkedVersions $versions
-     * @param callable         $comparator
+     * @param LinkedVersions $versions
+     * @param callable       $comparator
      */
-    public function __construct($versions, callable $comparator = null)
+    public function __construct(LinkedVersions $versions, callable $comparator = null)
     {
         $this->migrationBus = MigrationBusFactory::create();
 
-        if (is_array($versions) || (is_object($versions) && !$versions instanceof LinkedVersions)) {
-            $versions = new LinkedVersions($versions);
-        }
         if (null === $comparator) {
             $comparator = new DefaultComparator();
         }
+
         $versions->sortWith($comparator);
         $this->comparator = $comparator;
         $this->versions = clone $versions;

@@ -28,6 +28,7 @@ use Baleen\Migrations\Migration\Options;
 use Baleen\Migrations\Migration\MigrationInterface;
 use Baleen\Migrations\Timeline;
 use Baleen\Migrations\Version as V;
+use Baleen\Migrations\Version\Collection\LinkedVersions;
 use Baleen\Migrations\Version\Comparator\DefaultComparator;
 use Mockery as m;
 use Symfony\Component\EventDispatcher\EventDispatcher;
@@ -53,7 +54,7 @@ class TimelineTest extends BaseTestCase
         if (null === $callable) {
             $callable = new DefaultComparator();
         }
-        return m::mock('Baleen\Migrations\Timeline', [$versions, $callable])->makePartial()->shouldAllowMockingProtectedMethods();
+        return m::mock('Baleen\Migrations\Timeline', [new LinkedVersions($versions), $callable])->makePartial()->shouldAllowMockingProtectedMethods();
     }
 
     public function testConstructor()
@@ -324,7 +325,8 @@ class TimelineTest extends BaseTestCase
      */
     public function testRunSingle($id, Options $options, $expectation)
     {
-        $instance = new Timeline($this->getMixedVersionsFixture());
+        $versions = new LinkedVersions($this->getMixedVersionsFixture());
+        $instance = new Timeline($versions);
 
         $prop = new \ReflectionProperty($instance, 'versions');
         $prop->setAccessible(true);
@@ -342,13 +344,6 @@ class TimelineTest extends BaseTestCase
             $migration->shouldHaveReceived($expectation)->once();
             $this->assertTrue($version->isMigrated() == $options->isDirectionUp());
         }
-    }
-
-    public function testThrowsExceptionIfNoMigration()
-    {
-        $this->setExpectedException(MigrationMissingException::class);
-        $versions = [new V('1')];
-        $instance = new Timeline($versions);
     }
 
     public function runSingleProvider()

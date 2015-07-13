@@ -21,8 +21,10 @@ namespace BaleenTest\Migrations\Version;
 
 use Baleen\Migrations\Exception\InvalidArgumentException;
 use Baleen\Migrations\Exception\CollectionException;
+use Baleen\Migrations\Exception\MigrationMissingException;
 use Baleen\Migrations\Version as V;
 use Baleen\Migrations\Version;
+use Baleen\Migrations\Version\Collection\LinkedVersions;
 use Baleen\Migrations\Version\Collection\SortableVersions;
 use Baleen\Migrations\Version\Collection\Versions;
 use BaleenTest\Migrations\BaseTestCase;
@@ -174,5 +176,11 @@ class CollectionTest extends BaseTestCase
         $instance->rewind();
         $this->assertSame('100', $instance->current()->getId());
         $this->assertSame(100, $instance->key());
+    }
+
+    public function testLinkedVersionsThrowsExceptionIfNoMigration()
+    {
+        $this->setExpectedException(MigrationMissingException::class);
+        new LinkedVersions([new V('1')]);
     }
 }
