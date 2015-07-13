@@ -22,7 +22,8 @@ namespace Baleen\Migrations\Timeline;
 
 use Baleen\Migrations\Exception\MigrationMissingException;
 use Baleen\Migrations\Timeline;
-use Baleen\Migrations\Version\Collection;
+use Baleen\Migrations\Version\Collection\LinkedVersions;
+use Baleen\Migrations\Version\Collection\SortableVersions;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
 /**
@@ -30,10 +31,10 @@ use Symfony\Component\EventDispatcher\EventDispatcher;
  */
 class TimelineFactory
 {
-    /** @var Collection */
+    /** @var LinkedVersions */
     private $availableVersions;
 
-    /** @var Collection */
+    /** @var SortableVersions */
     private $migratedVersions;
 
     /**
@@ -43,10 +44,10 @@ class TimelineFactory
     public function __construct($availableVersions, $migratedVersions = [])
     {
         if (is_array($availableVersions)) {
-            $availableVersions = new Collection($availableVersions);
+            $availableVersions = new LinkedVersions($availableVersions);
         }
         if (is_array($migratedVersions)) {
-            $migratedVersions = new Collection($migratedVersions);
+            $migratedVersions = new SortableVersions($migratedVersions);
         }
         $this->availableVersions = $availableVersions;
         $this->migratedVersions = $migratedVersions;

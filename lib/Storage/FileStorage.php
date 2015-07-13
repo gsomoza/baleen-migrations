@@ -22,7 +22,7 @@ namespace Baleen\Migrations\Storage;
 
 use Baleen\Migrations\Exception\InvalidArgumentException;
 use Baleen\Migrations\Version;
-use Baleen\Migrations\Version\Collection;
+use Baleen\Migrations\Version\Collection\MigratedVersions;
 
 /**
  * {@inheritDoc}
@@ -72,11 +72,11 @@ class FileStorage implements StorageInterface
     /**
      * Write a collection of versions to the storage file.
      *
-     * @param Collection $versions
+     * @param MigratedVersions $versions
      *
      * @return int
      */
-    public function writeMigratedVersions(Collection $versions)
+    public function writeMigratedVersions(MigratedVersions $versions)
     {
         $ids = [];
         foreach ($versions as $version) {

@@ -23,7 +23,7 @@ namespace Baleen\Migrations\Event\Timeline;
 use Baleen\Migrations\Event\EventInterface;
 use Baleen\Migrations\Migration\Options;
 use Baleen\Migrations\Version;
-use Baleen\Migrations\Version\Collection;
+use Baleen\Migrations\Version\Collection\LinkedVersions;
 use Symfony\Component\EventDispatcher\Event;
 
 /**
@@ -34,7 +34,7 @@ use Symfony\Component\EventDispatcher\Event;
 class CollectionEvent extends Event implements EventInterface
 {
     /**
-     * @var Collection
+     * @var LinkedVersions
      */
     protected $collection;
 
@@ -53,9 +53,9 @@ class CollectionEvent extends Event implements EventInterface
      *
      * @param Version        $target
      * @param Options $options
-     * @param Collection     $versions
+     * @param LinkedVersions     $versions
      */
-    public function __construct(Version $target, Options $options, Collection $versions)
+    public function __construct(Version $target, Options $options, LinkedVersions $versions)
     {
         $this->options = $options;
         $this->target = $target;
@@ -71,7 +71,7 @@ class CollectionEvent extends Event implements EventInterface
     }
 
     /**
-     * @return Collection
+     * @return LinkedVersions
      */
     public function getCollection()
     {

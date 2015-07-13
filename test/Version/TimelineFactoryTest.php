@@ -21,7 +21,7 @@ namespace BaleenTest\Migrations\Version;
 
 use Baleen\Migrations\Timeline\TimelineFactory;
 use Baleen\Migrations\Version;
-use Baleen\Migrations\Version\Collection;
+use Baleen\Migrations\Version\Collection\SortableVersions;
 use BaleenTest\Migrations\BaseTestCase;
 use Mockery as m;
 

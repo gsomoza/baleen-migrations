@@ -26,7 +26,7 @@ use Baleen\Migrations\Exception\TimelineException;
 use Baleen\Migrations\Migration\Options;
 use Baleen\Migrations\Timeline\AbstractTimeline;
 use Baleen\Migrations\Timeline\TimelineEmitter;
-use Baleen\Migrations\Version\Collection;
+use Baleen\Migrations\Version\Collection\SortableVersions;
 
 /**
  * @author Gabriel Somoza <gabriel@strategery.io>
@@ -39,7 +39,7 @@ class Timeline extends AbstractTimeline
      * @param Version|string $goalVersion
      * @param Options $options
      *
-     * @return Collection A collection of modified versions
+     * @return SortableVersions A collection of modified versions
      *
      * @throws MigrationMissingException
      */
@@ -58,7 +58,7 @@ class Timeline extends AbstractTimeline
      * @param Version|string $goalVersion
      * @param Options $options
      *
-     * @return Collection A collection of modified versions
+     * @return SortableVersions A collection of modified versions
      *
      * @throws \Exception
      */
@@ -79,7 +79,7 @@ class Timeline extends AbstractTimeline
      * @param $goalVersion
      * @param \Baleen\Migrations\Migration\Options $options
      *
-     * @return Collection
+     * @return SortableVersions
      */
     public function goTowards($goalVersion, Options $options = null)
     {

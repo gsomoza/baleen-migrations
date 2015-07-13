@@ -26,7 +26,7 @@ use Baleen\Migrations\Migration\Command\MigrationBusFactory;
 use Baleen\Migrations\Migration\Options;
 use Baleen\Migrations\Migration\MigrationInterface;
 use Baleen\Migrations\Version;
-use Baleen\Migrations\Version\Collection;
+use Baleen\Migrations\Version\Collection\LinkedVersions;
 use Baleen\Migrations\Version\Comparator\DefaultComparator;
 
 /**
@@ -46,22 +46,22 @@ abstract class AbstractTimeline implements TimelineInterface
     /** @var string[] */
     protected $allowedDirections;
 
-    /** @var Collection */
+    /** @var LinkedVersions */
     protected $versions;
 
     /** @var callable */
     protected $comparator;
 
     /**
-     * @param array|Collection $versions
+     * @param array|LinkedVersions $versions
      * @param callable         $comparator
      */
     public function __construct($versions, callable $comparator = null)
     {
         $this->migrationBus = MigrationBusFactory::create();
 
-        if (is_array($versions) || (is_object($versions) && !$versions instanceof Collection)) {
-            $versions = new Collection($versions);
+        if (is_array($versions) || (is_object($versions) && !$versions instanceof LinkedVersions)) {
+            $versions = new LinkedVersions($versions);
         }
         if (null === $comparator) {
             $comparator = new DefaultComparator();
@@ -111,16 +111,16 @@ abstract class AbstractTimeline implements TimelineInterface
      * @param Options $options
      * @param $collection
      *
-     * @return Collection
+     * @return LinkedVersions
      */
-    protected function runCollection($goalVersion, Options $options, Collection $collection)
+    protected function runCollection($goalVersion, Options $options, LinkedVersions $collection)
     {
         $goalVersion = $this->versions->getOrException($goalVersion);
 
         // dispatch COLLECTION_BEFORE
         $this->getEmitter()->dispatchCollectionBefore($goalVersion, $options, $collection);
 
-        $modified = new Collection();
+        $modified = new LinkedVersions();
         foreach ($collection as $version) {
             $result = $this->runSingle($version, $options);
             if ($result) {

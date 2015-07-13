@@ -18,72 +18,36 @@
  * <https://github.com/baleen/migrations>.
  */
 
-namespace Baleen\Migrations\Version;
+namespace Baleen\Migrations\Version\Collection;
 
 use Baleen\Migrations\Exception\CollectionException;
 use Baleen\Migrations\Version;
-use Baleen\Migrations\Version\Collection\BaseCollection;
+use Baleen\Migrations\Version\Collection\Versions;
 
 /**
  * A collection of Versions.
  *
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
-class Collection extends BaseCollection
+class SortableVersions extends Versions
 {
+
     /**
+     * This makes the collection behave like a set - throwing an exception if the version already exists in the set.
+     *
      * @param Version $version
+     * @return bool
+     *
      * @throws CollectionException
      */
-    public function add(Version $version)
+    public function isAcceptable(Version $version)
     {
         if ($this->has($version->getId())) {
             throw new CollectionException(
                 sprintf('Item with id "%s" already exists', $version->getId())
             );
         }
-        $this->items[$version->getId()] = $version;
-    }
-
-    /**
-     * @param $version
-     */
-    public function remove($version)
-    {
-        $version = $this->getVersionId($version);
-        if ($this->has($version)) {
-            unset($this->items[$version]);
-        }
-    }
-
-    /**
-     * Adds a new version to the collection if it doesn't exist, or it updates the existing version if it does.
-     *
-     * @param Version $version
-     */
-    public function addOrUpdate(Version $version)
-    {
-        if ($this->has($version)) {
-            $this->items[$version->getId()] = $version; // replace
-        } else {
-            $this->add($version);
-        }
-    }
-
-    /**
-     * Merges another collection into this collection, replacing versions that exist and adding those that don't.
-     *
-     * @param Collection $collection
-     *
-     * @return $this
-     */
-    public function merge(Collection $collection)
-    {
-        foreach ($collection as $version) {
-            $this->addOrUpdate($version);
-        }
-
-        return $this;
+        return true;
     }
 
     /**
@@ -100,5 +64,21 @@ class Collection extends BaseCollection
     public function getReverse()
     {
         return new static(array_reverse($this->items));
+    }
+
+    /**
+     * Merges another set into this one, replacing versions that exist and adding those that don't.
+     *
+     * @param SortableVersions $collection
+     *
+     * @return $this
+     */
+    public function merge(SortableVersions $collection)
+    {
+        foreach ($collection as $version) {
+            $this->addOrReplace($version);
+        }
+
+        return $this;
     }
 }

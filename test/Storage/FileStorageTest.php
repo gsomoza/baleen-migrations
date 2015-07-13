@@ -21,7 +21,7 @@ namespace BaleenTest\Migrations\Storage;
 
 use Baleen\Migrations\Storage\FileStorage;
 use Baleen\Migrations\Version;
-use Baleen\Migrations\Version\Collection;
+use Baleen\Migrations\Version\Collection\MigratedVersions;
 use BaleenTest\Migrations\BaseTestCase;
 use Mockery as m;
 
@@ -68,13 +68,13 @@ class FileStorageTest extends BaseTestCase
 
     /**
      * @param $file
-     * @param Collection $versions
+     * @param MigratedVersions $versions
      *
      * @dataProvider writeMigratedVersionsProvider
      */
     public function testWriteMigratedVersions($file, $versions)
     {
-        $versions = new Collection($versions);
+        $versions = new MigratedVersions($versions);
         $instance = new FileStorage($file);
         $instance->writeMigratedVersions($versions);
         $this->assertFileExists($file);

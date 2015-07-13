@@ -1,4 +1,5 @@
 <?php
+
 /*
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -14,36 +15,37 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the MIT license. For more information, see
- * <http://www.doctrine-project.org>.
+ * <https://github.com/baleen/migrations>.
  */
 
-namespace BaleenTest\Migrations;
+namespace Baleen\Migrations\Version\Collection;
 
-use Baleen\Migrations\Migration\MigrationInterface;
+use Baleen\Migrations\Exception\MigrationMissingException;
 use Baleen\Migrations\Version;
-use Mockery as m;
 
 /**
+ * Represents a set of Versions, all of which must be linked to a Migration
+ *
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
-class BaseTestCase extends \PHPUnit_Framework_TestCase
+class LinkedVersions extends SortableVersions
 {
-
-    protected function createVersionsWithMigrations($ids)
+    /**
+     * Validates that migrations added to this set must all have a linked Migration
+     *
+     * @param Version $version
+     * @return bool
+     *
+     * @throws MigrationMissingException
+     */
+    public function isAcceptable(Version $version)
     {
-        if (!is_array($ids)) {
-            $ids = func_get_args();
+        if (!$version->hasMigration()) {
+            throw new MigrationMissingException(sprintf(
+                'Version "%s" must be associated with a Migration in order to be accepted into this collection.',
+                $version->getId()
+            ));
         }
-        $versions = Version::fromArray($ids);
-        foreach ($versions as $version) {
-            $version->setMigration(m::mock(MigrationInterface::class));
-        }
-        return $versions;
+        return parent::isAcceptable($version);
     }
-
-    public function tearDown()
-    {
-        m::close();
-    }
-
 }

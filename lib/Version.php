@@ -20,6 +20,7 @@
 
 namespace Baleen\Migrations;
 
+use Baleen\Migrations\Exception\InvalidArgumentException;
 use Baleen\Migrations\Migration\MigrationInterface;
 use Baleen\Migrations\Version\VersionInterface;
 
@@ -46,13 +47,16 @@ class Version implements VersionInterface
     protected $migration;
 
     /**
-     * Constructor.
-     *
      * @param $id string
+     * @throws InvalidArgumentException
      */
     public function __construct($id)
     {
-        $this->id = (string) $id;
+        $id = trim((string) $id);
+        if (empty($id)) {
+            throw new InvalidArgumentException('A version\'s id cannot be empty');
+        }
+        $this->id = $id;
     }
 
     /**
@@ -98,6 +102,14 @@ class Version implements VersionInterface
     }
 
     /**
+     * @return bool
+     */
+    public function hasMigration()
+    {
+        return !empty($this->migration);
+    }
+
+    /**
      * Creates a list of versions based on specified IDs
      *
      * @param mixed $versionIds
@@ -114,5 +126,10 @@ class Version implements VersionInterface
             $results[] = new static($id);
         }
         return $results;
+    }
+
+    public function __toString()
+    {
+        return $this->getId();
     }
 }

@@ -22,7 +22,7 @@ namespace BaleenTest\Migrations;
 use Baleen\Migrations\Event\EventInterface;
 use Baleen\Migrations\Event\Timeline\CollectionEvent;
 use Baleen\Migrations\Event\Timeline\MigrationEvent;
-use Baleen\Migrations\Exception\MigrationException;
+use Baleen\Migrations\Exception\MigrationMissingException;
 use Baleen\Migrations\Exception\TimelineException;
 use Baleen\Migrations\Migration\Options;
 use Baleen\Migrations\Migration\MigrationInterface;
@@ -344,13 +344,11 @@ class TimelineTest extends BaseTestCase
         }
     }
 
-    public function testRunSingleExceptionIfNoMigration()
+    public function testThrowsExceptionIfNoMigration()
     {
+        $this->setExpectedException(MigrationMissingException::class);
         $versions = [new V('1')];
         $instance = new Timeline($versions);
-
-        $this->setExpectedException(MigrationException::class);
-        $instance->runSingle($versions[0], new Options(Options::DIRECTION_UP));
     }
 
     public function runSingleProvider()

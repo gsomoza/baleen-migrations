@@ -27,7 +27,7 @@ use Baleen\Migrations\Event\Timeline\CollectionEvent;
 use Baleen\Migrations\Event\Timeline\MigrationEvent;
 use Baleen\Migrations\Migration\Options;
 use Baleen\Migrations\Version;
-use Baleen\Migrations\Version\Collection;
+use Baleen\Migrations\Version\Collection\LinkedVersions;
 
 /**
  * Dispatches Timeline events.
@@ -39,15 +39,15 @@ class TimelineEmitter implements EmitterInterface
     /**
      * @param Version        $targetVersion
      * @param Options $options
-     * @param Collection     $versions
+     * @param LinkedVersions     $versions
      */
-    public function dispatchCollectionBefore(Version $targetVersion, Options $options, Collection $versions)
+    public function dispatchCollectionBefore(Version $targetVersion, Options $options, LinkedVersions $versions)
     {
         $event = new CollectionEvent($targetVersion, $options, $versions);
         $this->dispatchEvent(EventInterface::COLLECTION_BEFORE, $event);
     }
 
-    public function dispatchCollectionAfter(Version $targetVersion, Options $options, Collection $versions)
+    public function dispatchCollectionAfter(Version $targetVersion, Options $options, LinkedVersions $versions)
     {
         $event = new CollectionEvent($targetVersion, $options, $versions);
         $this->dispatchEvent(EventInterface::COLLECTION_AFTER, $event);
