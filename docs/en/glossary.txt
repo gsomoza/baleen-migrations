@@ -1,0 +1,74 @@
+Glossary
+========
+
+Baleen Migrations has been carefully engineered with the goal of satisfying as many types migration as possible.
+Whether its a database migration, image transformations or even source code, this module aims to help in the process of
+pragmatically transform virtually anything from one state to the other, taking it through a series of pre-defined
+steps (migrations).
+
+The purpose of this document is to standardise the use of certain terms throughout the context of this project, as well
+as to provide information about the different models that make up the "migrations" domain.
+
+.. glossary::
+
+   Ecosystem
+         Refers to a group of objects related to each other that work towards a single purpose: migrating a
+         :term:`Target Resource` from point A to point B. In this project, some of those objects are (in no particular
+         order):
+
+             * :term:`Timeline`
+             * :term:`Repository`
+             * :term:`Storage`
+             * :term:`Version`
+             * :term:`Migration`
+
+         A single application can have any number of Migration Ecosystems, but its most common to find only one or two per
+         project.
+
+   Migration
+      (noun) A migration is a class that can execute an incremental (when migrating / "going up") or decremental (when
+      reverting / "going down") transformation on a target resource. All classes that implement ``MigrationInterface``
+      are considered a migration.
+
+   Migrate
+      (verb) Verb used to refer to the process of running one or more migrations.
+
+   Migrated
+      (adj.) If something is "migrated" then it means that the migration's ``up()`` method has executed successfully
+      and the corresponding version is (or will immediately be) stored in the :term:`Storage`. The opposite is true
+      if something has NOT been migrated.
+
+   Target Resource
+      During a migrationm the target resource or migration target is WHAT's being migrated. It can be a database, an
+      image, other files, etc. There should only be one target resource for any given Migration Ecosystem.
+
+   Repository
+      The Repository is an object that knows where to find term:`migrations <migration>`.
+
+   Storage
+      The Storage object is used to persist information about which :term:`Versions <version>` have already been
+      migrated.
+
+   Timeline
+      The Timeline is an object that is in charge of executing migrations in bulk using certain pre-defined algorithms.
+      It holds an immutable :term:`Version Collection`.
+
+   Version
+      A Version is a lightweight entity that is persisted into the :term:`Storage` and holds state information about
+      a :term:`Migration`. Currently the only state information being saved is whether the Version is :term:`migrated`
+      or not. If a Version is present in the :term:`Storage` then it means that Version has already been migrated.
+
+   Version Collection
+      A special object to represent and sort a set of Collection. Its important to note that it behaves as an ordered
+      set of elements.
+
+Core Models
+-----------
+
+.. toctree::
+   :maxdepth: 2
+
+   core-concepts/migration
+   core-concepts/timeline
+
+

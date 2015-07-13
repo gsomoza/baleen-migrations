@@ -259,7 +259,9 @@ class TimelineTest extends BaseTestCase
 
         $this->assertSame($dispatcher, $timeline->getEventDispatcher());
 
-        $collection = $timeline->getVersions();
+        $prop = new \ReflectionProperty($timeline, 'versions');
+        $prop->setAccessible(true);
+        $collection = $prop->getValue($timeline);
 
         $dispatcher->addListener(
             EventInterface::COLLECTION_BEFORE,
@@ -323,7 +325,11 @@ class TimelineTest extends BaseTestCase
     public function testRunSingle($id, Options $options, $expectation)
     {
         $instance = new Timeline($this->getMixedVersionsFixture());
-        $version = $instance->getVersions()->get($id);
+
+        $prop = new \ReflectionProperty($instance, 'versions');
+        $prop->setAccessible(true);
+
+        $version = $prop->getValue($instance)->get($id);
         /** @var m\Mock $migration */
         $migration = $version->getMigration();
 

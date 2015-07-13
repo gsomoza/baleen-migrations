@@ -60,7 +60,7 @@ abstract class AbstractTimeline implements TimelineInterface
     {
         $this->migrationBus = MigrationBusFactory::create();
 
-        if (is_array($versions)) {
+        if (is_array($versions) || (is_object($versions) && !$versions instanceof Collection)) {
             $versions = new Collection($versions);
         }
         if (null === $comparator) {
@@ -68,7 +68,7 @@ abstract class AbstractTimeline implements TimelineInterface
         }
         $versions->sortWith($comparator);
         $this->comparator = $comparator;
-        $this->versions = $versions;
+        $this->versions = clone $versions;
     }
 
     /**
@@ -136,13 +136,5 @@ abstract class AbstractTimeline implements TimelineInterface
         $this->getEmitter()->dispatchCollectionAfter($goalVersion, $options, $modified);
 
         return $modified;
-    }
-
-    /**
-     * @return Collection
-     */
-    public function getVersions()
-    {
-        return $this->versions;
     }
 }

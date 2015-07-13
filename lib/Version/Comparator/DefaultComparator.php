@@ -29,11 +29,15 @@ use Baleen\Migrations\Version\VersionInterface;
  */
 class DefaultComparator implements ComparatorInterface
 {
+    const PATTERN = '/(\d+)/';
+
     /**
      * {@inheritDoc}
      */
     public function __invoke(VersionInterface $version1, VersionInterface $version2)
     {
-        return (int) $version1->getId() - (int) $version2->getId();
+        preg_match(self::PATTERN, $version1->getId(), $matches1);
+        preg_match(self::PATTERN, $version2->getId(), $matches2);
+        return (int) $matches1[0] - (int) $matches2[0];
     }
 }

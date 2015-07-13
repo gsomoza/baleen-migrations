@@ -2,7 +2,7 @@ Getting Started
 ===============
 
 Before you get started its important you understand what this particular library is about. Make sure you read the
-introduction in the :doc:`index` and the following architecture overview.
+:doc:`introduction <index>` and the following architecture overview.
 
 Overview
 --------
@@ -11,14 +11,15 @@ The Baleen projects aims to make migrations easier for anyone. All projects unde
 be related to migrations in one way or another.
 
 Baleen Migrations is the core of the Baleen project. It provides a domain model on top of which other migration
-libraries can run their migrations.
+libraries can run their :term:`migration scripts <migration>`.
 
 In other words: Baleen Migrations alone is NOT supposed to be an end-user solution. Its meant to be used by other
 repositories such as Doctrine Migrations, and it is those repositories that would become the end-user libraries that
 framework users consume.
 
 So if you came to this repository to find a new migrations solution then you're not quite in the right place yet.
-Instead, please refer to :doc:`implementations` libraries - we hope there you'll find what you're looking for.
+Instead, please refer to the :doc:`implementations <implementations>` list of libraries - we hope there you'll find what
+you're looking for.
 
 Installation
 ------------

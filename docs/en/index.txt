@@ -11,21 +11,21 @@ implementation:
 * WHAT is going to be migrated? It could be a database, images, documents, etc.
 * HOW its going to be migrated? You can wrap each migration into DB transactions. Or not, its up to you.
 * What to do when a migration fails? We'll let you know WHEN it happens, but its up to you to decide what to do
-  (e.g. cancel the transaction).
+  (e.g. cancel the transaction / re-throw the exception, etc).
 
 Contents:
 
 .. toctree::
-   :glob:
+   :numbered:
    :maxdepth: 2
 
    getting-started
+   migration
+   timeline
    implementations
-   examples
-   examples/*
+   glossary
 
-Indices and tables
+Indices and Tables
 ==================
 
 * :ref:`genindex`
-

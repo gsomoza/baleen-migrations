@@ -1,0 +1,81 @@
+Timeline
+========
+
+A ``Timeline`` is an object comprised of a :term:`version collection` that's ordered by *version*.
+
+Public Methods
+--------------
+
+The Timeline is in charge of executing one or more migrations in any of four different ways:
+
+.. glossary::
+    ``upTowards(target)``
+        Executes all migrations in **ascending sequential order**, starting from the first "pending"
+        version, up to *and including* the "target" version - and skipping any versions that have already been migrated.
+        Calls each migration's ``up()`` method upon execution.
+
+    ``downTowards(target)``
+        Executes all migrations in **descending sequential order**, starting from the last
+        migration and down until *and including* the "target" version. Calls each migration's ``down()`` method upon
+        execution.
+
+    ``goTowards(target)``
+        Combines the previous two operations into one. Executes all migrations ``up()`` to and
+        including the "target" version. And then executes all remaining versions ``down()``, starting from the last
+        available version and ending in the version immediately **after** the "target" version. Useful to make sure
+        all versions before and including "target" are **migrated**, while all others are **pending**.
+
+    ``runSingle(version, options)``
+        Runs a single version's migration using the specified options. Can be called directly and useful mostly for
+        testing purposes in a controlled environment.
+
+Constructor
+-----------
+
+When being instantiated the Timeline requires a :term:`version collection` and a *comparator* as arguments.
+
+.. glossary::
+
+    ``VersionCollection $versions``
+        The :term:`version collection` must contain at least one :term:`Version`. All versions in the collection must
+        have a :term:`migration` assigned to them or otherwise an exception will be thrown.
+
+        Something to note is that the ``VersionCollection`` object will be cloned before being stored in the Timeline.
+        Since the Timeline doesn't have any public methods available to access the internal version collection this
+        effectively means that once the Timeline is created its collection cannot be altered.
+
+    ``callable $comparator``
+        The comparator must be a ``callable`` that receives two :term:`Versions <version>` as arguments and returns a
+        number less than, equal to, or greater than zero (0) if the first version should be executed before than, is
+        the same as, or should be executed after the second version (respectively).
+
+        The default comparator simply
+        extracts the first number from each version and subtracts the second one from the first one. See class
+        ``Version\Comparator\DefaultComparator`` for the source code.
+
+Events
+------
+
+The Timeline is coupled with a ``TimelineEmitter`` class that fires domain events for each operation if an
+``EventDispatcher`` is present. Events that will be fired are:
+
+.. glossary::
+
+    Before Collection
+    ``EventInterface::COLLECTION_BEFORE``
+        Fired before the Timeline executes one of the *collection methods* (upTowards, downTowards, goTowards). The
+        listener callback will receive a `CollectionEvent` object as a parameter, which includes information about the
+        collection of versions, the `Options` and the *target* version.
+
+    After Collection
+    ``EventInterface::COLLECTION_AFTER``
+        Same as above, but fired once the the collection method has finished executing all scheduled migrations.
+
+    Before Migration
+    ``EventInterface::MIGRATION_BEFORE``
+        Fired before the Timeline executes a single migration, which occurs both as part of executing ``runSingle`` and
+        also for each of the migrations executed by any *collection method*.
+
+    After Migration
+    ``EventInterface::MIGRATION_AFTER``
+        Same as above, but fired once the migration has finished.
