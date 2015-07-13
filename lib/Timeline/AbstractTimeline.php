@@ -80,7 +80,7 @@ abstract class AbstractTimeline implements TimelineInterface
     protected function shouldMigrate(Version $version, Options $options)
     {
         return $options->isForced()
-        || ($options->isDirectionUp() xor $version->isMigrated()); // direction is opposite to state
+        || ($options->isDirectionUp() ^ $version->isMigrated()); // direction is opposite to state
     }
 
     /**
