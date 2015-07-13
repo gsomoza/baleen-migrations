@@ -116,7 +116,8 @@ class IndexedVersions implements CollectionDirectAccessInterface
      */
     public function prev()
     {
-        prev($this->getItems());
+        $items = &$this->getItems();
+        prev($items);
     }
 
     /**
@@ -124,7 +125,8 @@ class IndexedVersions implements CollectionDirectAccessInterface
      */
     public function end()
     {
-        end($this->getItems());
+        $items = &$this->getItems();
+        end($items);
     }
 
     /**
