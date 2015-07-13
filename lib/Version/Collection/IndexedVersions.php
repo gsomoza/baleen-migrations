@@ -56,18 +56,13 @@ class IndexedVersions implements CollectionDirectAccessInterface
      * Returns true if the specified version is valid (can be added) to the collection. Otherwise, it MUST throw
      * an exception.
      *
-     * @param mixed $version
+     * @param Version $version
      * @return bool
      * @throws InvalidArgumentException
      */
-    public function isAcceptable($version)
+    public function isAcceptable(Version $version)
     {
-        if (!is_object($version) || !$version instanceof Version) {
-            throw new InvalidArgumentException(
-                sprintf('Expected version to be of type "%s"', Version::class)
-            );
-        }
-        return true;
+        return $version; // always true
     }
 
     /**

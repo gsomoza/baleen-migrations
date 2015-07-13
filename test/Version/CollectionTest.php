@@ -53,14 +53,6 @@ class CollectionTest extends BaseTestCase
         $this->assertCount(3, $instance);
     }
 
-    public function testConstructorWithInvalidVersions()
-    {
-        $versions = [new V('1'), '2', 3, new \stdClass()]; // only first one is valid
-
-        $this->setExpectedException(\Exception::class);
-        $instance = new SortableVersions($versions);
-    }
-
     public function testConstructor()
     {
         $instance = new SortableVersions();
