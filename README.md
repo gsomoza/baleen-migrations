@@ -31,7 +31,8 @@ Installation with Composer is simple:
 
 Documentation
 =============
-For more documentation please refer to the [online documentation]() (or to the `./docs` folder).
+For more documentation please refer to the [online documentation](http://baleen.readthedocs.org/en/latest/) (or build
+the `./docs` folder locally).
 
 Contributing
 ============
