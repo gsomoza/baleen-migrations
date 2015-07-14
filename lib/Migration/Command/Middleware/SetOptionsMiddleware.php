@@ -22,7 +22,6 @@ namespace Baleen\Migrations\Migration\Command\Middleware;
 
 use Baleen\Migrations\Migration\Capabilities\OptionsAwareInterface;
 use Baleen\Migrations\Migration\Command\MigrateCommand;
-use League\Tactician\Middleware;
 
 /**
  * Checks if a migration is an instance of OptionsAwareInterface and if so sends it

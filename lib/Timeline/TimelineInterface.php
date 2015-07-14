@@ -21,7 +21,6 @@
 namespace Baleen\Migrations\Timeline;
 
 use Baleen\Migrations\Migration\Options;
-use Baleen\Migrations\Version;
 
 /**
  * The Timeline is responsible of emitting MigrateCommands based on how the user wants to navigate the timeline

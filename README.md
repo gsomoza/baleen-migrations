@@ -5,6 +5,8 @@ Status
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/baleen/migrations/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/baleen/migrations/?branch=master)
 [![Documentation Status](https://readthedocs.org/projects/baleen/badge/?version=latest)](https://readthedocs.org/projects/baleen/?badge=latest)
 
+[![SensioLabsInsight](https://insight.sensiolabs.com/projects/6251e1ff-532d-4dad-a831-93dcf0561a49/mini.png)](https://insight.sensiolabs.com/projects/6251e1ff-532d-4dad-a831-93dcf0561a49)
+
 **NB!:** This project is still an early release. Please do not use in 
 production-critical environments. We do not guarantee the safety of your data - use
 at your own risk.

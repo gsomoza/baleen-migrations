@@ -25,13 +25,12 @@ use Baleen\Migrations\Exception\MigrationMissingException;
 use Baleen\Migrations\Exception\TimelineException;
 use Baleen\Migrations\Migration\Options;
 use Baleen\Migrations\Timeline\AbstractTimeline;
-use Baleen\Migrations\Timeline\TimelineEmitter;
 use Baleen\Migrations\Version\Collection\SortableVersions;
 
 /**
  * @author Gabriel Somoza <gabriel@strategery.io>
  *
- * @method TimelineEmitter getEmitter()
+ * @method Timeline\TimelineEmitter getEmitter()
  */
 class Timeline extends AbstractTimeline
 {

@@ -22,7 +22,6 @@ namespace Baleen\Migrations\Migration\Command\Middleware;
 
 use Baleen\Migrations\Migration\Capabilities\TransactionAwareInterface;
 use Baleen\Migrations\Migration\Command\MigrateCommand;
-use League\Tactician\Middleware;
 
 /**
  * Wraps the migration in a transaction if the migration implements

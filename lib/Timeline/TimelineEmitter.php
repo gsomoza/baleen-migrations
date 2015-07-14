@@ -21,8 +21,8 @@
 namespace Baleen\Migrations\Timeline;
 
 use Baleen\Migrations\Event\CanDispatchEventsTrait;
-use Baleen\Migrations\Event\EventInterface;
 use Baleen\Migrations\Event\EmitterInterface;
+use Baleen\Migrations\Event\EventInterface;
 use Baleen\Migrations\Event\Timeline\CollectionEvent;
 use Baleen\Migrations\Event\Timeline\MigrationEvent;
 use Baleen\Migrations\Migration\Options;
