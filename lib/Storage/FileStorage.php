@@ -40,7 +40,7 @@ class FileStorage implements StorageInterface
      */
     public function __construct($path)
     {
-        if (!is_file($path) && !is_writeable(realpath(dirname($path)))) {
+        if (!is_file($path) || !is_writeable(realpath(dirname($path)))) {
             throw new InvalidArgumentException(
                 'Argument "path" must be a valid path to a file which must be writable.'
             );
