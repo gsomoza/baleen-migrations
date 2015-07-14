@@ -94,6 +94,6 @@ class FileStorage extends AbstractStorage
                 $this->path
             ));
         }
-        return $result;
+        return (bool) $result;
     }
 }
