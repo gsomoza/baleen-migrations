@@ -7,7 +7,7 @@ Status
 [![Packagist](https://img.shields.io/packagist/v/symfony/symfony.svg)](https://packagist.org/packages/baleen/migrations)
 
 [![Author](http://img.shields.io/badge/author-@gabriel_somoza-blue.svg)](https://twitter.com/gabriel_somoza)
-[![Author](http://img.shields.io/badge/author-@_mikeSimonson-blue.svg)](https://twitter.com/_mikeSimonson)
+[![Author](http://img.shields.io/badge/author-@__mikeSimonson-blue.svg)](https://twitter.com/_mikeSimonson)
 [![License](https://img.shields.io/packagist/l/baleen/migrations.svg)](https://github.com/baleen/migrations/blob/master/LICENSE)
 [![Documentation Status](https://readthedocs.org/projects/baleen/badge/?version=latest)](https://readthedocs.org/projects/baleen/?badge=latest)
 
