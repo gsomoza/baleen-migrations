@@ -21,6 +21,7 @@
 namespace Baleen\Migrations\Storage;
 
 use Baleen\Migrations\Exception\InvalidArgumentException;
+use Baleen\Migrations\Exception\StorageException;
 use Baleen\Migrations\Version;
 use Baleen\Migrations\Version\Collection\MigratedVersions;
 
@@ -29,7 +30,7 @@ use Baleen\Migrations\Version\Collection\MigratedVersions;
  *
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
-class FileStorage implements StorageInterface
+class FileStorage extends AbstractStorage
 {
     protected $path;
 
@@ -40,32 +41,32 @@ class FileStorage implements StorageInterface
      */
     public function __construct($path)
     {
-        if (!is_file($path) || !is_writeable(realpath(dirname($path)))) {
-            throw new InvalidArgumentException(
-                'Argument "path" must be a valid path to a file which must be writable.'
-            );
-        }
         $this->path = $path;
+
     }
 
     /**
      * Reads versions from the storage file.
-     *
-     * @return array
+     * @return Version[]
+     * @throws StorageException
      */
-    public function readMigratedVersions()
+    protected function readVersions()
     {
-        $contents = explode("\n", file_get_contents($this->path));
+        $result = file_get_contents($this->path);
+        if ($result === false) {
+            throw new StorageException(
+                'Argument "path" must be a valid path to a file which must be writable.'
+            );
+        }
+        $contents = explode("\n", $result);
         $versions = [];
         foreach ($contents as $versionId) {
             $versionId = trim($versionId);
             if (!empty($versionId)) { // skip empty lines
                 $version = new Version($versionId);
-                $version->setMigrated(true);
                 $versions[] = $version;
             }
         }
-
         return $versions;
     }
 
@@ -73,10 +74,10 @@ class FileStorage implements StorageInterface
      * Write a collection of versions to the storage file.
      *
      * @param MigratedVersions $versions
-     *
      * @return int
+     * @throws StorageException
      */
-    public function writeMigratedVersions(MigratedVersions $versions)
+    public function saveCollection(MigratedVersions $versions)
     {
         $ids = [];
         foreach ($versions as $version) {
@@ -86,6 +87,13 @@ class FileStorage implements StorageInterface
         }
         $contents = implode("\n", $ids);
 
-        return file_put_contents($this->path, $contents) !== false;
+        $result = file_put_contents($this->path, $contents);
+        if ($result === false) {
+            throw new StorageException(sprintf(
+                'Could not write to file "%s".',
+                $this->path
+            ));
+        }
+        return $result;
     }
 }

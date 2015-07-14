@@ -36,12 +36,6 @@ class FileStorageTest extends BaseTestCase
      */
     protected $versionIds = ['201507020508', '201507020509', '1015', '1', '301507020508'];
 
-    public function testInvalidDirectoryInConstructor()
-    {
-        $this->setExpectedException('Baleen\Migrations\Exception\InvalidArgumentException');
-        new FileStorage('/non/existent/file');
-    }
-
     /**
      * @param $file
      * @param array $versionIds
@@ -51,7 +45,7 @@ class FileStorageTest extends BaseTestCase
     public function testReadMigratedVersions($file, array $versionIds)
     {
         $instance = new FileStorage($file);
-        $versions = $instance->readMigratedVersions();
+        $versions = $instance->fetchAll();
         $this->assertCount(count($versionIds), $versions);
         foreach ($versions as $version) {
             /** @var \Baleen\Migrations\Version\VersionInterface $version */
@@ -76,13 +70,16 @@ class FileStorageTest extends BaseTestCase
     {
         $versions = new MigratedVersions($versions);
         $instance = new FileStorage($file);
-        $instance->writeMigratedVersions($versions);
+        $instance->saveCollection($versions);
         $this->assertFileExists($file);
         $contents = explode("\n", file_get_contents($file));
         foreach ($contents as $line) {
             $line = trim($line);
             if (!empty($line)) {
-                $this->assertTrue($versions->has($line), sprintf("File had version '%s', which was not registered in the original collection", $line));
+                $this->assertTrue(
+                    $versions->has($line),
+                    sprintf("File had version '%s', which was not registered in the original collection", $line)
+                );
             }
         }
         @unlink($file);

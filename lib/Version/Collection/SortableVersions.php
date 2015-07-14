@@ -61,4 +61,15 @@ class SortableVersions extends IndexedVersions
 
         return $this;
     }
+
+    /**
+     * Returns the last Version of the collection.
+     *
+     * @return Version
+     */
+    public function last()
+    {
+        $this->end();
+        return $this->current();
+    }
 }

@@ -17,30 +17,12 @@
  * <https://github.com/baleen/migrations>.
  */
 
-namespace Baleen\Migrations\Storage;
-
-use Baleen\Migrations\Version\Collection\MigratedVersions;
+namespace Baleen\Migrations\Exception;
 
 /**
- * Provides a collection of Versions that have been migrated.
- *
+ * Class StorageException
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
-interface StorageInterface
+class StorageException extends BaleenException
 {
-    /**
-     * Reads versions from the storage file.
-     *
-     * @return MigratedVersions
-     */
-    public function fetchAll();
-
-    /**
-     * Write a collection of versions to the storage file.
-     *
-     * @param MigratedVersions $versions
-     *
-     * @return bool Returns false on failure.
-     */
-    public function saveCollection(MigratedVersions $versions);
 }

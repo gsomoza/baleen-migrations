@@ -19,28 +19,44 @@
 
 namespace Baleen\Migrations\Storage;
 
+use Baleen\Migrations\Exception\StorageException;
+use Baleen\Migrations\Version;
 use Baleen\Migrations\Version\Collection\MigratedVersions;
 
 /**
- * Provides a collection of Versions that have been migrated.
- *
+ * Class AbstractStorage
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
-interface StorageInterface
+abstract class AbstractStorage implements StorageInterface
 {
-    /**
-     * Reads versions from the storage file.
-     *
-     * @return MigratedVersions
-     */
-    public function fetchAll();
 
     /**
-     * Write a collection of versions to the storage file.
-     *
-     * @param MigratedVersions $versions
-     *
-     * @return bool Returns false on failure.
+     * Reads versions from the storage file.
+     * @return MigratedVersions
+     * @throws StorageException
+     * @throws \Baleen\Migrations\Exception\CollectionException
      */
-    public function saveCollection(MigratedVersions $versions);
+    public function fetchAll()
+    {
+        $collection = new MigratedVersions();
+        $versions = $this->readVersions();
+        if (!is_object($versions) || !$versions instanceof MigratedVersions) {
+            foreach ($versions as $version) {
+                if (!is_object($version) || !$version instanceof Version) {
+                    throw new StorageException(sprintf(
+                        'Expected exception to be an instance of %s.',
+                        Version::class
+                    ));
+                }
+                $version->setMigrated(true); // otherwise it shouldn't be on storage
+                $collection->add($version);
+            }
+        }
+        return $collection;
+    }
+
+    /**
+     * @return Version[]
+     */
+    abstract protected function readVersions();
 }
