@@ -23,6 +23,7 @@ namespace BaleenTest\Migrations\Version\Collection;
 use Baleen\Migrations\Exception\CollectionException;
 use Baleen\Migrations\Version as V;
 use Baleen\Migrations\Version;
+use Baleen\Migrations\Version\Collection\IndexedVersions;
 use Baleen\Migrations\Version\Collection\SortableVersions;
 use Mockery as m;
 use Zend\Stdlib\ArrayUtils;
@@ -57,6 +58,15 @@ class SortableVersionsTest extends IndexedVersionsTest
 
         $this->setExpectedException(CollectionException::class);
         $instance->add($version);
+    }
+
+    public function testIsUpgradable()
+    {
+        $versions = Version::fromArray('1', '2', '3', '4', '5');
+        $count = count($versions);
+        $indexed = new IndexedVersions($versions);
+        $upgraded = new SortableVersions($indexed);
+        $this->assertCount($count, $upgraded);
     }
 
 }

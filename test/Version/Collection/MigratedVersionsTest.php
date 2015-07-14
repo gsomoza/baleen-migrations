@@ -25,6 +25,7 @@ use Baleen\Migrations\Migration\MigrationInterface;
 use Baleen\Migrations\Version as V;
 use Baleen\Migrations\Version;
 use Baleen\Migrations\Version\Collection\MigratedVersions;
+use Baleen\Migrations\Version\Collection\SortableVersions;
 use Mockery as m;
 use Zend\Stdlib\ArrayUtils;
 
@@ -44,6 +45,18 @@ class MigratedVersionsTest extends SortableVersionsTest
 
         $this->setExpectedException(CollectionException::class, 'must be migrated');
         $instance->add($version);
+    }
+
+    public function testIsUpgradable()
+    {
+        $versions = Version::fromArray('1', '2', '3', '4', '5');
+        foreach ($versions as $version) {
+            $version->setMigrated(true);
+        }
+        $count = count($versions);
+        $indexed = new SortableVersions($versions);
+        $upgraded = new MigratedVersions($indexed);
+        $this->assertCount($count, $upgraded);
     }
 
 }

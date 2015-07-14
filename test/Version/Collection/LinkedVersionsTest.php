@@ -24,6 +24,7 @@ use Baleen\Migrations\Exception\CollectionException;
 use Baleen\Migrations\Version as V;
 use Baleen\Migrations\Version;
 use Baleen\Migrations\Version\Collection\LinkedVersions;
+use Baleen\Migrations\Version\Collection\SortableVersions;
 use Mockery as m;
 use Zend\Stdlib\ArrayUtils;
 
@@ -41,6 +42,15 @@ class LinkedVersionsTest extends SortableVersionsTest
 
         $this->setExpectedException(CollectionException::class, 'must have a Migration');
         $instance->add($version);
+    }
+
+    public function testIsUpgradable()
+    {
+        $versions = $this->createVersionsWithMigrations('1', '2', '3', '4', '5');
+        $count = count($versions);
+        $indexed = new SortableVersions($versions);
+        $upgraded = new LinkedVersions($indexed);
+        $this->assertCount($count, $upgraded);
     }
 
 }

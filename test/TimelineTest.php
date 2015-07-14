@@ -29,6 +29,7 @@ use Baleen\Migrations\Migration\MigrationInterface;
 use Baleen\Migrations\Timeline;
 use Baleen\Migrations\Version as V;
 use Baleen\Migrations\Version\Collection\LinkedVersions;
+use Baleen\Migrations\Version\Collection\SortableVersions;
 use Baleen\Migrations\Version\Comparator\DefaultComparator;
 use Mockery as m;
 use Symfony\Component\EventDispatcher\EventDispatcher;

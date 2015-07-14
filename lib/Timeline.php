@@ -109,13 +109,8 @@ class Timeline extends AbstractTimeline
     public function runSingle($version, Options $options)
     {
         $version = $this->versions->getOrException($version);
+        // migration will always exist because its enforced in LinkedCollection
         $migration = $version->getMigration();
-        if (null === $migration) {
-            throw new MigrationException(
-                'Migration object missing for registered version "%s".',
-                $version->getId()
-            );
-        }
 
         if (!$this->shouldMigrate($version, $options)) {
             if ($options->isExceptionOnSkip()) {
