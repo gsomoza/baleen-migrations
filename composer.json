@@ -4,12 +4,12 @@
     "license": "MIT",
     "authors": [
 		{
-			"name": "Mike Simonson",
-			"email": "contact@mikesimonson.com"
-		},
-		{
 			"name": "Gabriel Somoza",
 			"email": "gabriel@somoza.me"
+		},
+		{
+			"name": "Mike Simonson",
+			"email": "contact@mikesimonson.com"
 		}
     ],
     "require": {

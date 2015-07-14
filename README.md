@@ -12,7 +12,7 @@ Status
 [![Documentation Status](https://readthedocs.org/projects/baleen/badge/?version=latest)](https://readthedocs.org/projects/baleen/?badge=latest)
 
 **NB!:** This project is still an early release. Please do not use in 
-production-critical environments. Refer to the the [LICENSE](https://github.com/baleen/migrations/blob/master/LICENSE)
+production-critical environments. Refer to the [LICENSE](https://github.com/baleen/migrations/blob/master/LICENSE)
 for more information.
 
 Introduction
