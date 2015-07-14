@@ -34,7 +34,7 @@ class MigratedVersions extends SortableVersions
      * @throws CollectionException
      * @throws MigrationMissingException
      */
-    public function isAcceptable(Version $version)
+    public function validate(Version $version)
     {
         if (!$version->isMigrated()) {
             throw new CollectionException(sprintf(
@@ -42,6 +42,6 @@ class MigratedVersions extends SortableVersions
                 $version->getId()
             ));
         }
-        return parent::isAcceptable($version);
+        return parent::validate($version);
     }
 }

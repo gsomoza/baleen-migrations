@@ -58,11 +58,16 @@ class IndexedVersions implements CollectionDirectAccessInterface
      *
      * @param Version $version
      * @return bool
-     * @throws InvalidArgumentException
+     * @throws CollectionException
      */
-    public function isAcceptable(Version $version)
+    public function validate(Version $version)
     {
-        return $version; // always true
+        if ($this->has($version->getId())) {
+            throw new CollectionException(
+                sprintf('Item with id "%s" already exists', $version->getId())
+            );
+        }
+        return true; // if there are no exceptions then result is true
     }
 
     /**
@@ -71,13 +76,13 @@ class IndexedVersions implements CollectionDirectAccessInterface
      */
     public function add($version)
     {
-        if ($this->isAcceptable($version)) {
+        if ($this->validate($version)) {
             /** @var Version $version */
             $this->items[$version->getId()] = $version;
         } else {
             // this should never happen
             throw new CollectionException(
-                'For some reason isAcceptable returned a falsy value instead of throwing an exception.'
+                'For some reason validate returned a falsy value instead of throwing an exception.'
             );
         }
     }

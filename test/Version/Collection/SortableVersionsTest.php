@@ -15,36 +15,48 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the MIT license. For more information, see
- * <https://github.com/baleen/migrations>.
+ * <http://www.doctrine-project.org>.
  */
 
-namespace Baleen\Migrations\Version\Collection;
+namespace BaleenTest\Migrations\Version\Collection;
 
 use Baleen\Migrations\Exception\CollectionException;
+use Baleen\Migrations\Version as V;
 use Baleen\Migrations\Version;
+use Baleen\Migrations\Version\Collection\SortableVersions;
+use Mockery as m;
+use Zend\Stdlib\ArrayUtils;
 
 /**
- * Represents a set of Versions, all of which must be linked to a Migration
- *
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
-class LinkedVersions extends SortableVersions
+class SortableVersionsTest extends IndexedVersionsTest
 {
-    /**
-     * Validates that migrations added to this set must all have a linked Migration
-     *
-     * @param Version $version
-     * @return bool
-     * @throws CollectionException
-     */
-    public function validate(Version $version)
+
+
+    public function testMerge()
     {
-        if (!$version->hasMigration()) {
-            throw new CollectionException(sprintf(
-                'Version "%s" must have a Migration in order to be accepted into this collection.',
-                $version->getId()
-            ));
+        $instance1 = new SortableVersions(Version::fromArray('1', '2', '3', '4', '5'));
+        $migrated = Version::fromArray('2', '5', '6', '7');
+        foreach ($migrated as $v) {
+            $v->setMigrated(true);
         }
-        return parent::validate($version);
+        $instance2 = new SortableVersions($migrated);
+
+        $instance1->merge($instance2);
+
+        foreach ($migrated as $v) {
+            $this->assertTrue($instance1->getOrException($v)->isMigrated());
+        }
     }
+
+    public function testAddException()
+    {
+        $version = new V('1');
+        $instance = new SortableVersions([$version]);
+
+        $this->setExpectedException(CollectionException::class);
+        $instance->add($version);
+    }
+
 }

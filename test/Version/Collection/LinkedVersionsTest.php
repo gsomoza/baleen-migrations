@@ -15,36 +15,32 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the MIT license. For more information, see
- * <https://github.com/baleen/migrations>.
+ * <http://www.doctrine-project.org>.
  */
 
-namespace Baleen\Migrations\Version\Collection;
+namespace BaleenTest\Migrations\Version\Collection;
 
 use Baleen\Migrations\Exception\CollectionException;
+use Baleen\Migrations\Version as V;
 use Baleen\Migrations\Version;
+use Baleen\Migrations\Version\Collection\LinkedVersions;
+use Mockery as m;
+use Zend\Stdlib\ArrayUtils;
 
 /**
- * Represents a set of Versions, all of which must be linked to a Migration
- *
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
-class LinkedVersions extends SortableVersions
+class LinkedVersionsTest extends SortableVersionsTest
 {
-    /**
-     * Validates that migrations added to this set must all have a linked Migration
-     *
-     * @param Version $version
-     * @return bool
-     * @throws CollectionException
-     */
-    public function validate(Version $version)
+
+    public function testAddException()
     {
-        if (!$version->hasMigration()) {
-            throw new CollectionException(sprintf(
-                'Version "%s" must have a Migration in order to be accepted into this collection.',
-                $version->getId()
-            ));
-        }
-        return parent::validate($version);
+        $version = new V('1');
+        $version->setMigrated(true); // but no linked migration
+        $instance = new LinkedVersions();
+
+        $this->setExpectedException(CollectionException::class, 'must have a Migration');
+        $instance->add($version);
     }
+
 }

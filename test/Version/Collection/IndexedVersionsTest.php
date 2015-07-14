@@ -1,4 +1,5 @@
 <?php
+
 /*
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -17,16 +18,16 @@
  * <http://www.doctrine-project.org>.
  */
 
-namespace BaleenTest\Migrations\Version;
+namespace BaleenTest\Migrations\Version\Collection;
 
-use Baleen\Migrations\Exception\InvalidArgumentException;
 use Baleen\Migrations\Exception\CollectionException;
+use Baleen\Migrations\Exception\InvalidArgumentException;
 use Baleen\Migrations\Exception\MigrationMissingException;
-use Baleen\Migrations\Version as V;
 use Baleen\Migrations\Version;
+use Baleen\Migrations\Version as V;
+use Baleen\Migrations\Version\Collection\IndexedVersions;
 use Baleen\Migrations\Version\Collection\LinkedVersions;
 use Baleen\Migrations\Version\Collection\SortableVersions;
-use Baleen\Migrations\Version\Collection\IndexedVersions;
 use BaleenTest\Migrations\BaseTestCase;
 use EBT\Collection\ResourceNotFoundException;
 use Mockery as m;
@@ -35,13 +36,13 @@ use Zend\Stdlib\ArrayUtils;
 /**
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
-class CollectionTest extends BaseTestCase
+class IndexedVersionsTest extends BaseTestCase
 {
 
     public function testConstructorInvalidArgument()
     {
         $this->setExpectedException(InvalidArgumentException::class);
-        $instance = new SortableVersions('test');
+        $instance = new IndexedVersions('test');
         $this->assertInstanceOf(IndexedVersions::class, $instance);
     }
 
@@ -49,18 +50,18 @@ class CollectionTest extends BaseTestCase
     {
         $versions = Version::fromArray(['1', '2', '3']);
         $iterator = new \ArrayIterator($versions);
-        $instance = new SortableVersions($iterator);
+        $instance = new IndexedVersions($iterator);
         $this->assertCount(3, $instance);
     }
 
     public function testConstructor()
     {
-        $instance = new SortableVersions();
+        $instance = new IndexedVersions();
         $this->assertInstanceOf(IndexedVersions::class, $instance);
         $this->assertCount(0, $instance);
 
         $version = new V('1');
-        $instance = new SortableVersions([$version]);
+        $instance = new IndexedVersions([$version]);
         $this->assertInstanceOf(IndexedVersions::class, $instance);
         $this->assertCount(1, $instance);
 
@@ -69,8 +70,11 @@ class CollectionTest extends BaseTestCase
 
     /**
      * @depends testConstructor
+     * @param IndexedVersions $instance
+     * @return IndexedVersions
+     * @throws CollectionException
      */
-    public function testAdd(SortableVersions $instance)
+    public function testAdd(IndexedVersions $instance)
     {
         $originalCount = count($instance);
         $version2 = new V('2');
@@ -82,8 +86,9 @@ class CollectionTest extends BaseTestCase
 
     /**
      * @depends testAdd
+     * @param IndexedVersions $instance
      */
-    public function testRemove(SortableVersions $instance)
+    public function testRemove(IndexedVersions $instance)
     {
         $originalCount = count($instance);
 
@@ -97,10 +102,18 @@ class CollectionTest extends BaseTestCase
         $this->assertCount($originalCount - 2, $instance);
     }
 
+    public function testAddDuplicate()
+    {
+        $version = new V('1');
+        $instance = new IndexedVersions([$version]);
+        $this->setExpectedException(CollectionException::class, 'already exists');
+        $instance->add($version);
+    }
+
     public function testAddOrUpdate()
     {
         $versions = Version::fromArray('1', '2', '3');
-        $instance = new SortableVersions(array_slice($versions, 0, 2));
+        $instance = new IndexedVersions(array_slice($versions, 0, 2));
         $this->assertTrue($instance->has('1'));
 
         $migrated = clone $versions[0];
@@ -115,15 +128,6 @@ class CollectionTest extends BaseTestCase
         $this->assertFalse($instance->has('3'));
         $instance->addOrReplace($versions[2]);
         $this->assertTrue($instance->has('3'));
-    }
-
-    public function testAddException()
-    {
-        $version = new V('1');
-        $instance = new SortableVersions([$version]);
-
-        $this->setExpectedException(CollectionException::class);
-        $instance->add($version);
     }
 
     public function testMerge()
@@ -168,11 +172,5 @@ class CollectionTest extends BaseTestCase
         $instance->rewind();
         $this->assertSame('100', $instance->current()->getId());
         $this->assertSame(100, $instance->key());
-    }
-
-    public function testLinkedVersionsThrowsExceptionIfNoMigration()
-    {
-        $this->setExpectedException(MigrationMissingException::class);
-        new LinkedVersions([new V('1')]);
     }
 }

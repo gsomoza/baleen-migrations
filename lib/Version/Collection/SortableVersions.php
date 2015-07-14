@@ -20,9 +20,7 @@
 
 namespace Baleen\Migrations\Version\Collection;
 
-use Baleen\Migrations\Exception\CollectionException;
 use Baleen\Migrations\Version;
-use Baleen\Migrations\Version\Collection\IndexedVersions;
 
 /**
  * A collection of Versions.
@@ -31,24 +29,6 @@ use Baleen\Migrations\Version\Collection\IndexedVersions;
  */
 class SortableVersions extends IndexedVersions
 {
-
-    /**
-     * This makes the collection behave like a set - throwing an exception if the version already exists in the set.
-     *
-     * @param Version $version
-     * @return bool
-     *
-     * @throws CollectionException
-     */
-    public function isAcceptable(Version $version)
-    {
-        if ($this->has($version->getId())) {
-            throw new CollectionException(
-                sprintf('Item with id "%s" already exists', $version->getId())
-            );
-        }
-        return parent::isAcceptable($version);
-    }
 
     /**
      * @param callable $comparator
