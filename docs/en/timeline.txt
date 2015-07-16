@@ -29,6 +29,8 @@ The Timeline is in charge of executing one or more migrations in any of four dif
         Runs a single version's migration using the specified options. Can be called directly and useful mostly for
         testing purposes in a controlled environment.
 
+.. _timeline-constructor:
+
 Constructor
 -----------
 
@@ -44,7 +46,7 @@ When being instantiated the Timeline requires a :term:`version collection` and a
         Since the Timeline doesn't have any public methods available to access the internal version collection this
         effectively means that once the Timeline is created its collection cannot be altered.
 
-    ``callable $comparator``
+    ``callable $comparator`` (optional)
         The comparator must be a ``callable`` that receives two :term:`Versions <version>` as arguments and returns a
         number less than, equal to, or greater than zero (0) if the first version should be executed before than, is
         the same as, or should be executed after the second version (respectively).
@@ -52,6 +54,15 @@ When being instantiated the Timeline requires a :term:`version collection` and a
         The default comparator simply
         extracts the first number from each version and subtracts the second one from the first one. See class
         ``Version\Comparator\DefaultComparator`` for the source code.
+
+    ``MigrationBus $migrationBus`` (optional)
+        The ``MigrationBus`` (colloquially "bus") is an object that can handle a ``MigrationCommand`` ("command"). The
+        bus consists if a series of ``AbstractMiddleware`` (middleware), at least one of which must be a
+        ``MigrationHandler`` (handler). Each middleware object receives the command, handles it (e.g. logs some info),
+        and then calls the next middleware. This goes on until the command arrives at the handler (which is also
+        a middleware), who calls the ``up()`` or ``down()`` function in the command's migration and ends the chain.
+
+        A default ``MigrationBus`` is automatically created if none is specified.
 
 Events
 ------

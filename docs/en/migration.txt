@@ -1,10 +1,6 @@
 Migration
 =========
 
-.. glossary::
-
-
-
 A migration in Baleen is a class that implements ``MigrationInterface``. It can optionally implement one or more
 additional interfaces to describe special *capabilities*.
 
