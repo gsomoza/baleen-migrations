@@ -21,7 +21,6 @@ namespace Baleen\Migrations\Migration\Command;
 
 use Baleen\Migrations\Migration\Command\Middleware\SetOptionsMiddleware;
 use Baleen\Migrations\Migration\Command\Middleware\TransactionMiddleware;
-use League\Tactician\CommandBus;
 
 /**
  * Class CommandBusFactory.
