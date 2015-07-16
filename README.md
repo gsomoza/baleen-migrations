@@ -4,7 +4,7 @@ Status
 [![Code Coverage](https://scrutinizer-ci.com/g/baleen/migrations/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/baleen/migrations/?branch=master)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/baleen/migrations/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/baleen/migrations/?branch=master)
 [![SensioLabsInsight](https://img.shields.io/sensiolabs/i/6251e1ff-532d-4dad-a831-93dcf0561a49.svg)](https://insight.sensiolabs.com/projects/6251e1ff-532d-4dad-a831-93dcf0561a49)
-[![Packagist](https://img.shields.io/packagist/v/symfony/symfony.svg)](https://packagist.org/packages/baleen/migrations)
+[![Packagist](https://img.shields.io/packagist/v/baleen/migrations.svg)](https://packagist.org/packages/baleen/migrations)
 
 [![Author](http://img.shields.io/badge/author-@gabriel_somoza-blue.svg)](https://twitter.com/gabriel_somoza)
 [![Author](http://img.shields.io/badge/author-@__mikeSimonson-blue.svg)](https://twitter.com/_mikeSimonson)
