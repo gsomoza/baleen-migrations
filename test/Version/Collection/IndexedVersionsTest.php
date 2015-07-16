@@ -173,4 +173,16 @@ class IndexedVersionsTest extends BaseTestCase
         $this->assertSame('100', $instance->current()->getId());
         $this->assertSame(100, $instance->key());
     }
+
+    public function testAddThrowsExceptionIfValidateFalse()
+    {
+        $version = new V(1);
+        $instance = m::mock(SortableVersions::class)->makePartial();
+        $instance->shouldReceive('validate')->with($version)->once()->andReturn(false);
+        $this->setExpectedException(
+            CollectionException::class,
+            'Validate should either return true or throw an exception'
+        );
+        $instance->add($version);
+    }
 }

@@ -1,5 +1,4 @@
 <?php
-
 /*
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -62,6 +61,13 @@ class OptionsTest extends BaseTestCase
 
         $this->setExpectedException(InvalidArgumentException::class);
         $instance->setDirection('foo');
+    }
+
+    public function testIsDirectionDown()
+    {
+        $instance = new Options(Options::DIRECTION_DOWN);
+        $this->assertTrue($instance->isDirectionDown());
+        $this->assertFalse($instance->isDirectionUp());
     }
 
 }

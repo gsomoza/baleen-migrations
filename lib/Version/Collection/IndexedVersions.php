@@ -82,7 +82,7 @@ class IndexedVersions implements CollectionDirectAccessInterface
         } else {
             // this should never happen
             throw new CollectionException(
-                'For some reason validate returned a falsy value instead of throwing an exception.'
+                'Validate should either return true or throw an exception'
             );
         }
     }

@@ -39,12 +39,12 @@ abstract class AbstractStorage implements StorageInterface
     public function fetchAll()
     {
         $collection = new MigratedVersions();
-        $versions = $this->readVersions();
+        $versions = $this->doFetchAll();
         if (!is_object($versions) || !$versions instanceof MigratedVersions) {
             foreach ($versions as $version) {
                 if (!is_object($version) || !$version instanceof Version) {
                     throw new StorageException(sprintf(
-                        'Expected exception to be an instance of %s.',
+                        'Expected version to be an instance of %s.',
                         Version::class
                     ));
                 }
@@ -58,5 +58,5 @@ abstract class AbstractStorage implements StorageInterface
     /**
      * @return Version[]
      */
-    abstract protected function readVersions();
+    abstract protected function doFetchAll();
 }

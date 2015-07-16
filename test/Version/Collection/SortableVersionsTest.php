@@ -69,4 +69,11 @@ class SortableVersionsTest extends IndexedVersionsTest
         $this->assertCount($count, $upgraded);
     }
 
+    public function testLast()
+    {
+        $versions = Version::fromArray('1', '2', '3');
+        $instance = new SortableVersions($versions);
+        $last = $instance->last();
+        $this->assertSame($versions[2], $last);
+    }
 }

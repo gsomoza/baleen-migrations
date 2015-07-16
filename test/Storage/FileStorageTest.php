@@ -19,6 +19,7 @@
 
 namespace BaleenTest\Migrations\Storage;
 
+use Baleen\Migrations\Exception\StorageException;
 use Baleen\Migrations\Storage\FileStorage;
 use Baleen\Migrations\Version;
 use Baleen\Migrations\Version\Collection\MigratedVersions;
@@ -38,25 +39,31 @@ class FileStorageTest extends BaseTestCase
 
     /**
      * @param $file
-     * @param array $versionIds
+     * @param $versionIdsOrException
      *
      * @dataProvider readMigratedVersionsProvider
      */
-    public function testReadMigratedVersions($file, array $versionIds)
+    public function testReadMigratedVersions($file, $versionIdsOrException)
     {
-        $instance = new FileStorage($file);
+        /** @var m::Mock $instance */
+        $instance = m::mock(FileStorage::class, [$file])->shouldAllowMockingProtectedMethods()->makePartial();
+        if (is_string($versionIdsOrException)) {
+            $instance->shouldReceive('readFile')->once()->andReturn(false);
+            $this->setExpectedException($versionIdsOrException);
+        }
         $versions = $instance->fetchAll();
-        $this->assertCount(count($versionIds), $versions);
+        $this->assertCount(count($versionIdsOrException), $versions);
         foreach ($versions as $version) {
             /** @var \Baleen\Migrations\Version\VersionInterface $version */
-            $this->assertContains($version->getId(), $versionIds);
+            $this->assertContains($version->getId(), $versionIdsOrException);
         }
     }
 
     public function readMigratedVersionsProvider()
     {
         return [
-            [__DIR__ . '/../data/storage.txt', $this->versionIds]
+            [__DIR__ . '/../data/storage.txt', $this->versionIds],
+            ['doesnt matter', StorageException::class],
         ];
     }
 
@@ -98,4 +105,20 @@ class FileStorageTest extends BaseTestCase
         ];
     }
 
+    public function testFetchAllThrowsExceptionIfNotVersion()
+    {
+        $instance = m::mock(FileStorage::class)->shouldAllowMockingProtectedMethods()->makePartial();
+        $instance->shouldReceive('doFetchAll')->once()->andReturn(['not a version']);
+        $this->setExpectedException(StorageException::class, Version::class);
+        $instance->fetchAll();
+    }
+
+    public function testCantWriteToFileShouldThrowException()
+    {
+        $versions = new MigratedVersions($this->writeMigratedVersionsProvider()[0][1]);
+        $instance = m::mock(FileStorage::class)->shouldAllowMockingProtectedMethods()->makePartial();
+        $instance->shouldReceive('writeFile')->once()->andReturn(false);
+        $this->setExpectedException(StorageException::class, 'not write');
+        $instance->saveCollection($versions);
+    }
 }

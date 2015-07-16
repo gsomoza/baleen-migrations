@@ -50,13 +50,14 @@ class FileStorage extends AbstractStorage
      * @return Version[]
      * @throws StorageException
      */
-    protected function readVersions()
+    protected function doFetchAll()
     {
-        $result = file_get_contents($this->path);
+        $result = $this->readFile();
         if ($result === false) {
-            throw new StorageException(
-                'Argument "path" must be a valid path to a file which must be writable.'
-            );
+            throw new StorageException(sprintf(
+                'Error reading from path "%s"',
+                $this->path
+            ));
         }
         $contents = explode("\n", $result);
         $versions = [];
@@ -79,15 +80,12 @@ class FileStorage extends AbstractStorage
      */
     public function saveCollection(MigratedVersions $versions)
     {
-        $ids = [];
-        foreach ($versions as $version) {
-            if ($version->isMigrated()) {
-                $ids[] = $version->getId();
-            }
-        }
+        $ids = array_map(function(Version $v) {
+            return $v->getId();
+        }, $versions->toArray());
         $contents = implode("\n", $ids);
 
-        $result = file_put_contents($this->path, $contents);
+        $result = $this->writeFile($contents);
         if ($result === false) {
             throw new StorageException(sprintf(
                 'Could not write to file "%s".',
@@ -95,5 +93,22 @@ class FileStorage extends AbstractStorage
             ));
         }
         return (bool) $result;
+    }
+
+    /**
+     * @param $contents
+     * @return int
+     */
+    protected function writeFile($contents)
+    {
+        return file_put_contents($this->path, $contents);
+    }
+
+    /**
+     * @return string
+     */
+    protected function readFile()
+    {
+        return file_get_contents($this->path);
     }
 }

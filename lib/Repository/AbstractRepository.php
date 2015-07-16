@@ -54,7 +54,7 @@ abstract class AbstractRepository implements RepositoryInterface
         $result = $this->doFetchAll();
         if (!is_object($result) || !$result instanceof LinkedVersions) {
             throw new RepositoryException(
-                'Method AbstractRepository::doFetchAll() must return a LinkedVersions object'
+                'Method AbstractRepository::doFetchAll() must return a LinkedVersions collection.'
             );
         }
         return $result;

@@ -18,6 +18,8 @@
  */
 
 namespace BaleenTest\Migrations;
+use Baleen\Migrations\Exception\InvalidArgumentException;
+use Baleen\Migrations\Version;
 
 /**
  * @author Gabriel Somoza <gabriel@strategery.io>
@@ -25,8 +27,9 @@ namespace BaleenTest\Migrations;
 class VersionTest extends BaseTestCase
 {
 
-    public function testTrue()
+    public function testIdCannotBeEmpty()
     {
-        $this->assertTrue(true);
+        $this->setExpectedException(InvalidArgumentException::class);
+        $v = new Version('');
     }
 }

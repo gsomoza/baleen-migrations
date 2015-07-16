@@ -19,6 +19,7 @@
 
 namespace BaleenTest\Migrations\Repository;
 
+use Baleen\Migrations\Exception\RepositoryException;
 use Baleen\Migrations\Migration\Factory\FactoryInterface;
 use Baleen\Migrations\Migration\MigrationInterface;
 use Baleen\Migrations\Repository\DirectoryRepository;
@@ -91,6 +92,26 @@ class DirectoryRepositoryTest extends BaseTestCase
             // recursive search - should find 4 because there are two migrations in the custom regex directory that
             // conform to the default pattern (to test that they should NOT be loaded with a custom regex)
             [$migrationsBase, 4],
+        ];
+    }
+
+    /**
+     * @param $return
+     * @dataProvider doFetchResultIsNotLinkedCollectionProvider
+     */
+    public function testDoFetchResultIsNotLinkedCollection($return)
+    {
+        $instance = m::mock(DirectoryRepository::class)->shouldAllowMockingProtectedMethods()->makePartial();
+        $instance->shouldReceive('doFetchAll')->once()->andReturn($return);
+        $this->setExpectedException(RepositoryException::class, 'LinkedVersions');
+        $instance->fetchAll();
+    }
+
+    public function doFetchResultIsNotLinkedCollectionProvider()
+    {
+        return [
+            ['scalar'],
+            [new \stdClass()],
         ];
     }
 }

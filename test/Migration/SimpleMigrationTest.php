@@ -1,5 +1,4 @@
 <?php
-
 /*
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -18,58 +17,26 @@
  * <https://github.com/baleen/migrations>.
  */
 
-namespace Baleen\Migrations\Version\Collection;
+namespace BaleenTest\Migrations\Migration\Factory;
 
-use Baleen\Migrations\Version;
+use Baleen\Migrations\Migration\Options;
+use Baleen\Migrations\Migration\SimpleMigration;
+use BaleenTest\Migrations\BaseTestCase;
+use Mockery as m;
 
 /**
- * A collection of Versions.
- *
+ * Class SimpleMigrationTest
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
-class SortableVersions extends IndexedVersions
+class SimpleMigrationTest extends BaseTestCase
 {
 
-    /**
-     * @param callable $comparator
-     */
-    public function sortWith(callable $comparator)
+    public function testGetSetOptions()
     {
-        uasort($this->items, $comparator);
+        $options = new Options(Options::DIRECTION_UP);
+        $instance = m::mock(SimpleMigration::class)->makePartial();
+        $instance->setOptions($options);
+        $this->assertSame($options, $instance->getOptions());
     }
 
-    /**
-     * @return static
-     */
-    public function getReverse()
-    {
-        return new static(array_reverse($this->items));
-    }
-
-    /**
-     * Merges another set into this one, replacing versions that exist and adding those that don't.
-     *
-     * @param SortableVersions $collection
-     *
-     * @return $this
-     */
-    public function merge(SortableVersions $collection)
-    {
-        foreach ($collection as $version) {
-            $this->addOrReplace($version);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Returns the last Version in the collection.
-     *
-     * @return Version
-     */
-    public function last()
-    {
-        $this->end();
-        return $this->current();
-    }
 }
