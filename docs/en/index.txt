@@ -22,7 +22,6 @@ Contents:
    getting-started
    migration
    timeline
-   customisations
    implementations
    glossary
 

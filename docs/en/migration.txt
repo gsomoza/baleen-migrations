@@ -71,8 +71,27 @@ Other Capabilities
 Additional interfaces can be specified to deal with special features required by any particular migration process. In
 order to make this easy to customise, migrations are run through a configurable *Command Bus* pattern.
 
-Example Migrations
-------------------
+Custom Migrations
+-----------------
+
+Creating specialised Migration classes is very easy: all that's needed is a migration class that end-users must
+implement in their migrations.
+
+If your abstract migration class has dependencies that need to be injected through its constructor then simply create
+a ``Migration\Factory\FactoryInterface`` instance and pass it to the :term:`Repository`:
+
+.. code-block:: php
+
+    <?php
+
+    $factory = new MyMigrationFactory(/** dependencies here **/); // instance of MigrationFactory
+    $repository->setMigrationFactory($factory);
+    // $repository->fetchAll() will call the factory to instantiate each Migration
+
+The following section is an example of how an abstract PDO migration class can power database migrations.
+
+Example
+-------
 
 For the purposes of this example, imagine the following classes are each located on a separate file under a folder in
 your project called ``./migrations``.
@@ -80,7 +99,7 @@ your project called ``./migrations``.
 The first file declares a sample abstract class to incorporate common functionality. It is of course up to the user
 whether something like this is really required or not.
 
-File ``./migrations/AbstractPDOMigration.php`` :
+File :file:`./migrations/AbstractPDOMigration.php`:
 
 .. code-block:: php
 
@@ -100,7 +119,7 @@ File ``./migrations/AbstractPDOMigration.php`` :
                    Capabilities/TransactionAwareInterface
     {
         /** @var PDO **/
-        protected $connection; // gets initialised on the constructor
+        protected $connection; // gets initialised in the constructor
 
         /** @var RunOptions **/
         protected $options;
@@ -128,7 +147,7 @@ File ``./migrations/AbstractPDOMigration.php`` :
 
 And now the concrete migrations:
 
-File ``./migrations/v001_AddHireDateToStaff.php`` :
+File :file:`./migrations/v001_AddHireDateToStaff.php`:
 
 .. code-block:: php
 
@@ -144,7 +163,7 @@ File ``./migrations/v001_AddHireDateToStaff.php`` :
         }
     }
 
-File ``./migrations/v002_SeedJoeBloggs.php`` :
+File :file:`./migrations/v002_SeedJoeBloggs.php`:
 
 .. code-block:: php
 

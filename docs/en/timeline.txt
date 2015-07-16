@@ -64,11 +64,14 @@ When being instantiated the Timeline requires a :term:`version collection` and a
 
         A default ``MigrationBus`` is automatically created if none is specified.
 
+.. _timeline-events:
+
 Events
 ------
 
-The Timeline is coupled with a ``TimelineEmitter`` class that fires domain events for each operation if an
-``EventDispatcher`` is present. Events that will be fired are:
+Events are an useful to tap into the migration behaviour quickly and cleanly. The Timeline is coupled with a
+``TimelineEmitter`` class that fires domain events for each operation if an ``EventDispatcher`` is present. Events that
+will be fired are:
 
 .. glossary::
 
@@ -90,3 +93,65 @@ The Timeline is coupled with a ``TimelineEmitter`` class that fires domain event
     After Migration
     ``EventInterface::MIGRATION_AFTER``
         Same as above, but fired once the migration has finished.
+
+Baleen uses Symfony's Event Dispatcher component, so listening to timeline events is very easy:
+
+.. code-block:: php
+
+    <?php
+    use Baleen\Migrations\Event;
+
+    $dispatcher = $timeline->getEventDispatcher();
+
+    $dispatcher->addListener(
+        EventInterface::COLLECTION_BEFORE,
+        function ($event, $name) {
+            // do something
+        }
+    );
+    $dispatcher->addListener( /* ... */ );
+
+You can also inject your own dispatcher (useful for shared listeners e.g. across different Timeline instances):
+
+.. code-block:: php
+
+    <?php
+    use Symfony\Component\EventDispatcher;
+
+    $dispatcher = new EventDispatcher();
+    $dispatcher->addListener( /* ... */ );
+    $dispatcher->addListener( /* ... */ );
+
+    $timeline->setEventDispatcher($dispatcher);
+
+Custom MigrationBus
+----------------------
+
+As indicated in the :ref:`Timeline Constructor <timeline-constructor>` section, a Timeline can receive a
+``MigrationBus`` as an optional parameter. The ``MigrationBus`` is simply a specialised ``CommandBus`` that helps
+provide strong typing for the ``MigrateCommand`` in PHP 5. Its currently powered by the
+`Tactician <http://tactician.thephpleague.com/>`_ command bus library.
+
+The Middleware attached to that bus will be used to execute each individual migration, which means behaviors can easily
+be customised if needed.
+
+The default migration bus and its middleware stack is created by ``MigrationBusFactory`` - its very simple:
+
+.. code-block:: php
+
+    <?php
+    new MigrationBus([
+        // injects Options into the migration
+        new SetOptionsMiddleware(),
+        // wraps each migration into a transaction (most commonly a DB transaction)
+        new TransactionMiddleware(),
+        // in charge of executing the MigrateCommand
+        new MigrateHandler(),
+    ]);
+
+You can override the default ``MigrationBus`` by simply passing a different instance as a parameter for the Timeline's
+constructor.
+
+Creating your own middleware is easy too: just create a new class that extends ``AbstractMiddleware`` and add it to the
+chain when you create the ``MigrationBus``. See any of the default middleware classes for an example of what middleware
+can do.
