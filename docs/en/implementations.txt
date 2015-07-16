@@ -1,5 +1,10 @@
 Implementations
 ===============
 
-Since Baleen Migrations is barely taking its first steps, there are no end-user libraries / implementations that are
-already using it. You could be the first one to build one!
+Since Baleen Migrations is just taking its first steps there are still no major end-user libraries / implementations
+that are already using it. You could be the first one to build one!
+
+In alphabetical order:
+
+    * `Baleen CLI <https://github.com/baleen/cli>`_: command line (CLI) wrapper to execute simple migrations. Still
+      in active development.
