@@ -19,23 +19,30 @@
 
 namespace Baleen\Migrations\Migration\Command;
 
-use Baleen\Migrations\Migration\Command\Middleware\SetOptionsMiddleware;
-use Baleen\Migrations\Migration\Command\Middleware\TransactionMiddleware;
+
+use Baleen\Migrations\Exception\MigrationBusException;
 use League\Tactician\CommandBus;
 
-/**
- * Class CommandBusFactory.
- *
- * @author Gabriel Somoza <gabriel@strategery.io>
- */
-class MigrationBusFactory
+class MigrationBus extends CommandBus
 {
-    public static function create()
+    /**
+     * @inheritdoc
+     */
+    public function __construct(array $middleware)
     {
-        return new MigrationBus([
-            new SetOptionsMiddleware(),
-            new TransactionMiddleware(),
-            new MigrateHandler(),
-        ]);
+        $foundHandler = false;
+        foreach ($middleware as $object) {
+            if ($object instanceof MigrateHandler) {
+                $foundHandler = true;
+                break;
+            }
+        }
+        if (!$foundHandler) {
+            throw new MigrationBusException(sprintf(
+                'MigraitonBus must have at least one instance of "%s"',
+                MigrateHandler::class
+            ));
+        }
+        parent::__construct($middleware);
     }
 }

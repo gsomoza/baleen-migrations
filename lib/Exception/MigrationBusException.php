@@ -17,25 +17,12 @@
  * <https://github.com/baleen/migrations>.
  */
 
-namespace Baleen\Migrations\Migration\Command;
-
-use Baleen\Migrations\Migration\Command\Middleware\SetOptionsMiddleware;
-use Baleen\Migrations\Migration\Command\Middleware\TransactionMiddleware;
-use League\Tactician\CommandBus;
+namespace Baleen\Migrations\Exception;
 
 /**
- * Class CommandBusFactory.
- *
+ * Class MigrationBusException
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
-class MigrationBusFactory
+class MigrationBusException extends BaleenException
 {
-    public static function create()
-    {
-        return new MigrationBus([
-            new SetOptionsMiddleware(),
-            new TransactionMiddleware(),
-            new MigrateHandler(),
-        ]);
-    }
 }

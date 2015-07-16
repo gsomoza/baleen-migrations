@@ -24,6 +24,8 @@ use Baleen\Migrations\Event\Timeline\CollectionEvent;
 use Baleen\Migrations\Event\Timeline\MigrationEvent;
 use Baleen\Migrations\Exception\MigrationMissingException;
 use Baleen\Migrations\Exception\TimelineException;
+use Baleen\Migrations\Migration\Command\MigrateCommand;
+use Baleen\Migrations\Migration\Command\MigrationBus;
 use Baleen\Migrations\Migration\Options;
 use Baleen\Migrations\Migration\MigrationInterface;
 use Baleen\Migrations\Timeline;
@@ -33,6 +35,7 @@ use Baleen\Migrations\Version\Collection\SortableVersions;
 use Baleen\Migrations\Version\Comparator\DefaultComparator;
 use Mockery as m;
 use Symfony\Component\EventDispatcher\EventDispatcher;
+use Zend\Stdlib\Hydrator\ObjectProperty;
 
 /**
  * @author Gabriel Somoza <gabriel@strategery.io>
@@ -355,5 +358,19 @@ class TimelineTest extends BaseTestCase
             ['2', new Options(Options::DIRECTION_UP)  , Options::DIRECTION_UP],
             ['2', new Options(Options::DIRECTION_DOWN), 'exception' ], // its already down
         ];
+    }
+
+    public function testDoRunUsesMigrationBusToMigrate()
+    {
+        $migrationBus = m::mock(MigrationBus::class);
+        $migrationBus->shouldReceive('handle')->with(m::type(MigrateCommand::class))->once();
+
+        $collection = new LinkedVersions($this->getNoMigratedVersionsFixture());
+        $options = new Options(Options::DIRECTION_UP);
+        $instance = new Timeline($collection, null, $migrationBus);
+
+        $method = new \ReflectionMethod($instance, 'doRun');
+        $method->setAccessible(true);
+        $method->invoke($instance, $collection->current()->getMigration(), $options);
     }
 }

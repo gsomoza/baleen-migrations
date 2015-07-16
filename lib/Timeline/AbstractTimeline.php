@@ -22,12 +22,15 @@ namespace Baleen\Migrations\Timeline;
 
 use Baleen\Migrations\Event\HasEmitterTrait;
 use Baleen\Migrations\Migration\Command\MigrateCommand;
+use Baleen\Migrations\Migration\Command\MigrationBus;
 use Baleen\Migrations\Migration\Command\MigrationBusFactory;
+use Baleen\Migrations\Migration\Factory\FactoryInterface;
 use Baleen\Migrations\Migration\MigrationInterface;
 use Baleen\Migrations\Migration\Options;
 use Baleen\Migrations\Version;
 use Baleen\Migrations\Version\Collection\LinkedVersions;
 use Baleen\Migrations\Version\Comparator\DefaultComparator;
+use League\Tactician\CommandBus;
 
 /**
  * Encapsulates the lower-level methods of a Timeline, leaving the actual timeline logic to the extending class.
@@ -54,11 +57,18 @@ abstract class AbstractTimeline implements TimelineInterface
 
     /**
      * @param LinkedVersions $versions
-     * @param callable       $comparator
+     * @param callable $comparator
+     * @param MigrationBus $migrationBus A CommandBus that will be used to run each individual migration.
      */
-    public function __construct(LinkedVersions $versions, callable $comparator = null)
+    public function __construct(
+        LinkedVersions $versions,
+        callable $comparator = null,
+        MigrationBus $migrationBus = null)
     {
-        $this->migrationBus = MigrationBusFactory::create();
+        if (null === $migrationBus) {
+            $migrationBus = MigrationBusFactory::create();
+        }
+        $this->migrationBus = $migrationBus;
 
         if (null === $comparator) {
             $comparator = new DefaultComparator();

@@ -17,25 +17,25 @@
  * <https://github.com/baleen/migrations>.
  */
 
-namespace Baleen\Migrations\Migration\Command;
+namespace BaleenTest\Migrations\Migration\Command;
 
-use Baleen\Migrations\Migration\Command\Middleware\SetOptionsMiddleware;
-use Baleen\Migrations\Migration\Command\Middleware\TransactionMiddleware;
-use League\Tactician\CommandBus;
+use Baleen\Migrations\Exception\MigrationBusException;
+use Baleen\Migrations\Migration\Command\MigrateHandler;
+use Baleen\Migrations\Migration\Command\MigrationBus;
+use BaleenTest\Migrations\BaseTestCase;
+use Mockery as m;
 
 /**
- * Class CommandBusFactory.
- *
+ * Class MigrationBusTest
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
-class MigrationBusFactory
+class MigrationBusTest extends BaseTestCase
 {
-    public static function create()
+
+    public function testThrowsExceptionIfNoMigrateHandler()
     {
-        return new MigrationBus([
-            new SetOptionsMiddleware(),
-            new TransactionMiddleware(),
-            new MigrateHandler(),
-        ]);
+        $this->setExpectedException(MigrationBusException::class, MigrateHandler::class);
+        $instance = new MigrationBus([]);
     }
+
 }
