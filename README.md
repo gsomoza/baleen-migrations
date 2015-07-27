@@ -33,7 +33,7 @@ Installation (Composer)
 =======================
 Installation with Composer is simple:  
 
-    composer install baleen/migrations:^0.1
+    composer require baleen/migrations
 
 Documentation
 =============
