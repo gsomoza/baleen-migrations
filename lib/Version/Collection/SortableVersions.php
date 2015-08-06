@@ -29,6 +29,18 @@ use Baleen\Migrations\Version;
  */
 class SortableVersions extends IndexedVersions
 {
+    const LAST = 'last';
+    const FIRST = 'first';
+
+    /**
+     * @var array
+     */
+    protected $aliases = [
+        self::LAST  => self::LAST,
+        'latest'    => self::LAST, // an alternative to 'last'
+        self::FIRST => self::FIRST,
+        'earliest'  => self::FIRST, // an alternative to 'first'
+    ];
 
     /**
      * @param callable $comparator
@@ -71,5 +83,48 @@ class SortableVersions extends IndexedVersions
     {
         $this->end();
         return $this->current();
+    }
+
+    /**
+     * Returns the first Version in the collection.
+     * @return Version
+     */
+    public function first()
+    {
+        $this->rewind();
+        return $this->current();
+    }
+
+    /**
+     * @param mixed $index
+     * @param mixed $defaultValue Will be returned if the index is not present at collection
+     *
+     * @return Version|null Null if not present
+     */
+    public function get($index, $defaultValue = null)
+    {
+        return $this->getByAlias($index) ?: parent::get($index, $defaultValue);
+    }
+
+    /**
+     * @param string $index
+     * @return Version|null
+     */
+    public function getByAlias($index)
+    {
+        $index = (string) $index;
+        $version = null;
+        if (isset($this->aliases[$index])) {
+            $index = $this->aliases[$index];
+            switch ($index) {
+                case self::LAST:
+                    $version = $this->last();
+                    break;
+                case self::FIRST:
+                    $version = $this->first();
+                    break;
+            }
+        }
+        return $version;
     }
 }

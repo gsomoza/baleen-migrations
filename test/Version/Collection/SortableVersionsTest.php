@@ -76,4 +76,39 @@ class SortableVersionsTest extends IndexedVersionsTest
         $last = $instance->last();
         $this->assertSame($versions[2], $last);
     }
+
+    public function testGetSupportsAlias()
+    {
+        $instance = new SortableVersions(Version::fromArray(1, 2, 3));
+        $this->assertEquals(3, $instance->get('latest')->getId());
+        // also make sure it supports the standard get functionality if no alias is found
+        $this->assertEquals(1, $instance->get(1)->getId());
+        $this->assertEquals(99, $instance->get(98, 99));
+    }
+
+    /**
+     * @param string $alias
+     * @param int $expectedId
+     * @dataProvider getByAliasProvider
+     */
+    public function testGetByAlias(array $versions, $alias, $expectedId)
+    {
+        $instance = new SortableVersions($versions);
+        $result = $instance->getByAlias($alias);
+        $this->assertEquals($expectedId, $result->getId());
+    }
+
+    public function getByAliasProvider()
+    {
+        $sample1 = Version::fromArray(1, 2, 3, 4, 5);
+        $sample2 = Version::fromArray('v97', 'v98', 'v99', 'v100');
+        return [
+            [$sample1, 'last', 5],
+            [$sample1, 'first', 1],
+            [$sample2, 'last', 'v100'],
+            [$sample2, 'latest', 'v100'],
+            [$sample2, 'first', 'v97'],
+            [$sample2, 'earliest', 'v97'],
+        ];
+    }
 }
