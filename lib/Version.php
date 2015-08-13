@@ -48,6 +48,7 @@ class Version implements VersionInterface
 
     /**
      * @param $id string
+     *
      * @throws InvalidArgumentException
      */
     public function __construct($id)
@@ -110,7 +111,7 @@ class Version implements VersionInterface
     }
 
     /**
-     * Creates a list of versions based on specified IDs
+     * Creates a list of versions based on specified IDs.
      *
      * @param mixed $versionIds
      *
@@ -125,6 +126,7 @@ class Version implements VersionInterface
         foreach ($versionIds as $id) {
             $results[] = new static($id);
         }
+
         return $results;
     }
 

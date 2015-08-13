@@ -22,6 +22,7 @@ namespace BaleenTest\Migrations;
 use Baleen\Migrations\Event\EventInterface;
 use Baleen\Migrations\Event\Timeline\CollectionEvent;
 use Baleen\Migrations\Event\Timeline\MigrationEvent;
+use Baleen\Migrations\Event\Timeline\Progress;
 use Baleen\Migrations\Exception\MigrationMissingException;
 use Baleen\Migrations\Exception\TimelineException;
 use Baleen\Migrations\Migration\Command\MigrateCommand;
@@ -264,9 +265,8 @@ class TimelineTest extends BaseTestCase
 
         $this->assertSame($dispatcher, $timeline->getEventDispatcher());
 
-        $prop = new \ReflectionProperty($timeline, 'versions');
-        $prop->setAccessible(true);
-        $collection = $prop->getValue($timeline);
+        /** @var LinkedVersions $collection */
+        $collection = $this->getPropVal('versions', $timeline);
 
         $dispatcher->addListener(
             EventInterface::COLLECTION_BEFORE,
@@ -275,6 +275,10 @@ class TimelineTest extends BaseTestCase
                 $self->assertInstanceOf(EventInterface::class, $event);
                 $self->assertInstanceOf(CollectionEvent::class, $event);
                 /** @var CollectionEvent $event */
+                $self->assertInstanceOf(Progress::class, $event->getProgress());
+                $self->assertEquals($collection->count(), $event->getProgress()->getTotal());
+                $self->assertEquals(0, $event->getProgress()->getCurrent());
+
                 $self->assertSame($options, $event->getOptions());
                 $self->assertSame($collection, $event->getCollection());
                 // the following also asserts that the version is NOT migrated
@@ -283,11 +287,18 @@ class TimelineTest extends BaseTestCase
         );
         $dispatcher->addListener(
             EventInterface::MIGRATION_BEFORE,
-            function($event, $name) use ($version, $options, &$listened, $self) {
+            function($event, $name) use ($version, $options, &$listened, $collection, $self) {
                 $listened[$name] = true;
                 $self->assertInstanceOf(EventInterface::class, $event);
                 $self->assertInstanceOf(MigrationEvent::class, $event);
                 /** @var MigrationEvent $event */
+                $self->assertInstanceOf(Progress::class, $event->getProgress());
+                $self->assertEquals($collection->count(), $event->getProgress()->getTotal());
+                $self->assertEquals(
+                    $collection->getPosition($event->getVersion()),
+                    $event->getProgress()->getCurrent()
+                );
+
                 $self->assertSame($options, $event->getOptions());
                 // the following also asserts that the version is NOT migrated
                 $self->assertSame($version, $event->getVersion());
@@ -295,22 +306,33 @@ class TimelineTest extends BaseTestCase
         );
         $dispatcher->addListener(
             EventInterface::MIGRATION_AFTER,
-            function($event, $name) use ($version, $options, &$listened, $self) {
+            function($event, $name) use ($version, $options, &$listened, $collection, $self) {
                 $listened[$name] = true;
                 $self->assertInstanceOf(EventInterface::class, $event);
                 $self->assertInstanceOf(MigrationEvent::class, $event);
                 /** @var MigrationEvent $event */
+                $self->assertInstanceOf(Progress::class, $event->getProgress());
+                $self->assertEquals($collection->count(), $event->getProgress()->getTotal());
+                $self->assertEquals(
+                    $collection->getPosition($event->getVersion()),
+                    $event->getProgress()->getCurrent()
+                );
+
                 $self->assertSame($options, $event->getOptions());
                 $self->assertTrue($event->getVersion()->isMigrated());
             }
         );
         $dispatcher->addListener(
             EventInterface::COLLECTION_AFTER,
-            function($event, $name) use ($version, $options, &$listened, $self) {
+            function($event, $name) use ($version, $options, &$listened, $collection, $self) {
                 $listened[$name] = true;
                 $self->assertInstanceOf(EventInterface::class, $event);
                 $self->assertInstanceOf(CollectionEvent::class, $event);
                 /** @var CollectionEvent $event */
+                $self->assertInstanceOf(Progress::class, $event->getProgress());
+                $self->assertEquals($collection->count(), $event->getProgress()->getTotal());
+                $self->assertEquals($collection->count(), $event->getProgress()->getCurrent());
+
                 $self->assertSame($options, $event->getOptions());
                 $self->assertTrue($event->getTarget()->isMigrated());
             }

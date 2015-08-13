@@ -42,7 +42,7 @@ class MigrateCommand
 
     /**
      * @param MigrationInterface $migration
-     * @param Options     $options
+     * @param Options            $options
      */
     public function __construct(MigrationInterface $migration, Options $options)
     {

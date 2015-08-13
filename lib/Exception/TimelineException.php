@@ -21,7 +21,8 @@
 namespace Baleen\Migrations\Exception;
 
 /**
- * Class TimelineException
+ * Class TimelineException.
+ *
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
 class TimelineException extends BaleenException

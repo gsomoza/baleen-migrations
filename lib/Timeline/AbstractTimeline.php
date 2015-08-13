@@ -21,16 +21,15 @@
 namespace Baleen\Migrations\Timeline;
 
 use Baleen\Migrations\Event\HasEmitterTrait;
+use Baleen\Migrations\Event\Timeline\Progress;
 use Baleen\Migrations\Migration\Command\MigrateCommand;
 use Baleen\Migrations\Migration\Command\MigrationBus;
 use Baleen\Migrations\Migration\Command\MigrationBusFactory;
-use Baleen\Migrations\Migration\Factory\FactoryInterface;
 use Baleen\Migrations\Migration\MigrationInterface;
 use Baleen\Migrations\Migration\Options;
 use Baleen\Migrations\Version;
 use Baleen\Migrations\Version\Collection\LinkedVersions;
 use Baleen\Migrations\Version\Comparator\DefaultComparator;
-use League\Tactician\CommandBus;
 
 /**
  * Encapsulates the lower-level methods of a Timeline, leaving the actual timeline logic to the extending class.
@@ -57,14 +56,14 @@ abstract class AbstractTimeline implements TimelineInterface
 
     /**
      * @param LinkedVersions $versions
-     * @param callable $comparator
-     * @param MigrationBus $migrationBus A CommandBus that will be used to run each individual migration.
+     * @param callable       $comparator
+     * @param MigrationBus   $migrationBus A CommandBus that will be used to run each individual migration.
      */
     public function __construct(
         LinkedVersions $versions,
         callable $comparator = null,
-        MigrationBus $migrationBus = null)
-    {
+        MigrationBus $migrationBus = null
+    ) {
         if (null === $migrationBus) {
             $migrationBus = MigrationBusFactory::create();
         }
@@ -105,7 +104,7 @@ abstract class AbstractTimeline implements TimelineInterface
 
     /**
      * @param MigrationInterface $migration
-     * @param Options     $options
+     * @param Options            $options
      *
      * @return bool
      */
@@ -124,14 +123,20 @@ abstract class AbstractTimeline implements TimelineInterface
      */
     protected function runCollection($goalVersion, Options $options, LinkedVersions $collection)
     {
-        $goalVersion = $this->versions->getOrException($goalVersion);
+        $goalVersion = $collection->getOrException($goalVersion);
+
+        $current = 0;
+        $total = $collection->getPosition($goalVersion);
+        $progress = new Progress($total, $current);
 
         // dispatch COLLECTION_BEFORE
-        $this->getEmitter()->dispatchCollectionBefore($goalVersion, $options, $collection);
+        $this->getEmitter()->dispatchCollectionBefore($goalVersion, $options, $collection, $progress);
 
         $modified = new LinkedVersions();
         foreach ($collection as $version) {
-            $result = $this->runSingle($version, $options);
+            $current += 1;
+            $progress->setCurrent($current);
+            $result = $this->runSingle($version, $options, $progress);
             if ($result) {
                 $modified->add($version);
             }
@@ -142,7 +147,7 @@ abstract class AbstractTimeline implements TimelineInterface
         }
 
         // dispatch COLLECTION_AFTER
-        $this->getEmitter()->dispatchCollectionAfter($goalVersion, $options, $modified);
+        $this->getEmitter()->dispatchCollectionAfter($goalVersion, $options, $modified, $progress);
 
         return $modified;
     }

@@ -57,7 +57,9 @@ class IndexedVersions implements CollectionDirectAccessInterface
      * an exception.
      *
      * @param Version $version
+     *
      * @return bool
+     *
      * @throws CollectionException
      */
     public function validate(Version $version)
@@ -67,17 +69,19 @@ class IndexedVersions implements CollectionDirectAccessInterface
                 sprintf('Item with id "%s" already exists', $version->getId())
             );
         }
+
         return true; // if there are no exceptions then result is true
     }
 
     /**
      * @param mixed $version
+     *
      * @throws CollectionException
      */
     public function add($version)
     {
         if ($this->validate($version)) {
-            /** @var Version $version */
+            /* @var Version $version */
             $this->items[$version->getId()] = $version;
         } else {
             // this should never happen
@@ -121,7 +125,7 @@ class IndexedVersions implements CollectionDirectAccessInterface
     }
 
     /**
-     * Sets the internal items pointer to the end of the array
+     * Sets the internal items pointer to the end of the array.
      */
     public function end()
     {

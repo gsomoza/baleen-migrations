@@ -30,7 +30,9 @@ class MigratedVersions extends SortableVersions
      * This makes the collection behave like a set - throwing an exception if the version already exists in the set.
      *
      * @param Version $version
+     *
      * @return bool
+     *
      * @throws CollectionException
      * @throws MigrationMissingException
      */
@@ -42,6 +44,7 @@ class MigratedVersions extends SortableVersions
                 $version->getId()
             ));
         }
+
         return parent::validate($version);
     }
 }

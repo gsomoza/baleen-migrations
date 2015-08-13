@@ -21,7 +21,8 @@
 namespace Baleen\Migrations\Exception;
 
 /**
- * Class RepositoryException
+ * Class RepositoryException.
+ *
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
 class RepositoryException extends BaleenException

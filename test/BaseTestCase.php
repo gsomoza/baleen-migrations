@@ -46,4 +46,71 @@ class BaseTestCase extends \PHPUnit_Framework_TestCase
         m::close();
     }
 
+    /**
+     * @param $propName
+     * @param $instance
+     * @return mixed
+     */
+    public function getPropVal($propName, $instance)
+    {
+        $prop = new \ReflectionProperty($instance, $propName);
+        $prop->setAccessible(true);
+        return $prop->getValue($instance);
+    }
+
+    /**
+     * @param $propName
+     * @param $value
+     * @param $instance
+     */
+    public function setPropVal($propName, $value, $instance)
+    {
+        $prop = new \ReflectionProperty($instance, $propName);
+        $prop->setAccessible(true);
+        $prop->setValue($instance, $value);
+    }
+
+    /**
+     * @param $methodName
+     * @param $instance
+     * @param $args
+     * @return mixed
+     */
+    public function invokeMethod($methodName, $instance, $args = [])
+    {
+        $method = new \ReflectionMethod($instance, $methodName);
+        $method->setAccessible(true);
+        return $method->invokeArgs($instance, $args);
+    }
+
+    /**
+     * @param $arrays
+     * @param int $i
+     * @return array
+     */
+    public function combinations($arrays, $i = 0) {
+        if (!isset($arrays[$i])) {
+            return array();
+        }
+        if ($i == count($arrays) - 1) {
+            return $arrays[$i];
+        }
+
+        // get combinations from subsequent arrays
+        $tmp = $this->combinations($arrays, $i + 1);
+
+        $result = array();
+
+        // concat each array from tmp with each element from $arrays[$i]
+        foreach ($arrays[$i] as $v) {
+            foreach ($tmp as $t) {
+                $result[] = is_array($t) ?
+                    array_merge(array($v), $t) :
+                    array($v, $t);
+            }
+        }
+
+        return $result;
+    }
+
 }
