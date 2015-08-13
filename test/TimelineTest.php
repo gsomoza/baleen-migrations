@@ -100,11 +100,12 @@ class TimelineTest extends BaseTestCase
         $instance->downTowards($goal);
 
         $versions = $this->getInstanceVersions($instance);
-        $versions = array_reverse($versions);
+        $versions = new LinkedVersions(array_reverse($versions));
+        $goal = $versions->get($goal);
         foreach ($versions as $version) {
             /** @var V $version */
             $this->assertFalse($version->isMigrated(), sprintf('Expected version %s not to be migrated', $version->getId()));
-            if ($version->getId() == $goal) {
+            if ($version === $goal) {
                 break;
             }
         }
@@ -122,7 +123,9 @@ class TimelineTest extends BaseTestCase
         $instance->goTowards($goal);
 
         $afterGoal = false;
-        $versions = $this->getInstanceVersions($instance);
+        /** @var LinkedVersions $versions */
+        $versions = new LinkedVersions($this->getInstanceVersions($instance));
+        $goal = $versions->get($goal);
         foreach ($versions as $version) {
             /** @var V $version */
             if (!$afterGoal) {
@@ -130,7 +133,7 @@ class TimelineTest extends BaseTestCase
             } else {
                 $this->assertFalse($version->isMigrated(), sprintf('Expected version %s not to be migrated', $version->getId()));
             }
-            if ($version->getId() == $goal) {
+            if ($version === $goal) {
                 $afterGoal = true;
             }
         }
@@ -213,20 +216,13 @@ class TimelineTest extends BaseTestCase
 
     public function versionsAndGoalsProvider()
     {
-        return [
-            [$this->getAllMigratedVersionsFixture(), 12],
-            [$this->getAllMigratedVersionsFixture(), 1],
-            [$this->getAllMigratedVersionsFixture(), 8],
-            [$this->getAllMigratedVersionsFixture(), 9],
-            [$this->getNoMigratedVersionsFixture(), 12],
-            [$this->getNoMigratedVersionsFixture(), 1],
-            [$this->getNoMigratedVersionsFixture(), 8],
-            [$this->getNoMigratedVersionsFixture(), 9],
-            [$this->getMixedVersionsFixture(), 12],
-            [$this->getMixedVersionsFixture(), 1],
-            [$this->getMixedVersionsFixture(), 8],
-            [$this->getMixedVersionsFixture(), 9],
+        $goals = [1, 8, 12, 'first', 'last'];
+        $fixtures = [
+            $this->getAllMigratedVersionsFixture(),
+            $this->getNoMigratedVersionsFixture(),
+            $this->getMixedVersionsFixture(),
         ];
+        return $this->combinations([$fixtures, $goals]);
     }
 
     /**
