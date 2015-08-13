@@ -117,4 +117,34 @@ class FileStorage extends AbstractStorage
     {
         return file_get_contents($this->path);
     }
+
+    /**
+     * @inheritdoc
+     */
+    public function save(Version $version)
+    {
+        $result = false;
+        $stored = $this->fetchAll();
+        $exists = $stored->get($version);
+        if (!$exists) {
+            $stored->add($version);
+            $result = $this->saveCollection($stored);
+        }
+        return $result;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function delete(Version $version)
+    {
+        $result = false;
+        $stored = $this->fetchAll();
+        $exists = $stored->get($version);
+        if ($exists) {
+            $stored->remove($version);
+            $result = $this->saveCollection($stored);
+        }
+        return $result;
+    }
 }

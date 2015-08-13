@@ -68,6 +68,14 @@ class Timeline extends AbstractTimeline
             $options->setExceptionOnSkip(false);
         }
         $options->setDirection(Options::DIRECTION_DOWN); // make sure its right
+
+        // reverse aliases because we're also reversing the collection
+        if ($goalVersion === SortableVersions::FIRST) {
+            $goalVersion = SortableVersions::LAST;
+        } elseif ($goalVersion === SortableVersions::LAST) {
+            $goalVersion = SortableVersions::FIRST;
+        }
+
         return $this->runCollection($goalVersion, $options, $this->versions->getReverse());
     }
 

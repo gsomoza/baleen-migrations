@@ -60,6 +60,20 @@ abstract class AbstractStorage implements StorageInterface
     }
 
     /**
+     * @inheritdoc
+     */
+    public function update(Version $version)
+    {
+        $result = null;
+        if ($version->isMigrated()) {
+            $result = $this->save($version);
+        } else {
+            $result = $this->delete($version);
+        }
+        return $result;
+    }
+
+    /**
      * @return Version[]
      */
     abstract protected function doFetchAll();

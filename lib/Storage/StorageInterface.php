@@ -20,6 +20,7 @@
 
 namespace Baleen\Migrations\Storage;
 
+use Baleen\Migrations\Version;
 use Baleen\Migrations\Version\Collection\MigratedVersions;
 
 /**
@@ -44,4 +45,26 @@ interface StorageInterface
      * @return bool Returns false on failure.
      */
     public function saveCollection(MigratedVersions $versions);
+
+    /**
+     * Saves or deletes a version depending on whether the version is respectively migrated or not.
+     *
+     * @param Version $version
+     * @return bool The result of calling 'save' or 'delete' on the version.
+     */
+    public function update(Version $version);
+
+    /**
+     * Adds a version into storage
+     * @param Version $version
+     * @return bool
+     */
+    public function save(Version $version);
+
+    /**
+     * Removes a version from storage
+     * @param Version $version
+     * @return bool
+     */
+    public function delete(Version $version);
 }
