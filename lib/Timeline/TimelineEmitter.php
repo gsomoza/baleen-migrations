@@ -25,6 +25,7 @@ use Baleen\Migrations\Event\EmitterInterface;
 use Baleen\Migrations\Event\EventInterface;
 use Baleen\Migrations\Event\Timeline\CollectionEvent;
 use Baleen\Migrations\Event\Timeline\MigrationEvent;
+use Baleen\Migrations\Event\Timeline\Progress;
 use Baleen\Migrations\Migration\Options;
 use Baleen\Migrations\Version;
 use Baleen\Migrations\Version\Collection\LinkedVersions;
@@ -38,30 +39,61 @@ class TimelineEmitter implements EmitterInterface
 
     /**
      * @param Version        $targetVersion
-     * @param Options $options
-     * @param LinkedVersions     $versions
+     * @param Options        $options
+     * @param LinkedVersions $versions
+     * @param Progress       $progress
      */
-    public function dispatchCollectionBefore(Version $targetVersion, Options $options, LinkedVersions $versions)
-    {
-        $event = new CollectionEvent($targetVersion, $options, $versions);
+    public function dispatchCollectionBefore(
+        Version $targetVersion,
+        Options $options,
+        LinkedVersions $versions,
+        Progress $progress = null
+    ) {
+        $event = new CollectionEvent($targetVersion, $options, $versions, $progress);
         $this->dispatchEvent(EventInterface::COLLECTION_BEFORE, $event);
     }
 
-    public function dispatchCollectionAfter(Version $targetVersion, Options $options, LinkedVersions $versions)
-    {
-        $event = new CollectionEvent($targetVersion, $options, $versions);
+    /**
+     * dispatchCollectionAfter.
+     *
+     * @param Version        $targetVersion
+     * @param Options        $options
+     * @param LinkedVersions $versions
+     * @param Progress       $progress
+     */
+    public function dispatchCollectionAfter(
+        Version $targetVersion,
+        Options $options,
+        LinkedVersions $versions,
+        Progress $progress = null
+    ) {
+        $event = new CollectionEvent($targetVersion, $options, $versions, $progress);
         $this->dispatchEvent(EventInterface::COLLECTION_AFTER, $event);
     }
 
-    public function dispatchMigrationBefore(Version $version, Options $options)
+    /**
+     * dispatchMigrationBefore.
+     *
+     * @param Version       $version
+     * @param Options       $options
+     * @param Progress|null $progress
+     */
+    public function dispatchMigrationBefore(Version $version, Options $options, Progress $progress = null)
     {
-        $event = new MigrationEvent($version, $options);
+        $event = new MigrationEvent($version, $options, $progress);
         $this->dispatchEvent(EventInterface::MIGRATION_BEFORE, $event);
     }
 
-    public function dispatchMigrationAfter(Version $version, Options $options)
+    /**
+     * dispatchMigrationAfter.
+     *
+     * @param Version       $version
+     * @param Options       $options
+     * @param Progress|null $progress
+     */
+    public function dispatchMigrationAfter(Version $version, Options $options, Progress $progress = null)
     {
-        $event = new MigrationEvent($version, $options);
+        $event = new MigrationEvent($version, $options, $progress);
         $this->dispatchEvent(EventInterface::MIGRATION_AFTER, $event);
     }
 }

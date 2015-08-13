@@ -43,15 +43,26 @@ class MigrationEvent extends Event implements EventInterface
     protected $version;
 
     /**
-     * CollectionEvent constructor.
-     *
-     * @param Version        $version
-     * @param Options $options
+     * @var Progress
      */
-    public function __construct(Version $version, Options $options)
+    protected $progress;
+
+    /**
+     * MigrationEvent constructor.
+     *
+     * @param Version  $version
+     * @param Options  $options
+     * @param Progress $progress
+     */
+    public function __construct(Version $version, Options $options, Progress $progress = null)
     {
         $this->options = $options;
         $this->version = $version;
+
+        if (null === $progress) {
+            $progress = new Progress(1, 1);
+        }
+        $this->progress = $progress;
     }
 
     /**
@@ -68,5 +79,13 @@ class MigrationEvent extends Event implements EventInterface
     public function getVersion()
     {
         return $this->version;
+    }
+
+    /**
+     * @return Progress
+     */
+    public function getProgress()
+    {
+        return $this->progress;
     }
 }

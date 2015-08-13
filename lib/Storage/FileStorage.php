@@ -42,12 +42,13 @@ class FileStorage extends AbstractStorage
     public function __construct($path)
     {
         $this->path = $path;
-
     }
 
     /**
      * Reads versions from the storage file.
+     *
      * @return Version[]
+     *
      * @throws StorageException
      */
     protected function doFetchAll()
@@ -68,6 +69,7 @@ class FileStorage extends AbstractStorage
                 $versions[] = $version;
             }
         }
+
         return $versions;
     }
 
@@ -75,12 +77,14 @@ class FileStorage extends AbstractStorage
      * Write a collection of versions to the storage file.
      *
      * @param MigratedVersions $versions
+     *
      * @return int
+     *
      * @throws StorageException
      */
     public function saveCollection(MigratedVersions $versions)
     {
-        $ids = array_map(function(Version $v) {
+        $ids = array_map(function (Version $v) {
             return $v->getId();
         }, $versions->toArray());
         $contents = implode("\n", $ids);
@@ -92,11 +96,13 @@ class FileStorage extends AbstractStorage
                 $this->path
             ));
         }
+
         return (bool) $result;
     }
 
     /**
      * @param $contents
+     *
      * @return int
      */
     protected function writeFile($contents)

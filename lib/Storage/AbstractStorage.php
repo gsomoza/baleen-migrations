@@ -1,4 +1,5 @@
 <?php
+
 /*
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -24,15 +25,17 @@ use Baleen\Migrations\Version;
 use Baleen\Migrations\Version\Collection\MigratedVersions;
 
 /**
- * Class AbstractStorage
+ * Class AbstractStorage.
+ *
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
 abstract class AbstractStorage implements StorageInterface
 {
-
     /**
      * Reads versions from the storage file.
+     *
      * @return MigratedVersions
+     *
      * @throws StorageException
      * @throws \Baleen\Migrations\Exception\CollectionException
      */
@@ -52,6 +55,7 @@ abstract class AbstractStorage implements StorageInterface
                 $collection->add($version);
             }
         }
+
         return $collection;
     }
 

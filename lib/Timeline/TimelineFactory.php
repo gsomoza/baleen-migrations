@@ -77,7 +77,7 @@ class TimelineFactory
     }
 
     /**
-     * Sets versions in $this->availableVersions to migrated if they appear in $this->migratedVersions
+     * Sets versions in $this->availableVersions to migrated if they appear in $this->migratedVersions.
      *
      * @throws MigrationMissingException
      */

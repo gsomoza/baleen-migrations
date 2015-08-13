@@ -24,17 +24,19 @@ use Baleen\Migrations\Exception\CollectionException;
 use Baleen\Migrations\Version;
 
 /**
- * Represents a set of Versions, all of which must be linked to a Migration
+ * Represents a set of Versions, all of which must be linked to a Migration.
  *
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
 class LinkedVersions extends SortableVersions
 {
     /**
-     * Validates that migrations added to this set must all have a linked Migration
+     * Validates that migrations added to this set must all have a linked Migration.
      *
      * @param Version $version
+     *
      * @return bool
+     *
      * @throws CollectionException
      */
     public function validate(Version $version)
@@ -45,6 +47,7 @@ class LinkedVersions extends SortableVersions
                 $version->getId()
             ));
         }
+
         return parent::validate($version);
     }
 }

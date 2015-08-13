@@ -21,7 +21,8 @@
 namespace Baleen\Migrations\Exception;
 
 /**
- * Class CollectionException
+ * Class CollectionException.
+ *
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
 class CollectionException extends BaleenException

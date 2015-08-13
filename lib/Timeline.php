@@ -20,7 +20,7 @@
 
 namespace Baleen\Migrations;
 
-use Baleen\Migrations\Exception\MigrationException;
+use Baleen\Migrations\Event\Timeline\Progress;
 use Baleen\Migrations\Exception\MigrationMissingException;
 use Baleen\Migrations\Exception\TimelineException;
 use Baleen\Migrations\Migration\Options;
@@ -36,7 +36,7 @@ class Timeline extends AbstractTimeline
 {
     /**
      * @param Version|string $goalVersion
-     * @param Options $options
+     * @param Options        $options
      *
      * @return SortableVersions A collection of modified versions
      *
@@ -55,7 +55,7 @@ class Timeline extends AbstractTimeline
 
     /**
      * @param Version|string $goalVersion
-     * @param Options $options
+     * @param Options        $options
      *
      * @return SortableVersions A collection of modified versions
      *
@@ -99,13 +99,15 @@ class Timeline extends AbstractTimeline
 
     /**
      * @param \Baleen\Migrations\Version $version
-     * @param Options $options
+     * @param Options                    $options
+     * @param Progress                   $progress Provides contextual information about current progress if this
+     *                                             migration is one of many that are being run in batch.
+     *
      * @return Version|false
      *
-     * @throws MigrationException
      * @throws TimelineException
      */
-    public function runSingle($version, Options $options)
+    public function runSingle($version, Options $options, Progress $progress = null)
     {
         $version = $this->versions->getOrException($version);
         // migration will always exist because its enforced in LinkedCollection
@@ -125,7 +127,7 @@ class Timeline extends AbstractTimeline
         }
 
         // Dispatch MIGRATE_BEFORE
-        $this->getEmitter()->dispatchMigrationBefore($version, $options);
+        $this->getEmitter()->dispatchMigrationBefore($version, $options, $progress);
 
         $this->doRun($migration, $options);
 
@@ -133,7 +135,7 @@ class Timeline extends AbstractTimeline
         $version->setMigrated($options->isDirectionUp());
 
         // Dispatch MIGRATE_AFTER
-        $this->getEmitter()->dispatchMigrationAfter($version, $options);
+        $this->getEmitter()->dispatchMigrationAfter($version, $options, $progress);
 
         return $version;
     }

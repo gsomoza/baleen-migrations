@@ -49,17 +49,24 @@ class CollectionEvent extends Event implements EventInterface
     protected $target;
 
     /**
+     * @var Progress
+     */
+    protected $progress;
+
+    /**
      * CollectionEvent constructor.
      *
      * @param Version        $target
-     * @param Options $options
-     * @param LinkedVersions     $versions
+     * @param Options        $options
+     * @param LinkedVersions $versions
+     * @param Progress       $progress
      */
-    public function __construct(Version $target, Options $options, LinkedVersions $versions)
+    public function __construct(Version $target, Options $options, LinkedVersions $versions, Progress $progress = null)
     {
         $this->options = $options;
         $this->target = $target;
         $this->collection = $versions;
+        $this->progress = $progress;
     }
 
     /**
@@ -84,5 +91,13 @@ class CollectionEvent extends Event implements EventInterface
     public function getTarget()
     {
         return $this->target;
+    }
+
+    /**
+     * @return Progress
+     */
+    public function getProgress()
+    {
+        return $this->progress;
     }
 }

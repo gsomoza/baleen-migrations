@@ -20,6 +20,7 @@
 
 namespace Baleen\Migrations\Timeline;
 
+use Baleen\Migrations\Event\Timeline\Progress;
 use Baleen\Migrations\Migration\Options;
 
 /**
@@ -33,7 +34,7 @@ interface TimelineInterface
     /**
      * Runs all versions up, starting from the oldest and until (and including) the specified version.
      *
-     * @param string|\Baleen\Migrations\Version           $version
+     * @param string|\Baleen\Migrations\Version    $version
      * @param \Baleen\Migrations\Migration\Options $options
      */
     public function upTowards($version, Options $options);
@@ -41,7 +42,7 @@ interface TimelineInterface
     /**
      * Runs all versions down, starting from the newest and until (and including) the specified version.
      *
-     * @param string|\Baleen\Migrations\Version           $version
+     * @param string|\Baleen\Migrations\Version    $version
      * @param \Baleen\Migrations\Migration\Options $options
      */
     public function downTowards($version, Options $options);
@@ -56,10 +57,11 @@ interface TimelineInterface
     public function goTowards($goalVersion, Options $options);
 
     /**
-     * @param \Baleen\Migrations\Version                  $version
+     * @param \Baleen\Migrations\Version           $version
      * @param \Baleen\Migrations\Migration\Options $options
+     * @param Progress                             $progress
      *
      * @return
      */
-    public function runSingle($version, Options $options);
+    public function runSingle($version, Options $options, Progress $progress);
 }

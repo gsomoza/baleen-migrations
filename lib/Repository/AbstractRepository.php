@@ -25,12 +25,12 @@ use Baleen\Migrations\Migration\Factory\FactoryInterface;
 use Baleen\Migrations\Version\Collection\LinkedVersions;
 
 /**
- * Class AbstractRepository
+ * Class AbstractRepository.
+ *
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
 abstract class AbstractRepository implements RepositoryInterface
 {
-
     /**
      * @var FactoryInterface
      */
@@ -46,7 +46,9 @@ abstract class AbstractRepository implements RepositoryInterface
 
     /**
      * @inheritdoc
+     *
      * @return LinkedVersions
+     *
      * @throws RepositoryException
      */
     public function fetchAll()
@@ -57,6 +59,7 @@ abstract class AbstractRepository implements RepositoryInterface
                 'Method AbstractRepository::doFetchAll() must return a LinkedVersions collection.'
             );
         }
+
         return $result;
     }
 

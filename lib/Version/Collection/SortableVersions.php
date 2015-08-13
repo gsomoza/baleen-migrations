@@ -36,10 +36,10 @@ class SortableVersions extends IndexedVersions
      * @var array
      */
     protected $aliases = [
-        self::LAST  => self::LAST,
-        'latest'    => self::LAST, // an alternative to 'last'
+        self::LAST => self::LAST,
+        'latest' => self::LAST, // an alternative to 'last'
         self::FIRST => self::FIRST,
-        'earliest'  => self::FIRST, // an alternative to 'first'
+        'earliest' => self::FIRST, // an alternative to 'first'
     ];
 
     /**
@@ -82,16 +82,19 @@ class SortableVersions extends IndexedVersions
     public function last()
     {
         $this->end();
+
         return $this->current();
     }
 
     /**
      * Returns the first Version in the collection.
+     *
      * @return Version
      */
     public function first()
     {
         $this->rewind();
+
         return $this->current();
     }
 
@@ -108,6 +111,7 @@ class SortableVersions extends IndexedVersions
 
     /**
      * @param string $index
+     *
      * @return Version|null
      */
     public function getByAlias($index)
@@ -125,6 +129,19 @@ class SortableVersions extends IndexedVersions
                     break;
             }
         }
+
         return $version;
+    }
+
+    /**
+     * Returns the numeric position of an item in the collection (base 1).
+     *
+     * @param Version|string $index
+     *
+     * @return int
+     */
+    public function getPosition($index)
+    {
+        return array_search((string) $index, array_keys($this->items)) + 1;
     }
 }

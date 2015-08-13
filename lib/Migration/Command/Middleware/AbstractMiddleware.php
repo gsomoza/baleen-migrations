@@ -33,10 +33,11 @@ use League\Tactician\Middleware;
 abstract class AbstractMiddleware implements Middleware
 {
     /**
-     * @param object $command
+     * @param object   $command
      * @param callable $next
      *
      * @return mixed
+     *
      * @throws InvalidArgumentException
      */
     public function execute($command, callable $next)
@@ -46,14 +47,16 @@ abstract class AbstractMiddleware implements Middleware
                 'Expected $command to be an instance of MigrateCommand.'
             );
         }
+
         return $this->doExecute($command, $next);
     }
 
     /**
-     * Concrete handling of the MigrateCommand
+     * Concrete handling of the MigrateCommand.
      *
      * @param MigrateCommand $command
-     * @param callable $next
+     * @param callable       $next
+     *
      * @return mixed
      */
     abstract protected function doExecute(MigrateCommand $command, callable $next);
