@@ -185,4 +185,94 @@ class IndexedVersionsTest extends BaseTestCase
         );
         $instance->add($version);
     }
+
+    /**
+     * testResolve
+     */
+    public function testResolveSavesToCacheByDefault()
+    {
+        $alias = 'irrelevant';
+        $resolvedId = '123';
+        $instance = m::mock(IndexedVersions::class)->makePartial();
+        $instance->shouldReceive('getResolver->resolve')->once()->andReturn($resolvedId);
+        $result = $this->invokeMethod('resolve', $instance, [$alias]);
+        $cache = $this->getPropVal('cache', $instance);
+        $this->assertArrayHasKey($alias, $cache);
+        $this->assertContains($resolvedId, $cache);
+        $this->assertSame($resolvedId, $result);
+
+        return $instance;
+    }
+
+    /**
+     * testResolveWithWarmCache
+     */
+    public function testResolveWithWarmCache()
+    {
+        $alias = 'irrelevant';
+        $resolvedId = '123';
+        $instance = m::mock(IndexedVersions::class)->makePartial();
+        $instance->shouldNotReceive('getResolver');
+        $cache = [$alias => $resolvedId];
+        $this->setPropVal('cache', $cache, $instance);
+        $result = $this->invokeMethod('resolve', $instance, [$alias]);
+        $this->assertSame($resolvedId, $result);
+    }
+
+    /**
+     * testResolveWithWarmCacheResolvesIfNoCacheSpecified
+     */
+    public function testResolveWithWarmCacheResolvesIfCacheDisabled()
+    {
+        $alias = 'irrelevant';
+        $cachedId = '123';
+        $resolvedId = '456';
+        $this->assertNotEquals($resolvedId, $cachedId);
+
+        $instance = m::mock(IndexedVersions::class)->makePartial();
+        $instance->shouldReceive('getResolver->resolve')->once()->andReturn($resolvedId);
+        $cache = [$alias => $cachedId];
+        $this->setPropVal('cache', $cache, $instance);
+        $result = $this->invokeMethod('resolve', $instance, [$alias, false]);
+        $this->assertSame($resolvedId, $result);
+    }
+
+    /**
+     * testInvalidateCache
+     */
+    public function testInvalidateCache()
+    {
+        $instance = new IndexedVersions();
+        $cache = ['some' => 'cached_values'];
+        $this->setPropVal('cache', $cache, $instance);
+        $this->invokeMethod('invalidateCache', $instance);
+        $result = $this->getPropVal('cache', $instance);
+        $this->assertEmpty($result);
+    }
+
+    /**
+     * testAddInvalidatesCache
+     */
+    public function testAddInvalidatesCache()
+    {
+        $instance = m::mock(IndexedVersions::class)
+            ->shouldAllowMockingProtectedMethods()
+            ->makePartial();
+        $instance->shouldReceive(['validate' => true]);
+        $instance->shouldReceive('invalidateCache')->once();
+        $this->invokeMethod('add', $instance, [new V(1)]);
+    }
+
+    /**
+     * testRemoveInvalidatesCache
+     */
+    public function testRemoveInvalidatesCache()
+    {
+        $instance = m::mock(IndexedVersions::class)
+            ->shouldAllowMockingProtectedMethods()
+            ->makePartial();
+        $instance->shouldReceive('has')->andReturn(true);
+        $instance->shouldReceive('invalidateCache')->once();
+        $this->invokeMethod('remove', $instance, [new V(1)]);
+    }
 }

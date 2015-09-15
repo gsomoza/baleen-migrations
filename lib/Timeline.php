@@ -25,6 +25,7 @@ use Baleen\Migrations\Exception\MigrationMissingException;
 use Baleen\Migrations\Exception\TimelineException;
 use Baleen\Migrations\Migration\Options;
 use Baleen\Migrations\Timeline\AbstractTimeline;
+use Baleen\Migrations\Version\Collection\Resolver\FirstLastResolver;
 use Baleen\Migrations\Version\Collection\SortableVersions;
 
 /**
@@ -36,7 +37,7 @@ class Timeline extends AbstractTimeline
 {
     /**
      * @param Version|string $goalVersion
-     * @param Options        $options
+     * @param Options $options
      *
      * @return SortableVersions A collection of modified versions
      *
@@ -55,7 +56,7 @@ class Timeline extends AbstractTimeline
 
     /**
      * @param Version|string $goalVersion
-     * @param Options        $options
+     * @param Options $options
      *
      * @return SortableVersions A collection of modified versions
      *
@@ -69,12 +70,8 @@ class Timeline extends AbstractTimeline
         }
         $options->setDirection(Options::DIRECTION_DOWN); // make sure its right
 
-        // reverse aliases because we're also reversing the collection
-        if ($goalVersion === SortableVersions::FIRST) {
-            $goalVersion = SortableVersions::LAST;
-        } elseif ($goalVersion === SortableVersions::LAST) {
-            $goalVersion = SortableVersions::FIRST;
-        }
+        // get the goal version now, before reversing the collection
+        $goalVersion = $this->versions->get($goalVersion);
 
         return $this->runCollection($goalVersion, $options, $this->versions->getReverse());
     }
@@ -106,10 +103,10 @@ class Timeline extends AbstractTimeline
     }
 
     /**
-     * @param \Baleen\Migrations\Version $version
-     * @param Options                    $options
-     * @param Progress                   $progress Provides contextual information about current progress if this
-     *                                             migration is one of many that are being run in batch.
+     * @param Version|string $version
+     * @param Options        $options
+     * @param Progress       $progress Provides contextual information about current progress if this
+     *                                 migration is one of many that are being run in batch.
      *
      * @return Version|false
      *
