@@ -87,17 +87,23 @@ class SortableVersionsTest extends IndexedVersionsTest
     }
 
     /**
-     * @param string $alias
-     * @param int $expectedId
+     * TODO: this was refactored to the "resolvers" functionality. Move tests there.
      * @dataProvider getByAliasProvider
+     * @param array $versions
+     * @param $alias
+     * @param $expectedId
      */
     public function testGetByAlias(array $versions, $alias, $expectedId)
     {
         $instance = new SortableVersions($versions);
-        $result = $instance->getByAlias($alias);
+        $result = $instance->get($alias);
         $this->assertEquals($expectedId, $result->getId());
     }
 
+    /**
+     * getByAliasProvider
+     * @return array
+     */
     public function getByAliasProvider()
     {
         $sample1 = Version::fromArray(1, 2, 3, 4, 5);
@@ -110,5 +116,15 @@ class SortableVersionsTest extends IndexedVersionsTest
             [$sample2, 'first', 'v97'],
             [$sample2, 'earliest', 'v97'],
         ];
+    }
+
+    /**
+     * testGetByPositionEmpty
+     */
+    public function testGetByPositionReturnsNullWhenNoItems()
+    {
+        $instance = new SortableVersions([]);
+        $result = $instance->getByPosition(1);
+        $this->assertNull($result);
     }
 }

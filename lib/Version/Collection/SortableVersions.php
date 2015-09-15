@@ -29,19 +29,6 @@ use Baleen\Migrations\Version;
  */
 class SortableVersions extends IndexedVersions
 {
-    const LAST = 'last';
-    const FIRST = 'first';
-
-    /**
-     * @var array
-     */
-    protected $aliases = [
-        self::LAST => self::LAST,
-        'latest' => self::LAST, // an alternative to 'last'
-        self::FIRST => self::FIRST,
-        'earliest' => self::FIRST, // an alternative to 'first'
-    ];
-
     /**
      * @param callable $comparator
      */
@@ -51,7 +38,7 @@ class SortableVersions extends IndexedVersions
     }
 
     /**
-     * @return static
+     * @return $this The reversed collection
      */
     public function getReverse()
     {
@@ -99,41 +86,6 @@ class SortableVersions extends IndexedVersions
     }
 
     /**
-     * @param mixed $index
-     * @param mixed $defaultValue Will be returned if the index is not present at collection
-     *
-     * @return Version|null Null if not present
-     */
-    public function get($index, $defaultValue = null)
-    {
-        return $this->getByAlias($index) ?: parent::get($index, $defaultValue);
-    }
-
-    /**
-     * @param string $index
-     *
-     * @return Version|null
-     */
-    public function getByAlias($index)
-    {
-        $index = (string) $index;
-        $version = null;
-        if (isset($this->aliases[$index])) {
-            $index = $this->aliases[$index];
-            switch ($index) {
-                case self::LAST:
-                    $version = $this->last();
-                    break;
-                case self::FIRST:
-                    $version = $this->first();
-                    break;
-            }
-        }
-
-        return $version;
-    }
-
-    /**
      * Returns the numeric position of an item in the collection (base 1).
      *
      * @param Version|string $index
@@ -143,5 +95,25 @@ class SortableVersions extends IndexedVersions
     public function getPosition($index)
     {
         return array_search((string) $index, array_keys($this->items)) + 1;
+    }
+
+    /**
+     * getByPosition
+     * @param $position
+     * @return null|Version
+     */
+    public function getByPosition($position)
+    {
+        if (empty($this->items)) {
+            return null;
+        }
+        $result = null;
+        $keys = array_keys($this->items);
+        $position -= 1; // convert to base 0
+        if (isset($keys[$position])) {
+            $key = $keys[$position];
+            $result = $this->items[$key];
+        }
+        return $result;
     }
 }

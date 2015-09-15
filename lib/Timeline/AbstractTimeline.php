@@ -151,4 +151,20 @@ abstract class AbstractTimeline implements TimelineInterface
 
         return $modified;
     }
+
+    /**
+     * @inheritdoc
+     */
+    public function getLastMigratedVersion()
+    {
+        $last = null;
+        foreach ($this->versions->getReverse() as $version) {
+            /** @var Version $version */
+            if ($version->isMigrated()) {
+                $last = $version;
+                break;
+            }
+        }
+        return $last;
+    }
 }

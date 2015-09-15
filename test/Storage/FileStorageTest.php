@@ -41,11 +41,11 @@ class FileStorageTest extends BaseTestCase
      * @param $file
      * @param $versionIdsOrException
      *
-     * @dataProvider readMigratedVersionsProvider
+     * @dataProvider fetchAllProvider
      */
-    public function testReadMigratedVersions($file, $versionIdsOrException)
+    public function testFetchAll($file, $versionIdsOrException)
     {
-        /** @var m::Mock $instance */
+        /** @var m\Mock|FileStorage $instance */
         $instance = m::mock(FileStorage::class, [$file])->shouldAllowMockingProtectedMethods()->makePartial();
         if (is_string($versionIdsOrException)) {
             $instance->shouldReceive('readFile')->once()->andReturn(false);
@@ -59,7 +59,7 @@ class FileStorageTest extends BaseTestCase
         }
     }
 
-    public function readMigratedVersionsProvider()
+    public function fetchAllProvider()
     {
         return [
             [__DIR__ . '/../data/storage.txt', $this->versionIds],
@@ -107,6 +107,7 @@ class FileStorageTest extends BaseTestCase
 
     public function testFetchAllThrowsExceptionIfNotVersion()
     {
+        /** @var m\Mock|FileStorage $instance */
         $instance = m::mock(FileStorage::class)->shouldAllowMockingProtectedMethods()->makePartial();
         $instance->shouldReceive('doFetchAll')->once()->andReturn(['not a version']);
         $this->setExpectedException(StorageException::class, Version::class);
@@ -116,9 +117,43 @@ class FileStorageTest extends BaseTestCase
     public function testCantWriteToFileShouldThrowException()
     {
         $versions = new MigratedVersions($this->writeMigratedVersionsProvider()[0][1]);
+        /** @var m\Mock|FileStorage $instance */
         $instance = m::mock(FileStorage::class)->shouldAllowMockingProtectedMethods()->makePartial();
         $instance->shouldReceive('writeFile')->once()->andReturn(false);
         $this->setExpectedException(StorageException::class, 'not write');
         $instance->saveCollection($versions);
+    }
+
+    /**
+     * Test 'save' and 'remove'
+     * @param $exists
+     * @dataProvider saveRemoveProvider
+     */
+    public function testSaveRemove($method, $exists)
+    {
+        $v = m::mock(Version::class);
+        $instance = m::mock(FileStorage::class)->shouldAllowMockingProtectedMethods()->makePartial();
+        $stored = m::mock(MigratedVersions::class);
+        $stored->shouldReceive('has')->once()->with($v)->andReturn($exists);
+        $instance->shouldReceive('fetchAll')->once()->andReturn($stored);
+        $expected = false;
+        if ($method === 'save' ? !$exists : $exists) {
+            $expected = '123';
+            $stored->shouldReceive($method === 'save' ? 'add' : 'remove')->once()->with($v);
+            $instance->shouldReceive('saveCollection')->once()->andReturn($expected);
+        }
+        $result = $instance->$method($v);
+        $this->assertEquals($expected, $result);
+    }
+
+    /**
+     * saveRemoveProvider
+     * @return array
+     */
+    public function saveRemoveProvider()
+    {
+        $trueFalse = [true, false];
+        $methods = ['save', 'delete'];
+        return $this->combinations([$methods, $trueFalse]);
     }
 }

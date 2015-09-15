@@ -31,6 +31,7 @@ use Baleen\Migrations\Migration\Options;
 use Baleen\Migrations\Migration\MigrationInterface;
 use Baleen\Migrations\Timeline;
 use Baleen\Migrations\Version as V;
+use Baleen\Migrations\Version;
 use Baleen\Migrations\Version\Collection\LinkedVersions;
 use Baleen\Migrations\Version\Collection\SortableVersions;
 use Baleen\Migrations\Version\Comparator\DefaultComparator;
@@ -390,5 +391,43 @@ class TimelineTest extends BaseTestCase
         $method = new \ReflectionMethod($instance, 'doRun');
         $method->setAccessible(true);
         $method->invoke($instance, $collection->current()->getMigration(), $options);
+    }
+
+    /**
+     * testGetLastMigratedVersion
+     * @param $versions
+     * @param $expectedId
+     * @dataProvider lastMigratedVersionsProvider
+     */
+    public function testGetLastMigratedVersion($versions, $expectedId)
+    {
+        $instance = $this->getInstance($versions);
+        $version = $instance->getLastMigratedVersion();
+        if (null !== $version) {
+            $this->assertInstanceOf(Version::class, $version);
+            $this->assertEquals($expectedId, $version->getId());
+        } else {
+            $this->assertNull(
+                $expectedId,
+                sprintf('Expected a version with id "%s", but got NULL instead.', $expectedId)
+            );
+        }
+    }
+
+    /**
+     * lastMigratedVersionsProvider
+     * @return array
+     */
+    public function lastMigratedVersionsProvider()
+    {
+        $firstMigrated = $this->getNoMigratedVersionsFixture();
+        $firstMigrated[0]->setMigrated(true);
+        return [
+            [[], null],
+            [$firstMigrated, 1],
+            [$this->getAllMigratedVersionsFixture(), 12],
+            [$this->getNoMigratedVersionsFixture(), null],
+            [$this->getMixedVersionsFixture(), 10]
+        ];
     }
 }

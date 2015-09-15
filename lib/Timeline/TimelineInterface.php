@@ -22,6 +22,7 @@ namespace Baleen\Migrations\Timeline;
 
 use Baleen\Migrations\Event\Timeline\Progress;
 use Baleen\Migrations\Migration\Options;
+use Baleen\Migrations\Version;
 
 /**
  * The Timeline is responsible of emitting MigrateCommands based on how the user wants to navigate the timeline
@@ -57,6 +58,8 @@ interface TimelineInterface
     public function goTowards($goalVersion, Options $options);
 
     /**
+     * Runs a single migration in the specified direction.
+     *
      * @param \Baleen\Migrations\Version           $version
      * @param \Baleen\Migrations\Migration\Options $options
      * @param Progress                             $progress
@@ -64,4 +67,10 @@ interface TimelineInterface
      * @return
      */
     public function runSingle($version, Options $options, Progress $progress);
+
+    /**
+     * Returns the latest version that has been migrated (a.k.a. the HEAD), or NULL if no version has been migrated.
+     * @return Version|null
+     */
+    public function getLastMigratedVersion();
 }

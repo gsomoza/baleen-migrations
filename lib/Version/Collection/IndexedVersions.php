@@ -5,6 +5,8 @@ namespace Baleen\Migrations\Version\Collection;
 use Baleen\Migrations\Exception\CollectionException;
 use Baleen\Migrations\Exception\InvalidArgumentException;
 use Baleen\Migrations\Version;
+use Baleen\Migrations\Version\Collection\Resolver\DefaultResolverStackFactory;
+use Baleen\Migrations\Version\Collection\Resolver\ResolverInterface;
 use EBT\Collection\CollectionDirectAccessInterface;
 use EBT\Collection\CountableTrait;
 use EBT\Collection\DirectAccessTrait;
@@ -20,23 +22,35 @@ use Zend\Stdlib\ArrayUtils;
  *
  * @method Version current()
  * @method Version[] getItems()
- * @method Version get($index, $defaultValue = null)
+ * @method Version baseGet($index, $defaultValue = null)
  */
 class IndexedVersions implements CollectionDirectAccessInterface
 {
-    use CountableTrait, EmptyTrait, IterableTrait, GetItemsTrait, DirectAccessTrait;
+    use CountableTrait, EmptyTrait, IterableTrait, GetItemsTrait;
+    use DirectAccessTrait {
+        get as _get;
+        has as _has;
+    }
 
     /**
      * @var array
      */
     protected $items = array();
 
+    /** @var ResolverInterface */
+    protected $resolver;
+
+    /** @var string[] */
+    protected $cache = [];
+
     /**
      * @param array $versions
      *
+     * @param ResolverInterface $resolver
+     * @throws CollectionException
      * @throws InvalidArgumentException
      */
-    public function __construct($versions = array())
+    public function __construct($versions = array(), ResolverInterface $resolver = null)
     {
         if (!is_array($versions)) {
             if ($versions instanceof \Traversable) {
@@ -47,9 +61,91 @@ class IndexedVersions implements CollectionDirectAccessInterface
                 );
             }
         }
+        if (null !== $resolver) {
+            $this->setResolver($resolver);
+        }
         foreach ($versions as $version) {
             $this->add($version);
         }
+    }
+
+    /**
+     * @param ResolverInterface $resolver
+     */
+    public function setResolver(ResolverInterface $resolver)
+    {
+        $this->resolver = $resolver;
+    }
+
+    /**
+     * @return ResolverInterface
+     */
+    public function getResolver()
+    {
+        if (null === $this->resolver) {
+            $factory = new DefaultResolverStackFactory();
+            $this->resolver = $factory->create();
+        }
+        return $this->resolver;
+    }
+
+    /**
+     * @param mixed $index
+     * @param mixed $defaultValue Will be returned if the index is not present at collection.
+     * @param bool $resolve Whether to use the resolver or not.
+     * @param bool $cache Whether to use the cache or not. Forced to false if $resolve = false.
+     * @return Version|null Null if not present
+     */
+    public function get($index, $defaultValue = null, $resolve = true, $cache = true)
+    {
+        $index = (string) $index;
+
+        $result = null;
+
+        if ($resolve) {
+            $result = $this->resolve($index, $cache);
+        }
+
+        if (null === $result) {
+            $result = $this->_get($index, $defaultValue);
+        }
+
+        return $result;
+    }
+
+    /**
+     * Resolves an alias in to a version
+     * @param $alias
+     * @param bool|true $cache
+     * @return Version|null
+     */
+    protected function resolve($alias, $cache = true)
+    {
+        $result = null;
+        if ($cache && !empty($this->cache[$alias])) {
+            $result = $this->cache[$alias];
+        } else {
+            $result = $this->getResolver()->resolve($alias, $this);
+            if ($cache) {
+                $this->cache[$alias] = $result;
+            }
+        }
+        return $result;
+    }
+
+    /**
+     * Returns whether the index exists in the collection
+     *
+     * @param      $index
+     * @param bool $resolve
+     *
+     * @return bool
+     */
+    public function has($index, $resolve = false)
+    {
+        $index = (string) $index;
+
+        return $this->get($index, null, $resolve) !== null;
     }
 
     /**
@@ -74,6 +170,14 @@ class IndexedVersions implements CollectionDirectAccessInterface
     }
 
     /**
+     * invalidateCache
+     */
+    protected function invalidateCache()
+    {
+        $this->cache = [];
+    }
+
+    /**
      * @param mixed $version
      *
      * @throws CollectionException
@@ -83,6 +187,7 @@ class IndexedVersions implements CollectionDirectAccessInterface
         if ($this->validate($version)) {
             /* @var Version $version */
             $this->items[$version->getId()] = $version;
+            $this->invalidateCache();
         } else {
             // this should never happen
             throw new CollectionException(
@@ -98,6 +203,7 @@ class IndexedVersions implements CollectionDirectAccessInterface
     {
         if ($this->has($version)) {
             unset($this->items[(string) $version]);
+            $this->invalidateCache();
         }
     }
 
@@ -109,10 +215,9 @@ class IndexedVersions implements CollectionDirectAccessInterface
     public function addOrReplace(Version $version)
     {
         if ($this->has($version)) {
-            $this->items[$version->getId()] = $version; // replace
-        } else {
-            $this->add($version);
+            $this->remove($version);
         }
+        $this->add($version);
     }
 
     /**

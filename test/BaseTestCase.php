@@ -113,4 +113,15 @@ class BaseTestCase extends \PHPUnit_Framework_TestCase
         return $result;
     }
 
+    /**
+     * trueFalseProvider
+     * @return array
+     */
+    public function trueFalseProvider()
+    {
+        return [
+            [true],
+            [false],
+        ];
+    }
 }
