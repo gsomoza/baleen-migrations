@@ -39,7 +39,7 @@ abstract class AbstractResolver implements ResolverInterface
      */
     public function resolve($alias, IndexedVersions $collection)
     {
-        $alias = (string) $alias;
+        $alias = (string)$alias;
         if (empty($alias)) {
             return null;
         }

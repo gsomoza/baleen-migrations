@@ -56,8 +56,8 @@ abstract class AbstractTimeline implements TimelineInterface
 
     /**
      * @param LinkedVersions $versions
-     * @param callable       $comparator
-     * @param MigrationBus   $migrationBus A CommandBus that will be used to run each individual migration.
+     * @param callable $comparator
+     * @param MigrationBus $migrationBus A CommandBus that will be used to run each individual migration.
      */
     public function __construct(
         LinkedVersions $versions,
@@ -104,7 +104,7 @@ abstract class AbstractTimeline implements TimelineInterface
 
     /**
      * @param MigrationInterface $migration
-     * @param Options            $options
+     * @param Options $options
      *
      * @return bool
      */

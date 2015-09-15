@@ -25,7 +25,6 @@ use Baleen\Migrations\Exception\MigrationMissingException;
 use Baleen\Migrations\Exception\TimelineException;
 use Baleen\Migrations\Migration\Options;
 use Baleen\Migrations\Timeline\AbstractTimeline;
-use Baleen\Migrations\Version\Collection\Resolver\FirstLastResolver;
 use Baleen\Migrations\Version\Collection\SortableVersions;
 
 /**
@@ -104,8 +103,8 @@ class Timeline extends AbstractTimeline
 
     /**
      * @param Version|string $version
-     * @param Options        $options
-     * @param Progress       $progress Provides contextual information about current progress if this
+     * @param Options $options
+     * @param Progress $progress Provides contextual information about current progress if this
      *                                 migration is one of many that are being run in batch.
      *
      * @return Version|false

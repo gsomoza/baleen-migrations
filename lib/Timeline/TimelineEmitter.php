@@ -38,10 +38,10 @@ class TimelineEmitter implements EmitterInterface
     use CanDispatchEventsTrait;
 
     /**
-     * @param Version        $targetVersion
-     * @param Options        $options
+     * @param Version $targetVersion
+     * @param Options $options
      * @param LinkedVersions $versions
-     * @param Progress       $progress
+     * @param Progress $progress
      */
     public function dispatchCollectionBefore(
         Version $targetVersion,
@@ -56,10 +56,10 @@ class TimelineEmitter implements EmitterInterface
     /**
      * dispatchCollectionAfter.
      *
-     * @param Version        $targetVersion
-     * @param Options        $options
+     * @param Version $targetVersion
+     * @param Options $options
      * @param LinkedVersions $versions
-     * @param Progress       $progress
+     * @param Progress $progress
      */
     public function dispatchCollectionAfter(
         Version $targetVersion,
@@ -74,8 +74,8 @@ class TimelineEmitter implements EmitterInterface
     /**
      * dispatchMigrationBefore.
      *
-     * @param Version       $version
-     * @param Options       $options
+     * @param Version $version
+     * @param Options $options
      * @param Progress|null $progress
      */
     public function dispatchMigrationBefore(Version $version, Options $options, Progress $progress = null)
@@ -87,8 +87,8 @@ class TimelineEmitter implements EmitterInterface
     /**
      * dispatchMigrationAfter.
      *
-     * @param Version       $version
-     * @param Options       $options
+     * @param Version $version
+     * @param Options $options
      * @param Progress|null $progress
      */
     public function dispatchMigrationAfter(Version $version, Options $options, Progress $progress = null)

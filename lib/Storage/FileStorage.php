@@ -97,7 +97,7 @@ class FileStorage extends AbstractStorage
             ));
         }
 
-        return (bool) $result;
+        return (bool)$result;
     }
 
     /**

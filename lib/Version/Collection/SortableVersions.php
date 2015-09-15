@@ -94,7 +94,7 @@ class SortableVersions extends IndexedVersions
      */
     public function getPosition($index)
     {
-        return array_search((string) $index, array_keys($this->items)) + 1;
+        return array_search((string)$index, array_keys($this->items)) + 1;
     }
 
     /**

@@ -56,10 +56,10 @@ class CollectionEvent extends Event implements EventInterface
     /**
      * CollectionEvent constructor.
      *
-     * @param Version        $target
-     * @param Options        $options
+     * @param Version $target
+     * @param Options $options
      * @param LinkedVersions $versions
-     * @param Progress       $progress
+     * @param Progress $progress
      */
     public function __construct(Version $target, Options $options, LinkedVersions $versions, Progress $progress = null)
     {

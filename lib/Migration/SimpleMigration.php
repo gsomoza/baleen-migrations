@@ -32,18 +32,18 @@ abstract class SimpleMigration implements MigrationInterface, OptionsAwareInterf
     protected $options;
 
     /**
-     * @param Options $options
-     */
-    public function setOptions(Options $options)
-    {
-        $this->options = $options;
-    }
-
-    /**
      * @return Options
      */
     public function getOptions()
     {
         return $this->options;
+    }
+
+    /**
+     * @param Options $options
+     */
+    public function setOptions(Options $options)
+    {
+        $this->options = $options;
     }
 }

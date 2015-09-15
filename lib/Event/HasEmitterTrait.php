@@ -46,16 +46,6 @@ trait HasEmitterTrait
     }
 
     /**
-     * Get the event dispatcher from the emitter.
-     *
-     * @return EventDispatcherInterface
-     */
-    public function getEventDispatcher()
-    {
-        return $this->getEmitter()->getEventDispatcher();
-    }
-
-    /**
      * Returns the emitter for the class. Creates one if necessary.
      *
      * @return EmitterInterface
@@ -85,4 +75,14 @@ trait HasEmitterTrait
      * @return EmitterInterface
      */
     abstract protected function createEmitter();
+
+    /**
+     * Get the event dispatcher from the emitter.
+     *
+     * @return EventDispatcherInterface
+     */
+    public function getEventDispatcher()
+    {
+        return $this->getEmitter()->getEventDispatcher();
+    }
 }

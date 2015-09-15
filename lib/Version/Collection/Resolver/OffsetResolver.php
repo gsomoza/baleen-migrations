@@ -46,6 +46,10 @@ class OffsetResolver extends AbstractResolver
     /**
      * Resolves an alias into a Version.
      *
+     * TODO: this method has an NPath complexity of 400. The configured NPath complexity threshold is 200.
+     *
+     * @SuppressWarnings(PHPMD.NPathComplexity)
+     *
      * @param string $alias
      * @param IndexedVersions $collection
      *
@@ -62,7 +66,7 @@ class OffsetResolver extends AbstractResolver
         if (!preg_match(self::PATTERN, $alias, $matches)) {
             return null;
         }
-        list( , $newAlias, $operator) = $matches;
+        list(, $newAlias, $operator) = $matches;
 
         // resolve the new alias (this will allow to resolve e.g. HEAD-1)
         $absoluteVersion = $collection->get($newAlias);
@@ -71,7 +75,7 @@ class OffsetResolver extends AbstractResolver
         }
 
         // calculate the offset
-        $count = !isset($matches[3]) ? strlen($operator) : (int) $matches[3];
+        $count = !isset($matches[3]) ? strlen($operator) : (int)$matches[3];
         if (strlen($operator) > 1) {
             $operator = substr($operator, 0, 1);
         }

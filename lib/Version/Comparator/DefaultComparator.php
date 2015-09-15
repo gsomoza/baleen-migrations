@@ -39,6 +39,6 @@ class DefaultComparator implements ComparatorInterface
         preg_match(self::PATTERN, $version1->getId(), $matches1);
         preg_match(self::PATTERN, $version2->getId(), $matches2);
 
-        return (int) $matches1[0] - (int) $matches2[0];
+        return (int)$matches1[0] - (int)$matches2[0];
     }
 }

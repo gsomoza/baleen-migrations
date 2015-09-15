@@ -35,7 +35,7 @@ interface TimelineInterface
     /**
      * Runs all versions up, starting from the oldest and until (and including) the specified version.
      *
-     * @param string|\Baleen\Migrations\Version    $version
+     * @param string|\Baleen\Migrations\Version $version
      * @param \Baleen\Migrations\Migration\Options $options
      */
     public function upTowards($version, Options $options);
@@ -43,7 +43,7 @@ interface TimelineInterface
     /**
      * Runs all versions down, starting from the newest and until (and including) the specified version.
      *
-     * @param string|\Baleen\Migrations\Version    $version
+     * @param string|\Baleen\Migrations\Version $version
      * @param \Baleen\Migrations\Migration\Options $options
      */
     public function downTowards($version, Options $options);
@@ -60,9 +60,9 @@ interface TimelineInterface
     /**
      * Runs a single migration in the specified direction.
      *
-     * @param \Baleen\Migrations\Version           $version
+     * @param \Baleen\Migrations\Version $version
      * @param \Baleen\Migrations\Migration\Options $options
-     * @param Progress                             $progress
+     * @param Progress $progress
      *
      * @return
      */

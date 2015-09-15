@@ -80,7 +80,8 @@ class DirectoryRepository extends AbstractRepository
             $matches = [];
             if ($class->isInstantiable()
                 && preg_match($this->getClassNameRegex(), $className, $matches)
-                && isset($matches[1])) {
+                && isset($matches[1])
+            ) {
                 $migration = $this->factory->create($className);
                 if ($migration instanceof MigrationInterface) {
                     $version = new Version($matches[1]);
@@ -106,6 +107,6 @@ class DirectoryRepository extends AbstractRepository
      */
     public function setClassNameRegex($classNameRegex)
     {
-        $this->classNameRegex = (string) $classNameRegex;
+        $this->classNameRegex = (string)$classNameRegex;
     }
 }

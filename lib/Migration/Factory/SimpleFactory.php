@@ -36,7 +36,7 @@ class SimpleFactory implements FactoryInterface
      */
     public function create($class)
     {
-        $class = (string) $class;
+        $class = (string)$class;
         if (empty($class)) {
             throw new InvalidArgumentException(
                 'Cannot create a migration from an empty class name!'

@@ -36,11 +36,11 @@ class ResolverStack extends AbstractResolver
      * addResolver
      *
      * @param ResolverInterface $resolver
-     * @param int               $priority Highest priority gets executed first.
+     * @param int $priority Highest priority gets executed first.
      */
     public function addResolver(ResolverInterface $resolver, $priority)
     {
-        $priority = (int) $priority;
+        $priority = (int)$priority;
         $this->resolvers[$priority] = $resolver;
     }
 

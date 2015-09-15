@@ -20,6 +20,10 @@ use Zend\Stdlib\ArrayUtils;
  *
  * @author Gabriel Somoza <gabriel@strategery.io>
  *
+ * TODO: this class has 11 methods. Consider refactoring it to keep number of methods under 10.
+ *
+ * @SuppressWarnings(PHPMD.TooManyMethods)
+ *
  * @method Version current()
  * @method Version[] getItems()
  * @method Version baseGet($index, $defaultValue = null)
@@ -98,7 +102,7 @@ class IndexedVersions implements CollectionDirectAccessInterface
      */
     public function get($index, $defaultValue = null, $resolve = true, $cache = true)
     {
-        $index = (string) $index;
+        $index = (string)$index;
 
         $result = null;
 
@@ -143,7 +147,7 @@ class IndexedVersions implements CollectionDirectAccessInterface
      */
     public function has($index, $resolve = false)
     {
-        $index = (string) $index;
+        $index = (string)$index;
 
         return $this->get($index, null, $resolve) !== null;
     }
@@ -202,7 +206,7 @@ class IndexedVersions implements CollectionDirectAccessInterface
     public function remove($version)
     {
         if ($this->has($version)) {
-            unset($this->items[(string) $version]);
+            unset($this->items[(string)$version]);
             $this->invalidateCache();
         }
     }

@@ -62,9 +62,9 @@ class Options
 
     /**
      * @param $direction
-     * @param bool  $forced
-     * @param bool  $dryRun
-     * @param bool  $exceptionOnSkip
+     * @param bool $forced
+     * @param bool $dryRun
+     * @param bool $exceptionOnSkip
      * @param array $custom
      *
      * @throws InvalidArgumentException
@@ -96,22 +96,6 @@ class Options
     }
 
     /**
-     * @return bool
-     */
-    public function isDirectionUp()
-    {
-        return $this->direction == self::DIRECTION_UP;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isDirectionDown()
-    {
-        return $this->direction == self::DIRECTION_DOWN;
-    }
-
-    /**
      * @param string $direction
      *
      * @throws InvalidArgumentException
@@ -129,6 +113,22 @@ class Options
     /**
      * @return bool
      */
+    public function isDirectionUp()
+    {
+        return $this->direction == self::DIRECTION_UP;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isDirectionDown()
+    {
+        return $this->direction == self::DIRECTION_DOWN;
+    }
+
+    /**
+     * @return bool
+     */
     public function isForced()
     {
         return $this->forced;
@@ -139,7 +139,7 @@ class Options
      */
     public function setForced($forced)
     {
-        $this->forced = (bool) $forced;
+        $this->forced = (bool)$forced;
     }
 
     /**
@@ -155,7 +155,7 @@ class Options
      */
     public function setDryRun($dryRun)
     {
-        $this->dryRun = (bool) $dryRun;
+        $this->dryRun = (bool)$dryRun;
     }
 
     /**
@@ -187,6 +187,6 @@ class Options
      */
     public function setExceptionOnSkip($exceptionOnSkip)
     {
-        $this->exceptionOnSkip = (bool) $exceptionOnSkip;
+        $this->exceptionOnSkip = (bool)$exceptionOnSkip;
     }
 }

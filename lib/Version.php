@@ -53,7 +53,7 @@ class Version implements VersionInterface
      */
     public function __construct($id)
     {
-        $id = trim((string) $id);
+        $id = trim((string)$id);
         if (empty($id)) {
             throw new InvalidArgumentException('A version\'s id cannot be empty');
         }
@@ -81,7 +81,7 @@ class Version implements VersionInterface
      */
     public function setMigrated($migrated)
     {
-        $this->migrated = (bool) $migrated;
+        $this->migrated = (bool)$migrated;
     }
 
     /**

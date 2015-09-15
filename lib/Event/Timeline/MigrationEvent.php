@@ -50,8 +50,8 @@ class MigrationEvent extends Event implements EventInterface
     /**
      * MigrationEvent constructor.
      *
-     * @param Version  $version
-     * @param Options  $options
+     * @param Version $version
+     * @param Options $options
      * @param Progress $progress
      */
     public function __construct(Version $version, Options $options, Progress $progress = null)

@@ -33,7 +33,7 @@ use League\Tactician\Middleware;
 abstract class AbstractMiddleware implements Middleware
 {
     /**
-     * @param object   $command
+     * @param object $command
      * @param callable $next
      *
      * @return mixed
@@ -55,7 +55,7 @@ abstract class AbstractMiddleware implements Middleware
      * Concrete handling of the MigrateCommand.
      *
      * @param MigrateCommand $command
-     * @param callable       $next
+     * @param callable $next
      *
      * @return mixed
      */
