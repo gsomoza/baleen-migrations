@@ -125,8 +125,7 @@ class FileStorage extends AbstractStorage
     {
         $result = false;
         $stored = $this->fetchAll();
-        $exists = $stored->get($version);
-        if (!$exists) {
+        if (!$stored->has($version)) {
             $stored->add($version);
             $result = $this->saveCollection($stored);
         }
@@ -140,8 +139,7 @@ class FileStorage extends AbstractStorage
     {
         $result = false;
         $stored = $this->fetchAll();
-        $exists = $stored->get($version);
-        if ($exists) {
+        if ($stored->has($version)) {
             $stored->remove($version);
             $result = $this->saveCollection($stored);
         }
