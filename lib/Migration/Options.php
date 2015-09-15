@@ -69,8 +69,13 @@ class Options
      *
      * @throws InvalidArgumentException
      */
-    public function __construct($direction, $forced = false, $dryRun = false, $exceptionOnSkip = true, $custom = [])
-    {
+    public function __construct(
+        $direction = self::DIRECTION_UP,
+        $forced = false,
+        $dryRun = false,
+        $exceptionOnSkip = true,
+        $custom = []
+    ) {
         $this->allowedDirections = [
             self::DIRECTION_UP,
             self::DIRECTION_DOWN,
