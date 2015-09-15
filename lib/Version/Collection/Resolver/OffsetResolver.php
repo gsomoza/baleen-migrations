@@ -46,7 +46,7 @@ class OffsetResolver extends AbstractResolver
     /**
      * Resolves an alias into a Version.
      *
-     * TODO: this method has an NPath complexity of 400. The configured NPath complexity threshold is 200.
+     * IMPROVE: this method has an NPath complexity of 400. The configured NPath complexity threshold is 200.
      *
      * @SuppressWarnings(PHPMD.NPathComplexity)
      *

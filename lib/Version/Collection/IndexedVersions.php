@@ -20,7 +20,7 @@ use Zend\Stdlib\ArrayUtils;
  *
  * @author Gabriel Somoza <gabriel@strategery.io>
  *
- * TODO: this class has 11 methods. Consider refactoring it to keep number of methods under 10.
+ * IMPROVE: this class has 11 methods. Consider refactoring it to keep number of methods under 10.
  *
  * @SuppressWarnings(PHPMD.TooManyMethods)
  *
