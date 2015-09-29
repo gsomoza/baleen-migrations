@@ -1,0 +1,32 @@
+--------------------------------------------------
+Baleen\\Migrations\\Repository\\AbstractRepository
+--------------------------------------------------
+
+.. php:namespace: Baleen\\Migrations\\Repository
+
+.. php:class:: AbstractRepository
+
+    Class AbstractRepository.
+
+    .. php:attr:: factory
+
+        protected FactoryInterface
+
+    .. php:method:: setMigrationFactory(FactoryInterface $factory)
+
+        :type $factory: FactoryInterface
+        :param $factory:
+
+    .. php:method:: fetchAll()
+
+        :returns: LinkedVersions
+
+    .. php:method:: doFetchAll()
+
+        Must fetch all versions available to the repository, load them with their
+        migrations, and return them as a
+        LinkedVersions collection. It must use a factory (default or supplied by
+        'setMigrationFactory()') to instantiate
+        each of the migrations.
+
+        :returns: mixed

@@ -1,0 +1,13 @@
+'''''''''''''''''''''''''
+Baleen\\Migrations\\Event
+'''''''''''''''''''''''''
+
+.. php:namespace: Baleen\\Migrations\\Event
+
+.. toctree::
+
+   CanDispatchEventsTrait
+   EmitterInterface
+   EventInterface
+   HasEmitterTrait
+   Timeline/index

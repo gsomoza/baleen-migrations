@@ -1,0 +1,19 @@
+'''''''''''''''''''''''''''''
+Baleen\\Migrations\\Exception
+'''''''''''''''''''''''''''''
+
+.. php:namespace: Baleen\\Migrations\\Exception
+
+.. toctree::
+
+   BaleenException
+   CollectionException
+   InvalidArgumentException
+   MigrationBusException
+   MigrationException
+   MigrationExceptionInterface
+   MigrationMissingException
+   RepositoryException
+   ResolverException
+   StorageException
+   TimelineException

@@ -1,0 +1,76 @@
+---------------------------------------------
+Baleen\\Migrations\\Timeline\\TimelineEmitter
+---------------------------------------------
+
+.. php:namespace: Baleen\\Migrations\\Timeline
+
+.. php:class:: TimelineEmitter
+
+    Dispatches Timeline events.
+
+    .. php:attr:: eventDispatcher
+
+        protected null|EventDispatcherInterface
+
+    .. php:method:: dispatchCollectionBefore(Version $targetVersion, Options $options, LinkedVersions $versions, Progress $progress = null)
+
+        :type $targetVersion: Version
+        :param $targetVersion:
+        :type $options: Options
+        :param $options:
+        :type $versions: LinkedVersions
+        :param $versions:
+        :type $progress: Progress
+        :param $progress:
+
+    .. php:method:: dispatchCollectionAfter(Version $targetVersion, Options $options, LinkedVersions $versions, Progress $progress = null)
+
+        dispatchCollectionAfter.
+
+        :type $targetVersion: Version
+        :param $targetVersion:
+        :type $options: Options
+        :param $options:
+        :type $versions: LinkedVersions
+        :param $versions:
+        :type $progress: Progress
+        :param $progress:
+
+    .. php:method:: dispatchMigrationBefore(Version $version, Options $options, Progress $progress = null)
+
+        dispatchMigrationBefore.
+
+        :type $version: Version
+        :param $version:
+        :type $options: Options
+        :param $options:
+        :type $progress: Progress
+        :param $progress:
+
+    .. php:method:: dispatchMigrationAfter(Version $version, Options $options, Progress $progress = null)
+
+        dispatchMigrationAfter.
+
+        :type $version: Version
+        :param $version:
+        :type $options: Options
+        :param $options:
+        :type $progress: Progress
+        :param $progress:
+
+    .. php:method:: getEventDispatcher()
+
+        :returns: null|EventDispatcherInterface
+
+    .. php:method:: setEventDispatcher(EventDispatcherInterface $eventDispatcher)
+
+        :type $eventDispatcher: EventDispatcherInterface
+        :param $eventDispatcher:
+
+    .. php:method:: dispatchEvent($name, Event $event)
+
+        Dispatches an event if an EventDispatcher is available.
+
+        :param $name:
+        :type $event: Event
+        :param $event:

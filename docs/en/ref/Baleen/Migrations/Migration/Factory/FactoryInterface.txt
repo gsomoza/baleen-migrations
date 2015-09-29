@@ -1,0 +1,16 @@
+--------------------------------------------------------
+Baleen\\Migrations\\Migration\\Factory\\FactoryInterface
+--------------------------------------------------------
+
+.. php:namespace: Baleen\\Migrations\\Migration\\Factory
+
+.. php:interface:: FactoryInterface
+
+    Interface for a Migrations Factory.
+
+    .. php:method:: create($class)
+
+        Creates a Migration based on a class name.
+
+        :param $class:
+        :returns: \Baleen\Migrations\Migration\MigrationInterface

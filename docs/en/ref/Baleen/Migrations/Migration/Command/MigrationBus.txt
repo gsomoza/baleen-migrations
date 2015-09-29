@@ -1,0 +1,11 @@
+----------------------------------------------------
+Baleen\\Migrations\\Migration\\Command\\MigrationBus
+----------------------------------------------------
+
+.. php:namespace: Baleen\\Migrations\\Migration\\Command
+
+.. php:class:: MigrationBus
+
+    .. php:method:: __construct($middleware)
+
+        :param $middleware:

@@ -1,0 +1,13 @@
+-------------------------------------------------
+Baleen\\Migrations\\Migration\\MigrationInterface
+-------------------------------------------------
+
+.. php:namespace: Baleen\\Migrations\\Migration
+
+.. php:interface:: MigrationInterface
+
+    Interface to be implemented by all migration classes in the end-project.
+
+    .. php:method:: up()
+
+    .. php:method:: down()

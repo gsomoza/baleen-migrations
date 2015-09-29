@@ -1,0 +1,19 @@
+----------------------------------------------------------------------
+Baleen\\Migrations\\Migration\\Capabilities\\TransactionAwareInterface
+----------------------------------------------------------------------
+
+.. php:namespace: Baleen\\Migrations\\Migration\\Capabilities
+
+.. php:interface:: TransactionAwareInterface
+
+    Interface TransactionAwareInterface.
+
+    .. php:method:: begin()
+
+    .. php:method:: finish()
+
+    .. php:method:: abort(Exception $e)
+
+        :type $e: Exception
+        :param $e:
+        :returns: mixed

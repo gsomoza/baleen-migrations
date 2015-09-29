@@ -1,0 +1,11 @@
+-----------------------------------------------------------
+Baleen\\Migrations\\Migration\\Command\\MigrationBusFactory
+-----------------------------------------------------------
+
+.. php:namespace: Baleen\\Migrations\\Migration\\Command
+
+.. php:class:: MigrationBusFactory
+
+    Class CommandBusFactory.
+
+    .. php:method:: create()

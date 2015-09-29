@@ -1,0 +1,10 @@
+""""""""""""""""""""""""""""""""""""""
+Baleen\\Migrations\\Migration\\Factory
+""""""""""""""""""""""""""""""""""""""
+
+.. php:namespace: Baleen\\Migrations\\Migration\\Factory
+
+.. toctree::
+
+   FactoryInterface
+   SimpleFactory

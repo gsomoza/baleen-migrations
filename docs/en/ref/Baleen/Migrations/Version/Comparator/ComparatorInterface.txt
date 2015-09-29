@@ -1,0 +1,23 @@
+------------------------------------------------------------
+Baleen\\Migrations\\Version\\Comparator\\ComparatorInterface
+------------------------------------------------------------
+
+.. php:namespace: Baleen\\Migrations\\Version\\Comparator
+
+.. php:interface:: ComparatorInterface
+
+    Compares two version with each other.
+
+    .. php:method:: __invoke(VersionInterface $version1, VersionInterface $version2)
+
+        Compares two versions with each other. The comparison function must return
+        an integer less than, equal to, or
+        greater than zero if the first argument is considered to be respectively
+        less than, equal to, or greater than the
+        second.
+
+        :type $version1: VersionInterface
+        :param $version1:
+        :type $version2: VersionInterface
+        :param $version2:
+        :returns: int

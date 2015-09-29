@@ -1,0 +1,42 @@
+---------------------------------------------
+Baleen\\Migrations\\Version\\VersionInterface
+---------------------------------------------
+
+.. php:namespace: Baleen\\Migrations\\Version
+
+.. php:interface:: VersionInterface
+
+    Holds meta information about a migration, especially that which is related to its status (i.e. anything that can't
+    be stored in the migration itself).
+
+    .. php:method:: getId()
+
+        Returns the ID of the version.
+
+        :returns: string
+
+    .. php:method:: isMigrated()
+
+        Returns whether the version has been migrated or not.
+
+        :returns: mixed
+
+    .. php:method:: setMigrated($migrated)
+
+        Sets whether the version has already been migrated or not.
+
+        :param $migrated:
+
+    .. php:method:: setMigration(MigrationInterface $migration)
+
+        Sets the migration class this version corresponds to.
+
+        :type $migration: MigrationInterface
+        :param $migration:
+        :returns: mixed
+
+    .. php:method:: getMigration()
+
+        Returns the migration associated with this version.
+
+        :returns: null|MigrationInterface

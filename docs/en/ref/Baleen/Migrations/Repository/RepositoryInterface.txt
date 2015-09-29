@@ -1,0 +1,28 @@
+---------------------------------------------------
+Baleen\\Migrations\\Repository\\RepositoryInterface
+---------------------------------------------------
+
+.. php:namespace: Baleen\\Migrations\\Repository
+
+.. php:interface:: RepositoryInterface
+
+    In charge of loading Migration files and instantiating them.
+
+    .. php:method:: fetchAll()
+
+        Must fetch all versions available to the repository, load them with their
+        migrations, and return them as a
+        LinkedVersions collection. It must use a factory (default or supplied by
+        'setMigrationFactory()') to instantiate
+        each of the migrations.
+
+        :returns: LinkedVersions
+
+    .. php:method:: setMigrationFactory(FactoryInterface $factory)
+
+        Use a custom factory to create migrations. Useful to inject migration
+        instances with additional dependencies
+        (e.g. database adapters).
+
+        :type $factory: FactoryInterface
+        :param $factory:

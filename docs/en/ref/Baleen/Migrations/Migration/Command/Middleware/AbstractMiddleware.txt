@@ -1,0 +1,28 @@
+----------------------------------------------------------------------
+Baleen\\Migrations\\Migration\\Command\\Middleware\\AbstractMiddleware
+----------------------------------------------------------------------
+
+.. php:namespace: Baleen\\Migrations\\Migration\\Command\\Middleware
+
+.. php:class:: AbstractMiddleware
+
+    Enforces command type checking, to make sure that all commands ran by these Middleware classes
+    are able to handle MigrateCommand.
+
+    .. php:method:: execute($command, $next)
+
+        :type $command: object
+        :param $command:
+        :type $next: callable
+        :param $next:
+        :returns: mixed
+
+    .. php:method:: doExecute(MigrateCommand $command, $next)
+
+        Concrete handling of the MigrateCommand.
+
+        :type $command: MigrateCommand
+        :param $command:
+        :type $next: callable
+        :param $next:
+        :returns: mixed

@@ -62,14 +62,3 @@ as to provide information about the different models that make up the "migration
    Version Collection
       A special object to represent and sort a set of Collection. Its important to note that it behaves as an ordered
       set of elements.
-
-Core Models
------------
-
-.. toctree::
-   :maxdepth: 2
-
-   core-concepts/migration
-   core-concepts/timeline
-
-

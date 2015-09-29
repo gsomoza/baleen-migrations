@@ -1,0 +1,66 @@
+---------------------------
+Baleen\\Migrations\\Version
+---------------------------
+
+.. php:namespace: Baleen\\Migrations
+
+.. php:class:: Version
+
+    {@inheritDoc}
+
+    .. php:attr:: id
+
+        protected string
+
+    .. php:attr:: migrated
+
+        protected bool
+
+    .. php:attr:: migration
+
+        protected MigrationInterface
+
+    .. php:method:: __construct($id)
+
+        :param $id:
+
+    .. php:method:: getId()
+
+        {@inheritDoc}
+
+    .. php:method:: isMigrated()
+
+        {@inheritDoc}
+
+    .. php:method:: setMigrated($migrated)
+
+        {@inheritDoc}
+
+        :param $migrated:
+
+    .. php:method:: setMigration(MigrationInterface $migration)
+
+        {@inheritDoc}
+
+        :type $migration: MigrationInterface
+        :param $migration:
+
+    .. php:method:: getMigration()
+
+        Returns the migration associated with this version.
+
+        :returns: null|MigrationInterface
+
+    .. php:method:: hasMigration()
+
+        :returns: bool
+
+    .. php:method:: fromArray($versionIds)
+
+        Creates a list of versions based on specified IDs.
+
+        :type $versionIds: mixed
+        :param $versionIds:
+        :returns: Version[]
+
+    .. php:method:: __toString()

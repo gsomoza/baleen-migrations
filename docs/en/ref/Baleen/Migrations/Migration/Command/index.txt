@@ -1,0 +1,13 @@
+""""""""""""""""""""""""""""""""""""""
+Baleen\\Migrations\\Migration\\Command
+""""""""""""""""""""""""""""""""""""""
+
+.. php:namespace: Baleen\\Migrations\\Migration\\Command
+
+.. toctree::
+
+   Middleware/index
+   MigrateCommand
+   MigrateHandler
+   MigrationBus
+   MigrationBusFactory

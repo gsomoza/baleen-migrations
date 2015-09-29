@@ -1,0 +1,25 @@
+------------------------------------------------------
+Baleen\\Migrations\\Migration\\Command\\MigrateHandler
+------------------------------------------------------
+
+.. php:namespace: Baleen\\Migrations\\Migration\\Command
+
+.. php:class:: MigrateHandler
+
+    Class MigrateHandler.
+
+    .. php:method:: doExecute(MigrateCommand $command, $next)
+
+        {@inheritDoc}
+
+        :type $command: MigrateCommand
+        :param $command:
+        :param $next:
+
+    .. php:method:: execute($command, $next)
+
+        :type $command: object
+        :param $command:
+        :type $next: callable
+        :param $next:
+        :returns: mixed

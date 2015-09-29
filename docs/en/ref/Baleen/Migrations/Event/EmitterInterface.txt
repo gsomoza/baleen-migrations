@@ -1,0 +1,18 @@
+-------------------------------------------
+Baleen\\Migrations\\Event\\EmitterInterface
+-------------------------------------------
+
+.. php:namespace: Baleen\\Migrations\\Event
+
+.. php:interface:: EmitterInterface
+
+    Interface EmitterInterface.
+
+    .. php:method:: setEventDispatcher(EventDispatcherInterface $eventDispatcher)
+
+        :type $eventDispatcher: EventDispatcherInterface
+        :param $eventDispatcher:
+
+    .. php:method:: getEventDispatcher()
+
+        :returns: EventDispatcherInterface

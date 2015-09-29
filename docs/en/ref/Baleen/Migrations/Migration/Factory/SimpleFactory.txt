@@ -1,0 +1,11 @@
+-----------------------------------------------------
+Baleen\\Migrations\\Migration\\Factory\\SimpleFactory
+-----------------------------------------------------
+
+.. php:namespace: Baleen\\Migrations\\Migration\\Factory
+
+.. php:class:: SimpleFactory
+
+    .. php:method:: create($class)
+
+        :param $class:

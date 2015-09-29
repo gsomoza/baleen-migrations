@@ -1,0 +1,11 @@
+'''''''''''''''''''''''''''
+Baleen\\Migrations\\Storage
+'''''''''''''''''''''''''''
+
+.. php:namespace: Baleen\\Migrations\\Storage
+
+.. toctree::
+
+   AbstractStorage
+   FileStorage
+   StorageInterface

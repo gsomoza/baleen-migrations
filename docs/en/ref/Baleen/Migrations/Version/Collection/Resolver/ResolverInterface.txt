@@ -1,0 +1,19 @@
+--------------------------------------------------------------------
+Baleen\\Migrations\\Version\\Collection\\Resolver\\ResolverInterface
+--------------------------------------------------------------------
+
+.. php:namespace: Baleen\\Migrations\\Version\\Collection\\Resolver
+
+.. php:interface:: ResolverInterface
+
+    Interface ResolverInterface
+
+    .. php:method:: resolve($alias, IndexedVersions $collection)
+
+        Resolves an alias into a Version.
+
+        :type $alias: string
+        :param $alias:
+        :type $collection: IndexedVersions
+        :param $collection:
+        :returns: \Baleen\Migrations\Version|null

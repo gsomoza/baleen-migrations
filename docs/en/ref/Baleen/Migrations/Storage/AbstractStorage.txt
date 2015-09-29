@@ -1,0 +1,48 @@
+--------------------------------------------
+Baleen\\Migrations\\Storage\\AbstractStorage
+--------------------------------------------
+
+.. php:namespace: Baleen\\Migrations\\Storage
+
+.. php:class:: AbstractStorage
+
+    Class AbstractStorage.
+
+    .. php:method:: fetchAll()
+
+        Reads versions from the storage file.
+
+        :returns: MigratedVersions
+
+    .. php:method:: update(Version $version)
+
+        :type $version: Version
+        :param $version:
+
+    .. php:method:: doFetchAll()
+
+        :returns: Version[]
+
+    .. php:method:: saveCollection(MigratedVersions $versions)
+
+        Write a collection of versions to the storage file.
+
+        :type $versions: MigratedVersions
+        :param $versions:
+        :returns: bool Returns false on failure.
+
+    .. php:method:: save(Version $version)
+
+        Adds a version into storage
+
+        :type $version: Version
+        :param $version:
+        :returns: bool
+
+    .. php:method:: delete(Version $version)
+
+        Removes a version from storage
+
+        :type $version: Version
+        :param $version:
+        :returns: bool

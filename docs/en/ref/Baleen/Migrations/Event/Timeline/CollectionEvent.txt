@@ -1,0 +1,54 @@
+----------------------------------------------------
+Baleen\\Migrations\\Event\\Timeline\\CollectionEvent
+----------------------------------------------------
+
+.. php:namespace: Baleen\\Migrations\\Event\\Timeline
+
+.. php:class:: CollectionEvent
+
+    Class CollectionEvent.
+
+    .. php:attr:: collection
+
+        protected LinkedVersions
+
+    .. php:attr:: options
+
+        protected Options
+
+    .. php:attr:: target
+
+        protected Version
+
+    .. php:attr:: progress
+
+        protected Progress
+
+    .. php:method:: __construct(Version $target, Options $options, LinkedVersions $versions, Progress $progress = null)
+
+        CollectionEvent constructor.
+
+        :type $target: Version
+        :param $target:
+        :type $options: Options
+        :param $options:
+        :type $versions: LinkedVersions
+        :param $versions:
+        :type $progress: Progress
+        :param $progress:
+
+    .. php:method:: getOptions()
+
+        :returns: Options
+
+    .. php:method:: getCollection()
+
+        :returns: LinkedVersions
+
+    .. php:method:: getTarget()
+
+        :returns: Version
+
+    .. php:method:: getProgress()
+
+        :returns: Progress

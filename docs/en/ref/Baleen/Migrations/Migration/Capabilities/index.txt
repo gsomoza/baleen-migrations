@@ -1,0 +1,10 @@
+"""""""""""""""""""""""""""""""""""""""""""
+Baleen\\Migrations\\Migration\\Capabilities
+"""""""""""""""""""""""""""""""""""""""""""
+
+.. php:namespace: Baleen\\Migrations\\Migration\\Capabilities
+
+.. toctree::
+
+   OptionsAwareInterface
+   TransactionAwareInterface

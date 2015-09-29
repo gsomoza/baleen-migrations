@@ -1,0 +1,26 @@
+-------------------------------------------------------------------------
+Baleen\\Migrations\\Migration\\Command\\Middleware\\TransactionMiddleware
+-------------------------------------------------------------------------
+
+.. php:namespace: Baleen\\Migrations\\Migration\\Command\\Middleware
+
+.. php:class:: TransactionMiddleware
+
+    Wraps the migration in a transaction if the migration implements
+    TransactionAwareInterface.
+
+    .. php:method:: doExecute(MigrateCommand $command, $next)
+
+        {@inheritDoc}
+
+        :type $command: MigrateCommand
+        :param $command:
+        :param $next:
+
+    .. php:method:: execute($command, $next)
+
+        :type $command: object
+        :param $command:
+        :type $next: callable
+        :param $next:
+        :returns: mixed
