@@ -1,0 +1,3 @@
+sphinx>=1.3
+sphinx-rtd-theme~=0.1.8
+sphinxcontrib-phpdomain~=0.1.4
