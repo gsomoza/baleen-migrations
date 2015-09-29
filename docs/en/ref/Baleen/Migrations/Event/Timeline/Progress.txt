@@ -1,0 +1,39 @@
+---------------------------------------------
+Baleen\\Migrations\\Event\\Timeline\\Progress
+---------------------------------------------
+
+.. php:namespace: Baleen\\Migrations\\Event\\Timeline
+
+.. php:class:: Progress
+
+    Class Progress.
+
+    .. php:attr:: total
+
+        protected
+
+    .. php:attr:: current
+
+        protected
+
+    .. php:method:: __construct($total, $current)
+
+        Progress constructor.
+
+        :type $total: int
+        :param $total:
+        :type $current: int
+        :param $current:
+
+    .. php:method:: getTotal()
+
+        :returns: int
+
+    .. php:method:: getCurrent()
+
+        :returns: int
+
+    .. php:method:: setCurrent($current)
+
+        :type $current: int
+        :param $current:

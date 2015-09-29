@@ -1,0 +1,11 @@
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Baleen\\Migrations\\Migration\\Command\\Middleware
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. php:namespace: Baleen\\Migrations\\Migration\\Command\\Middleware
+
+.. toctree::
+
+   AbstractMiddleware
+   SetOptionsMiddleware
+   TransactionMiddleware

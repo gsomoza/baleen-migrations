@@ -1,0 +1,58 @@
+-----------------------------------------------
+Baleen\\Migrations\\Timeline\\TimelineInterface
+-----------------------------------------------
+
+.. php:namespace: Baleen\\Migrations\\Timeline
+
+.. php:interface:: TimelineInterface
+
+    The Timeline is responsible of emitting MigrateCommands based on how the user wants to navigate the timeline
+    (e.g. travel to a specific version). It takes into account the current state.
+
+    .. php:method:: upTowards($version, Options $options)
+
+        Runs all versions up, starting from the oldest and until (and including)
+        the specified version.
+
+        :type $version: string|\Baleen\Migrations\Version
+        :param $version:
+        :type $options: Options
+        :param $options:
+
+    .. php:method:: downTowards($version, Options $options)
+
+        Runs all versions down, starting from the newest and until (and including)
+        the specified version.
+
+        :type $version: string|\Baleen\Migrations\Version
+        :param $version:
+        :type $options: Options
+        :param $options:
+
+    .. php:method:: goTowards($goalVersion, Options $options)
+
+        Runs migrations up/down so that all versions *before and including* the
+        specified version are "up" and
+        all versions *after* the specified version are "down".
+
+        :param $goalVersion:
+        :type $options: Options
+        :param $options:
+
+    .. php:method:: runSingle($version, Options $options, Progress $progress)
+
+        Runs a single migration in the specified direction.
+
+        :type $version: \Baleen\Migrations\Version
+        :param $version:
+        :type $options: Options
+        :param $options:
+        :type $progress: Progress
+        :param $progress:
+
+    .. php:method:: getLastMigratedVersion()
+
+        Returns the latest version that has been migrated (a.k.a. the HEAD), or
+        NULL if no version has been migrated.
+
+        :returns: Version|null

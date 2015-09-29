@@ -1,0 +1,44 @@
+-----------------------------------------------------------------
+Baleen\\Migrations\\Version\\Collection\\Resolver\\OffsetResolver
+-----------------------------------------------------------------
+
+.. php:namespace: Baleen\\Migrations\\Version\\Collection\\Resolver
+
+.. php:class:: OffsetResolver
+
+    Class OffsetResolver.
+
+    Resolves aliases in the format: ID{OPERATOR}[COUNT]
+
+    Operators:
+         +           will add
+         -, ^ or ~   will subtract
+
+    Repeat operators consecutively works as a shortcut for COUNT. E.g. ++ will set COUNT to 2.
+
+    Count (optional) should be a number if present and takes precedence over the previous rule.
+
+    Example aliases: 123+, 123++ (same as 123+2), 123+++9 (will be simplified to 123+9)
+
+    .. php:method:: doResolve($alias, IndexedVersions $collection)
+
+        Resolves an alias into a Version.
+
+        IMPROVE: this method has an NPath complexity of 400. The configured NPath
+        complexity threshold is 200.
+
+        :type $alias: string
+        :param $alias:
+        :type $collection: IndexedVersions
+        :param $collection:
+        :returns: \Baleen\Migrations\Version|null|string
+
+    .. php:method:: resolve($alias, IndexedVersions $collection)
+
+        Resolves an alias into a Version.
+
+        :type $alias: string
+        :param $alias:
+        :type $collection: IndexedVersions
+        :param $collection:
+        :returns: Version|null

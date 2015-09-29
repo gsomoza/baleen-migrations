@@ -1,0 +1,9 @@
+-----------------------------------------
+Baleen\\Migrations\\Event\\EventInterface
+-----------------------------------------
+
+.. php:namespace: Baleen\\Migrations\\Event
+
+.. php:interface:: EventInterface
+
+    Interface MigrationsEvent.

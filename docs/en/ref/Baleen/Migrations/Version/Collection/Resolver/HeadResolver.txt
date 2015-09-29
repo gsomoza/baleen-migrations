@@ -1,0 +1,28 @@
+---------------------------------------------------------------
+Baleen\\Migrations\\Version\\Collection\\Resolver\\HeadResolver
+---------------------------------------------------------------
+
+.. php:namespace: Baleen\\Migrations\\Version\\Collection\\Resolver
+
+.. php:class:: HeadResolver
+
+    Class HeadResolver
+
+    .. php:method:: doResolve($alias, IndexedVersions $collection)
+
+        doResolve
+
+        :param $alias:
+        :type $collection: IndexedVersions
+        :param $collection:
+        :returns: Version|null
+
+    .. php:method:: resolve($alias, IndexedVersions $collection)
+
+        Resolves an alias into a Version.
+
+        :type $alias: string
+        :param $alias:
+        :type $collection: IndexedVersions
+        :param $collection:
+        :returns: Version|null

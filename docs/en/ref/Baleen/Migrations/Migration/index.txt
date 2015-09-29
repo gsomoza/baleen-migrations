@@ -1,0 +1,14 @@
+'''''''''''''''''''''''''''''
+Baleen\\Migrations\\Migration
+'''''''''''''''''''''''''''''
+
+.. php:namespace: Baleen\\Migrations\\Migration
+
+.. toctree::
+
+   Capabilities/index
+   Command/index
+   Factory/index
+   MigrationInterface
+   Options
+   SimpleMigration

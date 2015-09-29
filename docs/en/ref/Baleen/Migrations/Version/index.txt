@@ -1,0 +1,11 @@
+'''''''''''''''''''''''''''
+Baleen\\Migrations\\Version
+'''''''''''''''''''''''''''
+
+.. php:namespace: Baleen\\Migrations\\Version
+
+.. toctree::
+
+   Collection/index
+   Comparator/index
+   VersionInterface

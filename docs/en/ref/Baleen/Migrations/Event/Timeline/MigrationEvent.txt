@@ -1,0 +1,44 @@
+---------------------------------------------------
+Baleen\\Migrations\\Event\\Timeline\\MigrationEvent
+---------------------------------------------------
+
+.. php:namespace: Baleen\\Migrations\\Event\\Timeline
+
+.. php:class:: MigrationEvent
+
+    Class MigrationEvent.
+
+    .. php:attr:: options
+
+        protected Options
+
+    .. php:attr:: version
+
+        protected Version
+
+    .. php:attr:: progress
+
+        protected Progress
+
+    .. php:method:: __construct(Version $version, Options $options, Progress $progress = null)
+
+        MigrationEvent constructor.
+
+        :type $version: Version
+        :param $version:
+        :type $options: Options
+        :param $options:
+        :type $progress: Progress
+        :param $progress:
+
+    .. php:method:: getOptions()
+
+        :returns: Options
+
+    .. php:method:: getVersion()
+
+        :returns: Version
+
+    .. php:method:: getProgress()
+
+        :returns: Progress

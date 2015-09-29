@@ -1,0 +1,10 @@
+"""""""""""""""""""""""""""""""""""""""
+Baleen\\Migrations\\Version\\Comparator
+"""""""""""""""""""""""""""""""""""""""
+
+.. php:namespace: Baleen\\Migrations\\Version\\Comparator
+
+.. toctree::
+
+   ComparatorInterface
+   DefaultComparator

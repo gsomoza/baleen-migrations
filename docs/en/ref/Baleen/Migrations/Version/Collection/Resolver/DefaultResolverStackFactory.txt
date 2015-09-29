@@ -1,0 +1,15 @@
+------------------------------------------------------------------------------
+Baleen\\Migrations\\Version\\Collection\\Resolver\\DefaultResolverStackFactory
+------------------------------------------------------------------------------
+
+.. php:namespace: Baleen\\Migrations\\Version\\Collection\\Resolver
+
+.. php:class:: DefaultResolverStackFactory
+
+    Class DefaultResolverStackFactory
+
+    .. php:method:: create()
+
+        create
+
+        :returns: ResolverStack

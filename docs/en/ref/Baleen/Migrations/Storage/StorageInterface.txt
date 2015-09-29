@@ -1,0 +1,48 @@
+---------------------------------------------
+Baleen\\Migrations\\Storage\\StorageInterface
+---------------------------------------------
+
+.. php:namespace: Baleen\\Migrations\\Storage
+
+.. php:interface:: StorageInterface
+
+    Provides a collection of Versions that have been migrated.
+
+    .. php:method:: fetchAll()
+
+        Reads versions from the storage file.
+
+        :returns: MigratedVersions
+
+    .. php:method:: saveCollection(MigratedVersions $versions)
+
+        Write a collection of versions to the storage file.
+
+        :type $versions: MigratedVersions
+        :param $versions:
+        :returns: bool Returns false on failure.
+
+    .. php:method:: update(Version $version)
+
+        Saves or deletes a version depending on whether the version is
+        respectively migrated or not.
+
+        :type $version: Version
+        :param $version:
+        :returns: bool The result of calling 'save' or 'delete' on the version.
+
+    .. php:method:: save(Version $version)
+
+        Adds a version into storage
+
+        :type $version: Version
+        :param $version:
+        :returns: bool
+
+    .. php:method:: delete(Version $version)
+
+        Removes a version from storage
+
+        :type $version: Version
+        :param $version:
+        :returns: bool

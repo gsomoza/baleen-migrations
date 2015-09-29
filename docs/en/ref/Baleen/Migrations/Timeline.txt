@@ -1,0 +1,136 @@
+----------------------------
+Baleen\\Migrations\\Timeline
+----------------------------
+
+.. php:namespace: Baleen\\Migrations
+
+.. php:class:: Timeline
+
+    .. php:attr:: migrationBus
+
+        protected \League\Tactician\CommandBus
+
+    .. php:attr:: allowedDirections
+
+        protected string[]
+
+    .. php:attr:: versions
+
+        protected LinkedVersions
+
+    .. php:attr:: comparator
+
+        protected callable
+
+    .. php:attr:: emitter
+
+        protected EmitterInterface
+
+    .. php:method:: upTowards($goalVersion, Options $options = null)
+
+        :type $goalVersion: Version|string
+        :param $goalVersion:
+        :type $options: Options
+        :param $options:
+        :returns: SortableVersions A collection of modified versions
+
+    .. php:method:: downTowards($goalVersion, Options $options = null)
+
+        :type $goalVersion: Version|string
+        :param $goalVersion:
+        :type $options: Options
+        :param $options:
+        :returns: SortableVersions A collection of modified versions
+
+    .. php:method:: goTowards($goalVersion, Options $options = null)
+
+        Runs migrations up/down so that all versions *before and including* the
+        specified version are "up" and
+        all versions *after* the specified version are "down".
+
+        :param $goalVersion:
+        :type $options: Options
+        :param $options:
+        :returns: SortableVersions
+
+    .. php:method:: runSingle($version, Options $options, Progress $progress = null)
+
+        :type $version: Version|string
+        :param $version:
+        :type $options: Options
+        :param $options:
+        :type $progress: Progress
+        :param $progress: Provides contextual information about current progress if this migration is one of many that are being run in batch.
+        :returns: Version|false
+
+    .. php:method:: __construct(LinkedVersions $versions, $comparator = null, MigrationBus $migrationBus = null)
+
+        :type $versions: LinkedVersions
+        :param $versions:
+        :type $comparator: callable
+        :param $comparator:
+        :type $migrationBus: MigrationBus
+        :param $migrationBus: A CommandBus that will be used to run each individual migration.
+
+    .. php:method:: shouldMigrate(Version $version, Options $options)
+
+        Returns true if the operatin is forced, or if the direction is the
+        opposite to the state of the migration.
+
+        :type $version: Version
+        :param $version:
+        :type $options: Options
+        :param $options:
+        :returns: bool
+
+    .. php:method:: createEmitter()
+
+        Must create and return a default specialised dispatcher.
+
+        :returns: \Baleen\Migrations\Event\EmitterInterface
+
+    .. php:method:: doRun(MigrationInterface $migration, Options $options)
+
+        :type $migration: MigrationInterface
+        :param $migration:
+        :type $options: Options
+        :param $options:
+        :returns: bool
+
+    .. php:method:: runCollection($goalVersion, Options $options, LinkedVersions $collection)
+
+        :param $goalVersion:
+        :type $options: Options
+        :param $options:
+        :type $collection: LinkedVersions
+        :param $collection:
+        :returns: LinkedVersions
+
+    .. php:method:: getLastMigratedVersion()
+
+    .. php:method:: setEventDispatcher(EventDispatcherInterface $eventDispatcher)
+
+        Set the EventDispatcher for the emitter. This is public to allow attaching
+        a previously existing EventDispatcher.
+
+        :type $eventDispatcher: EventDispatcherInterface
+        :param $eventDispatcher:
+
+    .. php:method:: getEmitter()
+
+        Returns the emitter for the class. Creates one if necessary.
+
+        :returns: EmitterInterface
+
+    .. php:method:: setEmitter(EmitterInterface $emitter)
+
+        Sets the emitter for the class.
+
+        :type $emitter: EmitterInterface
+        :param $emitter:
+
+    .. php:method:: getEventDispatcher()
+
+        Get the event dispatcher from the emitter.
+
+        :returns: EventDispatcherInterface

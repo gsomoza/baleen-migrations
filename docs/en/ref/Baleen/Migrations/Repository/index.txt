@@ -1,0 +1,11 @@
+''''''''''''''''''''''''''''''
+Baleen\\Migrations\\Repository
+''''''''''''''''''''''''''''''
+
+.. php:namespace: Baleen\\Migrations\\Repository
+
+.. toctree::
+
+   AbstractRepository
+   DirectoryRepository
+   RepositoryInterface

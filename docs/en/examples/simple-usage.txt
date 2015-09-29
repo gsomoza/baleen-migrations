@@ -42,4 +42,4 @@ The following example illustrates how you can use Baleen migrations from within 
        method. You can also pass RunOptions to most of the other Timeline methods. */
 
 
-To see how you can put migration files into the `./migrations` directory refer to :doc:`sample-migrations`.
+.. To see how you can put migration files into the `./migrations` directory refer to the :doc:`examples`.

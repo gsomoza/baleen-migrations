@@ -1,0 +1,96 @@
+--------------------------------------
+Baleen\\Migrations\\Migration\\Options
+--------------------------------------
+
+.. php:namespace: Baleen\\Migrations\\Migration
+
+.. php:class:: Options
+
+    .. php:attr:: allowedDirections
+
+        protected array
+
+    .. php:attr:: direction
+
+        protected string
+
+    .. php:attr:: forced
+
+        protected bool
+
+    .. php:attr:: dryRun
+
+        protected bool
+
+    .. php:attr:: custom
+
+        protected array
+
+    .. php:attr:: exceptionOnSkip
+
+        protected bool
+
+    .. php:method:: __construct($direction = self::DIRECTION_UP, $forced = false, $dryRun = false, $exceptionOnSkip = true, $custom = [])
+
+        :param $direction:
+        :type $forced: bool
+        :param $forced:
+        :type $dryRun: bool
+        :param $dryRun:
+        :type $exceptionOnSkip: bool
+        :param $exceptionOnSkip:
+        :type $custom: array
+        :param $custom:
+
+    .. php:method:: getDirection()
+
+        :returns: string
+
+    .. php:method:: setDirection($direction)
+
+        :type $direction: string
+        :param $direction:
+
+    .. php:method:: isDirectionUp()
+
+        :returns: bool
+
+    .. php:method:: isDirectionDown()
+
+        :returns: bool
+
+    .. php:method:: isForced()
+
+        :returns: bool
+
+    .. php:method:: setForced($forced)
+
+        :type $forced: bool
+        :param $forced:
+
+    .. php:method:: isDryRun()
+
+        :returns: bool
+
+    .. php:method:: setDryRun($dryRun)
+
+        :type $dryRun: bool
+        :param $dryRun:
+
+    .. php:method:: getCustom()
+
+        :returns: array
+
+    .. php:method:: setCustom($custom)
+
+        :type $custom: array
+        :param $custom:
+
+    .. php:method:: isExceptionOnSkip()
+
+        :returns: bool
+
+    .. php:method:: setExceptionOnSkip($exceptionOnSkip)
+
+        :type $exceptionOnSkip: bool
+        :param $exceptionOnSkip:

@@ -1,0 +1,13 @@
+"""""""""""""""""""""""""""""""""""""""
+Baleen\\Migrations\\Version\\Collection
+"""""""""""""""""""""""""""""""""""""""
+
+.. php:namespace: Baleen\\Migrations\\Version\\Collection
+
+.. toctree::
+
+   IndexedVersions
+   LinkedVersions
+   MigratedVersions
+   Resolver/index
+   SortableVersions

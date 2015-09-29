@@ -1,12 +1,12 @@
 Baleen Migrations
 =================
 
-Baleen Migrations is a project that seeks to abstract the domain logic of performing migrations of any kind into a
-single package. Its simple goal is to excel at one single task: provide an intuitive, well-tested framework to migrate
-from point A to point B (or vice-versa if going down).
+Baleen Migrations is a project that seeks to abstract the domain of performing migrations of any kind into a single
+independent package. Its goal is to excel at one single task: provide an intuitive, well-tested framework to migrate
+"something" from point A to point B (or vice-versa if going down).
 
-In other words, we take care of WHICH migrations are run and in what ORDER. Everything else is left up to the
-implementation:
+In other words, we take care of WHICH migrations are run and the mechanism to run them. Everything else is the
+responsibility of the implementation:
 
 * WHAT is going to be migrated? It could be a database, images, documents, etc.
 * HOW its going to be migrated? You can wrap each migration into DB transactions. Or not, its up to you.
@@ -20,10 +20,10 @@ Contents:
    :maxdepth: 2
 
    getting-started
-   migration
-   timeline
+   domain-model
+   examples
    implementations
-   glossary
+   reference
 
 Indices and Tables
 ==================

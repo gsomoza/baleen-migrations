@@ -1,0 +1,47 @@
+------------------------------------------
+Baleen\\Migrations\\Event\\HasEmitterTrait
+------------------------------------------
+
+.. php:namespace: Baleen\\Migrations\\Event
+
+.. php:trait:: HasEmitterTrait
+
+    Trait to be used by classes that fire events through a specialised emitter. For example, the Timeline
+    class will use this trait to fire events using the TimelineEmitter.
+
+    .. php:attr:: emitter
+
+        protected EmitterInterface
+
+    .. php:method:: setEventDispatcher(EventDispatcherInterface $eventDispatcher)
+
+        Set the EventDispatcher for the emitter. This is public to allow attaching
+        a previously existing EventDispatcher.
+
+        :type $eventDispatcher: EventDispatcherInterface
+        :param $eventDispatcher:
+
+    .. php:method:: getEmitter()
+
+        Returns the emitter for the class. Creates one if necessary.
+
+        :returns: EmitterInterface
+
+    .. php:method:: setEmitter(EmitterInterface $emitter)
+
+        Sets the emitter for the class.
+
+        :type $emitter: EmitterInterface
+        :param $emitter:
+
+    .. php:method:: createEmitter()
+
+        Must create and return a default emitter.
+
+        :returns: EmitterInterface
+
+    .. php:method:: getEventDispatcher()
+
+        Get the event dispatcher from the emitter.
+
+        :returns: EventDispatcherInterface

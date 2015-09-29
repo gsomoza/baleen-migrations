@@ -1,0 +1,12 @@
+''''''''''''''''''''''''''''
+Baleen\\Migrations\\Timeline
+''''''''''''''''''''''''''''
+
+.. php:namespace: Baleen\\Migrations\\Timeline
+
+.. toctree::
+
+   AbstractTimeline
+   TimelineEmitter
+   TimelineFactory
+   TimelineInterface

@@ -1,0 +1,18 @@
+----------------------------------------------------------
+Baleen\\Migrations\\Version\\Comparator\\DefaultComparator
+----------------------------------------------------------
+
+.. php:namespace: Baleen\\Migrations\\Version\\Comparator
+
+.. php:class:: DefaultComparator
+
+    {@inheritDoc}
+
+    .. php:method:: __invoke(VersionInterface $version1, VersionInterface $version2)
+
+        {@inheritDoc}
+
+        :type $version1: VersionInterface
+        :param $version1:
+        :type $version2: VersionInterface
+        :param $version2:

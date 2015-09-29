@@ -1,0 +1,17 @@
+::::::::::::::::::
+Baleen\\Migrations
+::::::::::::::::::
+
+.. php:namespace: Baleen\\Migrations
+
+.. toctree::
+
+   Event/index
+   Exception/index
+   Migration/index
+   Repository/index
+   Storage/index
+   Timeline/index
+   Timeline
+   Version/index
+   Version

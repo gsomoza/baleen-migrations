@@ -1,0 +1,26 @@
+------------------------------------------------------------------------
+Baleen\\Migrations\\Migration\\Command\\Middleware\\SetOptionsMiddleware
+------------------------------------------------------------------------
+
+.. php:namespace: Baleen\\Migrations\\Migration\\Command\\Middleware
+
+.. php:class:: SetOptionsMiddleware
+
+    Checks if a migration is an instance of OptionsAwareInterface and if so sends it
+    the options available in the command.
+
+    .. php:method:: doExecute(MigrateCommand $command, $next)
+
+        {@inheritDoc}
+
+        :type $command: MigrateCommand
+        :param $command:
+        :param $next:
+
+    .. php:method:: execute($command, $next)
+
+        :type $command: object
+        :param $command:
+        :type $next: callable
+        :param $next:
+        :returns: mixed

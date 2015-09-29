@@ -1,0 +1,31 @@
+-------------------------------------------------
+Baleen\\Migrations\\Event\\CanDispatchEventsTrait
+-------------------------------------------------
+
+.. php:namespace: Baleen\\Migrations\\Event
+
+.. php:trait:: CanDispatchEventsTrait
+
+    Allows classes to OPTIONALLY receive an EventDispatcher to dispatch events. Making it optional puts responsibility
+    on the implementation: if the EventDispatcher is not available then no events are dispatched.
+
+    .. php:attr:: eventDispatcher
+
+        protected null|EventDispatcherInterface
+
+    .. php:method:: getEventDispatcher()
+
+        :returns: null|EventDispatcherInterface
+
+    .. php:method:: setEventDispatcher(EventDispatcherInterface $eventDispatcher)
+
+        :type $eventDispatcher: EventDispatcherInterface
+        :param $eventDispatcher:
+
+    .. php:method:: dispatchEvent($name, Event $event)
+
+        Dispatches an event if an EventDispatcher is available.
+
+        :param $name:
+        :type $event: Event
+        :param $event:

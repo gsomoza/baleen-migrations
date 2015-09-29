@@ -1,0 +1,31 @@
+---------------------------------------------
+Baleen\\Migrations\\Timeline\\TimelineFactory
+---------------------------------------------
+
+.. php:namespace: Baleen\\Migrations\\Timeline
+
+.. php:class:: TimelineFactory
+
+    .. php:method:: __construct($availableVersions, $migratedVersions = [])
+
+        :type $availableVersions: array
+        :param $availableVersions:
+        :type $migratedVersions: array
+        :param $migratedVersions:
+
+    .. php:method:: create($comparator = null, $useInternalDispatcher = true)
+
+        Creates a Timeline instance with all available versions. Those versions
+        that have already been migrated will
+        be marked accordingly.
+
+        :type $comparator: callable
+        :param $comparator:
+        :type $useInternalDispatcher: bool
+        :param $useInternalDispatcher: Whether to create an internal event dispatcher.
+        :returns: Timeline
+
+    .. php:method:: prepareCollection()
+
+        Sets versions in $this->availableVersions to migrated if they appear in
+        $this->migratedVersions.

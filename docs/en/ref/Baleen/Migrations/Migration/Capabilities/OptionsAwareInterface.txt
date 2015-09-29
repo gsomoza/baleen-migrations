@@ -1,0 +1,14 @@
+------------------------------------------------------------------
+Baleen\\Migrations\\Migration\\Capabilities\\OptionsAwareInterface
+------------------------------------------------------------------
+
+.. php:namespace: Baleen\\Migrations\\Migration\\Capabilities
+
+.. php:interface:: OptionsAwareInterface
+
+    Interface OptionsAwareInterface.
+
+    .. php:method:: setOptions(Options $options)
+
+        :type $options: Options
+        :param $options:

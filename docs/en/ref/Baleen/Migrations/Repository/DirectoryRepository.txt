@@ -1,0 +1,37 @@
+---------------------------------------------------
+Baleen\\Migrations\\Repository\\DirectoryRepository
+---------------------------------------------------
+
+.. php:namespace: Baleen\\Migrations\\Repository
+
+.. php:class:: DirectoryRepository
+
+    .. php:attr:: factory
+
+        protected FactoryInterface
+
+    .. php:method:: __construct($path, FactoryInterface $migrationFactory = null)
+
+        :param $path:
+        :type $migrationFactory: FactoryInterface
+        :param $migrationFactory:
+
+    .. php:method:: doFetchAll()
+
+    .. php:method:: getClassNameRegex()
+
+        :returns: string
+
+    .. php:method:: setClassNameRegex($classNameRegex)
+
+        :type $classNameRegex: string
+        :param $classNameRegex:
+
+    .. php:method:: setMigrationFactory(FactoryInterface $factory)
+
+        :type $factory: FactoryInterface
+        :param $factory:
+
+    .. php:method:: fetchAll()
+
+        :returns: LinkedVersions
