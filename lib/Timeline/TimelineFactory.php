@@ -23,7 +23,10 @@ namespace Baleen\Migrations\Timeline;
 use Baleen\Migrations\Exception\MigrationMissingException;
 use Baleen\Migrations\Timeline;
 use Baleen\Migrations\Version\Collection\LinkedVersions;
+use Baleen\Migrations\Version\Collection\MigratedVersions;
+use Baleen\Migrations\Version\Collection\Resolver\ResolverInterface;
 use Baleen\Migrations\Version\Collection\SortableVersions;
+use Baleen\Migrations\Version\Comparator\ComparatorInterface;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
 /**
@@ -31,47 +34,52 @@ use Symfony\Component\EventDispatcher\EventDispatcher;
  */
 class TimelineFactory
 {
-    /** @var LinkedVersions */
-    private $availableVersions;
-
-    /** @var SortableVersions */
-    private $migratedVersions;
+    /**
+     * @var ResolverInterface
+     */
+    private $resolver;
 
     /**
-     * @param array $availableVersions
-     * @param array $migratedVersions
+     * @var ComparatorInterface
      */
-    public function __construct($availableVersions, $migratedVersions = [])
-    {
-        if (is_array($availableVersions)) {
-            $availableVersions = new LinkedVersions($availableVersions);
+    private $comparator;
+    /**
+     * @var EventDispatcher
+     */
+    private $dispatcher;
+
+    /**
+     * @param ResolverInterface $resolver
+     * @param ComparatorInterface $comparator
+     * @param EventDispatcher $dispatcher
+     */
+    public function __construct(
+        ResolverInterface $resolver = null,
+        ComparatorInterface $comparator = null,
+        EventDispatcher $dispatcher = null
+    ) {
+        $this->resolver = $resolver;
+        $this->comparator = $comparator;
+        if (null === $dispatcher) {
+            $dispatcher = new EventDispatcher();
         }
-        if (is_array($migratedVersions)) {
-            $migratedVersions = new SortableVersions($migratedVersions);
-        }
-        $this->availableVersions = $availableVersions;
-        $this->migratedVersions = $migratedVersions;
+        $this->dispatcher = $dispatcher;
     }
 
     /**
      * Creates a Timeline instance with all available versions. Those versions that have already been migrated will
      * be marked accordingly.
      *
-     * @param callable $comparator
-     * @param bool $useInternalDispatcher Whether to create an internal event dispatcher.
-     *
+     * @param array|LinkedVersions $available
+     * @param array|MigratedVersions $migrated
      * @return Timeline
-     *
      * @throws MigrationMissingException
      */
-    public function create(callable $comparator = null, $useInternalDispatcher = true)
+    public function create($available, $migrated = [])
     {
-        $this->prepareCollection();
-
-        $timeline = new Timeline($this->availableVersions, $comparator);
-        if ($useInternalDispatcher) {
-            $timeline->setEventDispatcher(new EventDispatcher());
-        }
+        $collection = $this->prepareCollection($available, $migrated);
+        $timeline = new Timeline($collection);
+        $timeline->setEventDispatcher($this->dispatcher);
 
         return $timeline;
     }
@@ -79,13 +87,22 @@ class TimelineFactory
     /**
      * Sets versions in $this->availableVersions to migrated if they appear in $this->migratedVersions.
      *
+     * @param array|LinkedVersions $available
+     * @param array|MigratedVersions $migrated
+     * @return array|LinkedVersions
      * @throws MigrationMissingException
      */
-    protected function prepareCollection()
+    protected function prepareCollection($available, $migrated = [])
     {
-        foreach ($this->migratedVersions as $version) {
-            if ($this->availableVersions->has($version)) {
-                $availableVersion = $this->availableVersions->get($version);
+        if (is_array($available)) {
+            $available = new LinkedVersions($available, $this->resolver, $this->comparator);
+        }
+        if (is_array($migrated)) {
+            $migrated = new SortableVersions($migrated, $this->resolver, $this->comparator);
+        }
+        foreach ($migrated as $version) {
+            if ($available->has($version)) {
+                $availableVersion = $available->get($version);
                 $availableVersion->setMigrated(true);
             } else {
                 throw new MigrationMissingException(
@@ -96,5 +113,6 @@ class TimelineFactory
                 );
             }
         }
+        return $available;
     }
 }

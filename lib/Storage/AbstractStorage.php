@@ -23,14 +23,18 @@ namespace Baleen\Migrations\Storage;
 use Baleen\Migrations\Exception\StorageException;
 use Baleen\Migrations\Version;
 use Baleen\Migrations\Version\Collection\MigratedVersions;
+use Baleen\Migrations\Version\Comparator\ComparatorAwareInterface;
+use Baleen\Migrations\Version\Comparator\ComparatorAwareTrait;
 
 /**
  * Class AbstractStorage.
  *
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
-abstract class AbstractStorage implements StorageInterface
+abstract class AbstractStorage implements StorageInterface, ComparatorAwareInterface
 {
+    use ComparatorAwareTrait;
+
     /**
      * Reads versions from the storage file.
      *
@@ -41,7 +45,7 @@ abstract class AbstractStorage implements StorageInterface
      */
     public function fetchAll()
     {
-        $collection = new MigratedVersions();
+        $collection = new MigratedVersions([], null, $this->getComparator());
         $versions = $this->doFetchAll();
         if (!is_object($versions) || !$versions instanceof MigratedVersions) {
             foreach ($versions as $version) {

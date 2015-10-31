@@ -22,6 +22,7 @@ namespace Baleen\Migrations\Storage;
 
 use Baleen\Migrations\Version;
 use Baleen\Migrations\Version\Collection\MigratedVersions;
+use Baleen\Migrations\Version\Comparator\ComparatorAwareInterface;
 
 /**
  * Provides a collection of Versions that have been migrated.

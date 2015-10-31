@@ -26,6 +26,8 @@ use Baleen\Migrations\Migration\Factory\SimpleFactory;
 use Baleen\Migrations\Migration\MigrationInterface;
 use Baleen\Migrations\Version;
 use Baleen\Migrations\Version\Collection\LinkedVersions;
+use Baleen\Migrations\Version\Comparator\ComparatorInterface;
+use Baleen\Migrations\Version\Comparator\DefaultComparator;
 use Zend\Code\Scanner\DerivedClassScanner;
 use Zend\Code\Scanner\DirectoryScanner;
 
@@ -47,13 +49,17 @@ class DirectoryRepository extends AbstractRepository
     private $classNameRegex;
 
     /**
-     * @param $path
+     * @param string $path Full path to the repository's directory
      * @param FactoryInterface $migrationFactory
+     * @param ComparatorInterface $comparator
      *
      * @throws InvalidArgumentException
      */
-    public function __construct($path, FactoryInterface $migrationFactory = null)
-    {
+    public function __construct(
+        $path,
+        FactoryInterface $migrationFactory = null,
+        ComparatorInterface $comparator = null
+    ) {
         if (empty($path) || !is_dir($path)) {
             throw new InvalidArgumentException('Argument "path" is empty or directory does not exist.');
         }
@@ -65,6 +71,11 @@ class DirectoryRepository extends AbstractRepository
             $migrationFactory = new SimpleFactory();
         }
         $this->factory = $migrationFactory;
+
+        if (null === $comparator) {
+            $comparator = new DefaultComparator();
+        }
+        $this->comparator = $comparator;
     }
 
     /**
@@ -72,7 +83,7 @@ class DirectoryRepository extends AbstractRepository
      */
     public function doFetchAll()
     {
-        $versions = new LinkedVersions();
+        $versions = new LinkedVersions([], null, $this->comparator);
         $classes = $this->scanner->getClasses(true);
         foreach ($classes as $class) {
             /* @var DerivedClassScanner $class */
@@ -84,13 +95,12 @@ class DirectoryRepository extends AbstractRepository
             ) {
                 $migration = $this->factory->create($className);
                 if ($migration instanceof MigrationInterface) {
-                    $version = new Version($matches[1]);
+                    $version = new Version($className);
                     $version->setMigration($migration);
                     $versions->add($version);
                 }
             }
         }
-
         return $versions;
     }
 

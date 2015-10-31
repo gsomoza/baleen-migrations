@@ -23,14 +23,19 @@ namespace Baleen\Migrations\Repository;
 use Baleen\Migrations\Exception\RepositoryException;
 use Baleen\Migrations\Migration\Factory\FactoryInterface;
 use Baleen\Migrations\Version\Collection\LinkedVersions;
+use Baleen\Migrations\Version\Comparator\ComparatorAwareInterface;
+use Baleen\Migrations\Version\Comparator\ComparatorAwareTrait;
+use Baleen\Migrations\Version\Comparator\ComparatorInterface;
 
 /**
  * Class AbstractRepository.
  *
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
-abstract class AbstractRepository implements RepositoryInterface
+abstract class AbstractRepository implements RepositoryInterface, ComparatorAwareInterface
 {
+    use ComparatorAwareTrait;
+
     /**
      * @var FactoryInterface
      */
@@ -58,6 +63,9 @@ abstract class AbstractRepository implements RepositoryInterface
             throw new RepositoryException(
                 'Method AbstractRepository::doFetchAll() must return a LinkedVersions collection.'
             );
+        }
+        if (!$result->isSorted()) {
+            $result->sort();
         }
 
         return $result;

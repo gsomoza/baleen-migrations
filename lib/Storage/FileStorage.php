@@ -32,16 +32,17 @@ use Baleen\Migrations\Version\Collection\MigratedVersions;
  */
 class FileStorage extends AbstractStorage
 {
+    /** @var string */
     protected $path;
 
     /**
-     * @param $path
+     * @param string $path Full path to storage file
      *
      * @throws InvalidArgumentException
      */
     public function __construct($path)
     {
-        $this->path = $path;
+        $this->path = (string) $path;
     }
 
     /**

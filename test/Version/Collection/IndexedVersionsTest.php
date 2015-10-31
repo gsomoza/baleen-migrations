@@ -245,7 +245,7 @@ class IndexedVersionsTest extends BaseTestCase
         $instance = new IndexedVersions();
         $cache = ['some' => 'cached_values'];
         $this->setPropVal('cache', $cache, $instance);
-        $this->invokeMethod('invalidateCache', $instance);
+        $this->invokeMethod('invalidate', $instance);
         $result = $this->getPropVal('cache', $instance);
         $this->assertEmpty($result);
     }
@@ -259,7 +259,7 @@ class IndexedVersionsTest extends BaseTestCase
             ->shouldAllowMockingProtectedMethods()
             ->makePartial();
         $instance->shouldReceive(['validate' => true]);
-        $instance->shouldReceive('invalidateCache')->once();
+        $instance->shouldReceive('invalidate')->once();
         $this->invokeMethod('add', $instance, [new V(1)]);
     }
 
@@ -272,7 +272,7 @@ class IndexedVersionsTest extends BaseTestCase
             ->shouldAllowMockingProtectedMethods()
             ->makePartial();
         $instance->shouldReceive('has')->andReturn(true);
-        $instance->shouldReceive('invalidateCache')->once();
+        $instance->shouldReceive('invalidate')->once();
         $this->invokeMethod('remove', $instance, [new V(1)]);
     }
 }

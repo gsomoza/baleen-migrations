@@ -88,10 +88,10 @@ class SortableVersionsTest extends IndexedVersionsTest
 
     /**
      * TODO: this was refactored to the "resolvers" functionality. Move tests there.
-     * @dataProvider getByAliasProvider
      * @param array $versions
      * @param $alias
      * @param $expectedId
+     * @dataProvider getByAliasProvider
      */
     public function testGetByAlias(array $versions, $alias, $expectedId)
     {
@@ -107,14 +107,14 @@ class SortableVersionsTest extends IndexedVersionsTest
     public function getByAliasProvider()
     {
         $sample1 = Version::fromArray(1, 2, 3, 4, 5);
-        $sample2 = Version::fromArray('v97', 'v98', 'v99', 'v100');
+        $sample2 = Version::fromArray('v097', 'v098', 'v099', 'v100');
         return [
             [$sample1, 'last', 5],
             [$sample1, 'first', 1],
             [$sample2, 'last', 'v100'],
             [$sample2, 'latest', 'v100'],
-            [$sample2, 'first', 'v97'],
-            [$sample2, 'earliest', 'v97'],
+            [$sample2, 'first', 'v097'],
+            [$sample2, 'earliest', 'v097'],
         ];
     }
 

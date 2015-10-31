@@ -1,5 +1,4 @@
 <?php
-
 /*
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -29,16 +28,41 @@ use Baleen\Migrations\Version\VersionInterface;
  */
 class DefaultComparator implements ComparatorInterface
 {
-    const PATTERN = '/(\d+)/';
+    const ORDER_NORMAL = 1;
+    const ORDER_REVERSE = -1;
+
+    /** @var int */
+    protected $order = self::ORDER_NORMAL; // -1 for reverse order
 
     /**
-     * {@inheritDoc}
+     * DefaultComparator constructor.
+     *
+     * @param int $order
+     */
+    public function __construct($order = self::ORDER_NORMAL)
+    {
+        $this->order = (int) $order < 0 ? self::ORDER_REVERSE : self::ORDER_NORMAL;
+    }
+
+    /**
+     * @inheritdoc
+     *
+     * Migrations1\v01
+     * Migrations11\v01
+     * Migrations2\v01
      */
     public function __invoke(VersionInterface $version1, VersionInterface $version2)
     {
-        preg_match(self::PATTERN, $version1->getId(), $matches1);
-        preg_match(self::PATTERN, $version2->getId(), $matches2);
+        return strcmp($version1->getId(), $version2->getId()) * $this->order;
+    }
 
-        return (int)$matches1[0] - (int)$matches2[0];
+    /**
+     * Returns a reversed version of the comparator
+     *
+     * @return $this
+     */
+    public function reverse()
+    {
+        return new static($this->order * -1);
     }
 }

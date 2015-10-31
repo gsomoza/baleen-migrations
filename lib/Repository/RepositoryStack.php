@@ -103,6 +103,10 @@ class RepositoryStack implements RepositoryInterface
     /**
      * Fetches all versions available to all repositories in the stack and returns them as a LinkedVersions collection.
      *
+     * The returned collection contains versions groups sequentially into groups that correspond to each sub-repository.
+     * Each of those groups is sorted with the repository's own comparator. Therefore, its strongly recommended not to
+     * sort or modify the resulting collection.
+     *
      * @return LinkedVersions
      */
     public function fetchAll()

@@ -17,40 +17,27 @@
  * <http://www.doctrine-project.org>.
  */
 
-namespace Baleen\Migrations\Version\Collection\Resolver;
-
-use Baleen\Migrations\Version;
-use Baleen\Migrations\Version\Collection\IndexedVersions;
-use Baleen\Migrations\Version\Collection\SortableVersions;
+namespace Baleen\Migrations\Version\Comparator;
 
 /**
- * Class HeadResolver
- * @author Gabriel Somoza <gabriel@strategery.io>
+ * Interface ComparatorAwareInterface
+ * @package Baleen\Migrations\Version\Comparator
  */
-class HeadResolver extends AbstractResolver
+interface ComparatorAwareInterface
 {
-    const HEAD = 'head';
+    /**
+     * Set the comparator
+     *
+     * @param ComparatorInterface $comparator
+     *
+     * @return void
+     */
+    public function setComparator(ComparatorInterface $comparator);
 
     /**
-     * doResolve
+     * Get the comparator
      *
-     * @param $alias
-     * @param IndexedVersions $collection
-     *
-     * @return Version|null
+     * @return ComparatorInterface
      */
-    protected function doResolve($alias, IndexedVersions $collection)
-    {
-        if (!$collection instanceof SortableVersions || strtolower($alias) !== self::HEAD) {
-            return null;
-        }
-
-        $reversed = $collection->getReverse();
-        foreach ($reversed as $version) {
-            if ($version->isMigrated()) {
-                return $version;
-            }
-        }
-        return null;
-    }
+    public function getComparator();
 }

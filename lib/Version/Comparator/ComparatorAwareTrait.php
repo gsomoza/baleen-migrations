@@ -16,51 +16,31 @@
  * and is licensed under the MIT license. For more information, see
  * <http://www.doctrine-project.org>.
  */
-
-namespace BaleenTest\Migrations\Version;
-
-use Baleen\Migrations\Timeline\TimelineFactory;
-use Baleen\Migrations\Version;
-use Baleen\Migrations\Version\Collection\SortableVersions;
-use BaleenTest\Migrations\BaseTestCase;
-use Mockery as m;
+namespace Baleen\Migrations\Version\Comparator;
 
 /**
+ * Trait ComparatorAwareTrait
+ *
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
-class TimelineFactoryTest extends BaseTestCase
+trait ComparatorAwareTrait
 {
-    private $availableMock;
-    private $migratedMock;
+    /** @var ComparatorInterface */
+    protected $comparator;
 
-    public function setUp()
+    /**
+     * @param ComparatorInterface $comparator
+     */
+    public function setComparator(ComparatorInterface $comparator)
     {
-        $this->availableMock = [];
-        $this->migratedMock = [];
-    }
-
-    public function testConstructor()
-    {
-        $instance = new TimelineFactory();
-        $this->assertInstanceOf('Baleen\Migrations\Timeline\TimelineFactory', $instance);
+        $this->comparator = $comparator;
     }
 
     /**
-     * @param $migrated
-     * @param $available
-     *
-     * @dataProvider createProvider
-     * //TODO: finish data provider and re-enable this test
+     * @return ComparatorInterface
      */
-    public function _testCreate($migrated, $available)
+    public function getComparator()
     {
-        $instance = new TimelineFactory();
-        $result = $instance->create($migrated, $available);
-        $this->assertInstanceOf('Baleen\Migrations\Timeline', $result);
-    }
-
-    public function createProvider()
-    {
-
+        return $this->comparator;
     }
 }

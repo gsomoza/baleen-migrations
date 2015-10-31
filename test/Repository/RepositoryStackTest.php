@@ -27,6 +27,7 @@ use Baleen\Migrations\Repository\RepositoryStack;
 use Baleen\Migrations\Version;
 use Baleen\Migrations\Version\Collection\LinkedVersions;
 use Baleen\Migrations\Version\Collection\SortableVersions;
+use Baleen\Migrations\Version\Comparator\ComparatorInterface;
 use BaleenTest\Migrations\BaseTestCase;
 use Mockery as m;
 
@@ -158,10 +159,7 @@ class RepositoryStackTest extends BaseTestCase
     public function testFetchAll($repositories, $count = 0)
     {
         /** @var RepositoryStack|m\Mock $instance */
-        $instance = m::mock(RepositoryStack::class)
-            ->shouldAllowMockingProtectedMethods()
-            ->makePartial();
-
+        $instance = new RepositoryStack();
         $instance->setRepositories($repositories);
 
         $result = $instance->fetchAll();

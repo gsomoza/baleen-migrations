@@ -32,11 +32,10 @@ class TimelineFactoryTest extends BaseTestCase
 
     public function testCreate()
     {
-        $factory = new TimelineFactory(
-            $this->createVersionsWithMigrations('1', '2', '3', '4', '5'),
-            Version::fromArray('1', '2', '3', '4', '5')
-        );
-        $timeline = $factory->create();
+        $available = $this->createVersionsWithMigrations('1', '2', '3', '4', '5');
+        $migrated = Version::fromArray('1', '2', '3', '4', '5');
+        $factory = new TimelineFactory();
+        $timeline = $factory->create($available, $migrated);
         $prop = new \ReflectionProperty($timeline, 'versions');
         $prop->setAccessible(true);
         /** @var MigratedVersions $versions */
@@ -48,12 +47,13 @@ class TimelineFactoryTest extends BaseTestCase
 
     public function testCreateThrowsException()
     {
-        $factory = new TimelineFactory(
-            $this->createVersionsWithMigrations('1', '2', '3', '4', '5'),
-            Version::fromArray('1', '2', '3', '4', '5', '6') // has an additional version that doesn't have a migration
-        );
+        $available = $this->createVersionsWithMigrations('1', '2', '3', '4', '5');
+        // has an additional version that doesn't have a migration:
+        $migrated = Version::fromArray('1', '2', '3', '4', '5', '6');
+
+        $factory = new TimelineFactory();
 
         $this->setExpectedException(MigrationMissingException::class);
-        $factory->create();
+        $factory->create($available, $migrated);
     }
 }

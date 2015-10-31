@@ -29,7 +29,6 @@ use Baleen\Migrations\Migration\MigrationInterface;
 use Baleen\Migrations\Migration\Options;
 use Baleen\Migrations\Version;
 use Baleen\Migrations\Version\Collection\LinkedVersions;
-use Baleen\Migrations\Version\Comparator\DefaultComparator;
 
 /**
  * Encapsulates the lower-level methods of a Timeline, leaving the actual timeline logic to the extending class.
@@ -51,30 +50,16 @@ abstract class AbstractTimeline implements TimelineInterface
     /** @var LinkedVersions */
     protected $versions;
 
-    /** @var callable */
-    protected $comparator;
-
     /**
      * @param LinkedVersions $versions
-     * @param callable $comparator
      * @param MigrationBus $migrationBus A CommandBus that will be used to run each individual migration.
      */
-    public function __construct(
-        LinkedVersions $versions,
-        callable $comparator = null,
-        MigrationBus $migrationBus = null
-    ) {
+    public function __construct(LinkedVersions $versions, MigrationBus $migrationBus = null) {
         if (null === $migrationBus) {
             $migrationBus = MigrationBusFactory::create();
         }
         $this->migrationBus = $migrationBus;
 
-        if (null === $comparator) {
-            $comparator = new DefaultComparator();
-        }
-
-        $versions->sortWith($comparator);
-        $this->comparator = $comparator;
         $this->versions = clone $versions;
     }
 
@@ -140,8 +125,7 @@ abstract class AbstractTimeline implements TimelineInterface
             if ($result) {
                 $modified->add($version);
             }
-            $goalReached = call_user_func($this->comparator, $goalVersion, $version) === 0;
-            if ($goalReached) {
+            if ($version === $goalVersion) {
                 break;
             }
         }
@@ -153,18 +137,11 @@ abstract class AbstractTimeline implements TimelineInterface
     }
 
     /**
-     * @inheritdoc
+     * getVersions
+     * @return LinkedVersions
      */
-    public function getLastMigratedVersion()
+    public function getVersions()
     {
-        $last = null;
-        foreach ($this->versions->getReverse() as $version) {
-            /** @var Version $version */
-            if ($version->isMigrated()) {
-                $last = $version;
-                break;
-            }
-        }
-        return $last;
+        return $this->versions;
     }
 }

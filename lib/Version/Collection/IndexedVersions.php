@@ -174,9 +174,9 @@ class IndexedVersions implements CollectionDirectAccessInterface
     }
 
     /**
-     * invalidateCache
+     * invalidate
      */
-    protected function invalidateCache()
+    protected function invalidate()
     {
         $this->cache = [];
     }
@@ -191,7 +191,7 @@ class IndexedVersions implements CollectionDirectAccessInterface
         if ($this->validate($version)) {
             /* @var Version $version */
             $this->items[$version->getId()] = $version;
-            $this->invalidateCache();
+            $this->invalidate();
         } else {
             // this should never happen
             throw new CollectionException(
@@ -207,7 +207,7 @@ class IndexedVersions implements CollectionDirectAccessInterface
     {
         if ($this->has($version)) {
             unset($this->items[(string)$version]);
-            $this->invalidateCache();
+            $this->invalidate();
         }
     }
 

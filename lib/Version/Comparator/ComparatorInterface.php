@@ -40,4 +40,10 @@ interface ComparatorInterface
      * @return int
      */
     public function __invoke(VersionInterface $version1, VersionInterface $version2);
+
+    /**
+     * Returns a reversed version of the comparator
+     * @return $this
+     */
+    public function reverse();
 }

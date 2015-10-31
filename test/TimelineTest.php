@@ -52,15 +52,11 @@ class TimelineTest extends BaseTestCase
 
     /**
      * @param array $versions
-     * @param null $callable
-     * @return m\Mock|\Baleen\Migrations\Timeline
+     * @return Timeline|m\Mock
      */
-    public function getInstance($versions = [], $callable = null)
+    public function getInstance($versions = [])
     {
-        if (null === $callable) {
-            $callable = new DefaultComparator();
-        }
-        return m::mock('Baleen\Migrations\Timeline', [new LinkedVersions($versions), $callable])->makePartial()->shouldAllowMockingProtectedMethods();
+        return m::mock('Baleen\Migrations\Timeline', [new LinkedVersions($versions)])->makePartial()->shouldAllowMockingProtectedMethods();
     }
 
     public function testConstructor()
@@ -79,11 +75,13 @@ class TimelineTest extends BaseTestCase
         $instance = $this->getInstance($versions);
         $instance->upTowards($goal);
 
-        $versions = $this->getInstanceVersions($instance);
-        foreach ($versions as $version) {
+        $collection = $this->getTimelineCollection($instance);
+        $goalVersion = $collection->get($goal);
+
+        foreach ($collection as $version) {
             /** @var V $version */
             $this->assertTrue($version->isMigrated(), sprintf('Expected version %s to be migrated', $version->getId()));
-            if ($version->getId() == $goal) {
+            if ($version === $goalVersion) {
                 break;
             }
         }
@@ -93,6 +91,7 @@ class TimelineTest extends BaseTestCase
      * @param $versions
      * @param $goal
      *
+     * @internal param $collection
      * @dataProvider versionsAndGoalsProvider
      */
     public function testDownTowards($versions, $goal)
@@ -100,10 +99,10 @@ class TimelineTest extends BaseTestCase
         $instance = $this->getInstance($versions);
         $instance->downTowards($goal);
 
-        $versions = $this->getInstanceVersions($instance);
-        $versions = new LinkedVersions(array_reverse($versions));
-        $goal = $versions->get($goal);
-        foreach ($versions as $version) {
+        $collection = $this->getTimelineCollection($instance)->getReverse();
+        $goal = $collection->get($goal);
+
+        foreach ($collection as $version) {
             /** @var V $version */
             $this->assertFalse($version->isMigrated(), sprintf('Expected version %s not to be migrated', $version->getId()));
             if ($version === $goal) {
@@ -125,7 +124,7 @@ class TimelineTest extends BaseTestCase
 
         $afterGoal = false;
         /** @var LinkedVersions $versions */
-        $versions = new LinkedVersions($this->getInstanceVersions($instance));
+        $versions = new LinkedVersions($this->getTimelineCollection($instance));
         $goal = $versions->get($goal);
         foreach ($versions as $version) {
             /** @var V $version */
@@ -143,54 +142,54 @@ class TimelineTest extends BaseTestCase
     public function getAllMigratedVersionsFixture()
     {
         return $this->getFixtureFor([
-            ['id' => 1, 'migrated' => true],
-            ['id' => 2, 'migrated' => true],
-            ['id' => 3, 'migrated' => true],
-            ['id' => 4, 'migrated' => true],
-            ['id' => 5, 'migrated' => true],
-            ['id' => 6, 'migrated' => true],
-            ['id' => 7, 'migrated' => true],
-            ['id' => 8, 'migrated' => true],
-            ['id' => 9, 'migrated' => true],
-            ['id' => 10, 'migrated' => true],
-            ['id' => 11, 'migrated' => true],
-            ['id' => 12, 'migrated' => true],
+            ['id' => 'v1', 'migrated' => true],
+            ['id' => 'v2', 'migrated' => true],
+            ['id' => 'v3', 'migrated' => true],
+            ['id' => 'v4', 'migrated' => true],
+            ['id' => 'v5', 'migrated' => true],
+            ['id' => 'v6', 'migrated' => true],
+            ['id' => 'v7', 'migrated' => true],
+            ['id' => 'v8', 'migrated' => true],
+            ['id' => 'v9', 'migrated' => true],
+            ['id' => 'v10', 'migrated' => true],
+            ['id' => 'v11', 'migrated' => true],
+            ['id' => 'v12', 'migrated' => true],
         ]);
     }
 
     public function getNoMigratedVersionsFixture()
     {
         return $this->getFixtureFor([
-            ['id' => 1, 'migrated' => false],
-            ['id' => 2, 'migrated' => false],
-            ['id' => 3, 'migrated' => false],
-            ['id' => 4, 'migrated' => false],
-            ['id' => 5, 'migrated' => false],
-            ['id' => 6, 'migrated' => false],
-            ['id' => 7, 'migrated' => false],
-            ['id' => 8, 'migrated' => false],
-            ['id' => 9, 'migrated' => false],
-            ['id' => 10, 'migrated' => false],
-            ['id' => 11, 'migrated' => false],
-            ['id' => 12, 'migrated' => false],
+            ['id' => 'v1', 'migrated' => false],
+            ['id' => 'v2', 'migrated' => false],
+            ['id' => 'v3', 'migrated' => false],
+            ['id' => 'v4', 'migrated' => false],
+            ['id' => 'v5', 'migrated' => false],
+            ['id' => 'v6', 'migrated' => false],
+            ['id' => 'v7', 'migrated' => false],
+            ['id' => 'v8', 'migrated' => false],
+            ['id' => 'v9', 'migrated' => false],
+            ['id' => 'v10', 'migrated' => false],
+            ['id' => 'v11', 'migrated' => false],
+            ['id' => 'v12', 'migrated' => false],
         ]);
     }
 
     public function getMixedVersionsFixture()
     {
         return $this->getFixtureFor([
-            ['id' => 1, 'migrated' => true],
-            ['id' => 2, 'migrated' => false],
-            ['id' => 3, 'migrated' => true],
-            ['id' => 4, 'migrated' => true],
-            ['id' => 5, 'migrated' => false],
-            ['id' => 6, 'migrated' => false],
-            ['id' => 7, 'migrated' => false],
-            ['id' => 8, 'migrated' => true],
-            ['id' => 9, 'migrated' => false],
-            ['id' => 10, 'migrated' => true],
-            ['id' => 11, 'migrated' => false],
-            ['id' => 12, 'migrated' => false],
+            ['id' => 'v1', 'migrated' => true],
+            ['id' => 'v2', 'migrated' => false],
+            ['id' => 'v3', 'migrated' => true],
+            ['id' => 'v4', 'migrated' => true],
+            ['id' => 'v5', 'migrated' => false],
+            ['id' => 'v6', 'migrated' => false],
+            ['id' => 'v7', 'migrated' => false],
+            ['id' => 'v8', 'migrated' => true],
+            ['id' => 'v9', 'migrated' => false],
+            ['id' => 'v10', 'migrated' => true],
+            ['id' => 'v11', 'migrated' => false],
+            ['id' => 'v12', 'migrated' => false],
         ]);
     }
 
@@ -215,9 +214,13 @@ class TimelineTest extends BaseTestCase
         }, $versions);
     }
 
+    /**
+     * versionsAndGoalsProvider
+     * @return array
+     */
     public function versionsAndGoalsProvider()
     {
-        $goals = [1, 8, 12, 'first', 'last'];
+        $goals = ['v1', 'v8', 'v12', 'first', 'last'];
         $fixtures = [
             $this->getAllMigratedVersionsFixture(),
             $this->getNoMigratedVersionsFixture(),
@@ -227,15 +230,12 @@ class TimelineTest extends BaseTestCase
     }
 
     /**
-     * @param $instance
-     * @return mixed
+     * @param $timeline
+     * @return LinkedVersions
      */
-    protected function getInstanceVersions($instance)
+    protected function getTimelineCollection(Timeline $timeline)
     {
-        $prop = new \ReflectionProperty($instance, 'versions');
-        $prop->setAccessible(true);
-        $versions = $prop->getValue($instance);
-        return $versions->toArray();
+        return $this->getPropVal('versions', $timeline);
     }
 
     /**
@@ -369,13 +369,17 @@ class TimelineTest extends BaseTestCase
         }
     }
 
+    /**
+     * runSingleProvider
+     * @return array
+     */
     public function runSingleProvider()
     {
         return [
-            ['1', new Options(Options::DIRECTION_UP)  , 'exception' ], // its already up
-            ['1', new Options(Options::DIRECTION_DOWN), Options::DIRECTION_DOWN],
-            ['2', new Options(Options::DIRECTION_UP)  , Options::DIRECTION_UP],
-            ['2', new Options(Options::DIRECTION_DOWN), 'exception' ], // its already down
+            ['v1', new Options(Options::DIRECTION_UP)  , 'exception' ], // its already up
+            ['v1', new Options(Options::DIRECTION_DOWN), Options::DIRECTION_DOWN],
+            ['v2', new Options(Options::DIRECTION_UP)  , Options::DIRECTION_UP],
+            ['v2', new Options(Options::DIRECTION_DOWN), 'exception' ], // its already down
         ];
     }
 
@@ -386,7 +390,7 @@ class TimelineTest extends BaseTestCase
 
         $collection = new LinkedVersions($this->getNoMigratedVersionsFixture());
         $options = new Options(Options::DIRECTION_UP);
-        $instance = new Timeline($collection, null, $migrationBus);
+        $instance = new Timeline($collection, $migrationBus);
 
         $method = new \ReflectionMethod($instance, 'doRun');
         $method->setAccessible(true);
@@ -395,39 +399,23 @@ class TimelineTest extends BaseTestCase
 
     /**
      * testGetLastMigratedVersion
-     * @param $versions
-     * @param $expectedId
-     * @dataProvider lastMigratedVersionsProvider
      */
-    public function testGetLastMigratedVersion($versions, $expectedId)
+    public function testGetVersions()
     {
-        $instance = $this->getInstance($versions);
-        $version = $instance->getLastMigratedVersion();
-        if (null !== $version) {
-            $this->assertInstanceOf(Version::class, $version);
-            $this->assertEquals($expectedId, $version->getId());
-        } else {
-            $this->assertNull(
-                $expectedId,
-                sprintf('Expected a version with id "%s", but got NULL instead.', $expectedId)
-            );
+        $versions = V::fromArray(1, 2, 3);
+        /** @var MigrationInterface|m\Mock $migration */
+        $migration = m::mock(MigrationInterface::class);
+        foreach ($versions as $v) {
+            $v->setMigration($migration);
         }
-    }
 
-    /**
-     * lastMigratedVersionsProvider
-     * @return array
-     */
-    public function lastMigratedVersionsProvider()
-    {
-        $firstMigrated = $this->getNoMigratedVersionsFixture();
-        $firstMigrated[0]->setMigrated(true);
-        return [
-            [[], null],
-            [$firstMigrated, 1],
-            [$this->getAllMigratedVersionsFixture(), 12],
-            [$this->getNoMigratedVersionsFixture(), null],
-            [$this->getMixedVersionsFixture(), 10]
-        ];
+        $instance = $this->getInstance($versions);
+        $result = $instance->getVersions();
+
+        $this->assertInstanceOf(LinkedVersions::class, $result);
+        $this->assertCount(count($versions), $result);
+        foreach ($versions as $v) {
+            $this->assertSame($v, $result->get($v->getId()));
+        }
     }
 }

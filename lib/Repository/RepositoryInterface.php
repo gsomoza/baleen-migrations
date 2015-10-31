@@ -22,6 +22,7 @@ namespace Baleen\Migrations\Repository;
 
 use Baleen\Migrations\Migration\Factory\FactoryInterface;
 use Baleen\Migrations\Version\Collection\LinkedVersions;
+use Baleen\Migrations\Version\Comparator\ComparatorAwareInterface;
 
 /**
  * In charge of loading Migration files and instantiating them.

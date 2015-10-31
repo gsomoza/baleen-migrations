@@ -21,6 +21,9 @@
 namespace Baleen\Migrations\Version\Collection;
 
 use Baleen\Migrations\Version;
+use Baleen\Migrations\Version\Collection\Resolver\ResolverInterface;
+use Baleen\Migrations\Version\Comparator\ComparatorInterface;
+use Baleen\Migrations\Version\Comparator\DefaultComparator;
 
 /**
  * A collection of Versions.
@@ -29,12 +32,62 @@ use Baleen\Migrations\Version;
  */
 class SortableVersions extends IndexedVersions
 {
+    /** @var ComparatorInterface */
+    protected $comparator;
+
+    /** @var boolean */
+    protected $sorted = true;
+
     /**
-     * @param callable $comparator
+     * @param array $versions
+     *
+     * @param ResolverInterface $resolver
+     * @param ComparatorInterface $comparator
+     * @throws \Baleen\Migrations\Exception\InvalidArgumentException
      */
-    public function sortWith(callable $comparator)
+    public function __construct(
+        $versions = array(),
+        ResolverInterface $resolver = null,
+        ComparatorInterface $comparator = null
+    ) {
+        if (null === $comparator) {
+            $comparator = new DefaultComparator();
+        }
+        $this->setComparator($comparator);
+
+        if (!empty($versions)) {
+            $this->sorted = false;
+        }
+
+        parent::__construct($versions, $resolver);
+    }
+
+    /**
+     * @return ComparatorInterface
+     */
+    public function getComparator()
     {
-        uasort($this->items, $comparator);
+        return $this->comparator;
+    }
+
+    /**
+     * @param ComparatorInterface $comparator
+     */
+    public function setComparator(ComparatorInterface $comparator)
+    {
+        if ($comparator !== $comparator) {
+            $this->sorted = false;
+        }
+        $this->comparator = $comparator;
+    }
+
+    /**
+     * Sort the collection
+     */
+    public function sort()
+    {
+        uasort($this->items, $this->getComparator());
+        $this->sorted = true;
     }
 
     /**
@@ -42,7 +95,9 @@ class SortableVersions extends IndexedVersions
      */
     public function getReverse()
     {
-        return new static(array_reverse($this->items));
+        $reverse = clone $this;
+        $reverse->setComparator($this->comparator->reverse());
+        return $reverse;
     }
 
     /**
@@ -115,5 +170,24 @@ class SortableVersions extends IndexedVersions
             $result = $this->items[$key];
         }
         return $result;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function add($version)
+    {
+        parent::add($version);
+        $this->sorted = false;
+    }
+
+    /**
+     * Returns whether the collection is sorted or not
+     *
+     * @return bool
+     */
+    public function isSorted()
+    {
+        return $this->sorted;
     }
 }
