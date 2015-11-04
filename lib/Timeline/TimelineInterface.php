@@ -22,7 +22,6 @@ namespace Baleen\Migrations\Timeline;
 
 use Baleen\Migrations\Event\Timeline\Progress;
 use Baleen\Migrations\Migration\Options;
-use Baleen\Migrations\Version;
 use Baleen\Migrations\Version\Collection\Linked;
 use Baleen\Migrations\Version\VersionInterface;
 
@@ -66,7 +65,7 @@ interface TimelineInterface
      * @param Options $options
      * @param Progress $progress
      *
-     * @return Version|false
+     * @return VersionInterface|false
      */
     public function runSingle(VersionInterface $version, Options $options, Progress $progress);
 

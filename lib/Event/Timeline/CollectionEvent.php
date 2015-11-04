@@ -22,7 +22,6 @@ namespace Baleen\Migrations\Event\Timeline;
 
 use Baleen\Migrations\Event\EventInterface;
 use Baleen\Migrations\Migration\Options;
-use Baleen\Migrations\Version;
 use Baleen\Migrations\Version\Collection\Linked;
 use Baleen\Migrations\Version\VersionInterface;
 use Symfony\Component\EventDispatcher\Event;
@@ -45,7 +44,7 @@ class CollectionEvent extends Event implements EventInterface
     protected $options;
 
     /**
-     * @var Version
+     * @var VersionInterface
      */
     protected $target;
 
@@ -87,7 +86,7 @@ class CollectionEvent extends Event implements EventInterface
     }
 
     /**
-     * @return Version
+     * @return VersionInterface
      */
     public function getTarget()
     {

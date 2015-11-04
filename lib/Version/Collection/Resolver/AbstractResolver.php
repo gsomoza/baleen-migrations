@@ -20,7 +20,7 @@
 namespace Baleen\Migrations\Version\Collection\Resolver;
 
 use Baleen\Migrations\Exception\ResolverException;
-use Baleen\Migrations\Version;
+use Baleen\Migrations\Version\VersionInterface;
 use Doctrine\Common\Collections\Collection;
 
 /**
@@ -49,7 +49,9 @@ abstract class AbstractResolver implements ResolverInterface
      *
      * @param string $alias
      * @param Collection $collection
-     * @return Version|null
+     *
+     * @return VersionInterface|null
+     *
      * @throws ResolverException
      */
     public function resolve($alias, Collection $collection)
@@ -68,8 +70,8 @@ abstract class AbstractResolver implements ResolverInterface
 
         if (false === $result) {
             $result = $this->doResolve($alias, $collection);
-            if (null !== $result && !(is_object($result) && $result instanceof Version)) {
-                throw new ResolverException('Expected result to be either a Version or null.');
+            if (null !== $result && !(is_object($result) && $result instanceof VersionInterface)) {
+                throw new ResolverException('Expected result to be either a VersionInterface object or null.');
             }
             if ($this->cacheEnabled) {
                 $this->cacheSet($alias, $collection, $result);
@@ -86,7 +88,7 @@ abstract class AbstractResolver implements ResolverInterface
      * @param $alias
      * @param Collection $collection
      *
-     * @return bool|null|Version
+     * @return bool|null|VersionInterface
      */
     private function cacheGet($alias, Collection $collection)
     {
@@ -133,7 +135,7 @@ abstract class AbstractResolver implements ResolverInterface
      * @param $alias
      * @param Collection $collection
      *
-     * @return Version|null
+     * @return VersionInterface|null
      */
     abstract protected function doResolve($alias, Collection $collection);
 }

@@ -4,7 +4,6 @@ namespace Baleen\Migrations\Version;
 
 use Baleen\Migrations\Exception\CollectionException;
 use Baleen\Migrations\Exception\InvalidArgumentException;
-use Baleen\Migrations\Version;
 use Baleen\Migrations\Version\Collection\Resolver\DefaultResolverStackFactory;
 use Baleen\Migrations\Version\Collection\Resolver\ResolverInterface;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -86,7 +85,8 @@ class Collection extends ArrayCollection
      * @param mixed $key If an alias is given then it will be resolved to an element. Otherwise the $key will be used
      *                   to fetch the element by index.
      * @param bool $resolve Whether to use the resolver or not.
-     * @return Version|null Null if not present
+     *
+     * @return VersionInterface|null Null if not present
      */
     public function get($key, $resolve = true)
     {
@@ -142,7 +142,7 @@ class Collection extends ArrayCollection
      *
      * @param string $alias
      *
-     * @return Version|null
+     * @return VersionInterface|null
      */
     protected function resolve($alias)
     {
@@ -211,7 +211,6 @@ class Collection extends ArrayCollection
         }
 
         if ($this->validate($element)) {
-            /* @var Version $element */
             parent::add($element);
             $this->invalidateResolverCache();
         } else {
@@ -245,9 +244,9 @@ class Collection extends ArrayCollection
     /**
      * Adds a new version to the collection if it doesn't exist or replaces it if it does.
      *
-     * @param Version $version
+     * @param VersionInterface $version
      */
-    public function addOrReplace(Version $version)
+    public function addOrReplace(VersionInterface $version)
     {
         $index = $this->indexOfId($version->getId());
         if (null !== $index) {

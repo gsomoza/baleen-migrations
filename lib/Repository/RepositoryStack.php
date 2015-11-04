@@ -107,7 +107,7 @@ class RepositoryStack implements RepositoryInterface
      * Each of those groups is sorted with the repository's own comparator. Therefore, its strongly recommended not to
      * sort or modify the resulting collection.
      *
-     * @return \Baleen\Migrations\Version\Collection\Linked
+     * @return Linked
      */
     public function fetchAll()
     {

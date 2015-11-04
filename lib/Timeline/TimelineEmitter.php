@@ -27,7 +27,6 @@ use Baleen\Migrations\Event\Timeline\CollectionEvent;
 use Baleen\Migrations\Event\Timeline\MigrationEvent;
 use Baleen\Migrations\Event\Timeline\Progress;
 use Baleen\Migrations\Migration\Options;
-use Baleen\Migrations\Version;
 use Baleen\Migrations\Version\Collection\Linked;
 use Baleen\Migrations\Version\VersionInterface;
 

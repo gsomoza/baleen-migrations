@@ -36,7 +36,7 @@ use Baleen\Migrations\Version\VersionInterface;
 class Timeline extends AbstractTimeline
 {
     /**
-     * @param Version|string $goalVersion
+     * @param VersionInterface|string $goalVersion
      * @param Options $options
      *
      * @return Sortable A collection of modified versions
@@ -114,7 +114,9 @@ class Timeline extends AbstractTimeline
      * @param Options $options
      * @param Progress $progress Provides contextual information about current progress if this
      *                           migration is one of many that are being run in batch.
-     * @return Version|false
+     *
+     * @return VersionInterface|false
+     *
      * @throws TimelineException
      */
     public function runSingle(VersionInterface $version, Options $options, Progress $progress = null)

@@ -19,7 +19,7 @@
 namespace BaleenTest\Migrations\Storage;
 
 use Baleen\Migrations\Storage\AbstractStorage;
-use Baleen\Migrations\Version;
+use Baleen\Migrations\Version\VersionInterface;
 use BaleenTest\Migrations\BaseTestCase;
 use Mockery as m;
 
@@ -39,8 +39,8 @@ class AbstractStorageTest extends BaseTestCase
      */
     public function testUpdate($isMigrated, $return)
     {
-        /** @var m\Mock|Version $v */
-        $v = m::mock(Version::class);
+        /** @var m\Mock|VersionInterface $v */
+        $v = m::mock(VersionInterface::class);
         $v->shouldReceive('isMigrated')->once()->andReturn($isMigrated);
         /** @var m\Mock|AbstractStorage $instance */
         $instance = m::mock(AbstractStorage::class)->makePartial();
@@ -56,7 +56,7 @@ class AbstractStorageTest extends BaseTestCase
     public function updateProvider()
     {
         $trueFalse = [true, false];
-        $results = [m::mock(Version::class), null];
+        $results = [m::mock(VersionInterface::class), null];
         return $this->combinations([$trueFalse, $results]);
     }
 }

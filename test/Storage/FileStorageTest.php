@@ -23,6 +23,7 @@ use Baleen\Migrations\Exception\StorageException;
 use Baleen\Migrations\Storage\FileStorage;
 use Baleen\Migrations\Version;
 use Baleen\Migrations\Version\Collection\Migrated;
+use Baleen\Migrations\Version\VersionInterface;
 use BaleenTest\Migrations\BaseTestCase;
 use Mockery as m;
 
@@ -131,7 +132,7 @@ class FileStorageTest extends BaseTestCase
      */
     public function testSaveRemove($method, $exists)
     {
-        $v = m::mock(Version::class);
+        $v = m::mock(VersionInterface::class);
         $instance = m::mock(FileStorage::class)->shouldAllowMockingProtectedMethods()->makePartial();
         $stored = m::mock(Migrated::class);
         $stored->shouldReceive('has')->once()->with($v)->andReturn($exists);

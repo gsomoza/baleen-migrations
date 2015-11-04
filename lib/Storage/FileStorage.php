@@ -1,5 +1,4 @@
 <?php
-
 /*
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -24,6 +23,7 @@ use Baleen\Migrations\Exception\InvalidArgumentException;
 use Baleen\Migrations\Exception\StorageException;
 use Baleen\Migrations\Version;
 use Baleen\Migrations\Version\Collection\Migrated;
+use Baleen\Migrations\Version\VersionInterface;
 
 /**
  * {@inheritDoc}
@@ -48,7 +48,7 @@ class FileStorage extends AbstractStorage
     /**
      * Reads versions from the storage file.
      *
-     * @return Version[]
+     * @return VersionInterface[]
      *
      * @throws StorageException
      */
@@ -85,7 +85,7 @@ class FileStorage extends AbstractStorage
      */
     public function saveCollection(Migrated $versions)
     {
-        $ids = array_map(function (Version $v) {
+        $ids = array_map(function (VersionInterface $v) {
             return $v->getId();
         }, $versions->toArray());
         $contents = implode("\n", $ids);
@@ -98,7 +98,7 @@ class FileStorage extends AbstractStorage
             ));
         }
 
-        return (bool)$result;
+        return (bool) $result;
     }
 
     /**
@@ -122,7 +122,7 @@ class FileStorage extends AbstractStorage
     /**
      * @inheritdoc
      */
-    public function save(Version $version)
+    public function save(VersionInterface $version)
     {
         $result = false;
         $stored = $this->fetchAll();
@@ -136,7 +136,7 @@ class FileStorage extends AbstractStorage
     /**
      * @inheritdoc
      */
-    public function delete(Version $version)
+    public function delete(VersionInterface $version)
     {
         $result = false;
         $stored = $this->fetchAll();

@@ -34,7 +34,7 @@ interface ResolverInterface
      * @param string $alias
      * @param Collection $collection
      *
-     * @return \Baleen\Migrations\Version|null
+     * @return \Baleen\Migrations\Version\VersionInterface|null
      */
     public function resolve($alias, Collection $collection);
 

@@ -1,5 +1,4 @@
 <?php
-
 /*
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -28,7 +27,6 @@ use Baleen\Migrations\Migration\Command\MigrationBus;
 use Baleen\Migrations\Migration\Command\MigrationBusFactory;
 use Baleen\Migrations\Migration\MigrationInterface;
 use Baleen\Migrations\Migration\Options;
-use Baleen\Migrations\Version;
 use Baleen\Migrations\Version\Collection\Linked;
 use Baleen\Migrations\Version\VersionInterface;
 
@@ -69,12 +67,12 @@ abstract class AbstractTimeline implements TimelineInterface
     /**
      * Returns true if the operatin is forced, or if the direction is the opposite to the state of the migration.
      *
-     * @param Version $version
+     * @param VersionInterface $version
      * @param Options $options
      *
      * @return bool
      */
-    protected function shouldMigrate(Version $version, Options $options)
+    protected function shouldMigrate(VersionInterface $version, Options $options)
     {
         return $options->isForced()
         || ($options->isDirectionUp() ^ $version->isMigrated()); // direction is opposite to state

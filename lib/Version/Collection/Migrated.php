@@ -22,7 +22,6 @@ namespace Baleen\Migrations\Version\Collection;
 
 use Baleen\Migrations\Exception\CollectionException;
 use Baleen\Migrations\Exception\MigrationMissingException;
-use Baleen\Migrations\Version;
 use Baleen\Migrations\Version\VersionInterface;
 
 class Migrated extends Sortable

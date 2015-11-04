@@ -53,7 +53,7 @@ class OffsetResolver extends AbstractResolver
      * @param string $alias
      * @param Collection $collection
      *
-     * @return \Baleen\Migrations\Version|null|string
+     * @return \Baleen\Migrations\Version\VersionInterface|null|string
      */
     protected function doResolve($alias, Collection $collection)
     {

@@ -22,7 +22,6 @@ namespace BaleenTest\Migrations\Version;
 use Baleen\Migrations\Exception\CollectionException;
 use Baleen\Migrations\Exception\InvalidArgumentException;
 use Baleen\Migrations\Version as V;
-use Baleen\Migrations\Version;
 use Baleen\Migrations\Version\Collection;
 use Baleen\Migrations\Version\Collection\Resolver\ResolverInterface;
 use Baleen\Migrations\Version\Collection\Sortable;
@@ -50,7 +49,7 @@ class CollectionTest extends BaseTestCase
      */
     public function testConstructorIterator()
     {
-        $versions = Version::fromArray(['1', '2', '3']);
+        $versions = V::fromArray(['1', '2', '3']);
         $iterator = new \ArrayIterator($versions);
         $instance = new Collection($iterator);
         $this->assertCount(3, $instance);
@@ -66,7 +65,7 @@ class CollectionTest extends BaseTestCase
         $this->assertInstanceOf(Collection::class, $instance);
         $this->assertCount(0, $instance);
 
-        $version = new Version('1');
+        $version = new V('1');
         $instance = new Collection([$version]);
         $this->assertInstanceOf(Collection::class, $instance);
         $this->assertCount(1, $instance);
@@ -83,7 +82,7 @@ class CollectionTest extends BaseTestCase
     public function testAdd(Collection $instance)
     {
         $originalCount = count($instance);
-        $version2 = new Version('2');
+        $version2 = new V('2');
         $instance->add($version2);
         $this->assertCount($originalCount + 1, $instance);
 
@@ -117,8 +116,8 @@ class CollectionTest extends BaseTestCase
      */
     public function testAddDuplicate()
     {
-        $version = new Version('1');
-        $instance = new Version\Collection([$version]);
+        $version = new V('1');
+        $instance = new Collection([$version]);
         $this->setExpectedException(CollectionException::class, 'already exists');
         $instance->add($version);
     }
@@ -128,7 +127,7 @@ class CollectionTest extends BaseTestCase
      */
     public function testAddOrUpdate()
     {
-        $versions = Version::fromArray('v1', 'v2', 'v3');
+        $versions = V::fromArray('v1', 'v2', 'v3');
         $instance = new Collection(array_slice($versions, 0, 2));
         $this->assertTrue($instance->has('v1'));
 
@@ -151,8 +150,8 @@ class CollectionTest extends BaseTestCase
      */
     public function testMerge()
     {
-        $instance1 = new Sortable(Version::fromArray('1', '2', '3', '4', '5'));
-        $migrated = Version::fromArray('2', '5', '6', '7');
+        $instance1 = new Sortable(V::fromArray('1', '2', '3', '4', '5'));
+        $migrated = V::fromArray('2', '5', '6', '7');
         foreach ($migrated as $v) {
             $v->setMigrated(true);
         }
@@ -170,7 +169,7 @@ class CollectionTest extends BaseTestCase
      */
     public function testGetReturnsNullIfNotFound()
     {
-        $versions = Version::fromArray('v1', 'v2');
+        $versions = V::fromArray('v1', 'v2');
         $instance = new Sortable($versions);
         $this->assertNull($instance->get('v3'));
     }
@@ -180,7 +179,7 @@ class CollectionTest extends BaseTestCase
      */
     public function testArrayAccess()
     {
-        $instance = new Sortable(Version::fromArray('v100', 'v101', 'v102'));
+        $instance = new Sortable(V::fromArray('v100', 'v101', 'v102'));
         $this->assertSame('v100', $instance->current()->getId());
         $this->assertSame(0, $instance->key());
         $instance->next();
@@ -190,7 +189,7 @@ class CollectionTest extends BaseTestCase
 
     public function testAddThrowsExceptionIfValidateFalse()
     {
-        $version = new Version(1);
+        $version = new V(1);
         $instance = m::mock(Collection\Sortable::class)->makePartial();
         $instance->shouldReceive('validate')->with($version)->once()->andReturn(false);
         $this->setExpectedException(

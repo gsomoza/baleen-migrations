@@ -20,8 +20,8 @@
 namespace BaleenTest\Migrations\Version\Collection;
 
 use Baleen\Migrations\Exception\CollectionException;
-use Baleen\Migrations\Version;
 use Baleen\Migrations\Version as V;
+use Baleen\Migrations\Version;
 use Baleen\Migrations\Version\Collection\Linked;
 use Baleen\Migrations\Version\Collection\Sortable;
 use Mockery as m;

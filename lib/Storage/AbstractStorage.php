@@ -21,10 +21,10 @@
 namespace Baleen\Migrations\Storage;
 
 use Baleen\Migrations\Exception\StorageException;
-use Baleen\Migrations\Version;
 use Baleen\Migrations\Version\Collection\Migrated;
 use Baleen\Migrations\Version\Comparator\ComparatorAwareInterface;
 use Baleen\Migrations\Version\Comparator\ComparatorAwareTrait;
+use Baleen\Migrations\Version\VersionInterface;
 
 /**
  * Class AbstractStorage.
@@ -47,10 +47,10 @@ abstract class AbstractStorage implements StorageInterface, ComparatorAwareInter
         $versions = $this->doFetchAll();
         if (!is_object($versions) || !$versions instanceof Migrated) {
             foreach ($versions as $version) {
-                if (!is_object($version) || !$version instanceof Version) {
+                if (!is_object($version) || !$version instanceof VersionInterface) {
                     throw new StorageException(sprintf(
                         'Expected version to be an instance of %s.',
-                        Version::class
+                        VersionInterface::class
                     ));
                 }
                 $version->setMigrated(true); // otherwise it wouldn't be stored in the first place
@@ -65,7 +65,7 @@ abstract class AbstractStorage implements StorageInterface, ComparatorAwareInter
     /**
      * @inheritdoc
      */
-    public function update(Version $version)
+    public function update(VersionInterface $version)
     {
         $result = null;
         if ($version->isMigrated()) {
@@ -77,7 +77,7 @@ abstract class AbstractStorage implements StorageInterface, ComparatorAwareInter
     }
 
     /**
-     * @return Version[]|Migrated
+     * @return VersionInterface[]|Migrated
      */
     abstract protected function doFetchAll();
 }

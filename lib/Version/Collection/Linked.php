@@ -21,7 +21,6 @@
 namespace Baleen\Migrations\Version\Collection;
 
 use Baleen\Migrations\Exception\CollectionException;
-use Baleen\Migrations\Version;
 use Baleen\Migrations\Version\VersionInterface;
 
 /**

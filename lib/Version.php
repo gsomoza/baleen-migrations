@@ -29,35 +29,39 @@ use Baleen\Migrations\Version\VersionInterface;
  *
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
-class Version implements VersionInterface
+final class Version implements VersionInterface
 {
     /**
      * @var string
      */
-    protected $id;
+    private $id;
 
     /**
      * @var bool
      */
-    protected $migrated;
+    private $migrated;
 
     /**
      * @var MigrationInterface
      */
-    protected $migration;
+    private $migration;
 
     /**
      * @param $id string
+     * @param bool $migrated
+     * @param MigrationInterface $migration
      *
      * @throws InvalidArgumentException
      */
-    public function __construct($id)
+    public function __construct($id, $migrated = false, MigrationInterface $migration = null)
     {
-        $id = trim((string)$id);
+        $id = trim((string) $id);
         if (empty($id)) {
-            throw new InvalidArgumentException('A version\'s id cannot be empty');
+            throw new InvalidArgumentException('A version\'s id cannot be empty.');
         }
         $this->id = $id;
+        $this->migrated = (bool) $migrated;
+        $this->migration = $migration;
     }
 
     /**
@@ -81,7 +85,7 @@ class Version implements VersionInterface
      */
     public function setMigrated($migrated)
     {
-        $this->migrated = (bool)$migrated;
+        $this->migrated = (bool) $migrated;
     }
 
     /**
@@ -103,19 +107,11 @@ class Version implements VersionInterface
     }
 
     /**
-     * @return bool
-     */
-    public function hasMigration()
-    {
-        return !empty($this->migration);
-    }
-
-    /**
      * Creates a list of versions based on specified IDs.
      *
      * @param mixed $versionIds
      *
-     * @return Version[]
+     * @return VersionInterface[]
      */
     public static function fromArray($versionIds)
     {
@@ -130,6 +126,10 @@ class Version implements VersionInterface
         return $results;
     }
 
+    /**
+     * __toString
+     * @return string
+     */
     public function __toString()
     {
         return $this->getId();

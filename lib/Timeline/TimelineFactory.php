@@ -35,7 +35,7 @@ use Symfony\Component\EventDispatcher\EventDispatcher;
 class TimelineFactory
 {
     /**
-     * @var \Baleen\Migrations\Version\Collection\Resolver\ResolverInterface
+     * @var ResolverInterface
      */
     private $resolver;
 
@@ -49,7 +49,7 @@ class TimelineFactory
     private $dispatcher;
 
     /**
-     * @param \Baleen\Migrations\Version\Collection\Resolver\ResolverInterface $resolver
+     * @param ResolverInterface $resolver
      * @param ComparatorInterface $comparator
      * @param EventDispatcher $dispatcher
      */
@@ -70,7 +70,7 @@ class TimelineFactory
      * Creates a Timeline instance with all available versions. Those versions that have already been migrated will
      * be marked accordingly.
      *
-     * @param array|\Baleen\Migrations\Version\Collection\Linked $available
+     * @param array|Linked $available
      * @param array|Migrated $migrated
      * @return Timeline
      * @throws MigrationMissingException

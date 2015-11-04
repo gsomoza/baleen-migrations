@@ -39,7 +39,7 @@ class MigrationEvent extends Event implements EventInterface
     protected $options;
 
     /**
-     * @var Version
+     * @var VersionInterface
      */
     protected $version;
 
@@ -75,7 +75,7 @@ class MigrationEvent extends Event implements EventInterface
     }
 
     /**
-     * @return Version
+     * @return VersionInterface
      */
     public function getVersion()
     {
