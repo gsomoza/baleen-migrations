@@ -42,13 +42,10 @@ abstract class AbstractTimeline implements TimelineInterface
     use HasEmitterTrait;
 
     /** @var \League\Tactician\CommandBus */
-    protected $migrationBus;
-
-    /** @var string[] */
-    protected $allowedDirections;
+    private $migrationBus;
 
     /** @var Linked */
-    protected $versions;
+    private $versions;
 
     /**
      * @param Linked $versions
@@ -144,7 +141,7 @@ abstract class AbstractTimeline implements TimelineInterface
      * getVersions
      * @return Linked
      */
-    public function getVersions()
+    final public function getVersions()
     {
         return $this->versions;
     }

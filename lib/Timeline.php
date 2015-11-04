@@ -25,6 +25,7 @@ use Baleen\Migrations\Exception\MigrationMissingException;
 use Baleen\Migrations\Exception\TimelineException;
 use Baleen\Migrations\Migration\Options;
 use Baleen\Migrations\Timeline\AbstractTimeline;
+use Baleen\Migrations\Version\Collection\Linked;
 use Baleen\Migrations\Version\Collection\Sortable;
 use Baleen\Migrations\Version\VersionInterface;
 
@@ -52,10 +53,10 @@ final class Timeline extends AbstractTimeline
         $options->setDirection(Options::DIRECTION_UP); // make sure its right
 
         if (!is_object($goalVersion)) {
-            $goalVersion = $this->versions->get($goalVersion);
+            $goalVersion = $this->getVersions()->get($goalVersion);
         }
 
-        return $this->runCollection($goalVersion, $options, $this->versions);
+        return $this->runCollection($goalVersion, $options, $this->getVersions());
     }
 
     /**
@@ -75,10 +76,10 @@ final class Timeline extends AbstractTimeline
         $options->setDirection(Options::DIRECTION_DOWN); // make sure its right
 
         if (!is_object($goalVersion)) {
-            $goalVersion = $this->versions->get($goalVersion);
+            $goalVersion = $this->getVersions()->get($goalVersion);
         }
 
-        return $this->runCollection($goalVersion, $options, $this->versions->getReverse());
+        return $this->runCollection($goalVersion, $options, $this->getVersions()->getReverse());
     }
 
     /**
@@ -88,7 +89,8 @@ final class Timeline extends AbstractTimeline
      * @param $goalVersion
      * @param Options $options
      *
-     * @return Sortable
+     * @return Linked A collection of versions that were *changed* during the process. Note that this collection may
+     *                significantly defer from what would be obtained by $this->getVersions()
      */
     public function goTowards($goalVersion, Options $options = null)
     {
@@ -97,16 +99,26 @@ final class Timeline extends AbstractTimeline
             $options->setExceptionOnSkip(false);
         }
         if (!is_object($goalVersion)) {
-            $goalVersion = $this->versions->get($goalVersion);
-        }
-        $goalIndex = $this->versions->indexOf($goalVersion);
-        $this->upTowards($goalVersion, $options);
-        $newGoal = $this->versions->get($goalIndex + 1, false);
-        if (null !== $newGoal) { // unless we're at the end of the queue (no migrations can go down)
-            $this->downTowards($newGoal, $options);
+            $goalVersion = $this->getVersions()->get($goalVersion);
         }
 
-        return $this->versions;
+        // create a new collection to store the changed versions
+        $changed = clone $this->getVersions(); // this ensures we keep the same comparator
+        $changed->clear();
+
+        $goalIndex = $this->getVersions()->indexOf($goalVersion);
+        $changedUp = $this->upTowards($goalVersion, $options);
+        $changed->merge($changedUp);
+
+        $newGoal = $this->getVersions()->get($goalIndex + 1, false);
+        if (null !== $newGoal) { // unless we're at the end of the queue (no migrations can go down)
+            $changedDown  = $this->downTowards($newGoal, $options);
+            $changed->merge($changedDown);
+        }
+
+        $changed->sort();
+
+        return $changed;
     }
 
     /**
@@ -122,7 +134,7 @@ final class Timeline extends AbstractTimeline
     public function runSingle(VersionInterface $version, Options $options, Progress $progress = null)
     {
         if (!is_object($version)) {
-            $version = $this->versions->get($version);
+            $version = $this->getVersions()->get($version);
         }
 
         $migration = $version->getMigration();

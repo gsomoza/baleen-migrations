@@ -32,7 +32,7 @@ use Symfony\Component\EventDispatcher\EventDispatcher;
 /**
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
-class TimelineFactory
+final class TimelineFactory
 {
     /**
      * @var ResolverInterface

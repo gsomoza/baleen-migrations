@@ -125,10 +125,13 @@ class TimelineTest extends BaseTestCase
     public function testGoTowards($versions, $goal)
     {
         $instance = $this->getInstance($versions);
-        $collection = $instance->goTowards($goal);
+        $instance->goTowards($goal);
+
+        $collection = $instance->getVersions();
 
         $goal = $collection->get($goal);
         $afterGoal = false;
+
         foreach ($collection as $version) {
             if (!$afterGoal) {
                 $this->assertTrue($version->isMigrated(), sprintf('Expected version %s to be migrated', $version->getId()));

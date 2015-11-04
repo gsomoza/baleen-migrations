@@ -37,10 +37,7 @@ class TimelineFactoryTest extends BaseTestCase
         $migrated = Version::fromArray('v1', 'v2', 'v3', 'v4', 'v5');
         $factory = new TimelineFactory();
         $timeline = $factory->create($available, $migrated);
-        $prop = new \ReflectionProperty($timeline, 'versions');
-        $prop->setAccessible(true);
-        /** @var \Baleen\Migrations\Version\Collection\Migrated $versions */
-        $versions = $prop->getValue($timeline);
+        $versions = $timeline->getVersions();
         foreach($versions as $v) {
             $this->assertTrue($v->isMigrated());
         }

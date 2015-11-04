@@ -33,7 +33,7 @@ use Baleen\Migrations\Version\VersionInterface;
 /**
  * Dispatches Timeline events.
  */
-class TimelineEmitter implements EmitterInterface
+final class TimelineEmitter implements EmitterInterface
 {
     use CanDispatchEventsTrait;
 
