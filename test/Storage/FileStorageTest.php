@@ -22,7 +22,7 @@ namespace BaleenTest\Migrations\Storage;
 use Baleen\Migrations\Exception\StorageException;
 use Baleen\Migrations\Storage\FileStorage;
 use Baleen\Migrations\Version;
-use Baleen\Migrations\Version\Collection\MigratedVersions;
+use Baleen\Migrations\Version\Collection\Migrated;
 use BaleenTest\Migrations\BaseTestCase;
 use Mockery as m;
 
@@ -69,13 +69,13 @@ class FileStorageTest extends BaseTestCase
 
     /**
      * @param $file
-     * @param MigratedVersions $versions
+     * @param Migrated $versions
      *
      * @dataProvider writeMigratedVersionsProvider
      */
     public function testWriteMigratedVersions($file, $versions)
     {
-        $versions = new MigratedVersions($versions);
+        $versions = new Migrated($versions);
         $instance = new FileStorage($file);
         $instance->saveCollection($versions);
         $this->assertFileExists($file);
@@ -116,7 +116,7 @@ class FileStorageTest extends BaseTestCase
 
     public function testCantWriteToFileShouldThrowException()
     {
-        $versions = new MigratedVersions($this->writeMigratedVersionsProvider()[0][1]);
+        $versions = new Migrated($this->writeMigratedVersionsProvider()[0][1]);
         /** @var m\Mock|FileStorage $instance */
         $instance = m::mock(FileStorage::class)->shouldAllowMockingProtectedMethods()->makePartial();
         $instance->shouldReceive('writeFile')->once()->andReturn(false);
@@ -133,7 +133,7 @@ class FileStorageTest extends BaseTestCase
     {
         $v = m::mock(Version::class);
         $instance = m::mock(FileStorage::class)->shouldAllowMockingProtectedMethods()->makePartial();
-        $stored = m::mock(MigratedVersions::class);
+        $stored = m::mock(Migrated::class);
         $stored->shouldReceive('has')->once()->with($v)->andReturn($exists);
         $instance->shouldReceive('fetchAll')->once()->andReturn($stored);
         $expected = false;

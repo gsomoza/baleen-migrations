@@ -21,7 +21,7 @@ namespace Baleen\Migrations\Repository;
 
 use Baleen\Migrations\Exception\InvalidArgumentException;
 use Baleen\Migrations\Migration\Factory\FactoryInterface;
-use Baleen\Migrations\Version\Collection\LinkedVersions;
+use Baleen\Migrations\Version\Collection\Linked;
 
 /**
  * A generic repository that can aggregate one or more other repositories
@@ -101,17 +101,17 @@ class RepositoryStack implements RepositoryInterface
     }
 
     /**
-     * Fetches all versions available to all repositories in the stack and returns them as a LinkedVersions collection.
+     * Fetches all versions available to all repositories in the stack and returns them as a Linked collection.
      *
      * The returned collection contains versions groups sequentially into groups that correspond to each sub-repository.
      * Each of those groups is sorted with the repository's own comparator. Therefore, its strongly recommended not to
      * sort or modify the resulting collection.
      *
-     * @return LinkedVersions
+     * @return \Baleen\Migrations\Version\Collection\Linked
      */
     public function fetchAll()
     {
-        $collection = new LinkedVersions();
+        $collection = new Linked();
         foreach ($this->getRepositories() as $repo) {
             /** @var RepositoryInterface $repo */
             $versions = $repo->fetchAll();

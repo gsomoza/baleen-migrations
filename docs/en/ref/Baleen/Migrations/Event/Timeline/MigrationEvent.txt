@@ -20,11 +20,11 @@ Baleen\\Migrations\\Event\\Timeline\\MigrationEvent
 
         protected Progress
 
-    .. php:method:: __construct(Version $version, Options $options, Progress $progress = null)
+    .. php:method:: __construct(VersionInterface $version, Options $options, Progress $progress = null)
 
         MigrationEvent constructor.
 
-        :type $version: Version
+        :type $version: VersionInterface
         :param $version:
         :type $options: Options
         :param $options:

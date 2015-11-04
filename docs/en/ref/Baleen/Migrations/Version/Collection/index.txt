@@ -6,8 +6,7 @@ Baleen\\Migrations\\Version\\Collection
 
 .. toctree::
 
-   IndexedVersions
-   LinkedVersions
-   MigratedVersions
+   Linked
+   Migrated
    Resolver/index
-   SortableVersions
+   Sortable

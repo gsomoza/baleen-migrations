@@ -21,7 +21,7 @@ namespace BaleenTest\Migrations\Version\Collection\Resolver;
 
 use Baleen\Migrations\Version;
 use Baleen\Migrations\Version\Collection\Resolver\OffsetResolver;
-use Baleen\Migrations\Version\Collection\SortableVersions;
+use Baleen\Migrations\Version\Collection\Sortable;
 use BaleenTest\Migrations\BaseTestCase;
 use Mockery as m;
 
@@ -42,7 +42,7 @@ class OffsetResolverTest extends BaseTestCase
     public function testResolve($versions, $alias, $expected)
     {
         $instance = new OffsetResolver();
-        $collection = new SortableVersions($versions, $instance);
+        $collection = new Sortable($versions, $instance);
         $result = $instance->resolve($alias, $collection);
         $actual = $result ? $result->getId() : null;
         $this->assertEquals($expected, $actual);
@@ -53,51 +53,46 @@ class OffsetResolverTest extends BaseTestCase
      */
     public function resolveProvider()
     {
-        $versions = Version::fromArray('01','02','03','04','05','06','07','08','09','10','15');
+        $versions = Version::fromArray('v01','v02','v03','v04','v05','v06','v07','v08','v09','v10','v15');
         return [
-            [[], '0', null],
-            [[], '1', null],
-            [[], '1+', null],
-            [$versions, '0-3', null],
-            [$versions, '0', null],
-            [$versions, '0+2', null],
-            [$versions, '01+', '02'],
-            [$versions, '01++', '03'],
-            [$versions, '01+2', '03'],
-            [$versions, '01-', null],
-            [$versions, '05-', '04'],
-            [$versions, '05~', '04'],
-            [$versions, '05--', '03'],
-            [$versions, '05~~', '03'],
-            [$versions, '05-4', '01'],
-            [$versions, '05-5', null],
-            [$versions, '05+++', '08'],
-            [$versions, '05+4', '09'],
-            [$versions, '05+9', null],
-            [$versions, '10+', '15'],
-            [$versions, '10++', null],
-            [$versions, '10-3', '7'],
+            [[], '0', null], // 0 will get the first element (internally the collection is a 0-indexed array)
+            [$versions, '0', null], // no offset pattern
+            [$versions, '0+', 'v02'],
+            [$versions, '0+++', 'v04'],
+            [$versions, '0+2', 'v03'],
+            [$versions, '0-', null],
+            [$versions, '4-', 'v04'],
+            [$versions, '4~', 'v04'],
+            [$versions, '4--', 'v03'],
+            [$versions, '4~~', 'v03'],
+            [$versions, '4-4', 'v01'],
+            [$versions, '4-5', null],
+            [$versions, '4+++', 'v08'],
+            [$versions, '4+4', 'v09'],
+            [$versions, '4+9', null],
+            [$versions, '9+', 'v15'],
+            [$versions, '9++', null],
+            [$versions, '9-3', 'v07'],
             // override operator count
-            [$versions, '05---2', '03'],
-            [$versions, '05~~~2', '03'],
-            [$versions, '05+++4', '09'],
+            [$versions, '4---2', 'v03'],
+            [$versions, '4~~~2', 'v03'],
+            [$versions, '4+++4', 'v09'],
             // test if there's a gap (here between 10 and 15)
-            [$versions, '05+6', '15'],
-            [$versions, '10+', '15'],
-            [$versions, '10+1', '15'],
-            [$versions, '15+', null],
-            [$versions, '15-', '10'],
-            [$versions, '15-1', '10'],
+            [$versions, '4+6', 'v15'],
+            [$versions, '9+', 'v15'],
+            [$versions, '9+1', 'v15'],
+            [$versions, '10+', null],
+            [$versions, '10-', 'v10'],
+            [$versions, '10-1', 'v10'],
             // unsupported aliases (by this particular resolver)
             [$versions, null, null],
             [$versions, '', null],
             [$versions, '-3', null],
             [$versions, '+3', null],
-            [$versions, '1', null],
-            [$versions, '5', null],
+            [$versions, '+++', null],
+            // no pattern match
             [$versions, '15', null],
             [$versions, 'abc', null],
-            [$versions, '+++', null],
         ];
     }
 
@@ -106,8 +101,8 @@ class OffsetResolverTest extends BaseTestCase
      */
     public function testOnlyResolvesIfSortable()
     {
-        $instance = new OffsetResolver();
-        $collection = new Version\Collection\IndexedVersions(Version::fromArray(1,2,3));
+        $instance = new Version\Collection\Resolver\OffsetResolver();
+        $collection = new Version\Collection(Version::fromArray(1,2,3));
         $result = $instance->resolve('1+', $collection);
         $this->assertNull($result);
     }

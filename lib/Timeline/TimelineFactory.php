@@ -22,11 +22,12 @@ namespace Baleen\Migrations\Timeline;
 
 use Baleen\Migrations\Exception\MigrationMissingException;
 use Baleen\Migrations\Timeline;
-use Baleen\Migrations\Version\Collection\LinkedVersions;
-use Baleen\Migrations\Version\Collection\MigratedVersions;
+use Baleen\Migrations\Version\Collection\Linked;
+use Baleen\Migrations\Version\Collection\Migrated;
 use Baleen\Migrations\Version\Collection\Resolver\ResolverInterface;
-use Baleen\Migrations\Version\Collection\SortableVersions;
+use Baleen\Migrations\Version\Collection\Sortable;
 use Baleen\Migrations\Version\Comparator\ComparatorInterface;
+use Baleen\Migrations\Version\VersionInterface;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
 /**
@@ -35,7 +36,7 @@ use Symfony\Component\EventDispatcher\EventDispatcher;
 class TimelineFactory
 {
     /**
-     * @var ResolverInterface
+     * @var \Baleen\Migrations\Version\Collection\Resolver\ResolverInterface
      */
     private $resolver;
 
@@ -49,7 +50,7 @@ class TimelineFactory
     private $dispatcher;
 
     /**
-     * @param ResolverInterface $resolver
+     * @param \Baleen\Migrations\Version\Collection\Resolver\ResolverInterface $resolver
      * @param ComparatorInterface $comparator
      * @param EventDispatcher $dispatcher
      */
@@ -70,8 +71,8 @@ class TimelineFactory
      * Creates a Timeline instance with all available versions. Those versions that have already been migrated will
      * be marked accordingly.
      *
-     * @param array|LinkedVersions $available
-     * @param array|MigratedVersions $migrated
+     * @param array|\Baleen\Migrations\Version\Collection\Linked $available
+     * @param array|Migrated $migrated
      * @return Timeline
      * @throws MigrationMissingException
      */
@@ -87,22 +88,25 @@ class TimelineFactory
     /**
      * Sets versions in $this->availableVersions to migrated if they appear in $this->migratedVersions.
      *
-     * @param array|LinkedVersions $available
-     * @param array|MigratedVersions $migrated
-     * @return array|LinkedVersions
+     * @param array|Linked $available
+     * @param array|Migrated $migrated
+     *
+     * @return Linked
+     *
      * @throws MigrationMissingException
      */
     protected function prepareCollection($available, $migrated = [])
     {
         if (is_array($available)) {
-            $available = new LinkedVersions($available, $this->resolver, $this->comparator);
+            $available = new Linked($available, $this->resolver, $this->comparator);
         }
         if (is_array($migrated)) {
-            $migrated = new SortableVersions($migrated, $this->resolver, $this->comparator);
+            $migrated = new Sortable($migrated, $this->resolver, $this->comparator);
         }
+
         foreach ($migrated as $version) {
-            if ($available->has($version)) {
-                $availableVersion = $available->get($version);
+            $availableVersion = $available->getById($version->getId());
+            if ($availableVersion) {
                 $availableVersion->setMigrated(true);
             } else {
                 throw new MigrationMissingException(
@@ -113,6 +117,7 @@ class TimelineFactory
                 );
             }
         }
+
         return $available;
     }
 }

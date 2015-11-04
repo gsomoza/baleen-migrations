@@ -10,7 +10,7 @@ Baleen\\Migrations\\Event\\Timeline\\CollectionEvent
 
     .. php:attr:: collection
 
-        protected LinkedVersions
+        protected Linked
 
     .. php:attr:: options
 
@@ -24,15 +24,15 @@ Baleen\\Migrations\\Event\\Timeline\\CollectionEvent
 
         protected Progress
 
-    .. php:method:: __construct(Version $target, Options $options, LinkedVersions $versions, Progress $progress = null)
+    .. php:method:: __construct(VersionInterface $target, Options $options, Linked $versions, Progress $progress = null)
 
         CollectionEvent constructor.
 
-        :type $target: Version
+        :type $target: VersionInterface
         :param $target:
         :type $options: Options
         :param $options:
-        :type $versions: LinkedVersions
+        :type $versions: Linked
         :param $versions:
         :type $progress: Progress
         :param $progress:
@@ -43,7 +43,7 @@ Baleen\\Migrations\\Event\\Timeline\\CollectionEvent
 
     .. php:method:: getCollection()
 
-        :returns: LinkedVersions
+        :returns: Linked
 
     .. php:method:: getTarget()
 

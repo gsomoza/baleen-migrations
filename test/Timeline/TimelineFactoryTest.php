@@ -21,7 +21,7 @@ use Baleen\Migrations\Exception\MigrationMissingException;
 use Baleen\Migrations\Timeline\TimelineFactory;
 use Baleen\Migrations\Version as V;
 use Baleen\Migrations\Version;
-use Baleen\Migrations\Version\Collection\MigratedVersions;
+use Baleen\Migrations\Version\Collection\Migrated;
 use BaleenTest\Migrations\BaseTestCase;
 
 /**
@@ -29,22 +29,27 @@ use BaleenTest\Migrations\BaseTestCase;
  */
 class TimelineFactoryTest extends BaseTestCase
 {
-
+    /**
+     * testCreate
+     */
     public function testCreate()
     {
-        $available = $this->createVersionsWithMigrations('1', '2', '3', '4', '5');
-        $migrated = Version::fromArray('1', '2', '3', '4', '5');
+        $available = $this->createVersionsWithMigrations('v1', 'v2', 'v3', 'v4', 'v5');
+        $migrated = Version::fromArray('v1', 'v2', 'v3', 'v4', 'v5');
         $factory = new TimelineFactory();
         $timeline = $factory->create($available, $migrated);
         $prop = new \ReflectionProperty($timeline, 'versions');
         $prop->setAccessible(true);
-        /** @var MigratedVersions $versions */
+        /** @var \Baleen\Migrations\Version\Collection\Migrated $versions */
         $versions = $prop->getValue($timeline);
         foreach($versions as $v) {
             $this->assertTrue($v->isMigrated());
         }
     }
 
+    /**
+     * testCreateThrowsException
+     */
     public function testCreateThrowsException()
     {
         $available = $this->createVersionsWithMigrations('1', '2', '3', '4', '5');

@@ -1,5 +1,4 @@
 <?php
-
 /*
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -15,39 +14,29 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the MIT license. For more information, see
- * <https://github.com/baleen/migrations>.
+ * <http://www.doctrine-project.org>.
  */
 
-namespace Baleen\Migrations\Version\Collection;
+namespace Baleen\Migrations\Version\Collection\Resolver;
 
-use Baleen\Migrations\Exception\CollectionException;
-use Baleen\Migrations\Version;
+use Baleen\Migrations\Version\Collection as VersionCollection;
+use Doctrine\Common\Collections\Collection;
 
 /**
- * Represents a set of Versions, all of which must be linked to a Migration.
+ * Resolves version ID's
  *
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
-class LinkedVersions extends SortableVersions
+class IdResolver extends AbstractResolver
 {
     /**
-     * Validates that migrations added to this set must all have a linked Migration.
-     *
-     * @param Version $version
-     *
-     * @return bool
-     *
-     * @throws CollectionException
+     * @inheritdoc
      */
-    public function validate(Version $version)
+    public function doResolve($alias, Collection $collection)
     {
-        if (!$version->hasMigration()) {
-            throw new CollectionException(sprintf(
-                'Version "%s" must have a Migration in order to be accepted into this collection.',
-                $version->getId()
-            ));
+        if ($collection instanceof VersionCollection) {
+            return $collection->getById($alias);
         }
-
-        return parent::validate($version);
+        return null;
     }
 }

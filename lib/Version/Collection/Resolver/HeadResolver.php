@@ -19,9 +19,9 @@
 
 namespace Baleen\Migrations\Version\Collection\Resolver;
 
-use Baleen\Migrations\Version;
-use Baleen\Migrations\Version\Collection\IndexedVersions;
-use Baleen\Migrations\Version\Collection\SortableVersions;
+use Baleen\Migrations\Version\Collection\Sortable;
+use Baleen\Migrations\Version\VersionInterface;
+use Doctrine\Common\Collections\Collection;
 
 /**
  * Class HeadResolver
@@ -35,18 +35,19 @@ class HeadResolver extends AbstractResolver
      * doResolve
      *
      * @param $alias
-     * @param IndexedVersions $collection
+     * @param Collection $collection
      *
-     * @return Version|null
+     * @return VersionInterface|null
      */
-    protected function doResolve($alias, IndexedVersions $collection)
+    protected function doResolve($alias, Collection $collection)
     {
-        if (!$collection instanceof SortableVersions || strtolower($alias) !== self::HEAD) {
+        if (!$collection instanceof Sortable || strtolower($alias) !== self::HEAD) {
             return null;
         }
 
         $reversed = $collection->getReverse();
         foreach ($reversed as $version) {
+            /** @var VersionInterface $version */
             if ($version->isMigrated()) {
                 return $version;
             }

@@ -15,42 +15,40 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the MIT license. For more information, see
- * <http://www.doctrine-project.org>.
+ * <https://github.com/baleen/migrations>.
  */
 
-namespace BaleenTest\Migrations\Version\Collection;
+namespace Baleen\Migrations\Version\Collection;
 
 use Baleen\Migrations\Exception\CollectionException;
-use Baleen\Migrations\Version as V;
 use Baleen\Migrations\Version;
-use Baleen\Migrations\Version\Collection\LinkedVersions;
-use Baleen\Migrations\Version\Collection\SortableVersions;
-use Mockery as m;
-use Zend\Stdlib\ArrayUtils;
+use Baleen\Migrations\Version\VersionInterface;
 
 /**
+ * Represents a set of Versions, all of which must be linked to a Migration.
+ *
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
-class LinkedVersionsTest extends SortableVersionsTest
+class Linked extends Sortable
 {
-
-    public function testAddException()
+    /**
+     * Validates that migrations added to this set must all have a linked Migration.
+     *
+     * @param VersionInterface $element
+     *
+     * @return bool
+     *
+     * @throws CollectionException
+     */
+    public function validate(VersionInterface $element)
     {
-        $version = new V('1');
-        $version->setMigrated(true); // but no linked migration
-        $instance = new LinkedVersions();
+        if (!$element->getMigration()) {
+            throw new CollectionException(sprintf(
+                'Version "%s" must have a Migration in order to be accepted into this collection.',
+                $element->getId()
+            ));
+        }
 
-        $this->setExpectedException(CollectionException::class, 'must have a Migration');
-        $instance->add($version);
+        return parent::validate($element);
     }
-
-    public function testIsUpgradable()
-    {
-        $versions = $this->createVersionsWithMigrations('1', '2', '3', '4', '5');
-        $count = count($versions);
-        $indexed = new SortableVersions($versions);
-        $upgraded = new LinkedVersions($indexed);
-        $this->assertCount($count, $upgraded);
-    }
-
 }

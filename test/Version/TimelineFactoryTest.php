@@ -21,7 +21,7 @@ namespace BaleenTest\Migrations\Version;
 
 use Baleen\Migrations\Timeline\TimelineFactory;
 use Baleen\Migrations\Version;
-use Baleen\Migrations\Version\Collection\SortableVersions;
+use Baleen\Migrations\Version\Collection\Sortable;
 use BaleenTest\Migrations\BaseTestCase;
 use Mockery as m;
 
@@ -42,7 +42,7 @@ class TimelineFactoryTest extends BaseTestCase
     public function testConstructor()
     {
         $instance = new TimelineFactory();
-        $this->assertInstanceOf('Baleen\Migrations\Timeline\TimelineFactory', $instance);
+        $this->assertInstanceOf(TimelineFactory::class, $instance);
     }
 
     /**

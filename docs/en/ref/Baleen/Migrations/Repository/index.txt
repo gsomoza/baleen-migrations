@@ -9,3 +9,4 @@ Baleen\\Migrations\\Repository
    AbstractRepository
    DirectoryRepository
    RepositoryInterface
+   RepositoryStack

@@ -20,94 +20,78 @@
 
 namespace Baleen\Migrations\Version\Collection;
 
-use Baleen\Migrations\Version;
+use Baleen\Migrations\Version\Collection;
 use Baleen\Migrations\Version\Collection\Resolver\ResolverInterface;
 use Baleen\Migrations\Version\Comparator\ComparatorInterface;
 use Baleen\Migrations\Version\Comparator\DefaultComparator;
+use Baleen\Migrations\Version\VersionInterface;
+use Doctrine\Common\Collections\Collection as CollectionInterface;
 
 /**
  * A collection of Versions.
  *
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
-class SortableVersions extends IndexedVersions
+class Sortable extends Collection
 {
     /** @var ComparatorInterface */
-    protected $comparator;
+    private $comparator;
 
     /** @var boolean */
-    protected $sorted = true;
+    private $sorted = false;
 
     /**
-     * @param array $versions
-     *
+     * @param VersionInterface[] $versions
      * @param ResolverInterface $resolver
      * @param ComparatorInterface $comparator
+     *
      * @throws \Baleen\Migrations\Exception\InvalidArgumentException
      */
     public function __construct(
-        $versions = array(),
+        $versions = [],
         ResolverInterface $resolver = null,
         ComparatorInterface $comparator = null
     ) {
         if (null === $comparator) {
             $comparator = new DefaultComparator();
         }
-        $this->setComparator($comparator);
-
-        if (!empty($versions)) {
-            $this->sorted = false;
-        }
+        $this->comparator = $comparator;
 
         parent::__construct($versions, $resolver);
     }
 
     /**
-     * @return ComparatorInterface
-     */
-    public function getComparator()
-    {
-        return $this->comparator;
-    }
-
-    /**
-     * @param ComparatorInterface $comparator
-     */
-    public function setComparator(ComparatorInterface $comparator)
-    {
-        if ($comparator !== $comparator) {
-            $this->sorted = false;
-        }
-        $this->comparator = $comparator;
-    }
-
-    /**
      * Sort the collection
+     * @param ComparatorInterface $comparator
+     * @return static
      */
-    public function sort()
+    public function sort(ComparatorInterface $comparator = null)
     {
-        uasort($this->items, $this->getComparator());
-        $this->sorted = true;
+        if (null === $comparator) {
+            $comparator = $this->comparator;
+        }
+        $elements = $this->toArray();
+        usort($elements, $comparator);
+        return new static($elements, $this->getResolver(), $comparator);
     }
 
     /**
-     * @return $this The reversed collection
+     * Returns a collection with elements sorted in reverse order.
+     *
+     * @return static
      */
     public function getReverse()
     {
-        $reverse = clone $this;
-        $reverse->setComparator($this->comparator->reverse());
-        return $reverse;
+        return $this->sort($this->comparator->reverse());
     }
 
     /**
      * Merges another set into this one, replacing versions that exist and adding those that don't.
      *
-     * @param SortableVersions $collection
-     *
+     * @param CollectionInterface $collection
      * @return $this
      */
-    public function merge(SortableVersions $collection)
+    public function merge(CollectionInterface $collection)
     {
         foreach ($collection as $version) {
             $this->addOrReplace($version);
@@ -117,67 +101,23 @@ class SortableVersions extends IndexedVersions
     }
 
     /**
-     * Returns the last Version in the collection.
+     * Returns the element at the given position.
      *
-     * @return Version
-     */
-    public function last()
-    {
-        $this->end();
-
-        return $this->current();
-    }
-
-    /**
-     * Returns the first Version in the collection.
-     *
-     * @return Version
-     */
-    public function first()
-    {
-        $this->rewind();
-
-        return $this->current();
-    }
-
-    /**
-     * Returns the numeric position of an item in the collection (base 1).
-     *
-     * @param Version|string $index
-     *
-     * @return int
-     */
-    public function getPosition($index)
-    {
-        return array_search((string)$index, array_keys($this->items)) + 1;
-    }
-
-    /**
-     * getByPosition
      * @param $position
-     * @return null|Version
+     *
+     * @return null|VersionInterface
      */
     public function getByPosition($position)
     {
-        if (empty($this->items)) {
-            return null;
-        }
-        $result = null;
-        $keys = array_keys($this->items);
-        $position -= 1; // convert to base 0
-        if (isset($keys[$position])) {
-            $key = $keys[$position];
-            $result = $this->items[$key];
-        }
-        return $result;
+        return $this->get((int) $position + 1, false);
     }
 
     /**
      * @inheritdoc
      */
-    public function add($version)
+    public function add($element)
     {
-        parent::add($version);
+        parent::add($element);
         $this->sorted = false;
     }
 

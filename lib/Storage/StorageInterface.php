@@ -21,8 +21,7 @@
 namespace Baleen\Migrations\Storage;
 
 use Baleen\Migrations\Version;
-use Baleen\Migrations\Version\Collection\MigratedVersions;
-use Baleen\Migrations\Version\Comparator\ComparatorAwareInterface;
+use Baleen\Migrations\Version\Collection\Migrated;
 
 /**
  * Provides a collection of Versions that have been migrated.
@@ -34,18 +33,18 @@ interface StorageInterface
     /**
      * Reads versions from the storage file.
      *
-     * @return MigratedVersions
+     * @return \Baleen\Migrations\Version\Collection\Migrated
      */
     public function fetchAll();
 
     /**
      * Write a collection of versions to the storage file.
      *
-     * @param MigratedVersions $versions
+     * @param Migrated $versions
      *
      * @return bool Returns false on failure.
      */
-    public function saveCollection(MigratedVersions $versions);
+    public function saveCollection(Migrated $versions);
 
     /**
      * Saves or deletes a version depending on whether the version is respectively migrated or not.

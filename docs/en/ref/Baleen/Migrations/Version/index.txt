@@ -7,5 +7,6 @@ Baleen\\Migrations\\Version
 .. toctree::
 
    Collection/index
+   Collection
    Comparator/index
    VersionInterface

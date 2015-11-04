@@ -22,13 +22,15 @@ namespace Baleen\Migrations\Timeline;
 
 use Baleen\Migrations\Event\HasEmitterTrait;
 use Baleen\Migrations\Event\Timeline\Progress;
+use Baleen\Migrations\Exception\InvalidArgumentException;
 use Baleen\Migrations\Migration\Command\MigrateCommand;
 use Baleen\Migrations\Migration\Command\MigrationBus;
 use Baleen\Migrations\Migration\Command\MigrationBusFactory;
 use Baleen\Migrations\Migration\MigrationInterface;
 use Baleen\Migrations\Migration\Options;
 use Baleen\Migrations\Version;
-use Baleen\Migrations\Version\Collection\LinkedVersions;
+use Baleen\Migrations\Version\Collection\Linked;
+use Baleen\Migrations\Version\VersionInterface;
 
 /**
  * Encapsulates the lower-level methods of a Timeline, leaving the actual timeline logic to the extending class.
@@ -47,14 +49,15 @@ abstract class AbstractTimeline implements TimelineInterface
     /** @var string[] */
     protected $allowedDirections;
 
-    /** @var LinkedVersions */
+    /** @var Linked */
     protected $versions;
 
     /**
-     * @param LinkedVersions $versions
+     * @param Linked $versions
      * @param MigrationBus $migrationBus A CommandBus that will be used to run each individual migration.
      */
-    public function __construct(LinkedVersions $versions, MigrationBus $migrationBus = null) {
+    public function __construct(Linked $versions, MigrationBus $migrationBus = null)
+    {
         if (null === $migrationBus) {
             $migrationBus = MigrationBusFactory::create();
         }
@@ -100,24 +103,27 @@ abstract class AbstractTimeline implements TimelineInterface
     }
 
     /**
-     * @param $goalVersion
-     * @param Options $options
-     * @param $collection
+     * Executes migrations against a collection
      *
-     * @return LinkedVersions
+     * @param VersionInterface $goalVersion
+     * @param Options $options
+     * @param Linked $collection
+     *
+     * @return Linked
+     *
+     * @throws InvalidArgumentException
      */
-    protected function runCollection($goalVersion, Options $options, LinkedVersions $collection)
+    protected function runCollection(VersionInterface $goalVersion, Options $options, Linked $collection)
     {
-        $goalVersion = $collection->getOrException($goalVersion);
-
         $current = 0;
-        $total = $collection->getPosition($goalVersion);
+        $total = $collection->indexOf($goalVersion) + 1;
         $progress = new Progress($total, $current);
 
         // dispatch COLLECTION_BEFORE
         $this->getEmitter()->dispatchCollectionBefore($goalVersion, $options, $collection, $progress);
 
-        $modified = new LinkedVersions();
+        $modified = new Linked();
+        $collection->first(); // rewind
         foreach ($collection as $version) {
             $current += 1;
             $progress->setCurrent($current);
@@ -138,7 +144,7 @@ abstract class AbstractTimeline implements TimelineInterface
 
     /**
      * getVersions
-     * @return LinkedVersions
+     * @return Linked
      */
     public function getVersions()
     {

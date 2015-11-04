@@ -8,12 +8,21 @@ Baleen\\Migrations\\Version\\Collection\\Resolver\\ResolverInterface
 
     Interface ResolverInterface
 
-    .. php:method:: resolve($alias, IndexedVersions $collection)
+    .. php:method:: resolve($alias, Collection $collection)
 
         Resolves an alias into a Version.
 
         :type $alias: string
         :param $alias:
-        :type $collection: IndexedVersions
+        :type $collection: Collection
         :param $collection:
         :returns: \Baleen\Migrations\Version|null
+
+    .. php:method:: clearCache(Collection $collection = null)
+
+        Clears the resolver cache. Only clears the cache for a given collection if
+        a collection is specified.
+
+        :type $collection: Collection
+        :param $collection:
+        :returns: bool

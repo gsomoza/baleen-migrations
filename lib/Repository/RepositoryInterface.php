@@ -21,8 +21,7 @@
 namespace Baleen\Migrations\Repository;
 
 use Baleen\Migrations\Migration\Factory\FactoryInterface;
-use Baleen\Migrations\Version\Collection\LinkedVersions;
-use Baleen\Migrations\Version\Comparator\ComparatorAwareInterface;
+use Baleen\Migrations\Version\Collection\Linked;
 
 /**
  * In charge of loading Migration files and instantiating them.
@@ -33,10 +32,10 @@ interface RepositoryInterface
 {
     /**
      * Must fetch all versions available to the repository, load them with their migrations, and return them as a
-     * LinkedVersions collection. It must use a factory (default or supplied by 'setMigrationFactory()') to instantiate
+     * Linked collection. It must use a factory (default or supplied by 'setMigrationFactory()') to instantiate
      * each of the migrations.
      *
-     * @return LinkedVersions
+     * @return Linked
      */
     public function fetchAll();
 

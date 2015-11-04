@@ -1,0 +1,22 @@
+-------------------------------------------------------------
+Baleen\\Migrations\\Version\\Comparator\\ComparatorAwareTrait
+-------------------------------------------------------------
+
+.. php:namespace: Baleen\\Migrations\\Version\\Comparator
+
+.. php:trait:: ComparatorAwareTrait
+
+    Trait ComparatorAwareTrait
+
+    .. php:attr:: comparator
+
+        protected ComparatorInterface
+
+    .. php:method:: setComparator(ComparatorInterface $comparator)
+
+        :type $comparator: ComparatorInterface
+        :param $comparator:
+
+    .. php:method:: getComparator()
+
+        :returns: ComparatorInterface

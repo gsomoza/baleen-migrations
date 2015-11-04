@@ -20,7 +20,7 @@
 namespace BaleenTest\Migrations\Version\Collection\Resolver;
 
 use Baleen\Migrations\Exception\ResolverException;
-use Baleen\Migrations\Version\Collection\IndexedVersions;
+use Baleen\Migrations\Version\Collection;
 use Baleen\Migrations\Version\Collection\Resolver\AbstractResolver;
 use BaleenTest\Migrations\BaseTestCase;
 use Mockery as m;
@@ -46,7 +46,7 @@ class AbstractResolverTest extends BaseTestCase
             ->makePartial();
         $instance->shouldReceive('doResolve')->once()->andReturn($returnType);
         $this->setExpectedException(ResolverException::class);
-        $instance->resolve('HEAD', new IndexedVersions());
+        $instance->resolve('HEAD', new Collection());
     }
 
     /**

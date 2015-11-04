@@ -10,6 +10,7 @@ Baleen\\Migrations\\Version\\Collection\\Resolver
    DefaultResolverStackFactory
    FirstLastResolver
    HeadResolver
+   IdResolver
    OffsetResolver
    ResolverInterface
    ResolverStack

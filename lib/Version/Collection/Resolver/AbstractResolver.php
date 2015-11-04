@@ -21,7 +21,7 @@ namespace Baleen\Migrations\Version\Collection\Resolver;
 
 use Baleen\Migrations\Exception\ResolverException;
 use Baleen\Migrations\Version;
-use Baleen\Migrations\Version\Collection\IndexedVersions;
+use Doctrine\Common\Collections\Collection;
 
 /**
  * Class AbstractResolver
@@ -29,34 +29,111 @@ use Baleen\Migrations\Version\Collection\IndexedVersions;
  */
 abstract class AbstractResolver implements ResolverInterface
 {
+    /** @var array */
+    private $cache = [];
+
+    /** @var bool */
+    private $cacheEnabled = true;
+
+    /**
+     * @param bool $cacheEnabled
+     */
+    public function __construct($cacheEnabled = true)
+    {
+        $this->cacheEnabled = (bool) $cacheEnabled;
+    }
+
+
     /**
      * Resolves an alias into a Version.
      *
      * @param string $alias
-     * @param IndexedVersions $collection
+     * @param Collection $collection
      * @return Version|null
      * @throws ResolverException
      */
-    public function resolve($alias, IndexedVersions $collection)
+    public function resolve($alias, Collection $collection)
     {
-        $alias = (string)$alias;
-        if (empty($alias)) {
+        if (is_object($alias)) {
+            $alias = (string) $alias;
+        }
+        if (!is_string($alias)) {
             return null;
         }
-        $result = $this->doResolve($alias, $collection);
-        if (null !== $result && !(is_object($result) && $result instanceof Version)) {
-            throw new ResolverException('Expected result to be either a Version or null.');
+
+        $result = false;
+        if ($this->cacheEnabled) {
+            $result = $this->cacheGet($alias, $collection);
+        }
+
+        if (false === $result) {
+            $result = $this->doResolve($alias, $collection);
+            if (null !== $result && !(is_object($result) && $result instanceof Version)) {
+                throw new ResolverException('Expected result to be either a Version or null.');
+            }
+            if ($this->cacheEnabled) {
+                $this->cacheSet($alias, $collection, $result);
+            }
+        }
+
+        return $result;
+    }
+
+    /**
+     * Gets an alias from the cache. Returns false if nothing could be found, a Version if the alias was previously
+     * resolved to a version, and null if the alias couldn't be resolved in a previous call.
+     *
+     * @param $alias
+     * @param Collection $collection
+     *
+     * @return bool|null|Version
+     */
+    private function cacheGet($alias, Collection $collection)
+    {
+        $hash = spl_object_hash($collection);
+        $result = false;
+        if (isset($this->cache[$hash]) && array_key_exists($alias, $this->cache[$hash])) {
+            $result = $this->cache[$hash][$alias];
         }
         return $result;
+    }
+
+    /**
+     * Saves the result of resolving an alias against a given collection into the cache.
+     *
+     * @param $alias
+     * @param $collection
+     * @param $result
+     */
+    private function cacheSet($alias, $collection, $result)
+    {
+        $hash = spl_object_hash($collection);
+        if (!isset($this->cache[$hash])) {
+            $this->cache[$hash] = []; // initialize the collection's cache
+        }
+        $this->cache[$hash][$alias] = $result;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function clearCache(Collection $collection = null)
+    {
+        if (null !== $collection) {
+            $hash = spl_object_hash($collection);
+            unset($this->cache[$hash]);
+        } else {
+            $this->cache = [];
+        }
     }
 
     /**
      * doResolve
      *
      * @param $alias
-     * @param IndexedVersions $collection
+     * @param Collection $collection
      *
      * @return Version|null
      */
-    abstract protected function doResolve($alias, IndexedVersions $collection);
+    abstract protected function doResolve($alias, Collection $collection);
 }

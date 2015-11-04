@@ -19,8 +19,8 @@
 
 namespace Baleen\Migrations\Version\Collection\Resolver;
 
-use Baleen\Migrations\Version\Collection\IndexedVersions;
-use Baleen\Migrations\Version\Collection\SortableVersions;
+use Baleen\Migrations\Version\Collection\Sortable;
+use Doctrine\Common\Collections\Collection;
 
 /**
  * Class OffsetResolver.
@@ -51,13 +51,13 @@ class OffsetResolver extends AbstractResolver
      * @SuppressWarnings(PHPMD.NPathComplexity)
      *
      * @param string $alias
-     * @param IndexedVersions $collection
+     * @param Collection $collection
      *
      * @return \Baleen\Migrations\Version|null|string
      */
-    protected function doResolve($alias, IndexedVersions $collection)
+    protected function doResolve($alias, Collection $collection)
     {
-        if (!$collection instanceof SortableVersions) {
+        if (!$collection instanceof Sortable) {
             return null;
         }
 
@@ -75,7 +75,7 @@ class OffsetResolver extends AbstractResolver
         }
 
         // calculate the offset
-        $count = !isset($matches[3]) ? strlen($operator) : (int)$matches[3];
+        $count = !isset($matches[3]) ? strlen($operator) : (int) $matches[3];
         if (strlen($operator) > 1) {
             $operator = substr($operator, 0, 1);
         }
@@ -83,7 +83,7 @@ class OffsetResolver extends AbstractResolver
         $offset = $count * $multiplier;
 
         // find version by absolute position + offset
-        $pos = $collection->getPosition($absoluteVersion->getId());
-        return $collection->getByPosition($pos + $offset);
+        $absolutePos = $collection->indexOf($absoluteVersion);
+        return $collection->get($absolutePos + $offset);
     }
 }

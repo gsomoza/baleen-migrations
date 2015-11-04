@@ -23,28 +23,29 @@ namespace Baleen\Migrations\Version\Collection;
 use Baleen\Migrations\Exception\CollectionException;
 use Baleen\Migrations\Exception\MigrationMissingException;
 use Baleen\Migrations\Version;
+use Baleen\Migrations\Version\VersionInterface;
 
-class MigratedVersions extends SortableVersions
+class Migrated extends Sortable
 {
     /**
      * This makes the collection behave like a set - throwing an exception if the version already exists in the set.
      *
-     * @param Version $version
+     * @param VersionInterface $element
      *
      * @return bool
      *
      * @throws CollectionException
      * @throws MigrationMissingException
      */
-    public function validate(Version $version)
+    public function validate(VersionInterface $element)
     {
-        if (!$version->isMigrated()) {
+        if (!$element->isMigrated()) {
             throw new CollectionException(sprintf(
                 'Version "%s" must be migrated in order to be accepted into this collection.',
-                $version->getId()
+                $element->getId()
             ));
         }
 
-        return parent::validate($version);
+        return parent::validate($element);
     }
 }

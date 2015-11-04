@@ -23,67 +23,81 @@ namespace BaleenTest\Migrations\Version\Collection;
 use Baleen\Migrations\Exception\CollectionException;
 use Baleen\Migrations\Version as V;
 use Baleen\Migrations\Version;
-use Baleen\Migrations\Version\Collection\IndexedVersions;
-use Baleen\Migrations\Version\Collection\SortableVersions;
-use Mockery as m;
+use Baleen\Migrations\Version\Collection;
+use Baleen\Migrations\Version\Collection\Sortable;
+use BaleenTest\Migrations\Version\CollectionTest;
 use Zend\Stdlib\ArrayUtils;
+use Mockery as m;
 
 /**
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
-class SortableVersionsTest extends IndexedVersionsTest
+class SortableTest extends CollectionTest
 {
-
-
+    /**
+     * testMerge
+     */
     public function testMerge()
     {
-        $instance1 = new SortableVersions(Version::fromArray('1', '2', '3', '4', '5'));
+        $collection1 = new Sortable(Version::fromArray('1', '2', '3', '4', '5'));
+
         $migrated = Version::fromArray('2', '5', '6', '7');
         foreach ($migrated as $v) {
             $v->setMigrated(true);
         }
-        $instance2 = new SortableVersions($migrated);
+        $collection2 = new Sortable($migrated);
 
-        $instance1->merge($instance2);
+        $collection1->merge($collection2);
 
         foreach ($migrated as $v) {
-            $this->assertTrue($instance1->getOrException($v)->isMigrated());
+            $this->assertTrue($collection1->contains($v));
         }
     }
 
+    /**
+     * testAddException
+     */
     public function testAddException()
     {
-        $version = new V('1');
-        $instance = new SortableVersions([$version]);
+        $version = new Version('1');
+        $instance = new Sortable([$version]);
 
         $this->setExpectedException(CollectionException::class);
         $instance->add($version);
     }
 
+    /**
+     * testIsUpgradable
+     */
     public function testIsUpgradable()
     {
         $versions = Version::fromArray('1', '2', '3', '4', '5');
         $count = count($versions);
-        $indexed = new IndexedVersions($versions);
-        $upgraded = new SortableVersions($indexed);
+        $indexed = new Collection($versions);
+        $upgraded = new Sortable($indexed);
         $this->assertCount($count, $upgraded);
     }
 
+    /**
+     * testLast
+     */
     public function testLast()
     {
         $versions = Version::fromArray('1', '2', '3');
-        $instance = new SortableVersions($versions);
+        $instance = new Sortable($versions);
         $last = $instance->last();
         $this->assertSame($versions[2], $last);
     }
 
+    /**
+     * testGetSupportsAlias
+     */
     public function testGetSupportsAlias()
     {
-        $instance = new SortableVersions(Version::fromArray(1, 2, 3));
-        $this->assertEquals(3, $instance->get('latest')->getId());
+        $instance = new Sortable(Version::fromArray(1, 2, 3));
+        $this->assertEquals(3, $instance->get('last')->getId());
         // also make sure it supports the standard get functionality if no alias is found
-        $this->assertEquals(1, $instance->get(1)->getId());
-        $this->assertEquals(99, $instance->get(98, 99));
+        $this->assertEquals(1, $instance->get('1')->getId());
     }
 
     /**
@@ -95,7 +109,7 @@ class SortableVersionsTest extends IndexedVersionsTest
      */
     public function testGetByAlias(array $versions, $alias, $expectedId)
     {
-        $instance = new SortableVersions($versions);
+        $instance = new Sortable($versions);
         $result = $instance->get($alias);
         $this->assertEquals($expectedId, $result->getId());
     }
@@ -123,7 +137,7 @@ class SortableVersionsTest extends IndexedVersionsTest
      */
     public function testGetByPositionReturnsNullWhenNoItems()
     {
-        $instance = new SortableVersions([]);
+        $instance = new Sortable([]);
         $result = $instance->getByPosition(1);
         $this->assertNull($result);
     }

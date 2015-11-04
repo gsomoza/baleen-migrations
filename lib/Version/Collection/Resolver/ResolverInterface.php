@@ -19,7 +19,7 @@
 
 namespace Baleen\Migrations\Version\Collection\Resolver;
 
-use Baleen\Migrations\Version\Collection\IndexedVersions;
+use Doctrine\Common\Collections\Collection;
 
 /**
  * Interface ResolverInterface
@@ -32,9 +32,18 @@ interface ResolverInterface
      * Resolves an alias into a Version.
      *
      * @param string $alias
+     * @param Collection $collection
      *
-     * @param IndexedVersions $collection
      * @return \Baleen\Migrations\Version|null
      */
-    public function resolve($alias, IndexedVersions $collection);
+    public function resolve($alias, Collection $collection);
+
+    /**
+     * Clears the resolver cache. Only clears the cache for a given collection if a collection is specified.
+     *
+     * @param Collection $collection
+     *
+     * @return bool
+     */
+    public function clearCache(Collection $collection = null);
 }

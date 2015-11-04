@@ -10,11 +10,18 @@ Baleen\\Migrations\\Repository\\DirectoryRepository
 
         protected FactoryInterface
 
-    .. php:method:: __construct($path, FactoryInterface $migrationFactory = null)
+    .. php:attr:: comparator
 
-        :param $path:
+        protected ComparatorInterface
+
+    .. php:method:: __construct($path, FactoryInterface $migrationFactory = null, ComparatorInterface $comparator = null)
+
+        :type $path: string
+        :param $path: Full path to the repository's directory
         :type $migrationFactory: FactoryInterface
         :param $migrationFactory:
+        :type $comparator: ComparatorInterface
+        :param $comparator:
 
     .. php:method:: doFetchAll()
 
@@ -34,4 +41,13 @@ Baleen\\Migrations\\Repository\\DirectoryRepository
 
     .. php:method:: fetchAll()
 
-        :returns: LinkedVersions
+        :returns: Linked
+
+    .. php:method:: setComparator(ComparatorInterface $comparator)
+
+        :type $comparator: ComparatorInterface
+        :param $comparator:
+
+    .. php:method:: getComparator()
+
+        :returns: ComparatorInterface

@@ -12,46 +12,46 @@ Baleen\\Migrations\\Timeline\\TimelineEmitter
 
         protected null|EventDispatcherInterface
 
-    .. php:method:: dispatchCollectionBefore(Version $targetVersion, Options $options, LinkedVersions $versions, Progress $progress = null)
+    .. php:method:: dispatchCollectionBefore(VersionInterface $targetVersion, Options $options, Linked $versions, Progress $progress = null)
 
-        :type $targetVersion: Version
+        :type $targetVersion: VersionInterface
         :param $targetVersion:
         :type $options: Options
         :param $options:
-        :type $versions: LinkedVersions
+        :type $versions: Linked
         :param $versions:
         :type $progress: Progress
         :param $progress:
 
-    .. php:method:: dispatchCollectionAfter(Version $targetVersion, Options $options, LinkedVersions $versions, Progress $progress = null)
+    .. php:method:: dispatchCollectionAfter(VersionInterface $targetVersion, Options $options, Linked $versions, Progress $progress = null)
 
         dispatchCollectionAfter.
 
-        :type $targetVersion: Version
+        :type $targetVersion: VersionInterface
         :param $targetVersion:
         :type $options: Options
         :param $options:
-        :type $versions: LinkedVersions
+        :type $versions: Linked
         :param $versions:
         :type $progress: Progress
         :param $progress:
 
-    .. php:method:: dispatchMigrationBefore(Version $version, Options $options, Progress $progress = null)
+    .. php:method:: dispatchMigrationBefore(VersionInterface $version, Options $options, Progress $progress = null)
 
         dispatchMigrationBefore.
 
-        :type $version: Version
+        :type $version: VersionInterface
         :param $version:
         :type $options: Options
         :param $options:
         :type $progress: Progress
         :param $progress:
 
-    .. php:method:: dispatchMigrationAfter(Version $version, Options $options, Progress $progress = null)
+    .. php:method:: dispatchMigrationAfter(VersionInterface $version, Options $options, Progress $progress = null)
 
         dispatchMigrationAfter.
 
-        :type $version: Version
+        :type $version: VersionInterface
         :param $version:
         :type $options: Options
         :param $options:

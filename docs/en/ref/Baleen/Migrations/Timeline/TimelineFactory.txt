@@ -6,26 +6,34 @@ Baleen\\Migrations\\Timeline\\TimelineFactory
 
 .. php:class:: TimelineFactory
 
-    .. php:method:: __construct($availableVersions, $migratedVersions = [])
+    .. php:method:: __construct(ResolverInterface $resolver = null, ComparatorInterface $comparator = null, EventDispatcher $dispatcher = null)
 
-        :type $availableVersions: array
-        :param $availableVersions:
-        :type $migratedVersions: array
-        :param $migratedVersions:
+        :type $resolver: ResolverInterface
+        :param $resolver:
+        :type $comparator: ComparatorInterface
+        :param $comparator:
+        :type $dispatcher: EventDispatcher
+        :param $dispatcher:
 
-    .. php:method:: create($comparator = null, $useInternalDispatcher = true)
+    .. php:method:: create($available, $migrated = [])
 
         Creates a Timeline instance with all available versions. Those versions
         that have already been migrated will
         be marked accordingly.
 
-        :type $comparator: callable
-        :param $comparator:
-        :type $useInternalDispatcher: bool
-        :param $useInternalDispatcher: Whether to create an internal event dispatcher.
+        :type $available: array|\Baleen\Migrations\Version\Collection\Linked
+        :param $available:
+        :type $migrated: array|Migrated
+        :param $migrated:
         :returns: Timeline
 
-    .. php:method:: prepareCollection()
+    .. php:method:: prepareCollection($available, $migrated = [])
 
         Sets versions in $this->availableVersions to migrated if they appear in
         $this->migratedVersions.
+
+        :type $available: array|Linked
+        :param $available:
+        :type $migrated: array|Migrated
+        :param $migrated:
+        :returns: Linked

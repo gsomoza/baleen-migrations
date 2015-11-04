@@ -10,11 +10,16 @@ Baleen\\Migrations\\Storage\\FileStorage
 
     .. php:attr:: path
 
-        protected
+        protected string
+
+    .. php:attr:: comparator
+
+        protected ComparatorInterface
 
     .. php:method:: __construct($path)
 
-        :param $path:
+        :type $path: string
+        :param $path: Full path to storage file
 
     .. php:method:: doFetchAll()
 
@@ -22,11 +27,11 @@ Baleen\\Migrations\\Storage\\FileStorage
 
         :returns: Version[]
 
-    .. php:method:: saveCollection(MigratedVersions $versions)
+    .. php:method:: saveCollection(Migrated $versions)
 
         Write a collection of versions to the storage file.
 
-        :type $versions: MigratedVersions
+        :type $versions: Migrated
         :param $versions:
         :returns: int
 
@@ -53,9 +58,18 @@ Baleen\\Migrations\\Storage\\FileStorage
 
         Reads versions from the storage file.
 
-        :returns: MigratedVersions
+        :returns: Migrated
 
     .. php:method:: update(Version $version)
 
         :type $version: Version
         :param $version:
+
+    .. php:method:: setComparator(ComparatorInterface $comparator)
+
+        :type $comparator: ComparatorInterface
+        :param $comparator:
+
+    .. php:method:: getComparator()
+
+        :returns: ComparatorInterface

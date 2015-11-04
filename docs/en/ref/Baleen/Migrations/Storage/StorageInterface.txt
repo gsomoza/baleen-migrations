@@ -12,13 +12,13 @@ Baleen\\Migrations\\Storage\\StorageInterface
 
         Reads versions from the storage file.
 
-        :returns: MigratedVersions
+        :returns: \Baleen\Migrations\Version\Collection\Migrated
 
-    .. php:method:: saveCollection(MigratedVersions $versions)
+    .. php:method:: saveCollection(Migrated $versions)
 
         Write a collection of versions to the storage file.
 
-        :type $versions: MigratedVersions
+        :type $versions: Migrated
         :param $versions:
         :returns: bool Returns false on failure.
 

@@ -23,7 +23,7 @@ namespace Baleen\Migrations\Storage;
 use Baleen\Migrations\Exception\InvalidArgumentException;
 use Baleen\Migrations\Exception\StorageException;
 use Baleen\Migrations\Version;
-use Baleen\Migrations\Version\Collection\MigratedVersions;
+use Baleen\Migrations\Version\Collection\Migrated;
 
 /**
  * {@inheritDoc}
@@ -77,13 +77,13 @@ class FileStorage extends AbstractStorage
     /**
      * Write a collection of versions to the storage file.
      *
-     * @param MigratedVersions $versions
+     * @param Migrated $versions
      *
      * @return int
      *
      * @throws StorageException
      */
-    public function saveCollection(MigratedVersions $versions)
+    public function saveCollection(Migrated $versions)
     {
         $ids = array_map(function (Version $v) {
             return $v->getId();

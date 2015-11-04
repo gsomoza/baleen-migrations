@@ -19,8 +19,9 @@
 
 namespace Baleen\Migrations\Version\Collection\Resolver;
 
+use Baleen\Migrations\Exception\InvalidArgumentException;
 use Baleen\Migrations\Exception\ResolverException;
-use Baleen\Migrations\Version\Collection\IndexedVersions;
+use Doctrine\Common\Collections\Collection;
 
 /**
  * Class ResolverStack
@@ -33,29 +34,38 @@ class ResolverStack extends AbstractResolver
     protected $resolvers = [];
 
     /**
-     * addResolver
+     * ResolverStack constructor.
      *
-     * @param ResolverInterface $resolver
-     * @param int $priority Highest priority gets executed first.
+     * @param ResolverInterface[] $resolvers
+     *
+     * @param bool $cacheEnabled
+     * @throws InvalidArgumentException
      */
-    public function addResolver(ResolverInterface $resolver, $priority)
+    public function __construct(array $resolvers, $cacheEnabled = true)
     {
-        $priority = (int)$priority;
-        $this->resolvers[$priority] = $resolver;
+        foreach ($resolvers as $resolver) {
+            if (!is_object($resolver) || !$resolver instanceof ResolverInterface) {
+                throw new InvalidArgumentException(sprintf(
+                    'Invalid resolver of type "%s". Expected instance of "%s".',
+                    is_object($resolver) ? get_class($resolver) : gettype($resolver)
+                ));
+            }
+        }
+        $this->resolvers = $resolvers;
+        parent::__construct($cacheEnabled);
     }
 
     /**
      * Resolves an alias
      *
      * @param string $alias
-     * @param IndexedVersions $collection
+     * @param Collection $collection
      *
-     * @return \Baleen\Migrations\Version|null
+     * @return \Baleen\Migrations\Version\VersionInterface|null
      * @throws ResolverException
      */
-    public function doResolve($alias, IndexedVersions $collection)
+    public function doResolve($alias, Collection $collection)
     {
-        krsort($this->resolvers);
         foreach ($this->resolvers as $resolver) {
             $result = $resolver->resolve($alias, $collection);
             if ($result !== null) {

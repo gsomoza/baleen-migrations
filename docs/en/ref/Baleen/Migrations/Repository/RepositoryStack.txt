@@ -1,0 +1,63 @@
+-----------------------------------------------
+Baleen\\Migrations\\Repository\\RepositoryStack
+-----------------------------------------------
+
+.. php:namespace: Baleen\\Migrations\\Repository
+
+.. php:class:: RepositoryStack
+
+    A generic repository that can aggregate one or more other repositories
+
+    .. php:attr:: stack
+
+        protected \SplStack
+
+    .. php:method:: __construct()
+
+        RepositoryStack constructor.
+
+    .. php:method:: addRepository(RepositoryInterface $repo)
+
+        Adds a single repository to the stack
+
+        :type $repo: RepositoryInterface
+        :param $repo:
+
+    .. php:method:: addRepositories($repositories)
+
+        Adds a set of repositories to the stack
+
+        :param $repositories:
+
+    .. php:method:: getRepositories()
+
+        Returns the stack
+
+        :returns: \SplStack|RepositoryInterface[]
+
+    .. php:method:: setRepositories($repositories)
+
+        Resets the stack to the specified repositories
+
+        :type $repositories: array|\Traversable
+        :param $repositories:
+
+    .. php:method:: fetchAll()
+
+        Fetches all versions available to all repositories in the stack and
+        returns them as a Linked collection.
+
+        The returned collection contains versions groups sequentially into groups
+        that correspond to each sub-repository.
+        Each of those groups is sorted with the repository's own comparator.
+        Therefore, its strongly recommended not to sort or modify the resulting
+        collection.
+
+        :returns: \Baleen\Migrations\Version\Collection\Linked
+
+    .. php:method:: setMigrationFactory(FactoryInterface $factory)
+
+        Sets the migration factory for ALL repositories in the stack.
+
+        :type $factory: FactoryInterface
+        :param $factory:

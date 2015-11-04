@@ -19,8 +19,9 @@
 
 namespace Baleen\Migrations\Version\Collection\Resolver;
 
-use Baleen\Migrations\Version\Collection\IndexedVersions;
-use Baleen\Migrations\Version\Collection\SortableVersions;
+use Baleen\Migrations\Version\Collection\Sortable;
+use Baleen\Migrations\Version\VersionInterface;
+use Doctrine\Common\Collections\Collection;
 
 /**
  * Class FirstLastResolver
@@ -38,12 +39,12 @@ class FirstLastResolver extends AbstractResolver
      *
      * @param string $alias
      *
-     * @param IndexedVersions $collection
-     * @return \Baleen\Migrations\Version|null
+     * @param Collection $collection
+     * @return VersionInterface|null
      */
-    protected function doResolve($alias, IndexedVersions $collection)
+    protected function doResolve($alias, Collection $collection)
     {
-        if (!$collection instanceof SortableVersions) {
+        if (!$collection instanceof Sortable) {
             return null;
         }
         $result = null;

@@ -22,10 +22,9 @@ namespace Baleen\Migrations\Repository;
 
 use Baleen\Migrations\Exception\RepositoryException;
 use Baleen\Migrations\Migration\Factory\FactoryInterface;
-use Baleen\Migrations\Version\Collection\LinkedVersions;
+use Baleen\Migrations\Version\Collection\Linked;
 use Baleen\Migrations\Version\Comparator\ComparatorAwareInterface;
 use Baleen\Migrations\Version\Comparator\ComparatorAwareTrait;
-use Baleen\Migrations\Version\Comparator\ComparatorInterface;
 
 /**
  * Class AbstractRepository.
@@ -52,16 +51,16 @@ abstract class AbstractRepository implements RepositoryInterface, ComparatorAwar
     /**
      * @inheritdoc
      *
-     * @return LinkedVersions
+     * @return Linked
      *
      * @throws RepositoryException
      */
     public function fetchAll()
     {
         $result = $this->doFetchAll();
-        if (!is_object($result) || !$result instanceof LinkedVersions) {
+        if (!is_object($result) || !$result instanceof Linked) {
             throw new RepositoryException(
-                'Method AbstractRepository::doFetchAll() must return a LinkedVersions collection.'
+                'Method AbstractRepository::doFetchAll() must return a Linked collection.'
             );
         }
         if (!$result->isSorted()) {
@@ -73,7 +72,7 @@ abstract class AbstractRepository implements RepositoryInterface, ComparatorAwar
 
     /**
      * Must fetch all versions available to the repository, load them with their migrations, and return them as a
-     * LinkedVersions collection. It must use a factory (default or supplied by 'setMigrationFactory()') to instantiate
+     * Linked collection. It must use a factory (default or supplied by 'setMigrationFactory()') to instantiate
      * each of the migrations.
      *
      * @return mixed

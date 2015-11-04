@@ -19,10 +19,12 @@
 
 namespace BaleenTest\Migrations\Repository;
 
+use Baleen\Migrations\Exception\InvalidArgumentException;
 use Baleen\Migrations\Exception\RepositoryException;
 use Baleen\Migrations\Migration\Factory\FactoryInterface;
 use Baleen\Migrations\Migration\MigrationInterface;
 use Baleen\Migrations\Repository\DirectoryRepository;
+use Baleen\Migrations\Repository\RepositoryInterface;
 use BaleenTest\Migrations\BaseTestCase;
 use Mockery as m;
 
@@ -35,7 +37,7 @@ class DirectoryRepositoryTest extends BaseTestCase
     public function testInstanceOfRepositoryInterface()
     {
         $instance = new DirectoryRepository(__DIR__);
-        $this->assertInstanceOf('Baleen\Migrations\Repository\RepositoryInterface', $instance);
+        $this->assertInstanceOf(RepositoryInterface::class, $instance);
     }
 
     public function testProvidesDefaultFactory()
@@ -48,7 +50,7 @@ class DirectoryRepositoryTest extends BaseTestCase
 
     public function testDirectoryMustExist()
     {
-        $this->setExpectedException('Baleen\Migrations\Exception\InvalidArgumentException');
+        $this->setExpectedException(InvalidArgumentException::class);
         new DirectoryRepository('/non/existent');
     }
 
@@ -103,7 +105,7 @@ class DirectoryRepositoryTest extends BaseTestCase
     {
         $instance = m::mock(DirectoryRepository::class)->shouldAllowMockingProtectedMethods()->makePartial();
         $instance->shouldReceive('doFetchAll')->once()->andReturn($return);
-        $this->setExpectedException(RepositoryException::class, 'LinkedVersions');
+        $this->setExpectedException(RepositoryException::class, 'Linked');
         $instance->fetchAll();
     }
 

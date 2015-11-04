@@ -25,7 +25,7 @@ use Baleen\Migrations\Migration\Factory\FactoryInterface;
 use Baleen\Migrations\Migration\Factory\SimpleFactory;
 use Baleen\Migrations\Migration\MigrationInterface;
 use Baleen\Migrations\Version;
-use Baleen\Migrations\Version\Collection\LinkedVersions;
+use Baleen\Migrations\Version\Collection\Linked;
 use Baleen\Migrations\Version\Comparator\ComparatorInterface;
 use Baleen\Migrations\Version\Comparator\DefaultComparator;
 use Zend\Code\Scanner\DerivedClassScanner;
@@ -83,7 +83,7 @@ class DirectoryRepository extends AbstractRepository
      */
     public function doFetchAll()
     {
-        $versions = new LinkedVersions([], null, $this->comparator);
+        $versions = new Linked([], null, $this->comparator);
         $classes = $this->scanner->getClasses(true);
         foreach ($classes as $class) {
             /* @var DerivedClassScanner $class */

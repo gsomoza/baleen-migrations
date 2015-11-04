@@ -14,7 +14,7 @@ Baleen\\Migrations\\Timeline\\TimelineInterface
         Runs all versions up, starting from the oldest and until (and including)
         the specified version.
 
-        :type $version: string|\Baleen\Migrations\Version
+        :type $version: string|VersionInterface
         :param $version:
         :type $options: Options
         :param $options:
@@ -24,7 +24,7 @@ Baleen\\Migrations\\Timeline\\TimelineInterface
         Runs all versions down, starting from the newest and until (and including)
         the specified version.
 
-        :type $version: string|\Baleen\Migrations\Version
+        :type $version: string|VersionInterface
         :param $version:
         :type $options: Options
         :param $options:
@@ -35,24 +35,25 @@ Baleen\\Migrations\\Timeline\\TimelineInterface
         specified version are "up" and
         all versions *after* the specified version are "down".
 
+        :type $goalVersion: string|VersionInterface
         :param $goalVersion:
         :type $options: Options
         :param $options:
 
-    .. php:method:: runSingle($version, Options $options, Progress $progress)
+    .. php:method:: runSingle(VersionInterface $version, Options $options, Progress $progress)
 
         Runs a single migration in the specified direction.
 
-        :type $version: \Baleen\Migrations\Version
+        :type $version: VersionInterface
         :param $version:
         :type $options: Options
         :param $options:
         :type $progress: Progress
         :param $progress:
+        :returns: Version|false
 
-    .. php:method:: getLastMigratedVersion()
+    .. php:method:: getVersions()
 
-        Returns the latest version that has been migrated (a.k.a. the HEAD), or
-        NULL if no version has been migrated.
+        getVersions
 
-        :returns: Version|null
+        :returns: Linked

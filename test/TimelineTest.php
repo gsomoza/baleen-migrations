@@ -30,10 +30,11 @@ use Baleen\Migrations\Migration\Command\MigrationBus;
 use Baleen\Migrations\Migration\Options;
 use Baleen\Migrations\Migration\MigrationInterface;
 use Baleen\Migrations\Timeline;
+use Baleen\Migrations\Timeline\TimelineInterface;
 use Baleen\Migrations\Version as V;
 use Baleen\Migrations\Version;
-use Baleen\Migrations\Version\Collection\LinkedVersions;
-use Baleen\Migrations\Version\Collection\SortableVersions;
+use Baleen\Migrations\Version\Collection\Linked;
+use Baleen\Migrations\Version\Collection\Sortable;
 use Baleen\Migrations\Version\Comparator\DefaultComparator;
 use Mockery as m;
 use Symfony\Component\EventDispatcher\EventDispatcher;
@@ -56,12 +57,14 @@ class TimelineTest extends BaseTestCase
      */
     public function getInstance($versions = [])
     {
-        return m::mock('Baleen\Migrations\Timeline', [new LinkedVersions($versions)])->makePartial()->shouldAllowMockingProtectedMethods();
+        $linked = new Linked($versions);
+        $linked->sort();
+        return m::mock(Timeline::class, [$linked])->makePartial()->shouldAllowMockingProtectedMethods();
     }
 
     public function testConstructor()
     {
-        $this->assertInstanceOf('Baleen\Migrations\Timeline\TimelineInterface', $this->getInstance());
+        $this->assertInstanceOf(TimelineInterface::class, $this->getInstance());
     }
 
     /**
@@ -120,14 +123,11 @@ class TimelineTest extends BaseTestCase
     public function testGoTowards($versions, $goal)
     {
         $instance = $this->getInstance($versions);
-        $instance->goTowards($goal);
+        $collection = $instance->goTowards($goal);
 
+        $goal = $collection->get($goal);
         $afterGoal = false;
-        /** @var LinkedVersions $versions */
-        $versions = new LinkedVersions($this->getTimelineCollection($instance));
-        $goal = $versions->get($goal);
-        foreach ($versions as $version) {
-            /** @var V $version */
+        foreach ($collection as $version) {
             if (!$afterGoal) {
                 $this->assertTrue($version->isMigrated(), sprintf('Expected version %s to be migrated', $version->getId()));
             } else {
@@ -142,15 +142,15 @@ class TimelineTest extends BaseTestCase
     public function getAllMigratedVersionsFixture()
     {
         return $this->getFixtureFor([
-            ['id' => 'v1', 'migrated' => true],
-            ['id' => 'v2', 'migrated' => true],
-            ['id' => 'v3', 'migrated' => true],
-            ['id' => 'v4', 'migrated' => true],
-            ['id' => 'v5', 'migrated' => true],
-            ['id' => 'v6', 'migrated' => true],
-            ['id' => 'v7', 'migrated' => true],
-            ['id' => 'v8', 'migrated' => true],
-            ['id' => 'v9', 'migrated' => true],
+            ['id' => 'v01', 'migrated' => true],
+            ['id' => 'v02', 'migrated' => true],
+            ['id' => 'v03', 'migrated' => true],
+            ['id' => 'v04', 'migrated' => true],
+            ['id' => 'v05', 'migrated' => true],
+            ['id' => 'v06', 'migrated' => true],
+            ['id' => 'v07', 'migrated' => true],
+            ['id' => 'v08', 'migrated' => true],
+            ['id' => 'v09', 'migrated' => true],
             ['id' => 'v10', 'migrated' => true],
             ['id' => 'v11', 'migrated' => true],
             ['id' => 'v12', 'migrated' => true],
@@ -160,15 +160,15 @@ class TimelineTest extends BaseTestCase
     public function getNoMigratedVersionsFixture()
     {
         return $this->getFixtureFor([
-            ['id' => 'v1', 'migrated' => false],
-            ['id' => 'v2', 'migrated' => false],
-            ['id' => 'v3', 'migrated' => false],
-            ['id' => 'v4', 'migrated' => false],
-            ['id' => 'v5', 'migrated' => false],
-            ['id' => 'v6', 'migrated' => false],
-            ['id' => 'v7', 'migrated' => false],
-            ['id' => 'v8', 'migrated' => false],
-            ['id' => 'v9', 'migrated' => false],
+            ['id' => 'v01', 'migrated' => false],
+            ['id' => 'v02', 'migrated' => false],
+            ['id' => 'v03', 'migrated' => false],
+            ['id' => 'v04', 'migrated' => false],
+            ['id' => 'v05', 'migrated' => false],
+            ['id' => 'v06', 'migrated' => false],
+            ['id' => 'v07', 'migrated' => false],
+            ['id' => 'v08', 'migrated' => false],
+            ['id' => 'v09', 'migrated' => false],
             ['id' => 'v10', 'migrated' => false],
             ['id' => 'v11', 'migrated' => false],
             ['id' => 'v12', 'migrated' => false],
@@ -178,15 +178,15 @@ class TimelineTest extends BaseTestCase
     public function getMixedVersionsFixture()
     {
         return $this->getFixtureFor([
-            ['id' => 'v1', 'migrated' => true],
-            ['id' => 'v2', 'migrated' => false],
-            ['id' => 'v3', 'migrated' => true],
-            ['id' => 'v4', 'migrated' => true],
-            ['id' => 'v5', 'migrated' => false],
-            ['id' => 'v6', 'migrated' => false],
-            ['id' => 'v7', 'migrated' => false],
-            ['id' => 'v8', 'migrated' => true],
-            ['id' => 'v9', 'migrated' => false],
+            ['id' => 'v01', 'migrated' => true],
+            ['id' => 'v02', 'migrated' => false],
+            ['id' => 'v03', 'migrated' => true],
+            ['id' => 'v04', 'migrated' => true],
+            ['id' => 'v05', 'migrated' => false],
+            ['id' => 'v06', 'migrated' => false],
+            ['id' => 'v07', 'migrated' => false],
+            ['id' => 'v08', 'migrated' => true],
+            ['id' => 'v09', 'migrated' => false],
             ['id' => 'v10', 'migrated' => true],
             ['id' => 'v11', 'migrated' => false],
             ['id' => 'v12', 'migrated' => false],
@@ -196,11 +196,13 @@ class TimelineTest extends BaseTestCase
     /**
      * This fixture is meant to cover all use-cases.
      *
-     * @return V[]
+     * @param array $versions
+     * @return \Baleen\Migrations\Version[]
      */
     public function getFixtureFor(array $versions)
     {
-        $migrationMock = m::mock('Baleen\Migrations\Migration\MigrationInterface');
+        /** @var MigrationInterface $migrationMock */
+        $migrationMock = m::mock(MigrationInterface::class);
         $migrationMock->shouldReceive('up')->zeroOrMoreTimes();
         $migrationMock->shouldReceive('down')->zeroOrMoreTimes();
         $migrationMock->shouldReceive('abort')->zeroOrMoreTimes();
@@ -220,7 +222,7 @@ class TimelineTest extends BaseTestCase
      */
     public function versionsAndGoalsProvider()
     {
-        $goals = ['v1', 'v8', 'v12', 'first', 'last'];
+        $goals = ['v01', 'v08', 'v12', 'first', 'last'];
         $fixtures = [
             $this->getAllMigratedVersionsFixture(),
             $this->getNoMigratedVersionsFixture(),
@@ -231,7 +233,7 @@ class TimelineTest extends BaseTestCase
 
     /**
      * @param $timeline
-     * @return LinkedVersions
+     * @return Linked
      */
     protected function getTimelineCollection(Timeline $timeline)
     {
@@ -262,7 +264,7 @@ class TimelineTest extends BaseTestCase
 
         $this->assertSame($dispatcher, $timeline->getEventDispatcher());
 
-        /** @var LinkedVersions $collection */
+        /** @var Linked $collection */
         $collection = $this->getPropVal('versions', $timeline);
 
         $dispatcher->addListener(
@@ -292,7 +294,7 @@ class TimelineTest extends BaseTestCase
                 $self->assertInstanceOf(Progress::class, $event->getProgress());
                 $self->assertEquals($collection->count(), $event->getProgress()->getTotal());
                 $self->assertEquals(
-                    $collection->getPosition($event->getVersion()),
+                    $collection->indexOf($event->getVersion()) + 1,
                     $event->getProgress()->getCurrent()
                 );
 
@@ -311,7 +313,7 @@ class TimelineTest extends BaseTestCase
                 $self->assertInstanceOf(Progress::class, $event->getProgress());
                 $self->assertEquals($collection->count(), $event->getProgress()->getTotal());
                 $self->assertEquals(
-                    $collection->getPosition($event->getVersion()),
+                    $collection->indexOf($event->getVersion()) + 1,
                     $event->getProgress()->getCurrent()
                 );
 
@@ -343,25 +345,30 @@ class TimelineTest extends BaseTestCase
     }
 
     /**
-     * @param $options
+     * @param $id
+     * @param Options $options
+     * @param $expectation
+     *
+     * @throws TimelineException
+     *
      * @dataProvider runSingleProvider
      */
     public function testRunSingle($id, Options $options, $expectation)
     {
-        $versions = new LinkedVersions($this->getMixedVersionsFixture());
+        $versions = new Linked($this->getMixedVersionsFixture());
         $instance = new Timeline($versions);
 
-        $prop = new \ReflectionProperty($instance, 'versions');
-        $prop->setAccessible(true);
+        $collection = $instance->getVersions();
 
-        $version = $prop->getValue($instance)->get($id);
-        /** @var m\Mock $migration */
+        /** @var Version\VersionInterface $version */
+        $version = $collection->get($id);
+        /** @var MigrationInterface|m\Mock $migration */
         $migration = $version->getMigration();
 
         if ($expectation == 'exception') {
             $this->setExpectedException(TimelineException::class);
         }
-        $instance->runSingle($id, $options);
+        $instance->runSingle($version, $options);
 
         if ($expectation !== 'exception') {
             $migration->shouldHaveReceived($expectation)->once();
@@ -376,10 +383,10 @@ class TimelineTest extends BaseTestCase
     public function runSingleProvider()
     {
         return [
-            ['v1', new Options(Options::DIRECTION_UP)  , 'exception' ], // its already up
-            ['v1', new Options(Options::DIRECTION_DOWN), Options::DIRECTION_DOWN],
-            ['v2', new Options(Options::DIRECTION_UP)  , Options::DIRECTION_UP],
-            ['v2', new Options(Options::DIRECTION_DOWN), 'exception' ], // its already down
+            ['v01', new Options(Options::DIRECTION_UP)  , 'exception' ], // its already up
+            ['v01', new Options(Options::DIRECTION_DOWN), Options::DIRECTION_DOWN],
+            ['v02', new Options(Options::DIRECTION_UP)  , Options::DIRECTION_UP],
+            ['v02', new Options(Options::DIRECTION_DOWN), 'exception' ], // its already down
         ];
     }
 
@@ -388,7 +395,7 @@ class TimelineTest extends BaseTestCase
         $migrationBus = m::mock(MigrationBus::class);
         $migrationBus->shouldReceive('handle')->with(m::type(MigrateCommand::class))->once();
 
-        $collection = new LinkedVersions($this->getNoMigratedVersionsFixture());
+        $collection = new Linked($this->getNoMigratedVersionsFixture());
         $options = new Options(Options::DIRECTION_UP);
         $instance = new Timeline($collection, $migrationBus);
 
@@ -412,7 +419,7 @@ class TimelineTest extends BaseTestCase
         $instance = $this->getInstance($versions);
         $result = $instance->getVersions();
 
-        $this->assertInstanceOf(LinkedVersions::class, $result);
+        $this->assertInstanceOf(Linked::class, $result);
         $this->assertCount(count($versions), $result);
         foreach ($versions as $v) {
             $this->assertSame($v, $result->get($v->getId()));

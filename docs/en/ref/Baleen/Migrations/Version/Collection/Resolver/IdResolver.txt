@@ -1,21 +1,18 @@
----------------------------------------------------------------
-Baleen\\Migrations\\Version\\Collection\\Resolver\\HeadResolver
----------------------------------------------------------------
+-------------------------------------------------------------
+Baleen\\Migrations\\Version\\Collection\\Resolver\\IdResolver
+-------------------------------------------------------------
 
 .. php:namespace: Baleen\\Migrations\\Version\\Collection\\Resolver
 
-.. php:class:: HeadResolver
+.. php:class:: IdResolver
 
-    Class HeadResolver
+    Resolves version ID's
 
     .. php:method:: doResolve($alias, Collection $collection)
-
-        doResolve
 
         :param $alias:
         :type $collection: Collection
         :param $collection:
-        :returns: VersionInterface|null
 
     .. php:method:: __construct($cacheEnabled = true)
 

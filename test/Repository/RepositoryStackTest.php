@@ -25,8 +25,8 @@ use Baleen\Migrations\Migration\MigrationInterface;
 use Baleen\Migrations\Repository\RepositoryInterface;
 use Baleen\Migrations\Repository\RepositoryStack;
 use Baleen\Migrations\Version;
-use Baleen\Migrations\Version\Collection\LinkedVersions;
-use Baleen\Migrations\Version\Collection\SortableVersions;
+use Baleen\Migrations\Version\Collection\Linked;
+use Baleen\Migrations\Version\Collection\Sortable;
 use Baleen\Migrations\Version\Comparator\ComparatorInterface;
 use BaleenTest\Migrations\BaseTestCase;
 use Mockery as m;
@@ -68,7 +68,7 @@ class RepositoryStackTest extends BaseTestCase
      * @param $repositories
      * @param null $exception
      * @param int $count
-     * @throws \Baleen\Migrations\Exception\InvalidArgumentException
+     * @throws InvalidArgumentException
      * @dataProvider repositoriesProvider
      */
     public function testAddRepositories($repositories, $count = 0, $exception = null)
@@ -101,11 +101,13 @@ class RepositoryStackTest extends BaseTestCase
 
     /**
      * testSetRepositories
-     * @dataProvider repositoriesProvider
+     *
      * @param $repositories
      * @param int $count
      * @param null $exception
+     *
      * @throws InvalidArgumentException
+     * @dataProvider repositoriesProvider
      */
     public function testSetRepositories($repositories, $count = 0, $exception = null)
     {
@@ -163,7 +165,7 @@ class RepositoryStackTest extends BaseTestCase
         $instance->setRepositories($repositories);
 
         $result = $instance->fetchAll();
-        $this->assertInstanceOf(LinkedVersions::class, $result);
+        $this->assertInstanceOf(Linked::class, $result);
         $this->assertCount($count, $result);
         foreach ($repositories as $repo) {
             /** @var m\Mock $repo */
@@ -185,8 +187,8 @@ class RepositoryStackTest extends BaseTestCase
         $version2->setMigration($migration);
         $version3 = new Version(3);
         $version3->setMigration($migration);
-        $versions1 = new SortableVersions([$version1, $version3]);
-        $versions2 = new SortableVersions([$version1, $version2]);
+        $versions1 = new Sortable([$version1, $version3]);
+        $versions2 = new Sortable([$version1, $version2]);
 
         $repo1 = m::mock(RepositoryInterface::class);
         $repo1->shouldReceive('fetchAll')->zeroOrMoreTimes()->andReturn($versions1);

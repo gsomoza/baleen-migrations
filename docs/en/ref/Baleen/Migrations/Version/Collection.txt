@@ -1,0 +1,109 @@
+---------------------------------------
+Baleen\\Migrations\\Version\\Collection
+---------------------------------------
+
+.. php:namespace: Baleen\\Migrations\\Version
+
+.. php:class:: Collection
+
+    Class Collection.
+
+    IMPROVE: this class has 11 methods. Consider refactoring it to keep number of methods under 10.
+
+    .. php:attr:: resolver
+
+        protected ResolverInterface
+
+    .. php:method:: __construct($versions = array(), ResolverInterface $resolver = null)
+
+        :type $versions: array|\Traversable
+        :param $versions:
+        :type $resolver: ResolverInterface
+        :param $resolver:
+
+    .. php:method:: setResolver(ResolverInterface $resolver)
+
+        :type $resolver: ResolverInterface
+        :param $resolver:
+
+    .. php:method:: getResolver()
+
+        :returns: ResolverInterface
+
+    .. php:method:: get($key, $resolve = true)
+
+        Gets an element.
+
+        :type $key: mixed
+        :param $key: If an alias is given then it will be resolved to an element. Otherwise the $key will be used to fetch the element by index.
+        :type $resolve: bool
+        :param $resolve: Whether to use the resolver or not.
+        :returns: Version|null Null if not present
+
+    .. php:method:: getById($id)
+
+        Gets a version by id
+
+        :param $id:
+        :returns: VersionInterface
+
+    .. php:method:: indexOfId($id)
+
+        Returns the index of the version that has the given id. Returns null if
+        not found.
+
+        :type $id: string
+        :param $id:
+        :returns: int|null
+
+    .. php:method:: resolve($alias)
+
+        Resolves an alias in to a version
+
+        :type $alias: string
+        :param $alias:
+        :returns: Version|null
+
+    .. php:method:: has($index, $resolve = true)
+
+        Returns whether the key exists in the collection.
+
+        :param $index:
+        :type $resolve: bool
+        :param $resolve:
+        :returns: bool
+
+    .. php:method:: validate(VersionInterface $element)
+
+        Returns true if the specified version is valid (can be added) to the
+        collection. Otherwise, it MUST throw
+        an exception.
+
+        :type $element: VersionInterface
+        :param $element:
+        :returns: bool
+
+    .. php:method:: invalidateResolverCache()
+
+        invalidateResolverCache
+
+    .. php:method:: add($element)
+
+        Add a version to the collection
+
+        :type $element: mixed
+        :param $element:
+        :returns: bool
+
+    .. php:method:: remove($version)
+
+        :param $version:
+        :returns: VersionInterface|null
+
+    .. php:method:: addOrReplace(Version $version)
+
+        Adds a new version to the collection if it doesn't exist or replaces it if
+        it does.
+
+        :type $version: Version
+        :param $version:

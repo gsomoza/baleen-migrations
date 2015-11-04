@@ -28,7 +28,8 @@ use Baleen\Migrations\Event\Timeline\MigrationEvent;
 use Baleen\Migrations\Event\Timeline\Progress;
 use Baleen\Migrations\Migration\Options;
 use Baleen\Migrations\Version;
-use Baleen\Migrations\Version\Collection\LinkedVersions;
+use Baleen\Migrations\Version\Collection\Linked;
+use Baleen\Migrations\Version\VersionInterface;
 
 /**
  * Dispatches Timeline events.
@@ -38,15 +39,15 @@ class TimelineEmitter implements EmitterInterface
     use CanDispatchEventsTrait;
 
     /**
-     * @param Version $targetVersion
+     * @param VersionInterface $targetVersion
      * @param Options $options
-     * @param LinkedVersions $versions
+     * @param Linked $versions
      * @param Progress $progress
      */
     public function dispatchCollectionBefore(
-        Version $targetVersion,
+        VersionInterface $targetVersion,
         Options $options,
-        LinkedVersions $versions,
+        Linked $versions,
         Progress $progress = null
     ) {
         $event = new CollectionEvent($targetVersion, $options, $versions, $progress);
@@ -56,15 +57,15 @@ class TimelineEmitter implements EmitterInterface
     /**
      * dispatchCollectionAfter.
      *
-     * @param Version $targetVersion
+     * @param VersionInterface $targetVersion
      * @param Options $options
-     * @param LinkedVersions $versions
+     * @param Linked $versions
      * @param Progress $progress
      */
     public function dispatchCollectionAfter(
-        Version $targetVersion,
+        VersionInterface $targetVersion,
         Options $options,
-        LinkedVersions $versions,
+        Linked $versions,
         Progress $progress = null
     ) {
         $event = new CollectionEvent($targetVersion, $options, $versions, $progress);
@@ -74,11 +75,11 @@ class TimelineEmitter implements EmitterInterface
     /**
      * dispatchMigrationBefore.
      *
-     * @param Version $version
+     * @param VersionInterface $version
      * @param Options $options
      * @param Progress|null $progress
      */
-    public function dispatchMigrationBefore(Version $version, Options $options, Progress $progress = null)
+    public function dispatchMigrationBefore(VersionInterface $version, Options $options, Progress $progress = null)
     {
         $event = new MigrationEvent($version, $options, $progress);
         $this->dispatchEvent(EventInterface::MIGRATION_BEFORE, $event);
@@ -87,11 +88,11 @@ class TimelineEmitter implements EmitterInterface
     /**
      * dispatchMigrationAfter.
      *
-     * @param Version $version
+     * @param VersionInterface $version
      * @param Options $options
      * @param Progress|null $progress
      */
-    public function dispatchMigrationAfter(Version $version, Options $options, Progress $progress = null)
+    public function dispatchMigrationAfter(VersionInterface $version, Options $options, Progress $progress = null)
     {
         $event = new MigrationEvent($version, $options, $progress);
         $this->dispatchEvent(EventInterface::MIGRATION_AFTER, $event);

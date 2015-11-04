@@ -8,11 +8,15 @@ Baleen\\Migrations\\Storage\\AbstractStorage
 
     Class AbstractStorage.
 
+    .. php:attr:: comparator
+
+        protected ComparatorInterface
+
     .. php:method:: fetchAll()
 
         Reads versions from the storage file.
 
-        :returns: MigratedVersions
+        :returns: Migrated
 
     .. php:method:: update(Version $version)
 
@@ -23,11 +27,20 @@ Baleen\\Migrations\\Storage\\AbstractStorage
 
         :returns: Version[]
 
-    .. php:method:: saveCollection(MigratedVersions $versions)
+    .. php:method:: setComparator(ComparatorInterface $comparator)
+
+        :type $comparator: ComparatorInterface
+        :param $comparator:
+
+    .. php:method:: getComparator()
+
+        :returns: ComparatorInterface
+
+    .. php:method:: saveCollection(Migrated $versions)
 
         Write a collection of versions to the storage file.
 
-        :type $versions: MigratedVersions
+        :type $versions: Migrated
         :param $versions:
         :returns: bool Returns false on failure.
 

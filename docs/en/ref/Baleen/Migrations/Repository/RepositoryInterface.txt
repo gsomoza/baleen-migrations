@@ -12,11 +12,11 @@ Baleen\\Migrations\\Repository\\RepositoryInterface
 
         Must fetch all versions available to the repository, load them with their
         migrations, and return them as a
-        LinkedVersions collection. It must use a factory (default or supplied by
+        Linked collection. It must use a factory (default or supplied by
         'setMigrationFactory()') to instantiate
         each of the migrations.
 
-        :returns: LinkedVersions
+        :returns: Linked
 
     .. php:method:: setMigrationFactory(FactoryInterface $factory)
 

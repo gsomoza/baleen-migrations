@@ -21,6 +21,7 @@ namespace Baleen\Migrations\Version\Collection\Resolver;
 
 /**
  * Class DefaultResolverStackFactory
+ *
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
 class DefaultResolverStackFactory
@@ -29,12 +30,13 @@ class DefaultResolverStackFactory
      * create
      * @return ResolverStack
      */
-    public function create()
+    public static function create()
     {
-        $stack = new ResolverStack();
-        $stack->addResolver(new FirstLastResolver(), 100);
-        $stack->addResolver(new HeadResolver(), 200);
-        $stack->addResolver(new OffsetResolver(), 1000);
-        return $stack;
+        return new ResolverStack([
+            new OffsetResolver(false),
+            new HeadResolver(false),
+            new FirstLastResolver(false),
+            new IdResolver(false),
+        ]);
     }
 }
