@@ -55,12 +55,18 @@ class TimelineTest extends BaseTestCase
     {
         $linked = new Linked($versions);
         $linked->sort();
-        return m::mock(Timeline::class, [$linked])->makePartial()->shouldAllowMockingProtectedMethods();
+        $timeline = new Timeline($linked);
+        return m::mock($timeline)->shouldAllowMockingProtectedMethods();
     }
 
+    /**
+     * testConstructor
+     */
     public function testConstructor()
     {
-        $this->assertInstanceOf(TimelineInterface::class, $this->getInstance());
+        /** @var Linked|m\Mock $collection */
+        $collection = m::mock(Linked::class)->makePartial();
+        $this->assertInstanceOf(TimelineInterface::class, new Timeline($collection));
     }
 
     /**
@@ -74,7 +80,7 @@ class TimelineTest extends BaseTestCase
         $instance = $this->getInstance($versions);
         $instance->upTowards($goal);
 
-        $collection = $this->getTimelineCollection($instance);
+        $collection = $instance->getVersions();
         $goalVersion = $collection->get($goal);
 
         foreach ($collection as $version) {
@@ -98,7 +104,7 @@ class TimelineTest extends BaseTestCase
         $instance = $this->getInstance($versions);
         $instance->downTowards($goal);
 
-        $collection = $this->getTimelineCollection($instance)->getReverse();
+        $collection = $instance->getVersions()->getReverse();
         $goal = $collection->get($goal);
 
         foreach ($collection as $version) {
@@ -228,15 +234,6 @@ class TimelineTest extends BaseTestCase
     }
 
     /**
-     * @param $timeline
-     * @return Linked
-     */
-    protected function getTimelineCollection(Timeline $timeline)
-    {
-        return $this->getPropVal('versions', $timeline);
-    }
-
-    /**
      * Integration tests to see if Timeline can emmit events
      */
     public function testEmitsMigrationAndCollectionEvents()
@@ -260,8 +257,7 @@ class TimelineTest extends BaseTestCase
 
         $this->assertSame($dispatcher, $timeline->getEventDispatcher());
 
-        /** @var Linked $collection */
-        $collection = $this->getPropVal('versions', $timeline);
+        $collection = $timeline->getVersions();
 
         $dispatcher->addListener(
             EventInterface::COLLECTION_BEFORE,

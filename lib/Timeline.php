@@ -33,7 +33,7 @@ use Baleen\Migrations\Version\VersionInterface;
  *
  * @method Timeline\TimelineEmitter getEmitter()
  */
-class Timeline extends AbstractTimeline
+final class Timeline extends AbstractTimeline
 {
     /**
      * @param VersionInterface|string $goalVersion
