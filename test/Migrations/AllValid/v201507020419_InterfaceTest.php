@@ -20,7 +20,6 @@
 namespace BaleenTest\Migrations\Migrations\AllValid;
 
 use Baleen\Migrations\Migration\MigrationInterface;
-use Baleen\Migrations\Migration\Options;
 
 /**
  * @author Gabriel Somoza <gabriel@strategery.io>

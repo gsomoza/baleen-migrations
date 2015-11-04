@@ -23,22 +23,18 @@ use Baleen\Migrations\Event\EventInterface;
 use Baleen\Migrations\Event\Timeline\CollectionEvent;
 use Baleen\Migrations\Event\Timeline\MigrationEvent;
 use Baleen\Migrations\Event\Timeline\Progress;
-use Baleen\Migrations\Exception\MigrationMissingException;
 use Baleen\Migrations\Exception\TimelineException;
 use Baleen\Migrations\Migration\Command\MigrateCommand;
 use Baleen\Migrations\Migration\Command\MigrationBus;
-use Baleen\Migrations\Migration\Options;
 use Baleen\Migrations\Migration\MigrationInterface;
+use Baleen\Migrations\Migration\Options;
 use Baleen\Migrations\Timeline;
 use Baleen\Migrations\Timeline\TimelineInterface;
-use Baleen\Migrations\Version as V;
 use Baleen\Migrations\Version;
+use Baleen\Migrations\Version as V;
 use Baleen\Migrations\Version\Collection\Linked;
-use Baleen\Migrations\Version\Collection\Sortable;
-use Baleen\Migrations\Version\Comparator\DefaultComparator;
 use Mockery as m;
 use Symfony\Component\EventDispatcher\EventDispatcher;
-use Zend\Stdlib\Hydrator\ObjectProperty;
 
 /**
  * @author Gabriel Somoza <gabriel@strategery.io>

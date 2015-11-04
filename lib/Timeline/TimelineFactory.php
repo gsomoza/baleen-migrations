@@ -27,7 +27,6 @@ use Baleen\Migrations\Version\Collection\Migrated;
 use Baleen\Migrations\Version\Collection\Resolver\ResolverInterface;
 use Baleen\Migrations\Version\Collection\Sortable;
 use Baleen\Migrations\Version\Comparator\ComparatorInterface;
-use Baleen\Migrations\Version\VersionInterface;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
 /**

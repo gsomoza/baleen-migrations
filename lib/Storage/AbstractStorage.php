@@ -44,7 +44,6 @@ abstract class AbstractStorage implements StorageInterface, ComparatorAwareInter
      */
     public function fetchAll()
     {
-        $collection = new Migrated([], null, $this->getComparator());
         $versions = $this->doFetchAll();
         if (!is_object($versions) || !$versions instanceof Migrated) {
             foreach ($versions as $version) {
@@ -54,11 +53,12 @@ abstract class AbstractStorage implements StorageInterface, ComparatorAwareInter
                         Version::class
                     ));
                 }
-                $version->setMigrated(true); // otherwise it shouldn't be on storage
-                $collection->add($version);
+                $version->setMigrated(true); // otherwise it wouldn't be stored in the first place
             }
+            $collection = new Migrated($versions, null, $this->getComparator());
+        } else {
+            $collection = $versions;
         }
-
         return $collection;
     }
 
@@ -77,7 +77,7 @@ abstract class AbstractStorage implements StorageInterface, ComparatorAwareInter
     }
 
     /**
-     * @return Version[]
+     * @return Version[]|Migrated
      */
     abstract protected function doFetchAll();
 }

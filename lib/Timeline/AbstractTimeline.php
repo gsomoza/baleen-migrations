@@ -63,7 +63,7 @@ abstract class AbstractTimeline implements TimelineInterface
         }
         $this->migrationBus = $migrationBus;
 
-        $this->versions = clone $versions;
+        $this->versions = $versions;
     }
 
     /**

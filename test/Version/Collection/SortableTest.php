@@ -26,8 +26,8 @@ use Baleen\Migrations\Version;
 use Baleen\Migrations\Version\Collection;
 use Baleen\Migrations\Version\Collection\Sortable;
 use BaleenTest\Migrations\Version\CollectionTest;
-use Zend\Stdlib\ArrayUtils;
 use Mockery as m;
+use Zend\Stdlib\ArrayUtils;
 
 /**
  * @author Gabriel Somoza <gabriel@strategery.io>

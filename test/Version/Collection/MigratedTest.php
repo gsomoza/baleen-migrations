@@ -23,9 +23,7 @@ use Baleen\Migrations\Exception\CollectionException;
 use Baleen\Migrations\Migration\MigrationInterface;
 use Baleen\Migrations\Version as V;
 use Baleen\Migrations\Version;
-use Baleen\Migrations\Version\Collection\Migrated;
 use Baleen\Migrations\Version\Collection\Sortable;
-use BaleenTest\Migrations\Version\Collection\SortableTest;
 use Mockery as m;
 use Zend\Stdlib\ArrayUtils;
 

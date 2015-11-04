@@ -27,7 +27,6 @@ use Baleen\Migrations\Repository\RepositoryStack;
 use Baleen\Migrations\Version;
 use Baleen\Migrations\Version\Collection\Linked;
 use Baleen\Migrations\Version\Collection\Sortable;
-use Baleen\Migrations\Version\Comparator\ComparatorInterface;
 use BaleenTest\Migrations\BaseTestCase;
 use Mockery as m;
 

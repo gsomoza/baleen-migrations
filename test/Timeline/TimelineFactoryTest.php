@@ -21,7 +21,6 @@ use Baleen\Migrations\Exception\MigrationMissingException;
 use Baleen\Migrations\Timeline\TimelineFactory;
 use Baleen\Migrations\Version as V;
 use Baleen\Migrations\Version;
-use Baleen\Migrations\Version\Collection\Migrated;
 use BaleenTest\Migrations\BaseTestCase;
 
 /**

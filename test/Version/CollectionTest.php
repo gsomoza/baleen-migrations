@@ -21,13 +21,12 @@ namespace BaleenTest\Migrations\Version;
 
 use Baleen\Migrations\Exception\CollectionException;
 use Baleen\Migrations\Exception\InvalidArgumentException;
-use Baleen\Migrations\Version;
 use Baleen\Migrations\Version as V;
+use Baleen\Migrations\Version;
 use Baleen\Migrations\Version\Collection;
 use Baleen\Migrations\Version\Collection\Resolver\ResolverInterface;
 use Baleen\Migrations\Version\Collection\Sortable;
 use BaleenTest\Migrations\BaseTestCase;
-use EBT\Collection\ResourceNotFoundException;
 use Mockery as m;
 use Zend\Stdlib\ArrayUtils;
 
