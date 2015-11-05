@@ -2,7 +2,7 @@
 <ruleset name="PHP_CodeSniffer">
     <description>PHP_CodeSniffer coding standard for this project.</description>
 
-    <file>./lib</file>
+    <file>./src</file>
 
     <arg value="sp"/>
 

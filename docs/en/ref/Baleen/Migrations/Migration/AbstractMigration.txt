@@ -1,13 +1,13 @@
-------------------------------------------------------
+------------------------------------------------
 Baleen\\Migrations\\Migration\\AbstractMigration
-------------------------------------------------------
+------------------------------------------------
 
 .. php:namespace: Baleen\\Migrations\\Migration
 
 .. php:class:: AbstractMigration
 
-    An extremely simple migration base class. To be used for examples and tests or
-    extended by more complex classes.
+    A simple migration base class. To be used for examples and tests or extended by more
+    complex classes.
 
     .. php:method:: getOptions()
 
