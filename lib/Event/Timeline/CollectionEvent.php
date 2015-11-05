@@ -61,8 +61,12 @@ class CollectionEvent extends Event implements EventInterface
      * @param Linked $versions
      * @param Progress $progress
      */
-    public function __construct(VersionInterface $target, OptionsInterface $options, Linked $versions, Progress $progress = null)
-    {
+    public function __construct(
+        VersionInterface $target,
+        OptionsInterface $options,
+        Linked $versions,
+        Progress $progress = null
+    ) {
         $this->options = $options;
         $this->target = $target;
         $this->collection = $versions;

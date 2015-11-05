@@ -1,17 +1,13 @@
-----------------------------------------------
-Baleen\\Migrations\\Migration\\SimpleMigration
-----------------------------------------------
+------------------------------------------------------
+Baleen\\Migrations\\Migration\\AbstractMigration
+------------------------------------------------------
 
 .. php:namespace: Baleen\\Migrations\\Migration
 
-.. php:class:: SimpleMigration
+.. php:class:: AbstractMigration
 
     An extremely simple migration base class. To be used for examples and tests or
     extended by more complex classes.
-
-    .. php:attr:: options
-
-        protected OptionsInterface
 
     .. php:method:: getOptions()
 

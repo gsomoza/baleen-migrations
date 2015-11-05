@@ -24,6 +24,8 @@ use Baleen\Migrations\Exception\InvalidArgumentException;
 /**
  * @{inheritdoc}
  *
+ * @SuppressWarnings(PHPMD.TooManyMethods)
+ *
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
 final class Options implements OptionsInterface
@@ -90,7 +92,8 @@ final class Options implements OptionsInterface
      * @param $direction
      * @throws InvalidArgumentException
      */
-    private function setDirection($direction) {
+    private function setDirection($direction)
+    {
         if (!in_array($direction, $this->allowedDirections)) {
             throw new InvalidArgumentException(
                 sprintf('Unknown direction "%s". Valid options are "up" or "down".', $direction)
@@ -149,7 +152,8 @@ final class Options implements OptionsInterface
      * @param $forced
      * @return static
      */
-    public function withForced($forced) {
+    public function withForced($forced)
+    {
         return new static($this->direction, $forced, $this->dryRun, $this->exceptionOnSkip, $this->custom);
     }
 

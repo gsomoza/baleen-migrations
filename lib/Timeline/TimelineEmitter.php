@@ -81,8 +81,11 @@ final class TimelineEmitter implements EmitterInterface
      * @param Progress|null $progress
      * @return \Symfony\Component\EventDispatcher\Event|void
      */
-    public function dispatchMigrationBefore(VersionInterface $version, OptionsInterface $options, Progress $progress = null)
-    {
+    public function dispatchMigrationBefore(
+        VersionInterface $version,
+        OptionsInterface $options,
+        Progress $progress = null
+    ) {
         $event = new MigrationEvent($version, $options, $progress);
         return $this->dispatchEvent(EventInterface::MIGRATION_BEFORE, $event);
     }
@@ -95,8 +98,11 @@ final class TimelineEmitter implements EmitterInterface
      * @param Progress|null $progress
      * @return \Symfony\Component\EventDispatcher\Event|void
      */
-    public function dispatchMigrationAfter(VersionInterface $version, OptionsInterface $options, Progress $progress = null)
-    {
+    public function dispatchMigrationAfter(
+        VersionInterface $version,
+        OptionsInterface $options,
+        Progress $progress = null
+    ) {
         $event = new MigrationEvent($version, $options, $progress);
         return $this->dispatchEvent(EventInterface::MIGRATION_AFTER, $event);
     }

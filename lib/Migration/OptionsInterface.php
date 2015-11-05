@@ -20,7 +20,6 @@ namespace Baleen\Migrations\Migration;
 
 use Baleen\Migrations\Exception\InvalidArgumentException;
 
-
 /**
  * Options value object. Used to configure the migration jobs and provide information about them to the migration.
  *
