@@ -1,5 +1,4 @@
 <?php
-
 /*
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -27,7 +26,7 @@ use Baleen\Migrations\Migration\Command\Middleware\AbstractMiddleware;
  *
  * @author Gabriel Somoza <gabriel@stragery.io>
  */
-class MigrateHandler extends AbstractMiddleware
+final class MigrateHandler extends AbstractMiddleware
 {
     /**
      * {@inheritDoc}

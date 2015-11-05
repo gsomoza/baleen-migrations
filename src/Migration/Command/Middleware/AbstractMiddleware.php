@@ -40,11 +40,11 @@ abstract class AbstractMiddleware implements Middleware
      *
      * @throws InvalidArgumentException
      */
-    public function execute($command, callable $next)
+    final public function execute($command, callable $next)
     {
         if (!is_object($command) || !$command instanceof MigrateCommand) {
             throw new InvalidArgumentException(
-                'Expected $command to be an instance of MigrateCommand.'
+                'Expected command to be an instance of MigrateCommand.'
             );
         }
 

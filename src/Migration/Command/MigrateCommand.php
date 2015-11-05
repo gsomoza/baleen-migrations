@@ -28,7 +28,7 @@ use Baleen\Migrations\Migration\OptionsInterface;
  *
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
-class MigrateCommand
+final class MigrateCommand
 {
     /**
      * @var MigrationInterface

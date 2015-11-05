@@ -28,7 +28,7 @@ use Baleen\Migrations\Migration\Command\Middleware\TransactionMiddleware;
  *
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
-class MigrationBusFactory
+final class MigrationBusFactory
 {
     public static function create()
     {

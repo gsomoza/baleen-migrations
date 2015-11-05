@@ -1,5 +1,4 @@
 <?php
-
 /*
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -29,17 +28,17 @@ use Baleen\Migrations\Migration\Command\MigrateCommand;
  *
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
-class SetOptionsMiddleware extends AbstractMiddleware
+final class SetOptionsMiddleware extends AbstractMiddleware
 {
     /**
      * {@inheritDoc}
      */
-    public function doExecute(MigrateCommand $command, callable $next)
+    protected function doExecute(MigrateCommand $command, callable $next)
     {
         $migration = $command->getMigration();
         if ($migration instanceof OptionsAwareInterface) {
             $migration->setOptions($command->getOptions());
         }
-        $next($command);
+        return $next($command);
     }
 }
