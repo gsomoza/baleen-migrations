@@ -42,22 +42,18 @@ abstract class AbstractStorage implements StorageInterface, ComparatorAwareInter
      *
      * @throws StorageException
      */
-    public function fetchAll()
+    final public function fetchAll()
     {
-        $versions = $this->doFetchAll();
-        if (!is_object($versions) || !$versions instanceof Migrated) {
-            foreach ($versions as $version) {
-                if (!is_object($version) || !$version instanceof VersionInterface) {
-                    throw new StorageException(sprintf(
-                        'Expected version to be an instance of %s.',
-                        VersionInterface::class
-                    ));
-                }
-                $version->setMigrated(true); // otherwise it wouldn't be stored in the first place
-            }
-            $collection = new Migrated($versions, null, $this->getComparator());
-        } else {
-            $collection = $versions;
+        $collection = $this->doFetchAll();
+        if (!is_object($collection) || !$collection instanceof Migrated) {
+            throw new StorageException(sprintf(
+                'Method AbstractStorage::doFetchAll() must return a "%s" collection. Got "%s" instead."',
+                Migrated::class,
+                is_object($collection) ? get_class($collection) : gettype($collection)
+            ));
+        }
+        if (!$collection->isSorted()) {
+            $collection->sort($this->getComparator());
         }
         return $collection;
     }
@@ -65,7 +61,7 @@ abstract class AbstractStorage implements StorageInterface, ComparatorAwareInter
     /**
      * @inheritdoc
      */
-    public function update(VersionInterface $version)
+    final public function update(VersionInterface $version)
     {
         $result = null;
         if ($version->isMigrated()) {

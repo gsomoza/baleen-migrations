@@ -32,5 +32,8 @@
 		"phpmd/phpmd": "^2.2",
 		"sebastian/phpcpd": "^2.0",
         "sphpdox/sphpdox": "dev-master"
-    }
+    },
+	"suggest": {
+		"baleen/storage-flysystem": "For storing migrations using Flysystem."
+	}
 }

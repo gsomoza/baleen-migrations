@@ -57,17 +57,19 @@ abstract class AbstractRepository implements RepositoryInterface, ComparatorAwar
      */
     public function fetchAll()
     {
-        $result = $this->doFetchAll();
-        if (!is_object($result) || !$result instanceof Linked) {
-            throw new RepositoryException(
-                'Method AbstractRepository::doFetchAll() must return a Linked collection.'
-            );
+        $collection = $this->doFetchAll();
+        if (!is_object($collection) || !$collection instanceof Linked) {
+            throw new RepositoryException(sprintf(
+                'Method AbstractRepository::doFetchAll() must return a "%s" collection. Got "%s" instead.',
+                Linked::class,
+                is_object($collection) ? get_class($collection) : gettype($collection)
+            ));
         }
-        if (!$result->isSorted()) {
-            $result->sort();
+        if (!$collection->isSorted()) {
+            $collection->sort($this->getComparator());
         }
 
-        return $result;
+        return $collection;
     }
 
     /**
