@@ -24,7 +24,7 @@ use Baleen\Migrations\Exception\InvalidArgumentException;
 /**
  * @{inheritdoc}
  *
- * @SuppressWarnings(PHPMD.TooManyMethods)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  *
  * @author Gabriel Somoza <gabriel@strategery.io>
  */

@@ -47,8 +47,7 @@ final class TransactionMiddleware extends AbstractMiddleware
             $migration->finish();
         } catch (\Exception $e) {
             $migration->abort($e);
-        } finally {
-            return $result;
         }
+        return $result;
     }
 }
