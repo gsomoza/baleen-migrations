@@ -28,11 +28,13 @@ use Baleen\Migrations\Migration\Command\MigrateCommand;
 use Baleen\Migrations\Migration\Command\MigrationBus;
 use Baleen\Migrations\Migration\MigrationInterface;
 use Baleen\Migrations\Migration\Options;
+use Baleen\Migrations\Migration\OptionsInterface;
 use Baleen\Migrations\Timeline;
 use Baleen\Migrations\Timeline\TimelineInterface;
 use Baleen\Migrations\Version as V;
 use Baleen\Migrations\Version;
 use Baleen\Migrations\Version\Collection\Linked;
+use Baleen\Migrations\Version\VersionInterface;
 use Mockery as m;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
@@ -93,6 +95,19 @@ class TimelineTest extends BaseTestCase
     }
 
     /**
+     * testDownTowardsWithOptions
+     */
+    public function testUpTowardsWithOptionsForcesDownDirection()
+    {
+        $v = new V('v1', true, m::mock(MigrationInterface::class));
+        $instance = $this->getInstance([$v]);
+        $options = m::mock(OptionsInterface::class);
+        $options->shouldReceive('withDirection')->once()->with(OptionsInterface::DIRECTION_UP)->andReturnSelf();
+        $options->shouldReceive(['isForced' => false, 'isDirectionUp' => true, 'isExceptionOnSkip' => false]);
+        $instance->upTowards('v1', $options);
+    }
+
+    /**
      * @param $versions
      * @param $goal
      *
@@ -114,6 +129,19 @@ class TimelineTest extends BaseTestCase
                 break;
             }
         }
+    }
+
+    /**
+     * testDownTowardsWithOptions
+     */
+    public function testDownTowardsWithOptionsForcesDownDirection()
+    {
+        $v = new V('v1', false, m::mock(MigrationInterface::class));
+        $instance = $this->getInstance([$v]);
+        $options = m::mock(OptionsInterface::class);
+        $options->shouldReceive('withDirection')->once()->with(OptionsInterface::DIRECTION_DOWN)->andReturnSelf();
+        $options->shouldReceive(['isForced' => false, 'isDirectionUp' => false, 'isExceptionOnSkip' => false]);
+        $instance->downTowards('v1', $options);
     }
 
     /**
@@ -273,7 +301,7 @@ class TimelineTest extends BaseTestCase
                 $self->assertEquals($collection->count(), $event->getProgress()->getTotal());
                 $self->assertEquals(0, $event->getProgress()->getCurrent());
 
-                $self->assertSame($options, $event->getOptions());
+                $self->assertTrue($options->equals($event->getOptions()));
                 $self->assertSame($collection, $event->getCollection());
                 // the following also asserts that the version is NOT migrated
                 $self->assertSame($version, $event->getTarget());
@@ -293,7 +321,7 @@ class TimelineTest extends BaseTestCase
                     $event->getProgress()->getCurrent()
                 );
 
-                $self->assertSame($options, $event->getOptions());
+                $self->assertTrue($options->equals($event->getOptions()));
                 // the following also asserts that the version is NOT migrated
                 $self->assertSame($version, $event->getVersion());
             }
@@ -312,7 +340,7 @@ class TimelineTest extends BaseTestCase
                     $event->getProgress()->getCurrent()
                 );
 
-                $self->assertSame($options, $event->getOptions());
+                $self->assertTrue($options->equals($event->getOptions()));
                 $self->assertTrue($event->getVersion()->isMigrated());
             }
         );
@@ -327,7 +355,7 @@ class TimelineTest extends BaseTestCase
                 $self->assertEquals($collection->count(), $event->getProgress()->getTotal());
                 $self->assertEquals($collection->count(), $event->getProgress()->getCurrent());
 
-                $self->assertSame($options, $event->getOptions());
+                $self->assertTrue($options->equals($event->getOptions()));
                 $self->assertTrue($event->getTarget()->isMigrated());
             }
         );
@@ -341,14 +369,14 @@ class TimelineTest extends BaseTestCase
 
     /**
      * @param $id
-     * @param Options $options
+     * @param OptionsInterface $options
      * @param $expectation
      *
      * @throws TimelineException
      *
      * @dataProvider runSingleProvider
      */
-    public function testRunSingle($id, Options $options, $expectation)
+    public function testRunSingle($id, OptionsInterface $options, $expectation)
     {
         $versions = new Linked($this->getMixedVersionsFixture());
         $instance = new Timeline($versions);
@@ -369,6 +397,19 @@ class TimelineTest extends BaseTestCase
             $migration->shouldHaveReceived($expectation)->once();
             $this->assertTrue($version->isMigrated() == $options->isDirectionUp());
         }
+    }
+
+    /**
+     * testRunSingleVersionWithoutMigration
+     */
+    public function testRunSingleVersionWithoutMigration()
+    {
+        $instance = new Timeline(new Linked());
+        $version = new V('v1');
+        /** @var OptionsInterface|m\Mock $options */
+        $options = m::mock(OptionsInterface::class);
+        $this->setExpectedException(TimelineException::class);
+        $instance->runSingle($version, $options);
     }
 
     /**

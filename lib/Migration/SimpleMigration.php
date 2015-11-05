@@ -28,11 +28,11 @@ use Baleen\Migrations\Migration\Capabilities\OptionsAwareInterface;
  */
 abstract class SimpleMigration implements MigrationInterface, OptionsAwareInterface
 {
-    /** @var Options */
+    /** @var OptionsInterface */
     protected $options;
 
     /**
-     * @return Options
+     * @return OptionsInterface
      */
     public function getOptions()
     {
@@ -40,9 +40,9 @@ abstract class SimpleMigration implements MigrationInterface, OptionsAwareInterf
     }
 
     /**
-     * @param Options $options
+     * @param OptionsInterface $options
      */
-    public function setOptions(Options $options)
+    public function setOptions(OptionsInterface $options)
     {
         $this->options = $options;
     }

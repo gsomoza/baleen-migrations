@@ -18,14 +18,14 @@ Baleen\\Migrations\\Storage\\AbstractStorage
 
         :returns: Migrated
 
-    .. php:method:: update(Version $version)
+    .. php:method:: update(VersionInterface $version)
 
-        :type $version: Version
+        :type $version: VersionInterface
         :param $version:
 
     .. php:method:: doFetchAll()
 
-        :returns: Version[]
+        :returns: VersionInterface[]|Migrated
 
     .. php:method:: setComparator(ComparatorInterface $comparator)
 
@@ -44,18 +44,18 @@ Baleen\\Migrations\\Storage\\AbstractStorage
         :param $versions:
         :returns: bool Returns false on failure.
 
-    .. php:method:: save(Version $version)
+    .. php:method:: save(VersionInterface $version)
 
         Adds a version into storage
 
-        :type $version: Version
+        :type $version: VersionInterface
         :param $version:
         :returns: bool
 
-    .. php:method:: delete(Version $version)
+    .. php:method:: delete(VersionInterface $version)
 
         Removes a version from storage
 
-        :type $version: Version
+        :type $version: VersionInterface
         :param $version:
         :returns: bool

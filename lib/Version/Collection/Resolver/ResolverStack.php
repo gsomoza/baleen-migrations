@@ -47,7 +47,8 @@ class ResolverStack extends AbstractResolver
             if (!is_object($resolver) || !$resolver instanceof ResolverInterface) {
                 throw new InvalidArgumentException(sprintf(
                     'Invalid resolver of type "%s". Expected instance of "%s".',
-                    is_object($resolver) ? get_class($resolver) : gettype($resolver)
+                    is_object($resolver) ? get_class($resolver) : gettype($resolver),
+                    ResolverInterface::class
                 ));
             }
         }

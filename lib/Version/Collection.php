@@ -206,6 +206,7 @@ class Collection extends ArrayCollection
         if (!$element instanceof VersionInterface) {
             throw new InvalidArgumentException(sprintf(
                 'Invalid type "%s". Can only add instances of "%s" to this collection.',
+                VersionInterface::class,
                 is_object($element) ? get_class($element) : gettype($element)
             ));
         }

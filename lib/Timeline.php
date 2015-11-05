@@ -24,6 +24,7 @@ use Baleen\Migrations\Event\Timeline\Progress;
 use Baleen\Migrations\Exception\MigrationMissingException;
 use Baleen\Migrations\Exception\TimelineException;
 use Baleen\Migrations\Migration\Options;
+use Baleen\Migrations\Migration\OptionsInterface;
 use Baleen\Migrations\Timeline\AbstractTimeline;
 use Baleen\Migrations\Version\Collection\Linked;
 use Baleen\Migrations\Version\Collection\Sortable;
@@ -38,19 +39,20 @@ final class Timeline extends AbstractTimeline
 {
     /**
      * @param VersionInterface|string $goalVersion
-     * @param Options $options
+     * @param OptionsInterface $options
      *
      * @return Sortable A collection of modified versions
      *
      * @throws MigrationMissingException
      */
-    public function upTowards($goalVersion, Options $options = null)
+    public function upTowards($goalVersion, OptionsInterface $options = null)
     {
         if (null === $options) {
-            $options = new Options(Options::DIRECTION_UP);
-            $options->setExceptionOnSkip(false);
+            $options = new Options(OptionsInterface::DIRECTION_UP);
+            $options = $options->withExceptionOnSkip(false);
+        } else {
+            $options = $options->withDirection(OptionsInterface::DIRECTION_UP); // make sure its right
         }
-        $options->setDirection(Options::DIRECTION_UP); // make sure its right
 
         if (!is_object($goalVersion)) {
             $goalVersion = $this->getVersions()->get($goalVersion);
@@ -61,19 +63,20 @@ final class Timeline extends AbstractTimeline
 
     /**
      * @param VersionInterface|string $goalVersion
-     * @param Options $options
+     * @param OptionsInterface $options
      *
      * @return Sortable A collection of modified versions
      *
      * @throws \Exception
      */
-    public function downTowards($goalVersion, Options $options = null)
+    public function downTowards($goalVersion, OptionsInterface $options = null)
     {
         if (null === $options) {
-            $options = new Options(Options::DIRECTION_DOWN);
-            $options->setExceptionOnSkip(false);
+            $options = new Options(OptionsInterface::DIRECTION_DOWN);
+            $options = $options->withExceptionOnSkip(false);
+        } else {
+            $options = $options->withDirection(OptionsInterface::DIRECTION_DOWN); // make sure its right
         }
-        $options->setDirection(Options::DIRECTION_DOWN); // make sure its right
 
         if (!is_object($goalVersion)) {
             $goalVersion = $this->getVersions()->get($goalVersion);
@@ -87,17 +90,13 @@ final class Timeline extends AbstractTimeline
      * all versions *after* the specified version are "down".
      *
      * @param $goalVersion
-     * @param Options $options
+     * @param OptionsInterface $options
      *
      * @return Linked A collection of versions that were *changed* during the process. Note that this collection may
      *                significantly defer from what would be obtained by $this->getVersions()
      */
-    public function goTowards($goalVersion, Options $options = null)
+    public function goTowards($goalVersion, OptionsInterface $options = null)
     {
-        if (null === $options) {
-            $options = new Options(Options::DIRECTION_UP);
-            $options->setExceptionOnSkip(false);
-        }
         if (!is_object($goalVersion)) {
             $goalVersion = $this->getVersions()->get($goalVersion);
         }
@@ -123,7 +122,7 @@ final class Timeline extends AbstractTimeline
 
     /**
      * @param VersionInterface $version
-     * @param Options $options
+     * @param OptionsInterface $options
      * @param Progress $progress Provides contextual information about current progress if this
      *                           migration is one of many that are being run in batch.
      *
@@ -131,12 +130,8 @@ final class Timeline extends AbstractTimeline
      *
      * @throws TimelineException
      */
-    public function runSingle(VersionInterface $version, Options $options, Progress $progress = null)
+    public function runSingle(VersionInterface $version, OptionsInterface $options, Progress $progress = null)
     {
-        if (!is_object($version)) {
-            $version = $this->getVersions()->get($version);
-        }
-
         $migration = $version->getMigration();
         if (!$migration) {
             throw new TimelineException('Invalid version specified: version must be linked to a migration object.');

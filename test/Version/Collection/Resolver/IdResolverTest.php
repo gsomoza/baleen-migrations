@@ -1,5 +1,4 @@
 <?php
-
 /*
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -15,19 +14,33 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the MIT license. For more information, see
- * <https://github.com/baleen/migrations>.
+ * <http://www.doctrine-project.org>.
  */
 
-namespace Baleen\Migrations\Migration\Capabilities;
+namespace BaleenTest\Migrations\Version\Collection\Resolver;
 
-use Baleen\Migrations\Migration\OptionsInterface;
+use Baleen\Migrations\Version\Collection\Resolver\IdResolver;
+use BaleenTest\Migrations\BaseTestCase;
+use Doctrine\Common\Collections\Collection;
+use Mockery as m;
 
 /**
- * Interface OptionsAwareInterface.
- *
+ * Class IdResolverTest
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
-interface OptionsAwareInterface
+class IdResolverTest extends BaseTestCase
 {
-    public function setOptions(OptionsInterface $options);
+    /**
+     * testDoResolveReturnsNullIfNotVersionCollection
+     * @throws \Baleen\Migrations\Exception\ResolverException
+     */
+    public function testDoResolveReturnsNullIfNotVersionCollection()
+    {
+        /** @var Collection|m\Mock $collection */
+        $collection = m::mock(Collection::class);
+        $collection->shouldNotReceive('getById');
+        $resolver = new IdResolver();
+        $result = $resolver->resolve('123', $collection);
+        $this->assertNull($result);
+    }
 }

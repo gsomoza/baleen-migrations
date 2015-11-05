@@ -1,5 +1,4 @@
 <?php
-
 /*
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -15,19 +14,31 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the MIT license. For more information, see
- * <https://github.com/baleen/migrations>.
+ * <http://www.doctrine-project.org>.
  */
 
-namespace Baleen\Migrations\Migration\Capabilities;
+namespace BaleenTest\Migrations\Version\Comparator;
 
-use Baleen\Migrations\Migration\OptionsInterface;
+use Baleen\Migrations\Version\Comparator\ComparatorAwareTrait;
+use Baleen\Migrations\Version\Comparator\ComparatorInterface;
+use BaleenTest\Migrations\BaseTestCase;
+use Mockery as m;
 
 /**
- * Interface OptionsAwareInterface.
- *
+ * Class ComparatorAwareTraitTest
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
-interface OptionsAwareInterface
+class ComparatorAwareTraitTest extends BaseTestCase
 {
-    public function setOptions(OptionsInterface $options);
+    /**
+     * testGetSetComparator
+     */
+    public function testGetSetComparator()
+    {
+        $comparator = m::mock(ComparatorInterface::class);
+        $instance = $this->getObjectForTrait(ComparatorAwareTrait::class);
+        $instance->setComparator($comparator);
+        $result = $instance->getComparator();
+        $this->assertSame($comparator, $result);
+    }
 }

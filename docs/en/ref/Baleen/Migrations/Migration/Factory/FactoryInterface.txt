@@ -8,9 +8,12 @@ Baleen\\Migrations\\Migration\\Factory\\FactoryInterface
 
     Interface for a Migrations Factory.
 
-    .. php:method:: create($class)
+    .. php:method:: create($class, $args = [])
 
         Creates a Migration based on a class name.
 
-        :param $class:
+        :type $class: string
+        :param $class: The FQN of the migration class to be instantiated.
+        :type $args: array
+        :param $args: Constructor parameters.
         :returns: \Baleen\Migrations\Migration\MigrationInterface

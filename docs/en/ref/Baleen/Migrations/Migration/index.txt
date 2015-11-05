@@ -11,4 +11,5 @@ Baleen\\Migrations\\Migration
    Factory/index
    MigrationInterface
    Options
+   OptionsInterface
    SimpleMigration

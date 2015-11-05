@@ -8,10 +8,6 @@ Baleen\\Migrations\\Repository\\RepositoryStack
 
     A generic repository that can aggregate one or more other repositories
 
-    .. php:attr:: stack
-
-        protected \SplStack
-
     .. php:method:: __construct()
 
         RepositoryStack constructor.
@@ -53,7 +49,7 @@ Baleen\\Migrations\\Repository\\RepositoryStack
         Therefore, its strongly recommended not to sort or modify the resulting
         collection.
 
-        :returns: \Baleen\Migrations\Version\Collection\Linked
+        :returns: Linked
 
     .. php:method:: setMigrationFactory(FactoryInterface $factory)
 

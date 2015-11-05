@@ -30,9 +30,10 @@ interface FactoryInterface
     /**
      * Creates a Migration based on a class name.
      *
-     * @param $class
+     * @param string $class The FQN of the migration class to be instantiated.
+     * @param array $args Constructor parameters.
      *
      * @return \Baleen\Migrations\Migration\MigrationInterface
      */
-    public function create($class);
+    public function create($class, $args = []);
 }

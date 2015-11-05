@@ -26,7 +26,7 @@ use Baleen\Migrations\Migration\Command\MigrateCommand;
 use Baleen\Migrations\Migration\Command\MigrationBus;
 use Baleen\Migrations\Migration\Command\MigrationBusFactory;
 use Baleen\Migrations\Migration\MigrationInterface;
-use Baleen\Migrations\Migration\Options;
+use Baleen\Migrations\Migration\OptionsInterface;
 use Baleen\Migrations\Version\Collection\Linked;
 use Baleen\Migrations\Version\VersionInterface;
 
@@ -65,11 +65,11 @@ abstract class AbstractTimeline implements TimelineInterface
      * Returns true if the operatin is forced, or if the direction is the opposite to the state of the migration.
      *
      * @param VersionInterface $version
-     * @param Options $options
+     * @param OptionsInterface $options
      *
      * @return bool
      */
-    protected function shouldMigrate(VersionInterface $version, Options $options)
+    protected function shouldMigrate(VersionInterface $version, OptionsInterface $options)
     {
         return $options->isForced()
         || ($options->isDirectionUp() ^ $version->isMigrated()); // direction is opposite to state
@@ -87,11 +87,11 @@ abstract class AbstractTimeline implements TimelineInterface
 
     /**
      * @param MigrationInterface $migration
-     * @param Options $options
+     * @param OptionsInterface $options
      *
      * @return bool
      */
-    protected function doRun(MigrationInterface $migration, Options $options)
+    protected function doRun(MigrationInterface $migration, OptionsInterface $options)
     {
         $command = new MigrateCommand($migration, $options);
         $this->migrationBus->handle($command);
@@ -101,14 +101,14 @@ abstract class AbstractTimeline implements TimelineInterface
      * Executes migrations against a collection
      *
      * @param VersionInterface $goalVersion
-     * @param Options $options
+     * @param OptionsInterface $options
      * @param Linked $collection
      *
      * @return Linked
      *
      * @throws InvalidArgumentException
      */
-    protected function runCollection(VersionInterface $goalVersion, Options $options, Linked $collection)
+    protected function runCollection(VersionInterface $goalVersion, OptionsInterface $options, Linked $collection)
     {
         $current = 0;
         $total = $collection->indexOf($goalVersion) + 1;

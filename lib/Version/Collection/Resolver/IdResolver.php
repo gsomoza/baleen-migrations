@@ -19,8 +19,8 @@
 
 namespace Baleen\Migrations\Version\Collection\Resolver;
 
-use Baleen\Migrations\Version\Collection as VersionCollection;
-use Doctrine\Common\Collections\Collection;
+use Baleen\Migrations\Version\Collection;
+use Doctrine\Common\Collections\Collection as CollectionInterface;
 
 /**
  * Resolves version ID's
@@ -32,9 +32,9 @@ class IdResolver extends AbstractResolver
     /**
      * @inheritdoc
      */
-    public function doResolve($alias, Collection $collection)
+    public function doResolve($alias, CollectionInterface $collection)
     {
-        if ($collection instanceof VersionCollection) {
+        if ($collection instanceof Collection) {
             return $collection->getById($alias);
         }
         return null;

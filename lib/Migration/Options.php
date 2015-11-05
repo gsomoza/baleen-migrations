@@ -1,5 +1,4 @@
 <?php
-
 /*
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -23,42 +22,41 @@ namespace Baleen\Migrations\Migration;
 use Baleen\Migrations\Exception\InvalidArgumentException;
 
 /**
+ * @{inheritdoc}
+ *
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
-class Options
+final class Options implements OptionsInterface
 {
-    const DIRECTION_UP = 'up';
-    const DIRECTION_DOWN = 'down';
-
     /**
      * @var array
      */
-    protected $allowedDirections;
+    private $allowedDirections;
 
     /**
      * @var string
      */
-    protected $direction;
+    private $direction;
 
     /**
      * @var bool
      */
-    protected $forced;
+    private $forced;
 
     /**
      * @var bool
      */
-    protected $dryRun;
+    private $dryRun;
 
     /**
      * @var array
      */
-    protected $custom;
+    private $custom;
 
     /**
      * @var bool
      */
-    protected $exceptionOnSkip;
+    private $exceptionOnSkip;
 
     /**
      * @param $direction
@@ -74,20 +72,35 @@ class Options
         $forced = false,
         $dryRun = false,
         $exceptionOnSkip = true,
-        $custom = []
+        array $custom = []
     ) {
         $this->allowedDirections = [
             self::DIRECTION_UP,
             self::DIRECTION_DOWN,
         ];
         $this->setDirection($direction);
-        $this->setForced($forced);
-        $this->setDryRun($dryRun);
-        $this->setExceptionOnSkip($exceptionOnSkip);
-        $this->setCustom($custom);
+        $this->forced = (bool) $forced;
+        $this->dryRun = (bool) $dryRun;
+        $this->exceptionOnSkip = (bool) $exceptionOnSkip;
+        $this->custom = $custom;
     }
 
     /**
+     * setDirection
+     * @param $direction
+     * @throws InvalidArgumentException
+     */
+    private function setDirection($direction) {
+        if (!in_array($direction, $this->allowedDirections)) {
+            throw new InvalidArgumentException(
+                sprintf('Unknown direction "%s". Valid options are "up" or "down".', $direction)
+            );
+        }
+        $this->direction = $direction;
+    }
+
+    /**
+     * getDirection
      * @return string
      */
     public function getDirection()
@@ -98,16 +111,13 @@ class Options
     /**
      * @param string $direction
      *
+     * @return static
+     *
      * @throws InvalidArgumentException
      */
-    public function setDirection($direction)
+    public function withDirection($direction)
     {
-        if (!in_array($direction, $this->allowedDirections)) {
-            throw new InvalidArgumentException(
-                sprintf('Unknown direction "%s". Valid options are "up" or "down".', $direction)
-            );
-        }
-        $this->direction = $direction;
+        return new static($direction, $this->forced, $this->dryRun, $this->exceptionOnSkip, $this->custom);
     }
 
     /**
@@ -135,11 +145,12 @@ class Options
     }
 
     /**
-     * @param bool $forced
+     * withForced
+     * @param $forced
+     * @return static
      */
-    public function setForced($forced)
-    {
-        $this->forced = (bool)$forced;
+    public function withForced($forced) {
+        return new static($this->direction, $forced, $this->dryRun, $this->exceptionOnSkip, $this->custom);
     }
 
     /**
@@ -151,27 +162,13 @@ class Options
     }
 
     /**
+     * withDryRun
      * @param bool $dryRun
+     * @return static
      */
-    public function setDryRun($dryRun)
+    public function withDryRun($dryRun)
     {
-        $this->dryRun = (bool)$dryRun;
-    }
-
-    /**
-     * @return array
-     */
-    public function getCustom()
-    {
-        return $this->custom;
-    }
-
-    /**
-     * @param array $custom
-     */
-    public function setCustom($custom)
-    {
-        $this->custom = $custom;
+        return new static($this->direction, $this->forced, $dryRun, $this->exceptionOnSkip, $this->custom);
     }
 
     /**
@@ -184,9 +181,43 @@ class Options
 
     /**
      * @param bool $exceptionOnSkip
+     * @return static
      */
-    public function setExceptionOnSkip($exceptionOnSkip)
+    public function withExceptionOnSkip($exceptionOnSkip)
     {
-        $this->exceptionOnSkip = (bool)$exceptionOnSkip;
+        return new static($this->direction, $this->forced, $this->dryRun, $exceptionOnSkip, $this->custom);
+    }
+
+    /**
+     * @return array
+     */
+    public function getCustom()
+    {
+        return $this->custom;
+    }
+
+    /**
+     * @param array $custom
+     * @return static
+     */
+    public function withCustom(array $custom)
+    {
+        return new static($this->direction, $this->forced, $this->dryRun, $this->exceptionOnSkip, $custom);
+    }
+
+    /**
+     * Compares the current instance with another instance of options to see if they contain the same values.
+     *
+     * @param OptionsInterface $options
+     * @return bool
+     */
+    public function equals(OptionsInterface $options)
+    {
+        return get_class($options) === get_class($this)
+            && $this->getDirection() === $options->getDirection()
+            && $this->isForced() === $options->isForced()
+            && $this->isDryRun() === $options->isDryRun()
+            && $this->isExceptionOnSkip() === $options->isExceptionOnSkip()
+            && $this->getCustom() == $options->getCustom();
     }
 }

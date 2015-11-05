@@ -21,7 +21,7 @@
 namespace Baleen\Migrations\Timeline;
 
 use Baleen\Migrations\Event\Timeline\Progress;
-use Baleen\Migrations\Migration\Options;
+use Baleen\Migrations\Migration\OptionsInterface;
 use Baleen\Migrations\Version\Collection\Linked;
 use Baleen\Migrations\Version\VersionInterface;
 
@@ -37,37 +37,37 @@ interface TimelineInterface
      * Runs all versions up, starting from the oldest and until (and including) the specified version.
      *
      * @param string|VersionInterface $version
-     * @param Options $options
+     * @param OptionsInterface $options
      */
-    public function upTowards($version, Options $options);
+    public function upTowards($version, OptionsInterface $options);
 
     /**
      * Runs all versions down, starting from the newest and until (and including) the specified version.
      *
      * @param string|VersionInterface $version
-     * @param Options $options
+     * @param OptionsInterface $options
      */
-    public function downTowards($version, Options $options);
+    public function downTowards($version, OptionsInterface $options);
 
     /**
      * Runs migrations up/down so that all versions *before and including* the specified version are "up" and
      * all versions *after* the specified version are "down".
      *
      * @param string|VersionInterface $goalVersion
-     * @param Options $options
+     * @param OptionsInterface $options
      */
-    public function goTowards($goalVersion, Options $options);
+    public function goTowards($goalVersion, OptionsInterface $options);
 
     /**
      * Runs a single migration in the specified direction.
      *
      * @param VersionInterface $version
-     * @param Options $options
+     * @param OptionsInterface $options
      * @param Progress $progress
      *
      * @return VersionInterface|false
      */
-    public function runSingle(VersionInterface $version, Options $options, Progress $progress);
+    public function runSingle(VersionInterface $version, OptionsInterface $options, Progress $progress);
 
     /**
      * getVersions

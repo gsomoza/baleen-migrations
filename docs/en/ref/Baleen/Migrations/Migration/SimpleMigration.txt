@@ -11,15 +11,15 @@ Baleen\\Migrations\\Migration\\SimpleMigration
 
     .. php:attr:: options
 
-        protected Options
+        protected OptionsInterface
 
     .. php:method:: getOptions()
 
-        :returns: Options
+        :returns: OptionsInterface
 
-    .. php:method:: setOptions(Options $options)
+    .. php:method:: setOptions(OptionsInterface $options)
 
-        :type $options: Options
+        :type $options: OptionsInterface
         :param $options:
 
     .. php:method:: up()

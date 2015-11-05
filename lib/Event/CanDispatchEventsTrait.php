@@ -57,12 +57,14 @@ trait CanDispatchEventsTrait
      *
      * @param $name
      * @param Event $event
+     *
+     * @return Event
      */
     public function dispatchEvent($name, Event $event)
     {
         if (!$this->eventDispatcher) {
-            return;
+            return $event;
         }
-        $this->eventDispatcher->dispatch($name, $event);
+        return $this->eventDispatcher->dispatch($name, $event);
     }
 }

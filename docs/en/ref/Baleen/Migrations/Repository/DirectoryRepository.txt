@@ -6,18 +6,16 @@ Baleen\\Migrations\\Repository\\DirectoryRepository
 
 .. php:class:: DirectoryRepository
 
-    .. php:attr:: factory
-
-        protected FactoryInterface
-
     .. php:attr:: comparator
 
         protected ComparatorInterface
 
-    .. php:method:: __construct($path, FactoryInterface $migrationFactory = null, ComparatorInterface $comparator = null)
+    .. php:method:: __construct($path, $pattern = self::PATTERN_DEFAULT, FactoryInterface $migrationFactory = null, ComparatorInterface $comparator = null)
 
         :type $path: string
         :param $path: Full path to the repository's directory
+        :type $pattern: string
+        :param $pattern:
         :type $migrationFactory: FactoryInterface
         :param $migrationFactory:
         :type $comparator: ComparatorInterface
@@ -25,21 +23,23 @@ Baleen\\Migrations\\Repository\\DirectoryRepository
 
     .. php:method:: doFetchAll()
 
-    .. php:method:: getClassNameRegex()
-
-        :returns: string
-
-    .. php:method:: setClassNameRegex($classNameRegex)
-
-        :type $classNameRegex: string
-        :param $classNameRegex:
-
     .. php:method:: setMigrationFactory(FactoryInterface $factory)
+
+        {@inheritdoc}
 
         :type $factory: FactoryInterface
         :param $factory:
 
+    .. php:method:: getMigrationFactory()
+
+        Returns the migration factory. Creates a new SimpleFactory object for it
+        if none was configured.
+
+        :returns: FactoryInterface
+
     .. php:method:: fetchAll()
+
+        {@inheritdoc}
 
         :returns: Linked
 

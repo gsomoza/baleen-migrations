@@ -21,7 +21,7 @@ Baleen\\Migrations\\Timeline\\TimelineFactory
         that have already been migrated will
         be marked accordingly.
 
-        :type $available: array|\Baleen\Migrations\Version\Collection\Linked
+        :type $available: array|Linked
         :param $available:
         :type $migrated: array|Migrated
         :param $migrated:

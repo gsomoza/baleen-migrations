@@ -14,23 +14,23 @@ Baleen\\Migrations\\Event\\Timeline\\CollectionEvent
 
     .. php:attr:: options
 
-        protected Options
+        protected OptionsInterface
 
     .. php:attr:: target
 
-        protected Version
+        protected VersionInterface
 
     .. php:attr:: progress
 
         protected Progress
 
-    .. php:method:: __construct(VersionInterface $target, Options $options, Linked $versions, Progress $progress = null)
+    .. php:method:: __construct(VersionInterface $target, OptionsInterface $options, Linked $versions, Progress $progress = null)
 
         CollectionEvent constructor.
 
         :type $target: VersionInterface
         :param $target:
-        :type $options: Options
+        :type $options: OptionsInterface
         :param $options:
         :type $versions: Linked
         :param $versions:
@@ -39,7 +39,7 @@ Baleen\\Migrations\\Event\\Timeline\\CollectionEvent
 
     .. php:method:: getOptions()
 
-        :returns: Options
+        :returns: OptionsInterface
 
     .. php:method:: getCollection()
 
@@ -47,7 +47,7 @@ Baleen\\Migrations\\Event\\Timeline\\CollectionEvent
 
     .. php:method:: getTarget()
 
-        :returns: Version
+        :returns: VersionInterface
 
     .. php:method:: getProgress()
 

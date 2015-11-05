@@ -20,6 +20,7 @@
 namespace BaleenTest\Migrations\Migrations\AllValid;
 
 use Baleen\Migrations\Migration\Options;
+use Baleen\Migrations\Migration\OptionsInterface;
 use Baleen\Migrations\Migration\SimpleMigration;
 
 /**
@@ -49,7 +50,7 @@ class v201507020418_SimpleTest extends SimpleMigration
         // TODO: Implement abort() method.
     }
 
-    public function setOptions(Options $options)
+    public function setOptions(OptionsInterface $options)
     {
         // TODO: Implement setOptions() method.
     }

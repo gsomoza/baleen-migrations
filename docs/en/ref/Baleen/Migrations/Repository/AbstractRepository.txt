@@ -8,20 +8,27 @@ Baleen\\Migrations\\Repository\\AbstractRepository
 
     Class AbstractRepository.
 
-    .. php:attr:: factory
-
-        protected FactoryInterface
-
     .. php:attr:: comparator
 
         protected ComparatorInterface
 
     .. php:method:: setMigrationFactory(FactoryInterface $factory)
 
+        {@inheritdoc}
+
         :type $factory: FactoryInterface
         :param $factory:
 
+    .. php:method:: getMigrationFactory()
+
+        Returns the migration factory. Creates a new SimpleFactory object for it
+        if none was configured.
+
+        :returns: FactoryInterface
+
     .. php:method:: fetchAll()
+
+        {@inheritdoc}
 
         :returns: Linked
 

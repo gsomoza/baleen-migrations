@@ -7,5 +7,4 @@ Baleen\\Migrations\\Storage
 .. toctree::
 
    AbstractStorage
-   FileStorage
    StorageInterface

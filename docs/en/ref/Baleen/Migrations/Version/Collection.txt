@@ -38,7 +38,7 @@ Baleen\\Migrations\\Version\\Collection
         :param $key: If an alias is given then it will be resolved to an element. Otherwise the $key will be used to fetch the element by index.
         :type $resolve: bool
         :param $resolve: Whether to use the resolver or not.
-        :returns: Version|null Null if not present
+        :returns: VersionInterface|null Null if not present
 
     .. php:method:: getById($id)
 
@@ -62,7 +62,7 @@ Baleen\\Migrations\\Version\\Collection
 
         :type $alias: string
         :param $alias:
-        :returns: Version|null
+        :returns: VersionInterface|null
 
     .. php:method:: has($index, $resolve = true)
 
@@ -100,10 +100,10 @@ Baleen\\Migrations\\Version\\Collection
         :param $version:
         :returns: VersionInterface|null
 
-    .. php:method:: addOrReplace(Version $version)
+    .. php:method:: addOrReplace(VersionInterface $version)
 
         Adds a new version to the collection if it doesn't exist or replaces it if
         it does.
 
-        :type $version: Version
+        :type $version: VersionInterface
         :param $version:

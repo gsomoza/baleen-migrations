@@ -26,10 +26,22 @@ use Baleen\Migrations\Version;
  */
 class VersionTest extends BaseTestCase
 {
-
+    /**
+     * testIdCannotBeEmpty
+     */
     public function testIdCannotBeEmpty()
     {
         $this->setExpectedException(InvalidArgumentException::class);
-        $v = new Version('');
+        new Version('');
+    }
+
+    /**
+     * testToString
+     */
+    public function testToString()
+    {
+        $id = 'v1';
+        $v = new Version($id);
+        $this->assertEquals($id, (string) $v);
     }
 }

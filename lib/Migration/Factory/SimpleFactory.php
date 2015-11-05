@@ -1,5 +1,4 @@
 <?php
-
 /*
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -25,24 +24,36 @@ use Baleen\Migrations\Exception\InvalidArgumentException;
 /**
  * @inheritdoc
  */
-class SimpleFactory implements FactoryInterface
+final class SimpleFactory implements FactoryInterface
 {
     /**
      * @inheritdoc
      *
-     * @param $class
-     *
      * @throws InvalidArgumentException
      */
-    public function create($class)
+    public function create($class, $args = [])
     {
-        $class = (string)$class;
+        $class = (string) $class;
+
         if (empty($class)) {
             throw new InvalidArgumentException(
                 'Cannot create a migration from an empty class name!'
             );
         }
 
-        return new $class();
+        if (!is_array($args)) {
+            throw new InvalidArgumentException(
+                'Argument "params" must be an array of parameters.'
+            );
+        }
+
+        if (!empty($args)) {
+            $class = new \ReflectionClass($class);
+            $instance = $class->newInstanceArgs($args);
+        } else {
+            $instance = new $class();
+        }
+
+        return $instance;
     }
 }

@@ -30,7 +30,7 @@ Baleen\\Migrations\\Version\\Collection\\Resolver\\HeadResolver
         :param $alias:
         :type $collection: Collection
         :param $collection:
-        :returns: Version|null
+        :returns: VersionInterface|null
 
     .. php:method:: cacheGet($alias, Collection $collection)
 
@@ -42,7 +42,7 @@ Baleen\\Migrations\\Version\\Collection\\Resolver\\HeadResolver
         :param $alias:
         :type $collection: Collection
         :param $collection:
-        :returns: bool|null|Version
+        :returns: bool|null|VersionInterface
 
     .. php:method:: cacheSet($alias, $collection, $result)
 

@@ -9,27 +9,27 @@ Baleen\\Migrations\\Timeline\\TimelineInterface
     The Timeline is responsible of emitting MigrateCommands based on how the user wants to navigate the timeline
     (e.g. travel to a specific version). It takes into account the current state.
 
-    .. php:method:: upTowards($version, Options $options)
+    .. php:method:: upTowards($version, OptionsInterface $options)
 
         Runs all versions up, starting from the oldest and until (and including)
         the specified version.
 
         :type $version: string|VersionInterface
         :param $version:
-        :type $options: Options
+        :type $options: OptionsInterface
         :param $options:
 
-    .. php:method:: downTowards($version, Options $options)
+    .. php:method:: downTowards($version, OptionsInterface $options)
 
         Runs all versions down, starting from the newest and until (and including)
         the specified version.
 
         :type $version: string|VersionInterface
         :param $version:
-        :type $options: Options
+        :type $options: OptionsInterface
         :param $options:
 
-    .. php:method:: goTowards($goalVersion, Options $options)
+    .. php:method:: goTowards($goalVersion, OptionsInterface $options)
 
         Runs migrations up/down so that all versions *before and including* the
         specified version are "up" and
@@ -37,20 +37,20 @@ Baleen\\Migrations\\Timeline\\TimelineInterface
 
         :type $goalVersion: string|VersionInterface
         :param $goalVersion:
-        :type $options: Options
+        :type $options: OptionsInterface
         :param $options:
 
-    .. php:method:: runSingle(VersionInterface $version, Options $options, Progress $progress)
+    .. php:method:: runSingle(VersionInterface $version, OptionsInterface $options, Progress $progress)
 
         Runs a single migration in the specified direction.
 
         :type $version: VersionInterface
         :param $version:
-        :type $options: Options
+        :type $options: OptionsInterface
         :param $options:
         :type $progress: Progress
         :param $progress:
-        :returns: Version|false
+        :returns: VersionInterface|false
 
     .. php:method:: getVersions()
 

@@ -1,0 +1,96 @@
+-----------------------------------------------
+Baleen\\Migrations\\Migration\\OptionsInterface
+-----------------------------------------------
+
+.. php:namespace: Baleen\\Migrations\\Migration
+
+.. php:interface:: OptionsInterface
+
+    Options value object. Used to configure the migration jobs and provide information about them to the migration.
+
+    .. php:method:: getDirection()
+
+        The direction that we're migrating
+
+        :returns: string
+
+    .. php:method:: withDirection($direction)
+
+        MUST return a new OptionsInterface instance with the same property values
+        as the current one except for the new
+        direction.
+
+        :type $direction: string
+        :param $direction:
+        :returns: static
+
+    .. php:method:: isDirectionUp()
+
+        :returns: bool
+
+    .. php:method:: isDirectionDown()
+
+        :returns: bool
+
+    .. php:method:: isForced()
+
+        :returns: bool
+
+    .. php:method:: withForced($forced)
+
+        MUST return a new OptionsInterface instance with the same property values
+        as the current one except for the new
+        value for the "forced" property.
+
+        :param $forced:
+        :returns: static
+
+    .. php:method:: isDryRun()
+
+        :returns: bool
+
+    .. php:method:: withDryRun($dryRun)
+
+        MUST return a new OptionsInterface instance with the same property values
+        as the current one except for the new
+        value for the "dryRun" property.
+
+        :type $dryRun: bool
+        :param $dryRun:
+        :returns: static
+
+    .. php:method:: isExceptionOnSkip()
+
+        :returns: bool
+
+    .. php:method:: withExceptionOnSkip($exceptionOnSkip)
+
+        MUST return a new OptionsInterface instance with the same property values
+        as the current one except for the new
+        value for the "exceptionOnSkip" property.
+
+        :type $exceptionOnSkip: bool
+        :param $exceptionOnSkip:
+        :returns: static
+
+    .. php:method:: getCustom()
+
+        :returns: array
+
+    .. php:method:: withCustom($custom)
+
+        MUST return a new OptionsInterface instance with the same property values
+        as the current one except for the new
+        value for the "custom" array.
+
+        :type $custom: array
+        :param $custom:
+        :returns: static
+
+    .. php:method:: equals(OptionsInterface $options)
+
+        Returns true if the current object is the same as the parameter.
+
+        :type $options: OptionsInterface
+        :param $options:
+        :returns: boolean

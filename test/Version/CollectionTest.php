@@ -231,4 +231,15 @@ class CollectionTest extends BaseTestCase
         $resolver->shouldReceive('clearCache')->once()->with($instance);
         $this->invokeMethod('remove', $instance, [new V('v1')]);
     }
+
+    /**
+     * testAddOnlyAcceptsVersions
+     */
+    public function testAddOnlyAcceptsVersions()
+    {
+        $instance = new Collection();
+        $version = 'v1';
+        $this->setExpectedException(InvalidArgumentException::class);
+        $instance->add($version);
+    }
 }

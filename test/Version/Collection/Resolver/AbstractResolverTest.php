@@ -20,8 +20,10 @@
 namespace BaleenTest\Migrations\Version\Collection\Resolver;
 
 use Baleen\Migrations\Exception\ResolverException;
+use Baleen\Migrations\Version;
 use Baleen\Migrations\Version\Collection;
 use Baleen\Migrations\Version\Collection\Resolver\AbstractResolver;
+use Baleen\Migrations\Version\VersionInterface;
 use BaleenTest\Migrations\BaseTestCase;
 use Mockery as m;
 
@@ -61,5 +63,136 @@ class AbstractResolverTest extends BaseTestCase
             [1.2],
             [new \stdClass()],
         ];
+    }
+
+    /**
+     * testResolve
+     * @param $alias
+     * @param $resolvedResult
+     * @throws ResolverException
+     * @dataProvider resolveWithoutCacheProvider
+     */
+    public function testResolveWithCache($alias, $resolvedResult)
+    {
+        /** @var Collection|m\Mock $collection */
+        $collection = m::mock(Collection::class);
+        /** @var AbstractResolver|m\Mock $instance */
+        $instance = m::mock(AbstractResolver::class)
+            ->shouldAllowMockingProtectedMethods()
+            ->makePartial();
+        $instance->shouldReceive('doResolve')->once()->with((string) $alias, $collection)->andReturn($resolvedResult);
+        $result = $instance->resolve($alias, $collection);
+        $this->assertEquals($resolvedResult, $result);
+
+        // test that the value was cached and can be retrieved from the cache
+        $cached = $instance->resolve($alias, $collection);
+        // it would blow up here if it tried to 'doResolve' again
+        $this->assertEquals($resolvedResult, $cached);
+    }
+
+    /**
+     * resolveWithoutCacheProvider
+     * @return array
+     */
+    public function resolveWithoutCacheProvider()
+    {
+        $v = m::mock(VersionInterface::class);
+        return [
+            ['v1', $v],
+            ['v2', null],
+            [new Version('v1'), $v],
+        ];
+    }
+
+    /**
+     * testClearCache
+     */
+    public function testClearCache()
+    {
+        $alias = '123';
+        /** @var VersionInterface|m\Mock $version */
+        $version = m::mock(VersionInterface::class);
+        /** @var Collection|m\Mock $collection */
+        $collection = m::mock(Collection::class);
+        /** @var AbstractResolver|m\Mock $instance */
+        $instance = m::mock(AbstractResolver::class)
+            ->shouldAllowMockingProtectedMethods()
+            ->makePartial();
+        $instance->shouldReceive('doResolve')->zeroOrMoreTimes()->with($alias, $collection)->andReturn($version);
+
+        // warm up the cache for this alias
+        $result = $instance->resolve($alias, $collection);
+        $instance->shouldHaveReceived('doResolve')->once();
+        $this->assertEquals($version, $result);
+
+        // test that the value was cached and can be retrieved from the cache
+        $cached = $instance->resolve($alias, $collection);
+        $instance->shouldHaveReceived('doResolve')->once();
+        $this->assertEquals($version, $cached);
+
+        // clear cache
+        $instance->clearCache();
+
+        // this should not hit the cache
+        $result = $instance->resolve($alias, $collection);
+        $instance->shouldHaveReceived('doResolve')->twice();
+        $this->assertEquals($version, $result);
+    }
+
+    /**
+     * testClearCollectionCache
+     * @throws ResolverException
+     */
+    public function testClearCollectionCache()
+    {
+        $alias = '123';
+        /** @var VersionInterface|m\Mock $version */
+        $version = m::mock(VersionInterface::class);
+        /** @var Collection|m\Mock $collection1 */
+        $collection1 = m::mock(Collection::class);
+        /** @var Collection|m\Mock $collection2 */
+        $collection2 = m::mock(Collection::class);
+
+        /** @var AbstractResolver|m\Mock $instance */
+        $instance = m::mock(AbstractResolver::class)
+            ->shouldAllowMockingProtectedMethods()
+            ->makePartial();
+        $instance->shouldReceive('doResolve')
+            ->zeroOrMoreTimes()
+            ->with($alias, anInstanceOf(Collection::class))
+            ->andReturn($version);
+
+        // warm up the cache for collection 1
+        $result = $instance->resolve($alias, $collection1);
+        $instance->shouldHaveReceived('doResolve')->once();
+        $this->assertEquals($version, $result);
+
+        // test that the value was cached and can be retrieved from the cache
+        $cached = $instance->resolve($alias, $collection1);
+        $instance->shouldHaveReceived('doResolve')->once();
+        $this->assertEquals($version, $cached);
+
+        // warm up the cache for collection 2
+        $result = $instance->resolve($alias, $collection2);
+        $instance->shouldHaveReceived('doResolve')->twice();
+        $this->assertEquals($version, $result);
+
+        // test that the value was cached and can be retrieved from the cache
+        $cached = $instance->resolve($alias, $collection2);
+        $instance->shouldHaveReceived('doResolve')->twice();
+        $this->assertEquals($version, $cached);
+
+        // clear cache for collection 1
+        $instance->clearCache($collection1);
+
+        // collection 1 should not hit the cache
+        $result = $instance->resolve($alias, $collection1);
+        $instance->shouldHaveReceived('doResolve')->times(3);
+        $this->assertEquals($version, $result);
+
+        // but collection 2 should
+        $result = $instance->resolve($alias, $collection2);
+        $instance->shouldHaveReceived('doResolve')->times(3);
+        $this->assertEquals($version, $result);
     }
 }

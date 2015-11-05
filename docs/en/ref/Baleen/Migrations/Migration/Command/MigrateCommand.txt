@@ -8,11 +8,11 @@ Baleen\\Migrations\\Migration\\Command\\MigrateCommand
 
     Class MigrateCommand.
 
-    .. php:method:: __construct(MigrationInterface $migration, Options $options)
+    .. php:method:: __construct(MigrationInterface $migration, OptionsInterface $options)
 
         :type $migration: MigrationInterface
         :param $migration:
-        :type $options: Options
+        :type $options: OptionsInterface
         :param $options:
 
     .. php:method:: getMigration()
@@ -26,9 +26,9 @@ Baleen\\Migrations\\Migration\\Command\\MigrateCommand
 
     .. php:method:: getOptions()
 
-        :returns: Options
+        :returns: OptionsInterface
 
-    .. php:method:: setOptions(Options $options)
+    .. php:method:: setOptions(OptionsInterface $options)
 
-        :type $options: Options
+        :type $options: OptionsInterface
         :param $options:

@@ -1,5 +1,4 @@
 <?php
-
 /*
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -15,19 +14,29 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the MIT license. For more information, see
- * <https://github.com/baleen/migrations>.
+ * <http://www.doctrine-project.org>.
  */
 
-namespace Baleen\Migrations\Migration\Capabilities;
+namespace BaleenTest\Migrations\Version\Collection\Resolver;
 
-use Baleen\Migrations\Migration\OptionsInterface;
+use Baleen\Migrations\Exception\InvalidArgumentException;
+use Baleen\Migrations\Version\Collection\Resolver\ResolverStack;
+use BaleenTest\Migrations\BaseTestCase;
+use Mockery as m;
 
 /**
- * Interface OptionsAwareInterface.
- *
+ * Class ResolverStackTest
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
-interface OptionsAwareInterface
+class ResolverStackTest extends BaseTestCase
 {
-    public function setOptions(OptionsInterface $options);
+    /**
+     * testConstructorAcceptsOnlyResolverObjects
+     */
+    public function testConstructorAcceptsOnlyResolverObjects()
+    {
+        $resolvers = ['notAResolver'];
+        $this->setExpectedException(InvalidArgumentException::class);
+        new ResolverStack($resolvers);
+    }
 }

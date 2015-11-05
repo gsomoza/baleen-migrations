@@ -21,6 +21,7 @@ namespace BaleenTest\Migrations\Migrations\CustomRegex;
 
 use Baleen\Migrations\Migration\MigrationInterface;
 use Baleen\Migrations\Migration\Options;
+use Baleen\Migrations\Migration\OptionsInterface;
 
 /**
  * Use the following regex to load this class with the DirectoryRepository: /Version_([0-9]+).*?/
@@ -48,7 +49,7 @@ class Version_201507020433_CustomRegex implements MigrationInterface
         // TODO: Implement abort() method.
     }
 
-    public function setRunOptions(Options $options)
+    public function setRunOptions(OptionsInterface $options)
     {
         // TODO: Implement setOptions() method.
     }

@@ -8,7 +8,7 @@ Baleen\\Migrations\\Migration\\Capabilities\\OptionsAwareInterface
 
     Interface OptionsAwareInterface.
 
-    .. php:method:: setOptions(Options $options)
+    .. php:method:: setOptions(OptionsInterface $options)
 
-        :type $options: Options
+        :type $options: OptionsInterface
         :param $options:

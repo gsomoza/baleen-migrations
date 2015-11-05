@@ -26,7 +26,7 @@ use Baleen\Migrations\Event\EventInterface;
 use Baleen\Migrations\Event\Timeline\CollectionEvent;
 use Baleen\Migrations\Event\Timeline\MigrationEvent;
 use Baleen\Migrations\Event\Timeline\Progress;
-use Baleen\Migrations\Migration\Options;
+use Baleen\Migrations\Migration\OptionsInterface;
 use Baleen\Migrations\Version\Collection\Linked;
 use Baleen\Migrations\Version\VersionInterface;
 
@@ -39,61 +39,65 @@ final class TimelineEmitter implements EmitterInterface
 
     /**
      * @param VersionInterface $targetVersion
-     * @param Options $options
+     * @param OptionsInterface $options
      * @param Linked $versions
      * @param Progress $progress
+     * @return \Symfony\Component\EventDispatcher\Event|void
      */
     public function dispatchCollectionBefore(
         VersionInterface $targetVersion,
-        Options $options,
+        OptionsInterface $options,
         Linked $versions,
         Progress $progress = null
     ) {
         $event = new CollectionEvent($targetVersion, $options, $versions, $progress);
-        $this->dispatchEvent(EventInterface::COLLECTION_BEFORE, $event);
+        return $this->dispatchEvent(EventInterface::COLLECTION_BEFORE, $event);
     }
 
     /**
      * dispatchCollectionAfter.
      *
      * @param VersionInterface $targetVersion
-     * @param Options $options
+     * @param OptionsInterface $options
      * @param Linked $versions
      * @param Progress $progress
+     * @return \Symfony\Component\EventDispatcher\Event|void
      */
     public function dispatchCollectionAfter(
         VersionInterface $targetVersion,
-        Options $options,
+        OptionsInterface $options,
         Linked $versions,
         Progress $progress = null
     ) {
         $event = new CollectionEvent($targetVersion, $options, $versions, $progress);
-        $this->dispatchEvent(EventInterface::COLLECTION_AFTER, $event);
+        return $this->dispatchEvent(EventInterface::COLLECTION_AFTER, $event);
     }
 
     /**
      * dispatchMigrationBefore.
      *
      * @param VersionInterface $version
-     * @param Options $options
+     * @param OptionsInterface $options
      * @param Progress|null $progress
+     * @return \Symfony\Component\EventDispatcher\Event|void
      */
-    public function dispatchMigrationBefore(VersionInterface $version, Options $options, Progress $progress = null)
+    public function dispatchMigrationBefore(VersionInterface $version, OptionsInterface $options, Progress $progress = null)
     {
         $event = new MigrationEvent($version, $options, $progress);
-        $this->dispatchEvent(EventInterface::MIGRATION_BEFORE, $event);
+        return $this->dispatchEvent(EventInterface::MIGRATION_BEFORE, $event);
     }
 
     /**
      * dispatchMigrationAfter.
      *
      * @param VersionInterface $version
-     * @param Options $options
+     * @param OptionsInterface $options
      * @param Progress|null $progress
+     * @return \Symfony\Component\EventDispatcher\Event|void
      */
-    public function dispatchMigrationAfter(VersionInterface $version, Options $options, Progress $progress = null)
+    public function dispatchMigrationAfter(VersionInterface $version, OptionsInterface $options, Progress $progress = null)
     {
         $event = new MigrationEvent($version, $options, $progress);
-        $this->dispatchEvent(EventInterface::MIGRATION_AFTER, $event);
+        return $this->dispatchEvent(EventInterface::MIGRATION_AFTER, $event);
     }
 }
