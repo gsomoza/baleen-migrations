@@ -28,10 +28,10 @@ use Baleen\Migrations\Version\Collection\Linked;
  *
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
-class RepositoryStack implements RepositoryInterface
+final class RepositoryStack implements RepositoryInterface
 {
     /** @var \SplStack */
-    protected $stack;
+    private $stack;
 
     /**
      * RepositoryStack constructor.

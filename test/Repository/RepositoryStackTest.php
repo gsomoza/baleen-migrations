@@ -111,23 +111,20 @@ class RepositoryStackTest extends BaseTestCase
     public function testSetRepositories($repositories, $count = 0, $exception = null)
     {
         /** @var RepositoryStack|m\Mock $instance */
-        $instance = m::mock(RepositoryStack::class)
-            ->shouldAllowMockingProtectedMethods()
-            ->makePartial();
+        $instance = m::mock(new RepositoryStack())
+            ->shouldAllowMockingProtectedMethods();
 
         // load the instance with some previous repos, which should be overwritten
         /** @var RepositoryInterface|m\Mock $tmpRepo */
         $tmpRepo = m::mock(RepositoryInterface::class);
         $instance->addRepository($tmpRepo);
 
-        if (empty($exception)) {
-            $instance->shouldReceive('addRepositories')->once()->with($repositories);
-        } else {
+        if (!empty($exception)) {
             $this->setExpectedException($exception);
         }
 
         $instance->setRepositories($repositories);
-        $this->assertCount(0, $instance->getRepositories());
+        $this->assertCount($count, $instance->getRepositories());
     }
 
     /**
@@ -139,13 +136,14 @@ class RepositoryStackTest extends BaseTestCase
         $factory = m::mock(FactoryInterface::class);
 
         /** @var RepositoryStack|m\Mock $instance */
-        $instance = m::mock(RepositoryStack::class)
+        $instance = m::mock(new RepositoryStack())
             ->shouldAllowMockingProtectedMethods()
             ->makePartial();
 
+        /** @var RepositoryInterface|m\Mock $repo */
         $repo = m::mock(RepositoryInterface::class);
         $repo->shouldReceive('setMigrationFactory')->once()->with($factory);
-        $instance->shouldReceive('getRepositories')->once()->andReturn([$repo]);
+        $instance->addRepository($repo);
 
         $instance->setMigrationFactory($factory);
     }
