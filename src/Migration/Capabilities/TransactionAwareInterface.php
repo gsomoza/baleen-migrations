@@ -1,5 +1,4 @@
 <?php
-
 /*
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -21,20 +20,33 @@
 namespace Baleen\Migrations\Migration\Capabilities;
 
 /**
- * Interface TransactionAwareInterface.
+ * Indicates a migration can be handled within a transaction (commonly used in database migrations) and provides
+ * methods for the different stages of a transaction.
  *
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
 interface TransactionAwareInterface
 {
+    /**
+     * Called when the transaction should be begun.
+     *
+     * @return void
+     */
     public function begin();
 
+    /**
+     * Called when the transaction should be finished.
+     *
+     * @return void
+     */
     public function finish();
 
     /**
+     * Called when the transaction should be cancelled.
+     *
      * @param \Exception $e
      *
-     * @return mixed
+     * @return void
      */
     public function abort(\Exception $e);
 }

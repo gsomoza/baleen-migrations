@@ -8,10 +8,6 @@ Baleen\\Migrations\\Repository\\AbstractRepository
 
     Class AbstractRepository.
 
-    .. php:attr:: comparator
-
-        protected ComparatorInterface
-
     .. php:method:: setMigrationFactory(FactoryInterface $factory)
 
         {@inheritdoc}

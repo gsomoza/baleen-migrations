@@ -6,14 +6,25 @@ Baleen\\Migrations\\Migration\\Capabilities\\TransactionAwareInterface
 
 .. php:interface:: TransactionAwareInterface
 
-    Interface TransactionAwareInterface.
+    Indicates a migration can be handled within a transaction (commonly used in database migrations) and provides
+    methods for the different stages of a transaction.
 
     .. php:method:: begin()
 
+        Called when the transaction should be begun.
+
+        :returns: void
+
     .. php:method:: finish()
+
+        Called when the transaction should be finished.
+
+        :returns: void
 
     .. php:method:: abort(Exception $e)
 
+        Called when the transaction should be cancelled.
+
         :type $e: Exception
         :param $e:
-        :returns: mixed
+        :returns: void

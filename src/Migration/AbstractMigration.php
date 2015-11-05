@@ -33,7 +33,7 @@ abstract class AbstractMigration implements MigrationInterface, OptionsAwareInte
     /**
      * @return OptionsInterface
      */
-    final public function getOptions()
+    final protected function getOptions()
     {
         return $this->options;
     }

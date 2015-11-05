@@ -33,11 +33,4 @@ interface ComparatorAwareInterface
      * @return void
      */
     public function setComparator(ComparatorInterface $comparator);
-
-    /**
-     * Get the comparator
-     *
-     * @return ComparatorInterface
-     */
-    public function getComparator();
 }

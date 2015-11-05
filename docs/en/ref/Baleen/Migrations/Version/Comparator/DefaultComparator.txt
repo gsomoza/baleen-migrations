@@ -8,10 +8,6 @@ Baleen\\Migrations\\Version\\Comparator\\DefaultComparator
 
     {@inheritDoc}
 
-    .. php:attr:: order
-
-        protected int
-
     .. php:method:: __construct($order = self::ORDER_NORMAL)
 
         DefaultComparator constructor.

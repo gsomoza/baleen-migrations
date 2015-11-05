@@ -75,6 +75,9 @@ class AbstractStorageTest extends BaseTestCase
     {
         /** @var AbstractStorage|m\Mock $instance */
         $instance = m::mock(AbstractStorage::class)->shouldAllowMockingProtectedMethods()->makePartial();
+        /** @var ComparatorInterface|m\Mock $comparator */
+        $comparator = m::mock(ComparatorInterface::class);
+        $instance->setComparator($comparator);
         if ($exception) {
             $this->setExpectedException(StorageException::class);
         } else {
@@ -82,8 +85,6 @@ class AbstractStorageTest extends BaseTestCase
             if ($isSorted) {
                 $collection->shouldNotReceive('sort');
             } else {
-                $comparator = m::mock(ComparatorInterface::class);
-                $instance->shouldReceive('getComparator')->once()->andReturn($comparator);
                 $collection->shouldReceive('sort')->once()->with($comparator);
             }
         }

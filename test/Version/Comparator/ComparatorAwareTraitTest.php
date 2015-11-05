@@ -38,7 +38,7 @@ class ComparatorAwareTraitTest extends BaseTestCase
         $comparator = m::mock(ComparatorInterface::class);
         $instance = $this->getObjectForTrait(ComparatorAwareTrait::class);
         $instance->setComparator($comparator);
-        $result = $instance->getComparator();
+        $result = $this->invokeMethod('getComparator', $instance);
         $this->assertSame($comparator, $result);
     }
 }

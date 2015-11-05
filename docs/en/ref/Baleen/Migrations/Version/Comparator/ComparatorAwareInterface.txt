@@ -15,9 +15,3 @@ Baleen\\Migrations\\Version\\Comparator\\ComparatorAwareInterface
         :type $comparator: ComparatorInterface
         :param $comparator:
         :returns: void
-
-    .. php:method:: getComparator()
-
-        Get the comparator
-
-        :returns: ComparatorInterface

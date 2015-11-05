@@ -8,10 +8,6 @@ Baleen\\Migrations\\Version\\Comparator\\ComparatorAwareTrait
 
     Trait ComparatorAwareTrait
 
-    .. php:attr:: comparator
-
-        protected ComparatorInterface
-
     .. php:method:: setComparator(ComparatorInterface $comparator)
 
         :type $comparator: ComparatorInterface

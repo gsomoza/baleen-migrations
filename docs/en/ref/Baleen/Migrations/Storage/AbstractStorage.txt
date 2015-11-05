@@ -8,10 +8,6 @@ Baleen\\Migrations\\Storage\\AbstractStorage
 
     Class AbstractStorage.
 
-    .. php:attr:: comparator
-
-        protected ComparatorInterface
-
     .. php:method:: fetchAll()
 
         Reads versions from the storage file.

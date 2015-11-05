@@ -80,7 +80,7 @@ final class DirectoryRepository extends AbstractRepository
         if (null === $comparator) {
             $comparator = new DefaultComparator();
         }
-        $this->comparator = $comparator;
+        $this->setComparator($comparator);
 
         $this->scanner = new DirectoryScanner($path);
     }
@@ -90,7 +90,7 @@ final class DirectoryRepository extends AbstractRepository
      */
     public function doFetchAll()
     {
-        $versions = new Linked([], null, $this->comparator);
+        $versions = new Linked([], null, $this->getComparator());
         $classes = $this->scanner->getClasses(true);
         foreach ($classes as $class) {
             /* @var DerivedClassScanner $class */

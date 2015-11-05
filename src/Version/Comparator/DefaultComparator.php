@@ -26,13 +26,13 @@ use Baleen\Migrations\Version\VersionInterface;
  *
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
-class DefaultComparator implements ComparatorInterface
+final class DefaultComparator implements ComparatorInterface
 {
     const ORDER_NORMAL = 1;
     const ORDER_REVERSE = -1;
 
     /** @var int */
-    protected $order = self::ORDER_NORMAL; // -1 for reverse order
+    private $order = self::ORDER_NORMAL; // -1 for reverse order
 
     /**
      * DefaultComparator constructor.

@@ -6,10 +6,6 @@ Baleen\\Migrations\\Repository\\DirectoryRepository
 
 .. php:class:: DirectoryRepository
 
-    .. php:attr:: comparator
-
-        protected ComparatorInterface
-
     .. php:method:: __construct($path, $pattern = self::PATTERN_DEFAULT, FactoryInterface $migrationFactory = null, ComparatorInterface $comparator = null)
 
         :type $path: string

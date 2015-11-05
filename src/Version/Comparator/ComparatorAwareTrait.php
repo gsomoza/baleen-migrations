@@ -26,12 +26,12 @@ namespace Baleen\Migrations\Version\Comparator;
 trait ComparatorAwareTrait
 {
     /** @var ComparatorInterface */
-    protected $comparator;
+    private $comparator;
 
     /**
      * @param ComparatorInterface $comparator
      */
-    public function setComparator(ComparatorInterface $comparator)
+    final public function setComparator(ComparatorInterface $comparator)
     {
         $this->comparator = $comparator;
     }
@@ -39,7 +39,7 @@ trait ComparatorAwareTrait
     /**
      * @return ComparatorInterface
      */
-    public function getComparator()
+    final protected function getComparator()
     {
         return $this->comparator;
     }

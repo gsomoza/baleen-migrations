@@ -10,5 +10,8 @@ Baleen\\Migrations\\Migration\\Capabilities\\OptionsAwareInterface
 
     .. php:method:: setOptions(OptionsInterface $options)
 
+        Receive an OptionsInterface instance
+
         :type $options: OptionsInterface
         :param $options:
+        :returns: void

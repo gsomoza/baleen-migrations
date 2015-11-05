@@ -1,5 +1,4 @@
 <?php
-
 /*
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -29,5 +28,12 @@ use Baleen\Migrations\Migration\OptionsInterface;
  */
 interface OptionsAwareInterface
 {
+    /**
+     * Receive an OptionsInterface instance
+     *
+     * @param OptionsInterface $options
+     *
+     * @return void
+     */
     public function setOptions(OptionsInterface $options);
 }
