@@ -22,7 +22,6 @@ namespace Baleen\Migrations\Repository;
 
 use Baleen\Migrations\Exception\InvalidArgumentException;
 use Baleen\Migrations\Migration\Factory\FactoryInterface;
-use Baleen\Migrations\Migration\Factory\SimpleFactory;
 use Baleen\Migrations\Migration\MigrationInterface;
 use Baleen\Migrations\Version;
 use Baleen\Migrations\Version\Collection\Linked;
@@ -34,7 +33,7 @@ use Zend\Code\Scanner\DirectoryScanner;
 /**
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
-class DirectoryRepository extends AbstractRepository
+final class DirectoryRepository extends AbstractRepository
 {
     const PATTERN_DEFAULT = '/v([0-9]+).*/';
 
@@ -46,10 +45,11 @@ class DirectoryRepository extends AbstractRepository
     /**
      * @var string
      */
-    private $classNameRegex;
+    private $pattern = self::PATTERN_DEFAULT;
 
     /**
      * @param string $path Full path to the repository's directory
+     * @param string $pattern
      * @param FactoryInterface $migrationFactory
      * @param ComparatorInterface $comparator
      *
@@ -57,25 +57,32 @@ class DirectoryRepository extends AbstractRepository
      */
     public function __construct(
         $path,
+        $pattern = self::PATTERN_DEFAULT,
         FactoryInterface $migrationFactory = null,
         ComparatorInterface $comparator = null
     ) {
+        $path = (string) $path;
         if (empty($path) || !is_dir($path)) {
             throw new InvalidArgumentException('Argument "path" is empty or directory does not exist.');
         }
-        $this->scanner = new DirectoryScanner($path);
 
-        $this->classNameRegex = self::PATTERN_DEFAULT;
-
-        if (null === $migrationFactory) {
-            $migrationFactory = new SimpleFactory();
+        $pattern = (string) $pattern;
+        if (empty($pattern)) {
+            throw new InvalidArgumentException('Argument "pattern" cannot be empty.');
         }
-        $this->factory = $migrationFactory;
+        $this->pattern = (string) $pattern;
+
+
+        if (null !== $migrationFactory) {
+            $this->setMigrationFactory($migrationFactory);
+        }
 
         if (null === $comparator) {
             $comparator = new DefaultComparator();
         }
         $this->comparator = $comparator;
+
+        $this->scanner = new DirectoryScanner($path);
     }
 
     /**
@@ -90,10 +97,10 @@ class DirectoryRepository extends AbstractRepository
             $className = $class->getName();
             $matches = [];
             if ($class->isInstantiable()
-                && preg_match($this->getClassNameRegex(), $className, $matches)
+                && preg_match($this->pattern, $className, $matches)
                 && isset($matches[1])
             ) {
-                $migration = $this->factory->create($className);
+                $migration = $this->getMigrationFactory()->create($className);
                 if ($migration instanceof MigrationInterface) {
                     $version = new Version($className);
                     $version->setMigration($migration);
@@ -102,21 +109,5 @@ class DirectoryRepository extends AbstractRepository
             }
         }
         return $versions;
-    }
-
-    /**
-     * @return string
-     */
-    public function getClassNameRegex()
-    {
-        return $this->classNameRegex;
-    }
-
-    /**
-     * @param string $classNameRegex
-     */
-    public function setClassNameRegex($classNameRegex)
-    {
-        $this->classNameRegex = (string)$classNameRegex;
     }
 }
