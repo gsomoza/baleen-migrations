@@ -159,7 +159,7 @@ class AbstractResolverTest extends BaseTestCase
             ->makePartial();
         $instance->shouldReceive('doResolve')
             ->zeroOrMoreTimes()
-            ->with($alias, anInstanceOf(Collection::class))
+            ->with($alias, m::type(Collection::class))
             ->andReturn($version);
 
         // warm up the cache for collection 1
