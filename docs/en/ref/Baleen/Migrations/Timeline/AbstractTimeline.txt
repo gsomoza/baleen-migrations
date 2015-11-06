@@ -8,43 +8,25 @@ Baleen\\Migrations\\Timeline\\AbstractTimeline
 
     Encapsulates the lower-level methods of a Timeline, leaving the actual timeline logic to the extending class.
 
-    .. php:attr:: migrationBus
-
-        protected \League\Tactician\CommandBus
-
-    .. php:attr:: allowedDirections
-
-        protected string[]
-
-    .. php:attr:: versions
-
-        protected LinkedVersions
-
-    .. php:attr:: comparator
-
-        protected callable
-
     .. php:attr:: emitter
 
         protected EmitterInterface
 
-    .. php:method:: __construct(LinkedVersions $versions, $comparator = null, MigrationBus $migrationBus = null)
+    .. php:method:: __construct(Linked $versions, MigrationBus $migrationBus = null)
 
-        :type $versions: LinkedVersions
+        :type $versions: Linked
         :param $versions:
-        :type $comparator: callable
-        :param $comparator:
         :type $migrationBus: MigrationBus
         :param $migrationBus: A CommandBus that will be used to run each individual migration.
 
-    .. php:method:: shouldMigrate(Version $version, Options $options)
+    .. php:method:: shouldMigrate(VersionInterface $version, OptionsInterface $options)
 
         Returns true if the operatin is forced, or if the direction is the
         opposite to the state of the migration.
 
-        :type $version: Version
+        :type $version: VersionInterface
         :param $version:
-        :type $options: Options
+        :type $options: OptionsInterface
         :param $options:
         :returns: bool
 
@@ -54,24 +36,31 @@ Baleen\\Migrations\\Timeline\\AbstractTimeline
 
         :returns: \Baleen\Migrations\Event\EmitterInterface
 
-    .. php:method:: doRun(MigrationInterface $migration, Options $options)
+    .. php:method:: doRun(MigrationInterface $migration, OptionsInterface $options)
 
         :type $migration: MigrationInterface
         :param $migration:
-        :type $options: Options
+        :type $options: OptionsInterface
         :param $options:
         :returns: bool
 
-    .. php:method:: runCollection($goalVersion, Options $options, LinkedVersions $collection)
+    .. php:method:: runCollection(VersionInterface $goalVersion, OptionsInterface $options, Linked $collection)
 
+        Executes migrations against a collection
+
+        :type $goalVersion: VersionInterface
         :param $goalVersion:
-        :type $options: Options
+        :type $options: OptionsInterface
         :param $options:
-        :type $collection: LinkedVersions
+        :type $collection: Linked
         :param $collection:
-        :returns: LinkedVersions
+        :returns: Linked
 
-    .. php:method:: getLastMigratedVersion()
+    .. php:method:: getVersions()
+
+        getVersions
+
+        :returns: Linked
 
     .. php:method:: setEventDispatcher(EventDispatcherInterface $eventDispatcher)
 
@@ -100,43 +89,45 @@ Baleen\\Migrations\\Timeline\\AbstractTimeline
 
         :returns: EventDispatcherInterface
 
-    .. php:method:: upTowards($version, Options $options)
+    .. php:method:: upTowards($version, OptionsInterface $options)
 
         Runs all versions up, starting from the oldest and until (and including)
         the specified version.
 
-        :type $version: string|\Baleen\Migrations\Version
+        :type $version: string|VersionInterface
         :param $version:
-        :type $options: Options
+        :type $options: OptionsInterface
         :param $options:
 
-    .. php:method:: downTowards($version, Options $options)
+    .. php:method:: downTowards($version, OptionsInterface $options)
 
         Runs all versions down, starting from the newest and until (and including)
         the specified version.
 
-        :type $version: string|\Baleen\Migrations\Version
+        :type $version: string|VersionInterface
         :param $version:
-        :type $options: Options
+        :type $options: OptionsInterface
         :param $options:
 
-    .. php:method:: goTowards($goalVersion, Options $options)
+    .. php:method:: goTowards($goalVersion, OptionsInterface $options)
 
         Runs migrations up/down so that all versions *before and including* the
         specified version are "up" and
         all versions *after* the specified version are "down".
 
+        :type $goalVersion: string|VersionInterface
         :param $goalVersion:
-        :type $options: Options
+        :type $options: OptionsInterface
         :param $options:
 
-    .. php:method:: runSingle($version, Options $options, Progress $progress)
+    .. php:method:: runSingle(VersionInterface $version, OptionsInterface $options, Progress $progress)
 
         Runs a single migration in the specified direction.
 
-        :type $version: \Baleen\Migrations\Version
+        :type $version: VersionInterface
         :param $version:
-        :type $options: Options
+        :type $options: OptionsInterface
         :param $options:
         :type $progress: Progress
         :param $progress:
+        :returns: VersionInterface|false

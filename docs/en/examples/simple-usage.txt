@@ -13,15 +13,18 @@ The following example illustrates how you can use Baleen migrations from within 
 
     // The repository is in charge of loading all available migrations.
     $repository = new DirectoryRepository(__DIR__ . '/migrations');
-    $availableMigrations = $repository->getAllAvailableMigrations();
+    $available = $repository->getAllAvailableMigrations();
 
     /* The Storage retrieves a list of versions that have already been run.
        Here we're loading from a file, but it could also be a DB table, API call, etc. */
-    $storage = new FileStorage(__DIR__ . '/versions.txt');
-    $alreadyRun = $storage->readMigratedVersions();
+    // requires package "baleen/storage-flysystem"
+    $storage = new FlyStorage(__DIR__ . '/versions.txt');
+    $migrated = $storage->fetchAll();
+
+    $timelineFactory = new TimelineFactory();
 
     /* The Timeline sorts migrations in order and runs them based on their status */
-    $timeline = new Timeline($availableMigrations, $alreadyRun);
+    $timeline = $timelineFactory->create($available, $migrated);
 
     // Say we want to make sure all migrations up to and including v015 are UP:
     $timeline->upTowards('v015');
@@ -31,9 +34,8 @@ The following example illustrates how you can use Baleen migrations from within 
 
     /* You can also run a single migration in any direction and pass custom arguments
        to the Migration. */
-    use Baleen\Migration\RunOptions;
-    $options = new RunOptions(RunOptions::UP);
-    $options->setCustom([
+    use Baleen\Migration\Options;
+    $options = (new Options())->withCustom([
         'notifyEmail' => 'jon@doe.me',
     ]);
     $timeline->runSingle('v100', $options);

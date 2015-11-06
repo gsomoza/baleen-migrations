@@ -48,8 +48,7 @@ class SetOptionsMiddlewareTest extends BaseTestCase
     public function setUp()
     {
         $this->migration = m::mock(MigrationInterface::class);
-        $options = m::mock(Options::class);
-        $this->command = new MigrateCommand($this->migration, $options);
+        $this->command = new MigrateCommand($this->migration, new Options());
         $this->next = function() {};
     }
 

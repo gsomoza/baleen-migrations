@@ -25,8 +25,8 @@ use Baleen\Migrations\Migration\MigrationInterface;
 use Baleen\Migrations\Repository\RepositoryInterface;
 use Baleen\Migrations\Repository\RepositoryStack;
 use Baleen\Migrations\Version;
-use Baleen\Migrations\Version\Collection\LinkedVersions;
-use Baleen\Migrations\Version\Collection\SortableVersions;
+use Baleen\Migrations\Version\Collection\Linked;
+use Baleen\Migrations\Version\Collection\Sortable;
 use BaleenTest\Migrations\BaseTestCase;
 use Mockery as m;
 
@@ -67,7 +67,7 @@ class RepositoryStackTest extends BaseTestCase
      * @param $repositories
      * @param null $exception
      * @param int $count
-     * @throws \Baleen\Migrations\Exception\InvalidArgumentException
+     * @throws InvalidArgumentException
      * @dataProvider repositoriesProvider
      */
     public function testAddRepositories($repositories, $count = 0, $exception = null)
@@ -100,32 +100,31 @@ class RepositoryStackTest extends BaseTestCase
 
     /**
      * testSetRepositories
-     * @dataProvider repositoriesProvider
+     *
      * @param $repositories
      * @param int $count
      * @param null $exception
+     *
      * @throws InvalidArgumentException
+     * @dataProvider repositoriesProvider
      */
     public function testSetRepositories($repositories, $count = 0, $exception = null)
     {
         /** @var RepositoryStack|m\Mock $instance */
-        $instance = m::mock(RepositoryStack::class)
-            ->shouldAllowMockingProtectedMethods()
-            ->makePartial();
+        $instance = m::mock(new RepositoryStack())
+            ->shouldAllowMockingProtectedMethods();
 
         // load the instance with some previous repos, which should be overwritten
         /** @var RepositoryInterface|m\Mock $tmpRepo */
         $tmpRepo = m::mock(RepositoryInterface::class);
         $instance->addRepository($tmpRepo);
 
-        if (empty($exception)) {
-            $instance->shouldReceive('addRepositories')->once()->with($repositories);
-        } else {
+        if (!empty($exception)) {
             $this->setExpectedException($exception);
         }
 
         $instance->setRepositories($repositories);
-        $this->assertCount(0, $instance->getRepositories());
+        $this->assertCount($count, $instance->getRepositories());
     }
 
     /**
@@ -137,13 +136,14 @@ class RepositoryStackTest extends BaseTestCase
         $factory = m::mock(FactoryInterface::class);
 
         /** @var RepositoryStack|m\Mock $instance */
-        $instance = m::mock(RepositoryStack::class)
+        $instance = m::mock(new RepositoryStack())
             ->shouldAllowMockingProtectedMethods()
             ->makePartial();
 
+        /** @var RepositoryInterface|m\Mock $repo */
         $repo = m::mock(RepositoryInterface::class);
         $repo->shouldReceive('setMigrationFactory')->once()->with($factory);
-        $instance->shouldReceive('getRepositories')->once()->andReturn([$repo]);
+        $instance->addRepository($repo);
 
         $instance->setMigrationFactory($factory);
     }
@@ -158,14 +158,11 @@ class RepositoryStackTest extends BaseTestCase
     public function testFetchAll($repositories, $count = 0)
     {
         /** @var RepositoryStack|m\Mock $instance */
-        $instance = m::mock(RepositoryStack::class)
-            ->shouldAllowMockingProtectedMethods()
-            ->makePartial();
-
+        $instance = new RepositoryStack();
         $instance->setRepositories($repositories);
 
         $result = $instance->fetchAll();
-        $this->assertInstanceOf(LinkedVersions::class, $result);
+        $this->assertInstanceOf(Linked::class, $result);
         $this->assertCount($count, $result);
         foreach ($repositories as $repo) {
             /** @var m\Mock $repo */
@@ -187,8 +184,8 @@ class RepositoryStackTest extends BaseTestCase
         $version2->setMigration($migration);
         $version3 = new Version(3);
         $version3->setMigration($migration);
-        $versions1 = new SortableVersions([$version1, $version3]);
-        $versions2 = new SortableVersions([$version1, $version2]);
+        $versions1 = new Sortable([$version1, $version3]);
+        $versions2 = new Sortable([$version1, $version2]);
 
         $repo1 = m::mock(RepositoryInterface::class);
         $repo1->shouldReceive('fetchAll')->zeroOrMoreTimes()->andReturn($versions1);

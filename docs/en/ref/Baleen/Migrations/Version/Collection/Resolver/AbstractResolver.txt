@@ -8,21 +8,52 @@ Baleen\\Migrations\\Version\\Collection\\Resolver\\AbstractResolver
 
     Class AbstractResolver
 
-    .. php:method:: resolve($alias, IndexedVersions $collection)
+    .. php:method:: __construct($cacheEnabled = true)
+
+        :type $cacheEnabled: bool
+        :param $cacheEnabled:
+
+    .. php:method:: resolve($alias, Collection $collection)
 
         Resolves an alias into a Version.
 
         :type $alias: string
         :param $alias:
-        :type $collection: IndexedVersions
+        :type $collection: Collection
         :param $collection:
-        :returns: Version|null
+        :returns: VersionInterface|null
 
-    .. php:method:: doResolve($alias, IndexedVersions $collection)
+    .. php:method:: cacheGet($alias, Collection $collection)
+
+        Gets an alias from the cache. Returns false if nothing could be found, a
+        Version if the alias was previously
+        resolved to a version, and null if the alias couldn't be resolved in a
+        previous call.
+
+        :param $alias:
+        :type $collection: Collection
+        :param $collection:
+        :returns: bool|null|VersionInterface
+
+    .. php:method:: cacheSet($alias, $collection, $result)
+
+        Saves the result of resolving an alias against a given collection into the
+        cache.
+
+        :param $alias:
+        :param $collection:
+        :param $result:
+
+    .. php:method:: clearCache(Collection $collection = null)
+
+        :type $collection: Collection
+        :param $collection:
+
+    .. php:method:: doResolve($alias, Collection $collection)
 
         doResolve
 
         :param $alias:
-        :type $collection: IndexedVersions
+        :type $collection: Collection
         :param $collection:
-        :returns: Version|null
+        :returns: VersionInterface|null

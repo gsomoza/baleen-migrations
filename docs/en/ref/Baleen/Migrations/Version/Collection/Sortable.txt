@@ -1,0 +1,141 @@
+-------------------------------------------------
+Baleen\\Migrations\\Version\\Collection\\Sortable
+-------------------------------------------------
+
+.. php:namespace: Baleen\\Migrations\\Version\\Collection
+
+.. php:class:: Sortable
+
+    A collection of Versions.
+
+    .. php:attr:: resolver
+
+        protected ResolverInterface
+
+    .. php:method:: __construct($versions = [], ResolverInterface $resolver = null, ComparatorInterface $comparator = null)
+
+        :type $versions: VersionInterface[]
+        :param $versions:
+        :type $resolver: ResolverInterface
+        :param $resolver:
+        :type $comparator: ComparatorInterface
+        :param $comparator:
+
+    .. php:method:: sort(ComparatorInterface $comparator = null)
+
+        Sort the collection
+
+        :type $comparator: ComparatorInterface
+        :param $comparator:
+        :returns: static
+
+    .. php:method:: getReverse()
+
+        Returns a collection with elements sorted in reverse order.
+
+        :returns: static
+
+    .. php:method:: merge(CollectionInterface $collection)
+
+        Merges another set into this one, replacing versions that exist and adding
+        those that don't.
+
+        :type $collection: CollectionInterface
+        :param $collection:
+        :returns: $this
+
+    .. php:method:: getByPosition($position)
+
+        Returns the element at the given position.
+
+        :param $position:
+        :returns: null|VersionInterface
+
+    .. php:method:: add($element)
+
+        :param $element:
+
+    .. php:method:: isSorted()
+
+        Returns whether the collection is sorted or not
+
+        :returns: bool
+
+    .. php:method:: setResolver(ResolverInterface $resolver)
+
+        :type $resolver: ResolverInterface
+        :param $resolver:
+
+    .. php:method:: getResolver()
+
+        :returns: ResolverInterface
+
+    .. php:method:: get($key, $resolve = true)
+
+        Gets an element.
+
+        :type $key: mixed
+        :param $key: If an alias is given then it will be resolved to an element. Otherwise the $key will be used to fetch the element by index.
+        :type $resolve: bool
+        :param $resolve: Whether to use the resolver or not.
+        :returns: VersionInterface|null Null if not present
+
+    .. php:method:: getById($id)
+
+        Gets a version by id
+
+        :param $id:
+        :returns: VersionInterface
+
+    .. php:method:: indexOfId($id)
+
+        Returns the index of the version that has the given id. Returns null if
+        not found.
+
+        :type $id: string
+        :param $id:
+        :returns: int|null
+
+    .. php:method:: resolve($alias)
+
+        Resolves an alias in to a version
+
+        :type $alias: string
+        :param $alias:
+        :returns: VersionInterface|null
+
+    .. php:method:: has($index, $resolve = true)
+
+        Returns whether the key exists in the collection.
+
+        :param $index:
+        :type $resolve: bool
+        :param $resolve:
+        :returns: bool
+
+    .. php:method:: validate(VersionInterface $element)
+
+        Returns true if the specified version is valid (can be added) to the
+        collection. Otherwise, it MUST throw
+        an exception.
+
+        :type $element: VersionInterface
+        :param $element:
+        :returns: bool
+
+    .. php:method:: invalidateResolverCache()
+
+        invalidateResolverCache
+
+    .. php:method:: remove($version)
+
+        :param $version:
+        :returns: VersionInterface|null
+
+    .. php:method:: addOrReplace(VersionInterface $version)
+
+        Adds a new version to the collection if it doesn't exist or replaces it if
+        it does.
+
+        :type $version: VersionInterface
+        :param $version:

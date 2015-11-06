@@ -21,7 +21,6 @@ use Baleen\Migrations\Exception\MigrationMissingException;
 use Baleen\Migrations\Timeline\TimelineFactory;
 use Baleen\Migrations\Version as V;
 use Baleen\Migrations\Version;
-use Baleen\Migrations\Version\Collection\MigratedVersions;
 use BaleenTest\Migrations\BaseTestCase;
 
 /**
@@ -29,31 +28,33 @@ use BaleenTest\Migrations\BaseTestCase;
  */
 class TimelineFactoryTest extends BaseTestCase
 {
-
+    /**
+     * testCreate
+     */
     public function testCreate()
     {
-        $factory = new TimelineFactory(
-            $this->createVersionsWithMigrations('1', '2', '3', '4', '5'),
-            Version::fromArray('1', '2', '3', '4', '5')
-        );
-        $timeline = $factory->create();
-        $prop = new \ReflectionProperty($timeline, 'versions');
-        $prop->setAccessible(true);
-        /** @var MigratedVersions $versions */
-        $versions = $prop->getValue($timeline);
+        $available = $this->createVersionsWithMigrations('v1', 'v2', 'v3', 'v4', 'v5');
+        $migrated = Version::fromArray('v1', 'v2', 'v3', 'v4', 'v5');
+        $factory = new TimelineFactory();
+        $timeline = $factory->create($available, $migrated);
+        $versions = $timeline->getVersions();
         foreach($versions as $v) {
             $this->assertTrue($v->isMigrated());
         }
     }
 
+    /**
+     * testCreateThrowsException
+     */
     public function testCreateThrowsException()
     {
-        $factory = new TimelineFactory(
-            $this->createVersionsWithMigrations('1', '2', '3', '4', '5'),
-            Version::fromArray('1', '2', '3', '4', '5', '6') // has an additional version that doesn't have a migration
-        );
+        $available = $this->createVersionsWithMigrations('1', '2', '3', '4', '5');
+        // has an additional version that doesn't have a migration:
+        $migrated = Version::fromArray('1', '2', '3', '4', '5', '6');
+
+        $factory = new TimelineFactory();
 
         $this->setExpectedException(MigrationMissingException::class);
-        $factory->create();
+        $factory->create($available, $migrated);
     }
 }

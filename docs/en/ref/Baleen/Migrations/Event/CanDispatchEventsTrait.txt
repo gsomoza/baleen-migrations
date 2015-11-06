@@ -29,3 +29,4 @@ Baleen\\Migrations\\Event\\CanDispatchEventsTrait
         :param $name:
         :type $event: Event
         :param $event:
+        :returns: Event

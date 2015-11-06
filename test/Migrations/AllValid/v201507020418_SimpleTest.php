@@ -20,12 +20,13 @@
 namespace BaleenTest\Migrations\Migrations\AllValid;
 
 use Baleen\Migrations\Migration\Options;
-use Baleen\Migrations\Migration\SimpleMigration;
+use Baleen\Migrations\Migration\OptionsInterface;
+use Baleen\Migrations\Migration\AbstractMigration;
 
 /**
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
-class v201507020418_SimpleTest extends SimpleMigration
+class v201507020418_Abstract_Test extends AbstractMigration
 {
 
     /**
@@ -47,10 +48,5 @@ class v201507020418_SimpleTest extends SimpleMigration
     public function abort()
     {
         // TODO: Implement abort() method.
-    }
-
-    public function setOptions(Options $options)
-    {
-        // TODO: Implement setOptions() method.
     }
 }

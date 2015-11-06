@@ -12,37 +12,37 @@ Baleen\\Migrations\\Storage\\StorageInterface
 
         Reads versions from the storage file.
 
-        :returns: MigratedVersions
+        :returns: Migrated
 
-    .. php:method:: saveCollection(MigratedVersions $versions)
+    .. php:method:: saveCollection(Migrated $versions)
 
         Write a collection of versions to the storage file.
 
-        :type $versions: MigratedVersions
+        :type $versions: Migrated
         :param $versions:
         :returns: bool Returns false on failure.
 
-    .. php:method:: update(Version $version)
+    .. php:method:: update(VersionInterface $version)
 
         Saves or deletes a version depending on whether the version is
         respectively migrated or not.
 
-        :type $version: Version
+        :type $version: VersionInterface
         :param $version:
         :returns: bool The result of calling 'save' or 'delete' on the version.
 
-    .. php:method:: save(Version $version)
+    .. php:method:: save(VersionInterface $version)
 
         Adds a version into storage
 
-        :type $version: Version
+        :type $version: VersionInterface
         :param $version:
         :returns: bool
 
-    .. php:method:: delete(Version $version)
+    .. php:method:: delete(VersionInterface $version)
 
         Removes a version from storage
 
-        :type $version: Version
+        :type $version: VersionInterface
         :param $version:
         :returns: bool

@@ -21,3 +21,9 @@ Baleen\\Migrations\\Version\\Comparator\\ComparatorInterface
         :type $version2: VersionInterface
         :param $version2:
         :returns: int
+
+    .. php:method:: reverse()
+
+        Returns a reversed version of the comparator
+
+        :returns: $this

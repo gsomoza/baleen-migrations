@@ -1,0 +1,17 @@
+-----------------------------------------------------------------
+Baleen\\Migrations\\Version\\Comparator\\ComparatorAwareInterface
+-----------------------------------------------------------------
+
+.. php:namespace: Baleen\\Migrations\\Version\\Comparator
+
+.. php:interface:: ComparatorAwareInterface
+
+    Interface ComparatorAwareInterface
+
+    .. php:method:: setComparator(ComparatorInterface $comparator)
+
+        Set the comparator
+
+        :type $comparator: ComparatorInterface
+        :param $comparator:
+        :returns: void

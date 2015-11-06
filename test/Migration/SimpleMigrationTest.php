@@ -20,7 +20,7 @@
 namespace BaleenTest\Migrations\Migration\Factory;
 
 use Baleen\Migrations\Migration\Options;
-use Baleen\Migrations\Migration\SimpleMigration;
+use Baleen\Migrations\Migration\AbstractMigration;
 use BaleenTest\Migrations\BaseTestCase;
 use Mockery as m;
 
@@ -34,7 +34,7 @@ class SimpleMigrationTest extends BaseTestCase
     public function testGetSetOptions()
     {
         $options = new Options(Options::DIRECTION_UP);
-        $instance = m::mock(SimpleMigration::class)->makePartial();
+        $instance = m::mock(AbstractMigration::class)->makePartial();
         $instance->setOptions($options);
         $this->assertSame($options, $instance->getOptions());
     }

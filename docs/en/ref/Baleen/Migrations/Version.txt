@@ -8,21 +8,13 @@ Baleen\\Migrations\\Version
 
     {@inheritDoc}
 
-    .. php:attr:: id
-
-        protected string
-
-    .. php:attr:: migrated
-
-        protected bool
-
-    .. php:attr:: migration
-
-        protected MigrationInterface
-
-    .. php:method:: __construct($id)
+    .. php:method:: __construct($id, $migrated = false, MigrationInterface $migration = null)
 
         :param $id:
+        :type $migrated: bool
+        :param $migrated:
+        :type $migration: MigrationInterface
+        :param $migration:
 
     .. php:method:: getId()
 
@@ -51,16 +43,16 @@ Baleen\\Migrations\\Version
 
         :returns: null|MigrationInterface
 
-    .. php:method:: hasMigration()
-
-        :returns: bool
-
     .. php:method:: fromArray($versionIds)
 
         Creates a list of versions based on specified IDs.
 
         :type $versionIds: mixed
         :param $versionIds:
-        :returns: Version[]
+        :returns: VersionInterface[]
 
     .. php:method:: __toString()
+
+        __toString
+
+        :returns: string

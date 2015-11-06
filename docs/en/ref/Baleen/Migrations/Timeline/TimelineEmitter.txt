@@ -12,51 +12,55 @@ Baleen\\Migrations\\Timeline\\TimelineEmitter
 
         protected null|EventDispatcherInterface
 
-    .. php:method:: dispatchCollectionBefore(Version $targetVersion, Options $options, LinkedVersions $versions, Progress $progress = null)
+    .. php:method:: dispatchCollectionBefore(VersionInterface $targetVersion, OptionsInterface $options, Linked $versions, Progress $progress = null)
 
-        :type $targetVersion: Version
+        :type $targetVersion: VersionInterface
         :param $targetVersion:
-        :type $options: Options
+        :type $options: OptionsInterface
         :param $options:
-        :type $versions: LinkedVersions
+        :type $versions: Linked
         :param $versions:
         :type $progress: Progress
         :param $progress:
+        :returns: \Symfony\Component\EventDispatcher\Event|void
 
-    .. php:method:: dispatchCollectionAfter(Version $targetVersion, Options $options, LinkedVersions $versions, Progress $progress = null)
+    .. php:method:: dispatchCollectionAfter(VersionInterface $targetVersion, OptionsInterface $options, Linked $versions, Progress $progress = null)
 
         dispatchCollectionAfter.
 
-        :type $targetVersion: Version
+        :type $targetVersion: VersionInterface
         :param $targetVersion:
-        :type $options: Options
+        :type $options: OptionsInterface
         :param $options:
-        :type $versions: LinkedVersions
+        :type $versions: Linked
         :param $versions:
         :type $progress: Progress
         :param $progress:
+        :returns: \Symfony\Component\EventDispatcher\Event|void
 
-    .. php:method:: dispatchMigrationBefore(Version $version, Options $options, Progress $progress = null)
+    .. php:method:: dispatchMigrationBefore(VersionInterface $version, OptionsInterface $options, Progress $progress = null)
 
         dispatchMigrationBefore.
 
-        :type $version: Version
+        :type $version: VersionInterface
         :param $version:
-        :type $options: Options
+        :type $options: OptionsInterface
         :param $options:
         :type $progress: Progress
         :param $progress:
+        :returns: \Symfony\Component\EventDispatcher\Event|void
 
-    .. php:method:: dispatchMigrationAfter(Version $version, Options $options, Progress $progress = null)
+    .. php:method:: dispatchMigrationAfter(VersionInterface $version, OptionsInterface $options, Progress $progress = null)
 
         dispatchMigrationAfter.
 
-        :type $version: Version
+        :type $version: VersionInterface
         :param $version:
-        :type $options: Options
+        :type $options: OptionsInterface
         :param $options:
         :type $progress: Progress
         :param $progress:
+        :returns: \Symfony\Component\EventDispatcher\Event|void
 
     .. php:method:: getEventDispatcher()
 
@@ -74,3 +78,4 @@ Baleen\\Migrations\\Timeline\\TimelineEmitter
         :param $name:
         :type $event: Event
         :param $event:
+        :returns: Event

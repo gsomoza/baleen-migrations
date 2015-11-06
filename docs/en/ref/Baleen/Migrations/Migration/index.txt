@@ -6,9 +6,10 @@ Baleen\\Migrations\\Migration
 
 .. toctree::
 
+   AbstractMigration
    Capabilities/index
    Command/index
    Factory/index
    MigrationInterface
    Options
-   SimpleMigration
+   OptionsInterface

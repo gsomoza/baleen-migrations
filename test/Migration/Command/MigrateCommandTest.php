@@ -23,6 +23,7 @@ namespace BaleenTest\Migrations\Migration\Command;
 use Baleen\Migrations\Migration\Command\MigrateCommand;
 use Baleen\Migrations\Migration\MigrationInterface;
 use Baleen\Migrations\Migration\Options;
+use Baleen\Migrations\Migration\OptionsInterface;
 use BaleenTest\Migrations\BaseTestCase;
 use Mockery as m;
 
@@ -35,13 +36,13 @@ class MigrateCommandTest extends BaseTestCase
     /** @var m\Mock|MigrationInterface */
     protected $migration;
 
-    /** @var m\Mock|Options */
+    /** @var m\Mock|OptionsInterface */
     protected $options;
 
     public function setUp()
     {
         $this->migration = m::mock(MigrationInterface::class);
-        $this->options = m::mock(Options::class);
+        $this->options = m::mock(OptionsInterface::class);
     }
 
     public function testConstructor()
@@ -63,7 +64,8 @@ class MigrateCommandTest extends BaseTestCase
 
     public function testSetOptions()
     {
-        $options = m::mock(Options::class);
+        /** @var OptionsInterface $options */
+        $options = m::mock(OptionsInterface::class);
         $this->assertNotSame($this->options, $options);
 
         $instance = new MigrateCommand($this->migration, $this->options);

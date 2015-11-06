@@ -20,9 +20,9 @@
 namespace BaleenTest\Migrations\Version\Collection\Resolver;
 
 use Baleen\Migrations\Version;
-use Baleen\Migrations\Version\Collection\IndexedVersions;
+use Baleen\Migrations\Version\Collection;
 use Baleen\Migrations\Version\Collection\Resolver\HeadResolver;
-use Baleen\Migrations\Version\Collection\SortableVersions;
+use Baleen\Migrations\Version\Collection\Sortable;
 use BaleenTest\Migrations\BaseTestCase;
 use Mockery as m;
 
@@ -43,7 +43,7 @@ class HeadResolverTest extends BaseTestCase
     public function testResolve($versions, $headId, $command = 'HEAD')
     {
         $instance = new HeadResolver();
-        $collection = new SortableVersions($versions);
+        $collection = new Sortable($versions);
         $result = $instance->resolve($command, $collection);
         $actual = null !== $result ? $result->getId() : null;
         $this->assertEquals($headId, $actual);
@@ -86,8 +86,8 @@ class HeadResolverTest extends BaseTestCase
      */
     public function testResolveReturnsNullNotSortable()
     {
-        $instance = new HeadResolver();
-        $collection = new IndexedVersions(); // not sortable
+        $instance = new Collection\Resolver\HeadResolver();
+        $collection = new Collection(); // not sortable
         $result = $instance->resolve('HEAD', $collection);
         $this->assertNull($result);
     }

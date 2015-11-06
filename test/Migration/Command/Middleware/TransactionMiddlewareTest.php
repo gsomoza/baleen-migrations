@@ -26,6 +26,7 @@ use Baleen\Migrations\Migration\Command\Middleware\TransactionMiddleware;
 use Baleen\Migrations\Migration\Command\MigrateCommand;
 use Baleen\Migrations\Migration\MigrationInterface;
 use Baleen\Migrations\Migration\Options;
+use Baleen\Migrations\Migration\OptionsInterface;
 use BaleenTest\Migrations\BaseTestCase;
 use Mockery as m;
 
@@ -48,7 +49,8 @@ class TransactionMiddlewareTest extends BaseTestCase
     public function setUp()
     {
         $this->migration = m::mock(MigrationInterface::class);
-        $options = m::mock(Options::class);
+        /** @var OptionsInterface $options */
+        $options = m::mock(OptionsInterface::class);
         $this->command = new MigrateCommand($this->migration, $options);
         $this->next = function() {};
     }

@@ -6,5 +6,7 @@ Baleen\\Migrations\\Version\\Comparator
 
 .. toctree::
 
+   ComparatorAwareInterface
+   ComparatorAwareTrait
    ComparatorInterface
    DefaultComparator

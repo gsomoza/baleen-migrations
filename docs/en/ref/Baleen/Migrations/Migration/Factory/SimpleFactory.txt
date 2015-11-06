@@ -6,6 +6,7 @@ Baleen\\Migrations\\Migration\\Factory\\SimpleFactory
 
 .. php:class:: SimpleFactory
 
-    .. php:method:: create($class)
+    .. php:method:: create($class, $args = [])
 
         :param $class:
+        :param $args:

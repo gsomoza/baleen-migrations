@@ -6,30 +6,6 @@ Baleen\\Migrations\\Migration\\Options
 
 .. php:class:: Options
 
-    .. php:attr:: allowedDirections
-
-        protected array
-
-    .. php:attr:: direction
-
-        protected string
-
-    .. php:attr:: forced
-
-        protected bool
-
-    .. php:attr:: dryRun
-
-        protected bool
-
-    .. php:attr:: custom
-
-        protected array
-
-    .. php:attr:: exceptionOnSkip
-
-        protected bool
-
     .. php:method:: __construct($direction = self::DIRECTION_UP, $forced = false, $dryRun = false, $exceptionOnSkip = true, $custom = [])
 
         :param $direction:
@@ -42,14 +18,23 @@ Baleen\\Migrations\\Migration\\Options
         :type $custom: array
         :param $custom:
 
+    .. php:method:: setDirection($direction)
+
+        setDirection
+
+        :param $direction:
+
     .. php:method:: getDirection()
+
+        getDirection
 
         :returns: string
 
-    .. php:method:: setDirection($direction)
+    .. php:method:: withDirection($direction)
 
         :type $direction: string
         :param $direction:
+        :returns: static
 
     .. php:method:: isDirectionUp()
 
@@ -63,34 +48,50 @@ Baleen\\Migrations\\Migration\\Options
 
         :returns: bool
 
-    .. php:method:: setForced($forced)
+    .. php:method:: withForced($forced)
 
-        :type $forced: bool
+        withForced
+
         :param $forced:
+        :returns: static
 
     .. php:method:: isDryRun()
 
         :returns: bool
 
-    .. php:method:: setDryRun($dryRun)
+    .. php:method:: withDryRun($dryRun)
+
+        withDryRun
 
         :type $dryRun: bool
         :param $dryRun:
-
-    .. php:method:: getCustom()
-
-        :returns: array
-
-    .. php:method:: setCustom($custom)
-
-        :type $custom: array
-        :param $custom:
+        :returns: static
 
     .. php:method:: isExceptionOnSkip()
 
         :returns: bool
 
-    .. php:method:: setExceptionOnSkip($exceptionOnSkip)
+    .. php:method:: withExceptionOnSkip($exceptionOnSkip)
 
         :type $exceptionOnSkip: bool
         :param $exceptionOnSkip:
+        :returns: static
+
+    .. php:method:: getCustom()
+
+        :returns: array
+
+    .. php:method:: withCustom($custom)
+
+        :type $custom: array
+        :param $custom:
+        :returns: static
+
+    .. php:method:: equals(OptionsInterface $options)
+
+        Compares the current instance with another instance of options to see if
+        they contain the same values.
+
+        :type $options: OptionsInterface
+        :param $options:
+        :returns: bool

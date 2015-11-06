@@ -8,11 +8,26 @@ Baleen\\Migrations\\Version\\Comparator\\DefaultComparator
 
     {@inheritDoc}
 
+    .. php:method:: __construct($order = self::ORDER_NORMAL)
+
+        DefaultComparator constructor.
+
+        :type $order: int
+        :param $order:
+
     .. php:method:: __invoke(VersionInterface $version1, VersionInterface $version2)
 
-        {@inheritDoc}
+        Migrations1\v01
+        Migrations11\v01
+        Migrations2\v01
 
         :type $version1: VersionInterface
         :param $version1:
         :type $version2: VersionInterface
         :param $version2:
+
+    .. php:method:: reverse()
+
+        Returns a reversed version of the comparator
+
+        :returns: $this

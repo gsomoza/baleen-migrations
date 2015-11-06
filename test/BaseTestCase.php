@@ -35,8 +35,10 @@ class BaseTestCase extends \PHPUnit_Framework_TestCase
             $ids = func_get_args();
         }
         $versions = Version::fromArray($ids);
+        /** @var MigrationInterface|m\Mock $migration */
+        $migration = m::mock(MigrationInterface::class);
         foreach ($versions as $version) {
-            $version->setMigration(m::mock(MigrationInterface::class));
+            $version->setMigration(clone $migration);
         }
         return $versions;
     }

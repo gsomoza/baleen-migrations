@@ -22,6 +22,8 @@ namespace BaleenTest\Migrations\Migration\Factory;
 
 use Baleen\Migrations\Exception\InvalidArgumentException;
 use Baleen\Migrations\Migration\Factory\SimpleFactory;
+use Baleen\Migrations\Migration\Options;
+use Baleen\Migrations\Migration\OptionsInterface;
 use BaleenTest\Migrations\BaseTestCase;
 
 /**
@@ -30,7 +32,10 @@ use BaleenTest\Migrations\BaseTestCase;
  */
 class SimpleFactoryTest extends BaseTestCase
 {
-
+    /**
+     * testCreateSimple
+     * @throws InvalidArgumentException
+     */
     public function testCreateSimple()
     {
         $instance = new SimpleFactory();
@@ -38,11 +43,36 @@ class SimpleFactoryTest extends BaseTestCase
         $this->assertInstanceOf(\stdClass::class, $result);
     }
 
-    public function testCreateException()
+    /**
+     * testCreateException
+     * @throws InvalidArgumentException
+     */
+    public function testCreateExceptionWithInvalidClass()
     {
         $instance = new SimpleFactory();
         $this->setExpectedException(InvalidArgumentException::class);
         $instance->create('');
     }
 
+    /**
+     * testCreateExceptionWithInvalidArgs
+     * @throws InvalidArgumentException
+     */
+    public function testCreateExceptionWithInvalidArgs()
+    {
+        $factory = new SimpleFactory();
+        $this->setExpectedException(InvalidArgumentException::class);
+        $factory->create(Options::class, OptionsInterface::DIRECTION_DOWN); // no array!
+    }
+
+    /**
+     * testCreateWithArgs
+     */
+    public function testCreateWithArgs()
+    {
+        $factory = new SimpleFactory();
+        $result = $factory->create(Options::class, [OptionsInterface::DIRECTION_DOWN]);
+        $this->assertInstanceOf(Options::class, $result);
+        $this->assertTrue($result->isDirectionDown());
+    }
 }

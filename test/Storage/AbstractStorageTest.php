@@ -18,8 +18,11 @@
  */
 namespace BaleenTest\Migrations\Storage;
 
+use Baleen\Migrations\Exception\StorageException;
 use Baleen\Migrations\Storage\AbstractStorage;
-use Baleen\Migrations\Version;
+use Baleen\Migrations\Version\Collection\Migrated;
+use Baleen\Migrations\Version\Comparator\ComparatorInterface;
+use Baleen\Migrations\Version\VersionInterface;
 use BaleenTest\Migrations\BaseTestCase;
 use Mockery as m;
 
@@ -39,8 +42,8 @@ class AbstractStorageTest extends BaseTestCase
      */
     public function testUpdate($isMigrated, $return)
     {
-        /** @var m\Mock|Version $v */
-        $v = m::mock(Version::class);
+        /** @var m\Mock|VersionInterface $v */
+        $v = m::mock(VersionInterface::class);
         $v->shouldReceive('isMigrated')->once()->andReturn($isMigrated);
         /** @var m\Mock|AbstractStorage $instance */
         $instance = m::mock(AbstractStorage::class)->makePartial();
@@ -56,7 +59,53 @@ class AbstractStorageTest extends BaseTestCase
     public function updateProvider()
     {
         $trueFalse = [true, false];
-        $results = [m::mock(Version::class), null];
+        $results = [m::mock(VersionInterface::class), null];
         return $this->combinations([$trueFalse, $results]);
+    }
+
+    /**
+     * testFetchAll
+     * @param m\Mock|Migrated $collection
+     * @param bool $isSorted
+     * @param bool $exception
+     * @throws StorageException
+     * @dataProvider fetchAllProvider
+     */
+    public function testFetchAll($collection, $isSorted, $exception = false)
+    {
+        /** @var AbstractStorage|m\Mock $instance */
+        $instance = m::mock(AbstractStorage::class)->shouldAllowMockingProtectedMethods()->makePartial();
+        /** @var ComparatorInterface|m\Mock $comparator */
+        $comparator = m::mock(ComparatorInterface::class);
+        $instance->setComparator($comparator);
+        if ($exception) {
+            $this->setExpectedException(StorageException::class);
+        } else {
+            $collection->shouldReceive('isSorted')->once()->andReturn($isSorted);
+            if ($isSorted) {
+                $collection->shouldNotReceive('sort');
+            } else {
+                $collection->shouldReceive('sort')->once()->with($comparator);
+            }
+        }
+        $instance->shouldReceive('doFetchAll')->once()->andReturn($collection);
+        $result = $instance->fetchAll();
+        $this->assertSame($collection, $result);
+    }
+
+    /**
+     * fetchAllProvider
+     * @return array
+     */
+    public function fetchAllProvider()
+    {
+        return [
+            [m::mock(Migrated::class), false],
+            [m::mock(Migrated::class), true],
+            [['v1'], false, true],
+            ['v1', false, true],
+            [1, false, true],
+            [1.0, false, true],
+        ];
     }
 }

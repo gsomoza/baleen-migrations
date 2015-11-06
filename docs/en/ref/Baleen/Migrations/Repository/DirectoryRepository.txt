@@ -6,32 +6,44 @@ Baleen\\Migrations\\Repository\\DirectoryRepository
 
 .. php:class:: DirectoryRepository
 
-    .. php:attr:: factory
+    .. php:method:: __construct($path, $pattern = self::PATTERN_DEFAULT, FactoryInterface $migrationFactory = null, ComparatorInterface $comparator = null)
 
-        protected FactoryInterface
-
-    .. php:method:: __construct($path, FactoryInterface $migrationFactory = null)
-
-        :param $path:
+        :type $path: string
+        :param $path: Full path to the repository's directory
+        :type $pattern: string
+        :param $pattern:
         :type $migrationFactory: FactoryInterface
         :param $migrationFactory:
+        :type $comparator: ComparatorInterface
+        :param $comparator:
 
     .. php:method:: doFetchAll()
 
-    .. php:method:: getClassNameRegex()
-
-        :returns: string
-
-    .. php:method:: setClassNameRegex($classNameRegex)
-
-        :type $classNameRegex: string
-        :param $classNameRegex:
-
     .. php:method:: setMigrationFactory(FactoryInterface $factory)
+
+        {@inheritdoc}
 
         :type $factory: FactoryInterface
         :param $factory:
 
+    .. php:method:: getMigrationFactory()
+
+        Returns the migration factory. Creates a new SimpleFactory object for it
+        if none was configured.
+
+        :returns: FactoryInterface
+
     .. php:method:: fetchAll()
 
-        :returns: LinkedVersions
+        {@inheritdoc}
+
+        :returns: Linked
+
+    .. php:method:: setComparator(ComparatorInterface $comparator)
+
+        :type $comparator: ComparatorInterface
+        :param $comparator:
+
+    .. php:method:: getComparator()
+
+        :returns: ComparatorInterface
