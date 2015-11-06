@@ -36,27 +36,27 @@ interface TimelineInterface
     /**
      * Runs all versions up, starting from the oldest and until (and including) the specified version.
      *
-     * @param string|VersionInterface $version
+     * @param VersionInterface $version
      * @param OptionsInterface $options
      */
-    public function upTowards($version, OptionsInterface $options);
+    public function upTowards(VersionInterface $version, OptionsInterface $options);
 
     /**
      * Runs all versions down, starting from the newest and until (and including) the specified version.
      *
-     * @param string|VersionInterface $version
+     * @param VersionInterface $version
      * @param OptionsInterface $options
      */
-    public function downTowards($version, OptionsInterface $options);
+    public function downTowards(VersionInterface $version, OptionsInterface $options);
 
     /**
      * Runs migrations up/down so that all versions *before and including* the specified version are "up" and
      * all versions *after* the specified version are "down".
      *
-     * @param string|VersionInterface $goalVersion
+     * @param VersionInterface $goalVersion
      * @param OptionsInterface $options
      */
-    public function goTowards($goalVersion, OptionsInterface $options);
+    public function goTowards(VersionInterface $goalVersion, OptionsInterface $options);
 
     /**
      * Runs a single migration in the specified direction.

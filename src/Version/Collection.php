@@ -92,11 +92,15 @@ class Collection extends ArrayCollection
     {
         $result = null;
 
+        if (is_object($key) && $key instanceof VersionInterface) {
+            return $this->getById($key->getId());
+        }
+
         if ($resolve && is_string($key)) {
             $result = $this->resolve($key);
         }
 
-        if (null === $result) {
+        if (null === $result && is_scalar($key)) {
             $result = parent::get($key);
         }
 

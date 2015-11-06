@@ -38,14 +38,14 @@ use Baleen\Migrations\Version\VersionInterface;
 final class Timeline extends AbstractTimeline
 {
     /**
-     * @param VersionInterface|string $goalVersion
+     * @param VersionInterface $goalVersion
      * @param OptionsInterface $options
      *
      * @return Sortable A collection of modified versions
      *
      * @throws MigrationMissingException
      */
-    public function upTowards($goalVersion, OptionsInterface $options = null)
+    public function upTowards(VersionInterface $goalVersion, OptionsInterface $options = null)
     {
         if (null === $options) {
             $options = new Options(OptionsInterface::DIRECTION_UP);
@@ -54,32 +54,24 @@ final class Timeline extends AbstractTimeline
             $options = $options->withDirection(OptionsInterface::DIRECTION_UP); // make sure its right
         }
 
-        if (!is_object($goalVersion)) {
-            $goalVersion = $this->getVersions()->get($goalVersion);
-        }
-
         return $this->runCollection($goalVersion, $options, $this->getVersions());
     }
 
     /**
-     * @param VersionInterface|string $goalVersion
+     * @param VersionInterface $goalVersion
      * @param OptionsInterface $options
      *
      * @return Sortable A collection of modified versions
      *
      * @throws \Exception
      */
-    public function downTowards($goalVersion, OptionsInterface $options = null)
+    public function downTowards(VersionInterface $goalVersion, OptionsInterface $options = null)
     {
         if (null === $options) {
             $options = new Options(OptionsInterface::DIRECTION_DOWN);
             $options = $options->withExceptionOnSkip(false);
         } else {
             $options = $options->withDirection(OptionsInterface::DIRECTION_DOWN); // make sure its right
-        }
-
-        if (!is_object($goalVersion)) {
-            $goalVersion = $this->getVersions()->get($goalVersion);
         }
 
         return $this->runCollection($goalVersion, $options, $this->getVersions()->getReverse());
@@ -89,18 +81,14 @@ final class Timeline extends AbstractTimeline
      * Runs migrations up/down so that all versions *before and including* the specified version are "up" and
      * all versions *after* the specified version are "down".
      *
-     * @param $goalVersion
+     * @param VersionInterface $goalVersion
      * @param OptionsInterface $options
      *
      * @return Linked A collection of versions that were *changed* during the process. Note that this collection may
      *                significantly defer from what would be obtained by $this->getVersions()
      */
-    public function goTowards($goalVersion, OptionsInterface $options = null)
+    public function goTowards(VersionInterface $goalVersion, OptionsInterface $options = null)
     {
-        if (!is_object($goalVersion)) {
-            $goalVersion = $this->getVersions()->get($goalVersion);
-        }
-
         // create a new collection to store the changed versions
         $changed = clone $this->getVersions(); // this ensures we keep the same comparator
         $changed->clear();

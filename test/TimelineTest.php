@@ -81,15 +81,17 @@ class TimelineTest extends BaseTestCase
     public function testUpTowards($versions, $goal)
     {
         $instance = $this->getInstance($versions);
+        if (!is_object($goal) || !$goal instanceof VersionInterface) {
+            $goal = $instance->getVersions()->get($goal);
+        }
         $instance->upTowards($goal);
 
         $collection = $instance->getVersions();
-        $goalVersion = $collection->get($goal);
 
         foreach ($collection as $version) {
             /** @var V $version */
             $this->assertTrue($version->isMigrated(), sprintf('Expected version %s to be migrated', $version->getId()));
-            if ($version === $goalVersion) {
+            if ($version === $goal) {
                 break;
             }
         }
@@ -105,7 +107,7 @@ class TimelineTest extends BaseTestCase
         $options = m::mock(OptionsInterface::class);
         $options->shouldReceive('withDirection')->once()->with(OptionsInterface::DIRECTION_UP)->andReturnSelf();
         $options->shouldReceive(['isForced' => false, 'isDirectionUp' => true, 'isExceptionOnSkip' => false]);
-        $instance->upTowards('v1', $options);
+        $instance->upTowards($v, $options);
     }
 
     /**
@@ -118,10 +120,12 @@ class TimelineTest extends BaseTestCase
     public function testDownTowards($versions, $goal)
     {
         $instance = $this->getInstance($versions);
+        if (!is_object($goal) || !$goal instanceof VersionInterface) {
+            $goal = $instance->getVersions()->get($goal);
+        }
         $instance->downTowards($goal);
 
         $collection = $instance->getVersions()->getReverse();
-        $goal = $collection->get($goal);
 
         foreach ($collection as $version) {
             /** @var V $version */
@@ -142,7 +146,7 @@ class TimelineTest extends BaseTestCase
         $options = m::mock(OptionsInterface::class);
         $options->shouldReceive('withDirection')->once()->with(OptionsInterface::DIRECTION_DOWN)->andReturnSelf();
         $options->shouldReceive(['isForced' => false, 'isDirectionUp' => false, 'isExceptionOnSkip' => false]);
-        $instance->downTowards('v1', $options);
+        $instance->downTowards($v, $options);
     }
 
     /**
@@ -154,6 +158,9 @@ class TimelineTest extends BaseTestCase
     public function testGoTowards($versions, $goal)
     {
         $instance = $this->getInstance($versions);
+        if (!is_object($goal) || !$goal instanceof VersionInterface) {
+            $goal = $instance->getVersions()->get($goal);
+        }
         $instance->goTowards($goal);
 
         $collection = $instance->getVersions();
@@ -173,6 +180,10 @@ class TimelineTest extends BaseTestCase
         }
     }
 
+    /**
+     * getAllMigratedVersionsFixture
+     * @return \Baleen\Migrations\Version[]
+     */
     public function getAllMigratedVersionsFixture()
     {
         return $this->getFixtureFor([
@@ -191,6 +202,10 @@ class TimelineTest extends BaseTestCase
         ]);
     }
 
+    /**
+     * getNoMigratedVersionsFixture
+     * @return \Baleen\Migrations\Version[]
+     */
     public function getNoMigratedVersionsFixture()
     {
         return $this->getFixtureFor([
@@ -209,6 +224,10 @@ class TimelineTest extends BaseTestCase
         ]);
     }
 
+    /**
+     * getMixedVersionsFixture
+     * @return \Baleen\Migrations\Version[]
+     */
     public function getMixedVersionsFixture()
     {
         return $this->getFixtureFor([

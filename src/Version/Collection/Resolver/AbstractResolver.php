@@ -43,7 +43,6 @@ abstract class AbstractResolver implements ResolverInterface
         $this->cacheEnabled = (bool) $cacheEnabled;
     }
 
-
     /**
      * Resolves an alias into a Version.
      *
