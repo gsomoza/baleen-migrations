@@ -19,8 +19,8 @@
 
 namespace Baleen\Migrations\Version\Collection\Resolver;
 
+use Baleen\Migrations\Version\Collection;
 use Baleen\Migrations\Version\Collection\Sortable;
-use Doctrine\Common\Collections\Collection;
 
 /**
  * Class OffsetResolver.

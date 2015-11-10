@@ -20,8 +20,8 @@
 namespace Baleen\Migrations\Version\Collection\Resolver;
 
 use Baleen\Migrations\Exception\Version\Collection\ResolverException;
+use Baleen\Migrations\Version\Collection;
 use Baleen\Migrations\Version\VersionInterface;
-use Doctrine\Common\Collections\Collection;
 
 /**
  * Class AbstractResolver

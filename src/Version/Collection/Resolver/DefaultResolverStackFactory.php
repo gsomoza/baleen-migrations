@@ -36,6 +36,7 @@ class DefaultResolverStackFactory
             new OffsetResolver(false),
             new HeadResolver(false),
             new FirstLastResolver(false),
+            new FilenameResolver(false),
             new IdResolver(false),
         ]);
     }

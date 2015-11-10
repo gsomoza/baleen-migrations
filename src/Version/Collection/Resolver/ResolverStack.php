@@ -20,7 +20,7 @@
 namespace Baleen\Migrations\Version\Collection\Resolver;
 
 use Baleen\Migrations\Exception\InvalidArgumentException;
-use Doctrine\Common\Collections\Collection;
+use Baleen\Migrations\Version\Collection;
 
 /**
  * Class ResolverStack

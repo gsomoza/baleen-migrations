@@ -20,30 +20,39 @@
 namespace Baleen\Migrations\Version\Collection\Resolver;
 
 use Baleen\Migrations\Version\Collection;
+use Baleen\Migrations\Version\VersionInterface;
 
 /**
- * Interface ResolverInterface
- *
- * @package Baleen\Cli\Version\Resolver
+ * Class FilenameResolver
+ * @author Gabriel Somoza <gabriel@strategery.io>
  */
-interface ResolverInterface
+class FilenameResolver extends AbstractResolver
 {
     /**
-     * Resolves an alias into a Version.
+     * doResolve
      *
-     * @param string $alias
+     * @param $alias
      * @param Collection $collection
      *
-     * @return \Baleen\Migrations\Version\VersionInterface|null
+     * @return VersionInterface|null
      */
-    public function resolve($alias, Collection $collection);
+    protected function doResolve($alias, Collection $collection)
+    {
+        if (strlen($alias) <= 4 || substr($alias, -4) != '.php') {
+            return null;
+        }
 
-    /**
-     * Clears the resolver cache. Only clears the cache for a given collection if a collection is specified.
-     *
-     * @param Collection $collection
-     *
-     * @return bool
-     */
-    public function clearCache(Collection $collection = null);
+        $result = null;
+        foreach ($collection as $version) {
+            if ($version->getMigration()) {
+                $class = new \ReflectionClass($version->getMigration());
+                $file = $class->getFileName();
+                if (strpos($file, $alias) !== false) {
+                    $result = $version;
+                    break;
+                }
+            }
+        }
+        return $result;
+    }
 }
