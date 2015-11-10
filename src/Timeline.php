@@ -38,14 +38,14 @@ use Baleen\Migrations\Version\VersionInterface;
 final class Timeline extends AbstractTimeline
 {
     /**
-     * @param VersionInterface $goalVersion
+     * @param VersionInterface $goal
      * @param OptionsInterface $options
      *
      * @return Sortable A collection of modified versions
      *
      * @throws MigrationMissingException
      */
-    public function upTowards(VersionInterface $goalVersion, OptionsInterface $options = null)
+    public function upTowards(VersionInterface $goal, OptionsInterface $options = null)
     {
         if (null === $options) {
             $options = new Options(OptionsInterface::DIRECTION_UP);
@@ -54,18 +54,27 @@ final class Timeline extends AbstractTimeline
             $options = $options->withDirection(OptionsInterface::DIRECTION_UP); // make sure its right
         }
 
-        return $this->runCollection($goalVersion, $options, $this->getVersions());
+        // get only versions that are not migrated and are lesser than or equal to the goal version
+        $collection = $this->getVersions();
+        $comparator = $collection->getComparator();
+        $collection = $collection->filter(function (VersionInterface $v) use ($goal, $comparator) {
+            return !$v->isMigrated() && $comparator($v, $goal) <= 0;
+        });
+        /** @var Linked $collection */
+        $collection = $collection->sort($comparator);
+
+        return $this->runCollection($goal, $options, $collection);
     }
 
     /**
-     * @param VersionInterface $goalVersion
+     * @param VersionInterface $goal
      * @param OptionsInterface $options
      *
      * @return Sortable A collection of modified versions
      *
      * @throws \Exception
      */
-    public function downTowards(VersionInterface $goalVersion, OptionsInterface $options = null)
+    public function downTowards(VersionInterface $goal, OptionsInterface $options = null)
     {
         if (null === $options) {
             $options = new Options(OptionsInterface::DIRECTION_DOWN);
@@ -74,32 +83,43 @@ final class Timeline extends AbstractTimeline
             $options = $options->withDirection(OptionsInterface::DIRECTION_DOWN); // make sure its right
         }
 
-        return $this->runCollection($goalVersion, $options, $this->getVersions()->getReverse());
+        // get only versions that are not migrated and are lesser than or equal to the goal version
+        $collection = $this->getVersions()->getReverse();
+        $comparator = $collection->getComparator(); // already reversed
+        $collection = $collection->filter(function (VersionInterface $v) use ($goal, $comparator) {
+            return $v->isMigrated() && $comparator($v, $goal) <= 0;
+        });
+        /** @var Linked $collection */
+        $collection = $collection->sort($comparator);
+
+        return $this->runCollection($goal, $options, $collection);
     }
 
     /**
      * Runs migrations up/down so that all versions *before and including* the specified version are "up" and
      * all versions *after* the specified version are "down".
      *
-     * @param VersionInterface $goalVersion
+     * @param VersionInterface $goalUp
      * @param OptionsInterface $options
      *
      * @return Linked A collection of versions that were *changed* during the process. Note that this collection may
      *                significantly defer from what would be obtained by $this->getVersions()
      */
-    public function goTowards(VersionInterface $goalVersion, OptionsInterface $options = null)
+    public function goTowards(VersionInterface $goalUp, OptionsInterface $options = null)
     {
+        $collection = $this->getVersions();
         // create a new collection to store the changed versions
-        $changed = clone $this->getVersions(); // this ensures we keep the same comparator
+        $changed = clone $collection; // this ensures we keep the same comparator
         $changed->clear();
 
-        $goalIndex = $this->getVersions()->indexOf($goalVersion);
-        $changedUp = $this->upTowards($goalVersion, $options);
+        $goalIndex = $collection->indexOf($goalUp);
+        $goalDown = $collection->get($goalIndex + 1, false);
+
+        $changedUp = $this->upTowards($goalUp, $options);
         $changed->merge($changedUp);
 
-        $newGoal = $this->getVersions()->get($goalIndex + 1, false);
-        if (null !== $newGoal) { // unless we're at the end of the queue (no migrations can go down)
-            $changedDown  = $this->downTowards($newGoal, $options);
+        if (null !== $goalDown) { // unless we're at the end of the queue (no migrations can go down)
+            $changedDown = $this->downTowards($goalDown, $options);
             $changed->merge($changedDown);
         }
 

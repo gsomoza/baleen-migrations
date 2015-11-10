@@ -19,8 +19,8 @@
 
 namespace BaleenTest\Migrations\Version;
 
-use Baleen\Migrations\Exception\CollectionException;
 use Baleen\Migrations\Exception\InvalidArgumentException;
+use Baleen\Migrations\Exception\Version\Collection\CollectionException;
 use Baleen\Migrations\Version as V;
 use Baleen\Migrations\Version\Collection;
 use Baleen\Migrations\Version\Collection\Resolver\ResolverInterface;

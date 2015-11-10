@@ -120,6 +120,9 @@ final class Version implements VersionInterface
         }
         $results = [];
         foreach ($versionIds as $id) {
+            if (!is_string($id)) {
+                $id = 'v' . (string) $id;
+            }
             $results[] = new static($id);
         }
 

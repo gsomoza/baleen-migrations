@@ -62,7 +62,7 @@ abstract class AbstractTimeline implements TimelineInterface
     }
 
     /**
-     * Returns true if the operatin is forced, or if the direction is the opposite to the state of the migration.
+     * Returns true if the operation is forced, or if the direction is the opposite to the state of the migration.
      *
      * @param VersionInterface $version
      * @param OptionsInterface $options
@@ -100,7 +100,7 @@ abstract class AbstractTimeline implements TimelineInterface
     /**
      * Executes migrations against a collection
      *
-     * @param VersionInterface $goalVersion
+     * @param VersionInterface $goal
      * @param OptionsInterface $options
      * @param Linked $collection
      *
@@ -108,31 +108,33 @@ abstract class AbstractTimeline implements TimelineInterface
      *
      * @throws InvalidArgumentException
      */
-    protected function runCollection(VersionInterface $goalVersion, OptionsInterface $options, Linked $collection)
+    protected function runCollection(VersionInterface $goal, OptionsInterface $options, Linked $collection)
     {
-        $current = 0;
-        $total = $collection->indexOf($goalVersion) + 1;
-        $progress = new Progress($total, $current);
+        $current = 1;
+        $progress = new Progress(max($collection->count(), 1), $current);
 
         // dispatch COLLECTION_BEFORE
-        $this->getEmitter()->dispatchCollectionBefore($goalVersion, $options, $collection, $progress);
+        $this->getEmitter()->dispatchCollectionBefore($goal, $options, $collection, $progress);
 
         $modified = new Linked();
+        $comparator = $collection->getComparator();
+
+        // TODO: add tests to see if rewind is necessary
         $collection->first(); // rewind
         foreach ($collection as $version) {
-            $current += 1;
             $progress->setCurrent($current);
             $result = $this->runSingle($version, $options, $progress);
             if ($result) {
                 $modified->add($version);
             }
-            if ($version === $goalVersion) {
+            if ($comparator($version, $goal) >= 0) {
                 break;
             }
+            $current += 1;
         }
 
         // dispatch COLLECTION_AFTER
-        $this->getEmitter()->dispatchCollectionAfter($goalVersion, $options, $modified, $progress);
+        $this->getEmitter()->dispatchCollectionAfter($goal, $options, $modified, $progress);
 
         return $modified;
     }

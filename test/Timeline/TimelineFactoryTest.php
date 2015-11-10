@@ -17,7 +17,7 @@
  * <http://www.doctrine-project.org>.
  */
 
-use Baleen\Migrations\Exception\MigrationMissingException;
+use Baleen\Migrations\Exception\Version\Collection\CollectionException;
 use Baleen\Migrations\Timeline\TimelineFactory;
 use Baleen\Migrations\Version as V;
 use Baleen\Migrations\Version;
@@ -33,13 +33,16 @@ class TimelineFactoryTest extends BaseTestCase
      */
     public function testCreate()
     {
-        $available = $this->createVersionsWithMigrations('v1', 'v2', 'v3', 'v4', 'v5');
-        $migrated = Version::fromArray('v1', 'v2', 'v3', 'v4', 'v5');
+        $available = $this->createVersionsWithMigrations(range(1, 5));
+        $migrated = Version::fromArray(range(1, 5));
+        foreach ($migrated as $v) {
+            $v->setMigrated(true);
+        }
         $factory = new TimelineFactory();
         $timeline = $factory->create($available, $migrated);
         $versions = $timeline->getVersions();
         foreach($versions as $v) {
-            $this->assertTrue($v->isMigrated());
+            $this->assertTrue($v->isMigrated(), sprintf('Expected version %s to be migrated.', $v->getId()));
         }
     }
 
@@ -48,13 +51,18 @@ class TimelineFactoryTest extends BaseTestCase
      */
     public function testCreateThrowsException()
     {
-        $available = $this->createVersionsWithMigrations('1', '2', '3', '4', '5');
+        $available = $this->createVersionsWithMigrations(range(1, 5));
         // has an additional version that doesn't have a migration:
-        $migrated = Version::fromArray('1', '2', '3', '4', '5', '6');
+        $migrated = Version::fromArray(range(1, 6));
+        foreach ($migrated as $v) {
+            if ($v->getId() !== 'v6') {
+                $v->setMigrated(true);
+            }
+        }
 
         $factory = new TimelineFactory();
 
-        $this->setExpectedException(MigrationMissingException::class);
+        $this->setExpectedException(CollectionException::class);
         $factory->create($available, $migrated);
     }
 }

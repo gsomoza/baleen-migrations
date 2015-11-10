@@ -19,6 +19,7 @@
 
 namespace Baleen\Migrations\Version\Comparator;
 
+use Baleen\Migrations\Exception\InvalidArgumentException;
 use Baleen\Migrations\Version\VersionInterface;
 
 /**
@@ -26,43 +27,20 @@ use Baleen\Migrations\Version\VersionInterface;
  *
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
-final class DefaultComparator implements ComparatorInterface
+final class MigrationComparator extends AbstractReversibleComparator
 {
-    const ORDER_NORMAL = 1;
-    const ORDER_REVERSE = -1;
-
-    /** @var int */
-    private $order = self::ORDER_NORMAL; // -1 for reverse order
-
-    /**
-     * DefaultComparator constructor.
-     *
-     * @param int $order
-     */
-    public function __construct($order = self::ORDER_NORMAL)
-    {
-        $this->order = (int) $order < 0 ? self::ORDER_REVERSE : self::ORDER_NORMAL;
-    }
-
     /**
      * @inheritdoc
-     *
-     * Migrations1\v01
-     * Migrations11\v01
-     * Migrations2\v01
      */
-    public function __invoke(VersionInterface $version1, VersionInterface $version2)
+    protected function compare(VersionInterface $version1, VersionInterface $version2)
     {
-        return strcmp($version1->getId(), $version2->getId()) * $this->order;
-    }
-
-    /**
-     * Returns a reversed version of the comparator
-     *
-     * @return $this
-     */
-    public function reverse()
-    {
-        return new static($this->order * -1);
+        if ($version1->getMigration() === null || $version2->getMigration() === null) {
+            throw new InvalidArgumentException(
+                "Expected both versions to be linked to a migration, but at least one of them isn't."
+            );
+        }
+        $class1 = get_class($version1->getMigration());
+        $class2 = get_class($version2->getMigration());
+        return strcmp($class1, $class2);
     }
 }

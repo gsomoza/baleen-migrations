@@ -22,8 +22,8 @@ namespace BaleenTest\Migrations\Repository;
 use Baleen\Migrations\Exception\InvalidArgumentException;
 use Baleen\Migrations\Migration\Factory\FactoryInterface;
 use Baleen\Migrations\Migration\MigrationInterface;
+use Baleen\Migrations\Repository\AggregateRepository;
 use Baleen\Migrations\Repository\RepositoryInterface;
-use Baleen\Migrations\Repository\RepositoryStack;
 use Baleen\Migrations\Version;
 use Baleen\Migrations\Version\Collection\Linked;
 use Baleen\Migrations\Version\Collection\Sortable;
@@ -31,17 +31,17 @@ use BaleenTest\Migrations\BaseTestCase;
 use Mockery as m;
 
 /**
- * Class RepositoryStackTest
+ * Class RepositoryAggregateTest
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
-class RepositoryStackTest extends BaseTestCase
+class RepositoryAggregateTest extends BaseTestCase
 {
     /**
      * testConstructor
      */
     public function testConstructor()
     {
-        $instance = new RepositoryStack();
+        $instance = new AggregateRepository();
         $repositories = $instance->getRepositories();
         $this->assertInstanceOf(\Traversable::class, $repositories);
         $this->assertInstanceOf(\ArrayAccess::class, $repositories);
@@ -54,7 +54,7 @@ class RepositoryStackTest extends BaseTestCase
      */
     public function testAddRepository()
     {
-        $instance = new RepositoryStack();
+        $instance = new AggregateRepository();
         /** @var RepositoryInterface|m\Mock $repo */
         $repo = m::mock(RepositoryInterface::class);
         $instance->addRepository($repo);
@@ -72,7 +72,7 @@ class RepositoryStackTest extends BaseTestCase
      */
     public function testAddRepositories($repositories, $count = 0, $exception = null)
     {
-        $instance = new RepositoryStack();
+        $instance = new AggregateRepository();
         if (!empty($exception)) {
             $this->setExpectedException($exception);
         }
@@ -110,8 +110,8 @@ class RepositoryStackTest extends BaseTestCase
      */
     public function testSetRepositories($repositories, $count = 0, $exception = null)
     {
-        /** @var RepositoryStack|m\Mock $instance */
-        $instance = m::mock(new RepositoryStack())
+        /** @var AggregateRepository|m\Mock $instance */
+        $instance = m::mock(new AggregateRepository())
             ->shouldAllowMockingProtectedMethods();
 
         // load the instance with some previous repos, which should be overwritten
@@ -135,8 +135,8 @@ class RepositoryStackTest extends BaseTestCase
         /** @var FactoryInterface|m\Mock $factory */
         $factory = m::mock(FactoryInterface::class);
 
-        /** @var RepositoryStack|m\Mock $instance */
-        $instance = m::mock(new RepositoryStack())
+        /** @var AggregateRepository|m\Mock $instance */
+        $instance = m::mock(new AggregateRepository())
             ->shouldAllowMockingProtectedMethods()
             ->makePartial();
 
@@ -157,8 +157,8 @@ class RepositoryStackTest extends BaseTestCase
      */
     public function testFetchAll($repositories, $count = 0)
     {
-        /** @var RepositoryStack|m\Mock $instance */
-        $instance = new RepositoryStack();
+        /** @var AggregateRepository|m\Mock $instance */
+        $instance = new AggregateRepository();
         $instance->setRepositories($repositories);
 
         $result = $instance->fetchAll();

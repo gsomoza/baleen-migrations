@@ -25,7 +25,6 @@ use Baleen\Migrations\Event\Timeline\MigrationEvent;
 use Baleen\Migrations\Event\Timeline\Progress;
 use Baleen\Migrations\Exception\TimelineException;
 use Baleen\Migrations\Migration\Command\MigrateCommand;
-use Baleen\Migrations\Migration\Command\MigrateHandler;
 use Baleen\Migrations\Migration\Command\MigrationBus;
 use Baleen\Migrations\Migration\MigrationInterface;
 use Baleen\Migrations\Migration\Options;
@@ -35,6 +34,7 @@ use Baleen\Migrations\Timeline\TimelineInterface;
 use Baleen\Migrations\Version as V;
 use Baleen\Migrations\Version;
 use Baleen\Migrations\Version\Collection\Linked;
+use Baleen\Migrations\Version\Comparator\IdComparator;
 use Baleen\Migrations\Version\VersionInterface;
 use Mockery as m;
 use Symfony\Component\EventDispatcher\EventDispatcher;
@@ -56,8 +56,7 @@ class TimelineTest extends BaseTestCase
      */
     public function getInstance($versions = [])
     {
-        $linked = new Linked($versions);
-        $linked->sort();
+        $linked = (new Linked($versions, null, new IdComparator()))->sort();
         $timeline = new Timeline($linked);
         return m::mock($timeline)->shouldAllowMockingProtectedMethods();
     }
@@ -81,19 +80,28 @@ class TimelineTest extends BaseTestCase
     public function testUpTowards($versions, $goal)
     {
         $instance = $this->getInstance($versions);
-        if (!is_object($goal) || !$goal instanceof VersionInterface) {
-            $goal = $instance->getVersions()->get($goal);
-        }
-        $instance->upTowards($goal);
-
         $collection = $instance->getVersions();
+        $comparator = $collection->getComparator();
+        if (!is_object($goal) || !$goal instanceof VersionInterface) {
+            $goal = $collection->get($goal);
+        }
+        $changed = $instance->upTowards($goal);
 
-        foreach ($collection as $version) {
-            /** @var V $version */
+        /** @var Linked $before */
+        list($before, ) = $collection->partition(function ($i, VersionInterface $v) use ($comparator, $goal) {
+            return $comparator($v, $goal) <= 0;
+        });
+
+        foreach ($before as $version) {
             $this->assertTrue($version->isMigrated(), sprintf('Expected version %s to be migrated', $version->getId()));
-            if ($version === $goal) {
-                break;
-            }
+        }
+
+        // assert subset doesn't work because they're not the same instances, so we're doing it manually
+        foreach ($changed as $version) {
+            $this->assertTrue($before->has(
+                $version->getId()),
+                sprintf('Version %s is not after goal %s', $version->getId(), $goal->getId())
+            );
         }
     }
 
@@ -120,19 +128,28 @@ class TimelineTest extends BaseTestCase
     public function testDownTowards($versions, $goal)
     {
         $instance = $this->getInstance($versions);
+        $collection = $instance->getVersions();
+        $comparator = $collection->getComparator();
         if (!is_object($goal) || !$goal instanceof VersionInterface) {
-            $goal = $instance->getVersions()->get($goal);
+            $goal = $collection->get($goal);
         }
-        $instance->downTowards($goal);
+        $changed = $instance->downTowards($goal);
 
-        $collection = $instance->getVersions()->getReverse();
+        /** @var Linked $after */
+        list(, $after) = $collection->partition(function ($i, VersionInterface $v) use ($comparator, $goal) {
+            return $comparator($v, $goal) < 0; // less than goal, cause goal is included in the downTowards run
+        });
 
-        foreach ($collection as $version) {
-            /** @var V $version */
+        foreach ($after as $version) {
             $this->assertFalse($version->isMigrated(), sprintf('Expected version %s not to be migrated', $version->getId()));
-            if ($version === $goal) {
-                break;
-            }
+        }
+
+        // assert subset doesn't work because they're not the same instances, so we're doing it manually
+        foreach ($changed as $version) {
+            $this->assertTrue($after->has(
+                $version->getId()),
+                sprintf('Version %s is not after goal %s', $version->getId(), $goal->getId())
+            );
         }
     }
 
@@ -161,28 +178,29 @@ class TimelineTest extends BaseTestCase
         if (!is_object($goal) || !$goal instanceof VersionInterface) {
             $goal = $instance->getVersions()->get($goal);
         }
-        $instance->goTowards($goal);
+        $changed = $instance->goTowards($goal);
 
         $collection = $instance->getVersions();
+        $comparator = $collection->getComparator();
 
-        $goal = $collection->get($goal);
-        $afterGoal = false;
+        /** @var Linked $before */
+        /** @var Linked $after */
+        list($before, $after) = $changed->partition(function ($index, VersionInterface $v) use ($comparator, $goal) {
+            return $comparator($v, $goal) <= 0;
+        });
 
-        foreach ($collection as $version) {
-            if (!$afterGoal) {
-                $this->assertTrue($version->isMigrated(), sprintf('Expected version %s to be migrated', $version->getId()));
-            } else {
-                $this->assertFalse($version->isMigrated(), sprintf('Expected version %s not to be migrated', $version->getId()));
-            }
-            if ($version === $goal) {
-                $afterGoal = true;
-            }
+        foreach ($before as $version) {
+            $this->assertTrue($version->isMigrated(), sprintf('Expected version %s to be migrated', $version->getId()));
+        }
+
+        foreach ($after as $version) {
+            $this->assertFalse($version->isMigrated(), sprintf('Expected version %s not to be migrated', $version->getId()));
         }
     }
 
     /**
      * getAllMigratedVersionsFixture
-     * @return \Baleen\Migrations\Version[]
+     * @return V[]
      */
     public function getAllMigratedVersionsFixture()
     {
@@ -204,7 +222,7 @@ class TimelineTest extends BaseTestCase
 
     /**
      * getNoMigratedVersionsFixture
-     * @return \Baleen\Migrations\Version[]
+     * @return V[]
      */
     public function getNoMigratedVersionsFixture()
     {
@@ -226,7 +244,7 @@ class TimelineTest extends BaseTestCase
 
     /**
      * getMixedVersionsFixture
-     * @return \Baleen\Migrations\Version[]
+     * @return V[]
      */
     public function getMixedVersionsFixture()
     {
@@ -250,11 +268,11 @@ class TimelineTest extends BaseTestCase
      * This fixture is meant to cover all use-cases.
      *
      * @param array $versions
-     * @return \Baleen\Migrations\Version[]
+     * @return V[]
      */
     public function getFixtureFor(array $versions)
     {
-        /** @var MigrationInterface $migrationMock */
+        /** @var MigrationInterface|m\Mock $migrationMock */
         $migrationMock = m::mock(MigrationInterface::class);
         $migrationMock->shouldReceive('up')->zeroOrMoreTimes();
         $migrationMock->shouldReceive('down')->zeroOrMoreTimes();
@@ -262,10 +280,7 @@ class TimelineTest extends BaseTestCase
         $migrationMock->shouldReceive('setOptions')->zeroOrMoreTimes();
         $this->migrationMock = $migrationMock;
         return array_map(function ($arr) use ($migrationMock) {
-            $v = new V($arr['id']);
-            $v->setMigrated($arr['migrated']);
-            $v->setMigration(clone $migrationMock);
-            return $v;
+            return new V($arr['id'], $arr['migrated'], clone $migrationMock);
         }, $versions);
     }
 
@@ -319,10 +334,10 @@ class TimelineTest extends BaseTestCase
                 /** @var CollectionEvent $event */
                 $self->assertInstanceOf(Progress::class, $event->getProgress());
                 $self->assertEquals($collection->count(), $event->getProgress()->getTotal());
-                $self->assertEquals(0, $event->getProgress()->getCurrent());
+                $self->assertEquals(1, $event->getProgress()->getCurrent());
 
                 $self->assertTrue($options->equals($event->getOptions()));
-                $self->assertSame($collection, $event->getCollection());
+                $self->assertArraySubset($event->getCollection()->toArray(), $collection->toArray());
                 // the following also asserts that the version is NOT migrated
                 $self->assertSame($version, $event->getTarget());
             }

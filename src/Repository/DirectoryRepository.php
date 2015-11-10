@@ -26,7 +26,7 @@ use Baleen\Migrations\Migration\MigrationInterface;
 use Baleen\Migrations\Version;
 use Baleen\Migrations\Version\Collection\Linked;
 use Baleen\Migrations\Version\Comparator\ComparatorInterface;
-use Baleen\Migrations\Version\Comparator\DefaultComparator;
+use Baleen\Migrations\Version\Comparator\MigrationComparator;
 use Zend\Code\Scanner\DerivedClassScanner;
 use Zend\Code\Scanner\DirectoryScanner;
 
@@ -79,7 +79,7 @@ final class DirectoryRepository extends AbstractRepository
         }
 
         if (null === $comparator) {
-            $comparator = new DefaultComparator();
+            $comparator = new MigrationComparator();
         }
         $this->setComparator($comparator);
 
@@ -103,7 +103,8 @@ final class DirectoryRepository extends AbstractRepository
             ) {
                 $migration = $this->getMigrationFactory()->create($className);
                 if ($migration instanceof MigrationInterface) {
-                    $version = new Version($className);
+                    $id = hash('sha1', $className);
+                    $version = new Version($id);
                     $version->setMigration($migration);
                     $versions->add($version);
                 }

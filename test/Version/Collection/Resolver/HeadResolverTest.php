@@ -19,6 +19,7 @@
 
 namespace BaleenTest\Migrations\Version\Collection\Resolver;
 
+use Baleen\Migrations\Migration\MigrationInterface;
 use Baleen\Migrations\Version;
 use Baleen\Migrations\Version\Collection;
 use Baleen\Migrations\Version\Collection\Resolver\HeadResolver;
@@ -55,28 +56,36 @@ class HeadResolverTest extends BaseTestCase
      */
     public function resolveProvider()
     {
-        $migratedVersion = new Version(5);
-        $migratedVersion->setMigrated(true);
+        /** @var MigrationInterface|m\Mock $migration */
+        $migration = m::mock(MigrationInterface::class);
 
-        $oneVersionNoHead = [new Version(1)];
+        $link = function (Version\VersionInterface $v) use ($migration) {
+            $v->setMigration($migration);
+            return $v;
+        };
+
+        $migratedVersion = new Version('v5', true, clone $migration);
+
+        $oneVersionNoHead = [new Version('v1', false, clone $migration)];
         $oneVersionWithHead = [clone $migratedVersion];
 
-        $tenVersionsNoHead = Version::fromArray(range(1,10));
-        $tenVersionsWithHead = Version::fromArray(range(1,10));
+        $tenVersionsNoHead = array_map($link, Version::fromArray(range(1,10)));
+        $tenVersionsWithHead = array_map($link, Version::fromArray(range(1,10)));
+        /** @var MigrationInterface[] $tenVersionsWithHead */
         $tenVersionsWithHead[8]->setMigrated(true);
 
-        $tenVersionsTwoHeads = Version::fromArray(range(1,10));
+        $tenVersionsTwoHeads = array_map($link, Version::fromArray(range(1,10)));
         reset($tenVersionsTwoHeads)->setMigrated(true);
         end($tenVersionsTwoHeads)->setMigrated(true);
 
         return [
             [[], null],
             [$oneVersionNoHead, null],
-            [$oneVersionWithHead, 5],
-            [$oneVersionWithHead, 5, 'head'],
+            [$oneVersionWithHead, 'v5'],
+            [$oneVersionWithHead, 'v5', 'head'],
             [$tenVersionsNoHead, null],
-            [$tenVersionsWithHead, 9],
-            [$tenVersionsTwoHeads, 10],
+            [$tenVersionsWithHead, 'v9'],
+            [$tenVersionsTwoHeads, 'v10'],
             [$tenVersionsTwoHeads, null, 'notHEAD'],
         ];
     }

@@ -19,7 +19,7 @@
 
 namespace BaleenTest\Migrations\Version\Collection;
 
-use Baleen\Migrations\Exception\CollectionException;
+use Baleen\Migrations\Exception\Version\Collection\CollectionException;
 use Baleen\Migrations\Version as V;
 use Baleen\Migrations\Version;
 use Baleen\Migrations\Version\Collection\Linked;
@@ -37,9 +37,9 @@ class LinkedTest extends SortableTest
      */
     public function testAddException()
     {
-        $version = new Version('1');
+        $version = new Version('v1');
         $version->setMigrated(true); // but no linked migration
-        $instance = new Version\Collection\Linked();
+        $instance = new Linked();
 
         $this->setExpectedException(CollectionException::class, 'must have a Migration');
         $instance->add($version);

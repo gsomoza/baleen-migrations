@@ -28,13 +28,13 @@ use Baleen\Migrations\Version\Collection\Linked;
  *
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
-final class RepositoryStack implements RepositoryInterface
+final class AggregateRepository implements RepositoryInterface
 {
     /** @var \SplStack */
     private $stack;
 
     /**
-     * RepositoryStack constructor.
+     * AggregateRepository constructor.
      */
     public function __construct()
     {

@@ -22,8 +22,6 @@ namespace Baleen\Migrations\Storage;
 
 use Baleen\Migrations\Exception\StorageException;
 use Baleen\Migrations\Version\Collection\Migrated;
-use Baleen\Migrations\Version\Comparator\ComparatorAwareInterface;
-use Baleen\Migrations\Version\Comparator\ComparatorAwareTrait;
 use Baleen\Migrations\Version\VersionInterface;
 
 /**
@@ -31,10 +29,8 @@ use Baleen\Migrations\Version\VersionInterface;
  *
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
-abstract class AbstractStorage implements StorageInterface, ComparatorAwareInterface
+abstract class AbstractStorage implements StorageInterface
 {
-    use ComparatorAwareTrait;
-
     /**
      * Reads versions from the storage file.
      *
@@ -51,9 +47,6 @@ abstract class AbstractStorage implements StorageInterface, ComparatorAwareInter
                 Migrated::class,
                 is_object($collection) ? get_class($collection) : gettype($collection)
             ));
-        }
-        if (!$collection->isSorted()) {
-            $collection->sort($this->getComparator());
         }
         return $collection;
     }

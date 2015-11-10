@@ -20,7 +20,6 @@
 namespace Baleen\Migrations\Version\Collection\Resolver;
 
 use Baleen\Migrations\Exception\InvalidArgumentException;
-use Baleen\Migrations\Exception\ResolverException;
 use Doctrine\Common\Collections\Collection;
 
 /**
@@ -63,7 +62,7 @@ class ResolverStack extends AbstractResolver
      * @param Collection $collection
      *
      * @return \Baleen\Migrations\Version\VersionInterface|null
-     * @throws ResolverException
+     * @throws \Baleen\Migrations\Exception\Version\Collection\ResolverException
      */
     public function doResolve($alias, Collection $collection)
     {

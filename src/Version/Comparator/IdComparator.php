@@ -17,12 +17,27 @@
  * <http://www.doctrine-project.org>.
  */
 
-namespace Baleen\Migrations\Exception;
+namespace Baleen\Migrations\Version\Comparator;
+
+use Baleen\Migrations\Version\VersionInterface;
 
 /**
- * Class ResolverException
+ * Class IdComparator
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
-class ResolverException extends CollectionException
+final class IdComparator extends AbstractReversibleComparator
 {
+    /**
+     * The internal compare function. Should return less than zero (0), zero or greater than zero if the first item is
+     * respectively less than, equal to, or greater than the second item.
+     *
+     * @param VersionInterface $version1
+     * @param VersionInterface $version2
+     *
+     * @return mixed
+     */
+    protected function compare(VersionInterface $version1, VersionInterface $version2)
+    {
+        return strcmp($version1->getId(), $version2->getId());
+    }
 }

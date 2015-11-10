@@ -23,9 +23,8 @@ namespace Baleen\Migrations\Version\Collection;
 use Baleen\Migrations\Version\Collection;
 use Baleen\Migrations\Version\Collection\Resolver\ResolverInterface;
 use Baleen\Migrations\Version\Comparator\ComparatorInterface;
-use Baleen\Migrations\Version\Comparator\DefaultComparator;
+use Baleen\Migrations\Version\Comparator\MigrationComparator;
 use Baleen\Migrations\Version\VersionInterface;
-use Doctrine\Common\Collections\Collection as CollectionInterface;
 
 /**
  * A collection of Versions.
@@ -53,7 +52,7 @@ class Sortable extends Collection
         ComparatorInterface $comparator = null
     ) {
         if (null === $comparator) {
-            $comparator = new DefaultComparator();
+            $comparator = new MigrationComparator();
         }
         $this->comparator = $comparator;
 
@@ -86,21 +85,6 @@ class Sortable extends Collection
     }
 
     /**
-     * Merges another set into this one, replacing versions that exist and adding those that don't.
-     *
-     * @param CollectionInterface $collection
-     * @return $this
-     */
-    public function merge(CollectionInterface $collection)
-    {
-        foreach ($collection as $version) {
-            $this->addOrReplace($version);
-        }
-
-        return $this;
-    }
-
-    /**
      * Returns the element at the given position.
      *
      * @param $position
@@ -119,6 +103,23 @@ class Sortable extends Collection
     {
         parent::add($element);
         $this->sorted = false;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function set($key, $value)
+    {
+        parent::set($key, $value);
+        $this->sorted = false;
+    }
+
+    /**
+     * @return ComparatorInterface
+     */
+    public function getComparator()
+    {
+        return $this->comparator;
     }
 
     /**

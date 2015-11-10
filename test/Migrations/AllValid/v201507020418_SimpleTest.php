@@ -19,8 +19,6 @@
 
 namespace BaleenTest\Migrations\Migrations\AllValid;
 
-use Baleen\Migrations\Migration\Options;
-use Baleen\Migrations\Migration\OptionsInterface;
 use Baleen\Migrations\Migration\AbstractMigration;
 
 /**

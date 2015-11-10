@@ -19,8 +19,8 @@
 
 namespace BaleenTest\Migrations\Migration\Factory;
 
-use Baleen\Migrations\Migration\Options;
 use Baleen\Migrations\Migration\AbstractMigration;
+use Baleen\Migrations\Migration\Options;
 use BaleenTest\Migrations\BaseTestCase;
 use Mockery as m;
 

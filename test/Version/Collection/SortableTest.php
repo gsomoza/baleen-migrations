@@ -1,5 +1,4 @@
 <?php
-
 /*
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -20,7 +19,7 @@
 
 namespace BaleenTest\Migrations\Version\Collection;
 
-use Baleen\Migrations\Exception\CollectionException;
+use Baleen\Migrations\Exception\Version\Collection\CollectionException;
 use Baleen\Migrations\Version as V;
 use Baleen\Migrations\Version;
 use Baleen\Migrations\Version\Collection;
@@ -95,9 +94,9 @@ class SortableTest extends CollectionTest
     public function testGetSupportsAlias()
     {
         $instance = new Sortable(Version::fromArray(1, 2, 3));
-        $this->assertEquals(3, $instance->get('last')->getId());
+        $this->assertEquals('v3', $instance->get('last')->getId());
         // also make sure it supports the standard get functionality if no alias is found
-        $this->assertEquals(1, $instance->get('1')->getId());
+        $this->assertEquals('v1', $instance->get('v1')->getId());
     }
 
     /**
@@ -123,8 +122,8 @@ class SortableTest extends CollectionTest
         $sample1 = Version::fromArray(1, 2, 3, 4, 5);
         $sample2 = Version::fromArray('v097', 'v098', 'v099', 'v100');
         return [
-            [$sample1, 'last', 5],
-            [$sample1, 'first', 1],
+            [$sample1, 'last', 'v5'],
+            [$sample1, 'first', 'v1'],
             [$sample2, 'last', 'v100'],
             [$sample2, 'latest', 'v100'],
             [$sample2, 'first', 'v097'],

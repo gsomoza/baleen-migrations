@@ -20,7 +20,6 @@
 namespace BaleenTest\Migrations\Migrations\CustomRegex;
 
 use Baleen\Migrations\Migration\MigrationInterface;
-use Baleen\Migrations\Migration\Options;
 use Baleen\Migrations\Migration\OptionsInterface;
 
 /**

@@ -17,30 +17,13 @@
  * <http://www.doctrine-project.org>.
  */
 
-namespace BaleenTest\Migrations\Version\Collection\Resolver;
-
-use Baleen\Migrations\Version\Collection\Resolver\IdResolver;
-use BaleenTest\Migrations\BaseTestCase;
-use Doctrine\Common\Collections\Collection;
-use Mockery as m;
+namespace Baleen\Migrations\Exception\Version\Collection;
 
 /**
- * Class IdResolverTest
+ * Class AlreadyExistsException
+ *
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
-class IdResolverTest extends BaseTestCase
+class AlreadyExistsException extends CollectionException
 {
-    /**
-     * testDoResolveReturnsNullIfNotVersionCollection
-     * @throws \Baleen\Migrations\Exception\ResolverException
-     */
-    public function testDoResolveReturnsNullIfNotVersionCollection()
-    {
-        /** @var Collection|m\Mock $collection */
-        $collection = m::mock(Collection::class);
-        $collection->shouldNotReceive('getById');
-        $resolver = new IdResolver();
-        $result = $resolver->resolve('123', $collection);
-        $this->assertNull($result);
-    }
 }
