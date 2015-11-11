@@ -24,7 +24,7 @@ use Baleen\Migrations\Migration\AbstractMigration;
 /**
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
-class v201507020418_Abstract_Test extends AbstractMigration
+class v201507020418_SimpleTest extends AbstractMigration
 {
 
     /**

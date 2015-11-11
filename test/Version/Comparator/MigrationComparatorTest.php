@@ -14,33 +14,35 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the MIT license. For more information, see
- * <https://github.com/baleen/migrations>.
+ * <http://www.doctrine-project.org>.
  */
 
-namespace Baleen\Migrations\Version\Comparator;
+namespace BaleenTest\Migrations\Version\Comparator;
 
 use Baleen\Migrations\Exception\InvalidArgumentException;
-use Baleen\Migrations\Version\VersionInterface;
+use Baleen\Migrations\Migration\MigrationInterface;
+use Baleen\Migrations\Version;
+use Baleen\Migrations\Version\Comparator\MigrationComparator;
+use Mockery as m;
 
 /**
- * {@inheritDoc}
- *
+ * Class MigrationComparatorTest
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
-final class MigrationComparator extends AbstractComparator
+class MigrationComparatorTest extends ComparatorTestCase
 {
     /**
-     * @inheritdoc
+     * testCompareThrowsExceptionIfNoMigration
+     * @param $withMigration1
+     * @param $withMigration2
+     * @dataProvider twoTrueFalseProvider
      */
-    protected function compare(VersionInterface $version1, VersionInterface $version2)
+    public function testCompareThrowsExceptionIfNoMigration($withMigration1, $withMigration2)
     {
-        if ($version1->getMigration() === null || $version2->getMigration() === null) {
-            throw new InvalidArgumentException(
-                "Expected both versions to be linked to a migration, but at least one of them isn't."
-            );
-        }
-        $class1 = get_class($version1->getMigration());
-        $class2 = get_class($version2->getMigration());
-        return strcmp($class1, $class2);
+        $v1 = new Version('abc', false, $withMigration1 ? m::mock(MigrationInterface::class) : null);
+        $v2 = new Version('xyz', false, $withMigration2 ? m::mock(MigrationInterface::class) : null);
+        $comparator = new MigrationComparator();
+        $this->setExpectedException(InvalidArgumentException::class);
+        $comparator($v1, $v2);
     }
 }

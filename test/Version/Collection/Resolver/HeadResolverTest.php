@@ -24,6 +24,7 @@ use Baleen\Migrations\Version;
 use Baleen\Migrations\Version\Collection;
 use Baleen\Migrations\Version\Collection\Resolver\HeadResolver;
 use Baleen\Migrations\Version\Collection\Sortable;
+use Baleen\Migrations\Version\Comparator\IdComparator;
 use Baleen\Migrations\Version\VersionInterface;
 use BaleenTest\Migrations\BaseTestCase;
 use Mockery as m;
@@ -45,7 +46,7 @@ class HeadResolverTest extends BaseTestCase
     public function testResolve($versions, $headId, $command = 'HEAD')
     {
         $instance = new HeadResolver();
-        $collection = new Sortable($versions);
+        $collection = new Sortable($versions, null, new IdComparator());
         $result = $instance->resolve($command, $collection);
         $actual = null !== $result ? $result->getId() : null;
         $this->assertEquals($headId, $actual);
@@ -60,24 +61,20 @@ class HeadResolverTest extends BaseTestCase
         /** @var MigrationInterface|m\Mock $migration */
         $migration = m::mock(MigrationInterface::class);
 
-        $link = function (VersionInterface $v) use ($migration) {
-            $v->setMigration($migration);
-            return $v;
-        };
-
         $migratedVersion = new Version('v5', true, clone $migration);
 
         $oneVersionNoHead = [new Version('v1', false, clone $migration)];
         $oneVersionWithHead = [clone $migratedVersion];
 
-        $tenVersionsNoHead = array_map($link, Version::fromArray(range(1,10)));
-        $tenVersionsWithHead = array_map($link, Version::fromArray(range(1,10)));
-        /** @var MigrationInterface[] $tenVersionsWithHead */
+        $tenVersionsNoHead = Version::fromArray(range(1,10));
+        $tenVersionsWithHead = Version::fromArray(range(1,10));
+        /** @var VersionInterface[] $tenVersionsWithHead */
         $tenVersionsWithHead[8]->setMigrated(true);
 
-        $tenVersionsTwoHeads = array_map($link, Version::fromArray(range(1,10)));
-        reset($tenVersionsTwoHeads)->setMigrated(true);
-        end($tenVersionsTwoHeads)->setMigrated(true);
+        /** @var VersionInterface[] $tenVersionsTwoHeads */
+        $tenVersionsTwoHeads = Version::fromArray(range(1,10));
+        $tenVersionsTwoHeads[0]->setMigrated(true);
+        $tenVersionsTwoHeads[9]->setMigrated(true);
 
         return [
             [[], null],

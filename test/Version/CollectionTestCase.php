@@ -19,16 +19,11 @@
 
 namespace BaleenTest\Migrations\Version;
 
-use Baleen\Migrations\Exception\InvalidArgumentException;
 use Baleen\Migrations\Exception\Version\Collection\CollectionException;
 use Baleen\Migrations\Migration\MigrationInterface;
 use Baleen\Migrations\Version as V;
 use Baleen\Migrations\Version;
 use Baleen\Migrations\Version\Collection;
-use Baleen\Migrations\Version\Collection\Linked;
-use Baleen\Migrations\Version\Collection\Migrated;
-use Baleen\Migrations\Version\Collection\Resolver\ResolverInterface;
-use Baleen\Migrations\Version\Collection\Sortable;
 use Baleen\Migrations\Version\VersionInterface;
 use BaleenTest\Migrations\BaseTestCase;
 use Mockery as m;

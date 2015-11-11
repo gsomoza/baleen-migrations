@@ -25,7 +25,7 @@ use Baleen\Migrations\Version\VersionInterface;
  * Class IdComparator
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
-final class IdComparator extends AbstractReversibleComparator
+final class IdComparator extends AbstractComparator
 {
     /**
      * The internal compare function. Should return less than zero (0), zero or greater than zero if the first item is

@@ -20,6 +20,7 @@
 namespace Baleen\Migrations\Version\Comparator;
 
 use Baleen\Migrations\Exception\InvalidArgumentException;
+use Baleen\Migrations\Exception\Version\ComparatorException;
 use Baleen\Migrations\Version\VersionInterface;
 
 /**
@@ -27,7 +28,7 @@ use Baleen\Migrations\Version\VersionInterface;
  *
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
-final class NamespacesAwareComparator extends AbstractReversibleComparator
+final class NamespacesAwareComparator extends AbstractComparator
 {
     /** @var array */
     private $namespaces;
@@ -41,16 +42,22 @@ final class NamespacesAwareComparator extends AbstractReversibleComparator
      * @param int $order
      * @param ComparatorInterface $fallbackComparator
      * @param array $namespaces Namespaces with keys ordered by priority (highest priority first)
+     * @throws ComparatorException
      */
     public function __construct($order, ComparatorInterface $fallbackComparator, array $namespaces)
     {
         $this->fallback = $fallbackComparator;
+
+        if (empty($namespaces)) {
+            throw new ComparatorException('Expected at least one namespace for this comparator.');
+        }
         // normalize namespaces
         foreach ($namespaces as &$namespace) {
             $namespace = trim($namespace, '\\') . '\\';
         }
-        krsort($namespaces);
+        krsort($namespaces); // we search from highest to lowest priority
         $this->namespaces = $namespaces;
+
         parent::__construct($order);
     }
 
@@ -92,7 +99,7 @@ final class NamespacesAwareComparator extends AbstractReversibleComparator
 
         $res = null;
         // loop from highest namespace priority to lowest
-        foreach ($this->namespaces as $priority => $namespace) {
+        foreach ($this->namespaces as $namespace) {
             if (strpos($class1, $namespace) === 0) {
                 $res = 1;
             }

@@ -17,6 +17,9 @@
  * <http://www.doctrine-project.org>.
  */
 
+namespace BaleenTest\Migrations\Timeline;
+
+use Baleen\Migrations\Exception\InvalidArgumentException;
 use Baleen\Migrations\Exception\Version\Collection\CollectionException;
 use Baleen\Migrations\Timeline\TimelineFactory;
 use Baleen\Migrations\Version as V;
@@ -64,5 +67,38 @@ class TimelineFactoryTest extends BaseTestCase
 
         $this->setExpectedException(CollectionException::class);
         $factory->create($available, $migrated);
+    }
+
+    /**
+     * testPrepareCollectionInvalidArguments
+     * @param $available
+     * @param $migrated
+     * @dataProvider createInvalidArgumentsProvider
+     */
+    public function testCreateInvalidArgumentsProvider($available, $migrated)
+    {
+        $this->setExpectedException(InvalidArgumentException::class);
+        $factory = new TimelineFactory();
+        $factory->create($available, $migrated);
+    }
+
+    /**
+     * testCreateInvalidArgumentsProvider
+     * @return array
+     */
+    public function createInvalidArgumentsProvider()
+    {
+        return [
+            // first invalid
+            ['test', []],
+            [new \stdClass(), []],
+            // second invalid
+            [[], 'test'],
+            [[], new \stdClass()],
+            // both invalid
+            ['test', 'test'],
+            [new \stdClass(), new \stdClass()],
+
+        ];
     }
 }

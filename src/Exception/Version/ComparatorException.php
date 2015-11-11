@@ -14,33 +14,18 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the MIT license. For more information, see
- * <https://github.com/baleen/migrations>.
+ * <http://www.doctrine-project.org>.
  */
 
-namespace Baleen\Migrations\Version\Comparator;
+namespace Baleen\Migrations\Exception\Version;
 
-use Baleen\Migrations\Exception\InvalidArgumentException;
-use Baleen\Migrations\Version\VersionInterface;
+use Baleen\Migrations\Exception\BaleenException;
 
 /**
- * {@inheritDoc}
- *
+ * Class ComparatorException
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
-final class MigrationComparator extends AbstractComparator
+class ComparatorException extends BaleenException
 {
-    /**
-     * @inheritdoc
-     */
-    protected function compare(VersionInterface $version1, VersionInterface $version2)
-    {
-        if ($version1->getMigration() === null || $version2->getMigration() === null) {
-            throw new InvalidArgumentException(
-                "Expected both versions to be linked to a migration, but at least one of them isn't."
-            );
-        }
-        $class1 = get_class($version1->getMigration());
-        $class2 = get_class($version2->getMigration());
-        return strcmp($class1, $class2);
-    }
+
 }

@@ -20,13 +20,11 @@
 namespace BaleenTest\Migrations\Version\Collection;
 
 use Baleen\Migrations\Exception\Version\Collection\CollectionException;
-use Baleen\Migrations\Version as V;
 use Baleen\Migrations\Version;
+use Baleen\Migrations\Version as V;
 use Baleen\Migrations\Version\Collection;
 use Baleen\Migrations\Version\Collection\Sortable;
-use Baleen\Migrations\Version\Comparator\IdComparator;
 use Baleen\Migrations\Version\VersionInterface;
-use BaleenTest\Migrations\Version\CollectionTest;
 use BaleenTest\Migrations\Version\CollectionTestCase;
 use Mockery as m;
 use Zend\Stdlib\ArrayUtils;

@@ -21,11 +21,11 @@ namespace Baleen\Migrations\Version\Comparator;
 use Baleen\Migrations\Version\VersionInterface;
 
 /**
- * Class AbstractReversibleComparator
+ * Class AbstractComparator
  *
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
-abstract class AbstractReversibleComparator implements ComparatorInterface
+abstract class AbstractComparator implements ComparatorInterface
 {
     /** @var int */
     private $order = self::ORDER_NORMAL;
@@ -38,7 +38,7 @@ abstract class AbstractReversibleComparator implements ComparatorInterface
     public function __construct($order = self::ORDER_NORMAL)
     {
         $order = null === $order ? self::ORDER_NORMAL : (int) $order;
-        $this->order = ($order > 0) - ($order < 0);
+        $this->order = $order >= 0 ? 1 : -1;
     }
 
     /**
@@ -60,7 +60,8 @@ abstract class AbstractReversibleComparator implements ComparatorInterface
     /**
      * @inheritdoc
      */
-    public function withOrder($order) {
+    public function withOrder($order)
+    {
         return new static($order);
     }
 
