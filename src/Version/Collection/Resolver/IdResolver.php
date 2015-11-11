@@ -26,7 +26,7 @@ use Baleen\Migrations\Version\Collection;
  *
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
-class IdResolver extends AbstractResolver
+final class IdResolver extends AbstractResolver
 {
     /**
      * @inheritdoc

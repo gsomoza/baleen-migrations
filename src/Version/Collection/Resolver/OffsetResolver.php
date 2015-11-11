@@ -39,7 +39,7 @@ use Baleen\Migrations\Version\Collection\Sortable;
  *
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
-class OffsetResolver extends AbstractResolver
+final class OffsetResolver extends AbstractResolver
 {
     const PATTERN = '/^(.*?)([\+\-\~\^]+)([0-9]+)?$/';
 

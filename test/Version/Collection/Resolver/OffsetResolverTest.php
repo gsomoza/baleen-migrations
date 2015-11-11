@@ -20,6 +20,7 @@
 namespace BaleenTest\Migrations\Version\Collection\Resolver;
 
 use Baleen\Migrations\Version;
+use Baleen\Migrations\Version\Collection;
 use Baleen\Migrations\Version\Collection\Resolver\OffsetResolver;
 use Baleen\Migrations\Version\Collection\Sortable;
 use BaleenTest\Migrations\BaseTestCase;
@@ -53,7 +54,7 @@ class OffsetResolverTest extends BaseTestCase
      */
     public function resolveProvider()
     {
-        $versions = Version::fromArray('v01','v02','v03','v04','v05','v06','v07','v08','v09','v10','v15');
+        $versions = Version::fromArray(['v01','v02','v03','v04','v05','v06','v07','v08','v09','v10','v15']);
         return [
             [[], '0', null], // 0 will get the first element (internally the collection is a 0-indexed array)
             [$versions, '0', null], // no offset pattern
@@ -101,8 +102,8 @@ class OffsetResolverTest extends BaseTestCase
      */
     public function testOnlyResolvesIfSortable()
     {
-        $instance = new Version\Collection\Resolver\OffsetResolver();
-        $collection = new Version\Collection(Version::fromArray(1,2,3));
+        $instance = new OffsetResolver();
+        $collection = new Collection(Version::fromArray(range(1, 3)));
         $result = $instance->resolve('1+', $collection);
         $this->assertNull($result);
     }

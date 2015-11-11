@@ -53,7 +53,7 @@ abstract class AbstractResolver implements ResolverInterface
      *
      * @throws ResolverException
      */
-    public function resolve($alias, Collection $collection)
+    final public function resolve($alias, Collection $collection)
     {
         if (is_object($alias)) {
             $alias = (string) $alias;
@@ -118,7 +118,7 @@ abstract class AbstractResolver implements ResolverInterface
     /**
      * @inheritdoc
      */
-    public function clearCache(Collection $collection = null)
+    final public function clearCache(Collection $collection = null)
     {
         if (null !== $collection) {
             $hash = spl_object_hash($collection);

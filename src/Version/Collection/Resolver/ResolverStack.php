@@ -27,7 +27,7 @@ use Baleen\Migrations\Version\Collection;
  *
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
-class ResolverStack extends AbstractResolver
+final class ResolverStack extends AbstractResolver
 {
     /** @var ResolverInterface[] */
     protected $resolvers = [];

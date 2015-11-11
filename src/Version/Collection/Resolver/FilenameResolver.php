@@ -26,7 +26,7 @@ use Baleen\Migrations\Version\VersionInterface;
  * Class FilenameResolver
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
-class FilenameResolver extends AbstractResolver
+final class FilenameResolver extends AbstractResolver
 {
     /**
      * doResolve

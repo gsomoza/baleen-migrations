@@ -27,7 +27,7 @@ use Baleen\Migrations\Version\VersionInterface;
  * Class HeadResolver
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
-class HeadResolver extends AbstractResolver
+final class HeadResolver extends AbstractResolver
 {
     const HEAD = 'head';
 

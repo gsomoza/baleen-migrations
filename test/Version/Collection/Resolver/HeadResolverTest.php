@@ -24,6 +24,7 @@ use Baleen\Migrations\Version;
 use Baleen\Migrations\Version\Collection;
 use Baleen\Migrations\Version\Collection\Resolver\HeadResolver;
 use Baleen\Migrations\Version\Collection\Sortable;
+use Baleen\Migrations\Version\VersionInterface;
 use BaleenTest\Migrations\BaseTestCase;
 use Mockery as m;
 
@@ -59,7 +60,7 @@ class HeadResolverTest extends BaseTestCase
         /** @var MigrationInterface|m\Mock $migration */
         $migration = m::mock(MigrationInterface::class);
 
-        $link = function (Version\VersionInterface $v) use ($migration) {
+        $link = function (VersionInterface $v) use ($migration) {
             $v->setMigration($migration);
             return $v;
         };

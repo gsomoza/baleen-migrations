@@ -27,7 +27,7 @@ use Baleen\Migrations\Version\VersionInterface;
  * Class FirstLastResolver
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
-class FirstLastResolver extends AbstractResolver
+final class FirstLastResolver extends AbstractResolver
 {
     const FIRST = 'first';
     const EARLIEST = 'earliest';
