@@ -36,9 +36,6 @@ class Sortable extends Collection
     /** @var ComparatorInterface */
     private $comparator;
 
-    /** @var boolean */
-    private $sorted = false;
-
     /**
      * @param VersionInterface[] $versions
      * @param ResolverInterface $resolver
@@ -97,38 +94,10 @@ class Sortable extends Collection
     }
 
     /**
-     * @inheritdoc
-     */
-    public function add($element)
-    {
-        parent::add($element);
-        $this->sorted = false;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function set($key, $value)
-    {
-        parent::set($key, $value);
-        $this->sorted = false;
-    }
-
-    /**
      * @return ComparatorInterface
      */
     public function getComparator()
     {
         return $this->comparator;
-    }
-
-    /**
-     * Returns whether the collection is sorted or not
-     *
-     * @return bool
-     */
-    public function isSorted()
-    {
-        return $this->sorted;
     }
 }

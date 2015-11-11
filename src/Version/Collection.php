@@ -1,4 +1,21 @@
 <?php
+/*
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+ * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+ * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ * This software consists of voluntary contributions made by many individuals
+ * and is licensed under the MIT license. For more information, see
+ * <http://www.doctrine-project.org>.
+ */
 
 namespace Baleen\Migrations\Version;
 
@@ -134,28 +151,27 @@ class Collection extends ArrayCollection
         $id = (string) $id;
         $result = null;
         $lazy = true;
-        $this->forAll(function ($index, VersionInterface $version) use ($id, &$result, &$lazy) {
+        foreach ($this as $index => $version) {
             // perfect match
             $currentId = $version->getId();
             if ($currentId === $id) {
                 $result = $index;
-                return false; // break
+                break;
             }
 
             // lazy match:
             if ($lazy && strlen($id) < strlen($currentId) && substr($currentId, 0, strlen($id)) === $id) {
                 if ($result === null) {
                     // make this version a candidate, but continue searching to see if any other items also meet the
-                    // condition (in which case we'd know the $id being searched for is "ambiguous"
+                    // condition (in which case we'd know the $id being searched for is "ambiguous")
                     $result = $index;
                 } else {
-                    // the $id is ambiguous and cannot be used for lazy matching
-                    $result = null;
-                    $lazy = false; // rest of the versions will only be matched by exact id
+                    // the $id is ambiguous when used for lazy matching
+                    $lazy = false; // abort lazy search, match by exact ID from now on
+                    $result = null; // remove the candidate
                 }
             }
-            return true; // continue
-        });
+        }
         return $result;
     }
 
@@ -292,15 +308,15 @@ class Collection extends ArrayCollection
      */
     public function hydrate(Collection $versions)
     {
-        foreach ($this->toArray() as $v) {
-            $newData = $versions->getById($v->getId());
-            if ($newData !== null) {
-                $v->setMigrated($newData->isMigrated());
-                if ($newData->getMigration() !== null) {
-                    $v->setMigration($newData->getMigration());
+        foreach ($versions as $update) {
+            $current = $this->getById($update->getId());
+            if ($current !== null) {
+                $current->setMigrated($update->isMigrated());
+                if ($update->getMigration() !== null) {
+                    $current->setMigration($update->getMigration());
                 }
                 try {
-                    $this->validate($v);
+                    $this->validate($current);
                 } catch (AlreadyExistsException $e) {
                     // we don't care for this validation, but yes for the rest
                 }

@@ -81,9 +81,7 @@ abstract class AbstractRepository implements RepositoryInterface, ComparatorAwar
                 is_object($collection) ? get_class($collection) : gettype($collection)
             ));
         }
-        if (!$collection->isSorted()) {
-            $collection->sort($this->getComparator());
-        }
+        $collection->sort($this->getComparator());
 
         return $collection;
     }

@@ -23,14 +23,18 @@ use Baleen\Migrations\Exception\Version\Collection\CollectionException;
 use Baleen\Migrations\Migration\MigrationInterface;
 use Baleen\Migrations\Version as V;
 use Baleen\Migrations\Version;
+use Baleen\Migrations\Version\Collection;
+use Baleen\Migrations\Version\Collection\Migrated;
 use Baleen\Migrations\Version\Collection\Sortable;
+use Baleen\Migrations\Version\VersionInterface;
+use BaleenTest\Migrations\Version\CollectionTestCase;
 use Mockery as m;
 use Zend\Stdlib\ArrayUtils;
 
 /**
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
-class MigratedTest extends SortableTest
+class MigratedTest extends CollectionTestCase
 {
     /**
      * testAddException
@@ -42,7 +46,7 @@ class MigratedTest extends SortableTest
         $migration = m::mock(MigrationInterface::class);
         $version->setMigration($migration);
         $version->setMigrated(false); // this is what we're testing
-        $instance = new Version\Collection\Migrated();
+        $instance = new Migrated();
 
         $this->setExpectedException(CollectionException::class, 'must be migrated');
         $instance->add($version);
@@ -51,16 +55,42 @@ class MigratedTest extends SortableTest
     /**
      * testIsUpgradable
      */
-    public function testIsUpgradable()
+    public function testCanUpgradeFromSortable()
     {
-        $versions = Version::fromArray('1', '2', '3', '4', '5');
+        $versions = Version::fromArray(range(1, 5));
         foreach ($versions as $version) {
             $version->setMigrated(true);
         }
         $count = count($versions);
         $indexed = new Sortable($versions);
-        $upgraded = new Version\Collection\Migrated($indexed);
+        $upgraded = new Migrated($indexed);
         $this->assertCount($count, $upgraded);
     }
 
+    /**
+     * testConstructor
+     * @return Collection
+     */
+    function testConstructor()
+    {
+        $instance = new Migrated();
+        $this->assertInstanceOf(Sortable::class, $instance);
+        $this->assertCount(0, $instance);
+
+        $version = $this->createValidVersion('1');
+        $instance = new Migrated([$version]);
+        $this->assertCount(1, $instance);
+
+        return $instance;
+    }
+
+    /**
+     * createValidVersion
+     * @param string $id
+     * @return VersionInterface
+     */
+    public function createValidVersion($id)
+    {
+        return new V($id, true);
+    }
 }

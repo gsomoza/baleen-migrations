@@ -426,11 +426,15 @@ class TimelineTest extends BaseTestCase
         if ($expectation == 'exception') {
             $this->setExpectedException(TimelineException::class);
         }
-        $instance->runSingle($version, $options);
 
-        if ($expectation !== 'exception') {
+        $result = $instance->runSingle($version, $options);
+
+        if ($expectation == 'skip') {
+            $this->assertFalse($result, 'Expected runSingle() to return false when skipping without exception.');
+        } elseif ($expectation !== 'exception') {
             $migration->shouldHaveReceived($expectation)->once();
             $this->assertTrue($version->isMigrated() == $options->isDirectionUp());
+            $this->assertSame($version, $result);
         }
     }
 
@@ -458,6 +462,7 @@ class TimelineTest extends BaseTestCase
             ['v01', new Options(Options::DIRECTION_DOWN), Options::DIRECTION_DOWN],
             ['v02', new Options(Options::DIRECTION_UP)  , Options::DIRECTION_UP],
             ['v02', new Options(Options::DIRECTION_DOWN), 'exception' ], // its already down
+            ['v02', new Options(Options::DIRECTION_DOWN, false, false, false), 'skip' ], // skip without exception
         ];
     }
 
@@ -480,7 +485,7 @@ class TimelineTest extends BaseTestCase
      */
     public function testGetVersions()
     {
-        $versions = V::fromArray(1, 2, 3);
+        $versions = V::fromArray(range(1, 3));
         /** @var MigrationInterface|m\Mock $migration */
         $migration = m::mock(MigrationInterface::class);
         foreach ($versions as $v) {

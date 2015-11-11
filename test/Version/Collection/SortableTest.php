@@ -24,23 +24,26 @@ use Baleen\Migrations\Version as V;
 use Baleen\Migrations\Version;
 use Baleen\Migrations\Version\Collection;
 use Baleen\Migrations\Version\Collection\Sortable;
+use Baleen\Migrations\Version\Comparator\IdComparator;
+use Baleen\Migrations\Version\VersionInterface;
 use BaleenTest\Migrations\Version\CollectionTest;
+use BaleenTest\Migrations\Version\CollectionTestCase;
 use Mockery as m;
 use Zend\Stdlib\ArrayUtils;
 
 /**
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
-class SortableTest extends CollectionTest
+class SortableTest extends CollectionTestCase
 {
     /**
      * testMerge
      */
     public function testMerge()
     {
-        $collection1 = new Sortable(Version::fromArray('1', '2', '3', '4', '5'));
+        $collection1 = new Sortable(Version::fromArray(range(1, 5)));
 
-        $migrated = Version::fromArray('2', '5', '6', '7');
+        $migrated = Version::fromArray([2, 5, 6, 7]);
         foreach ($migrated as $v) {
             $v->setMigrated(true);
         }
@@ -70,7 +73,7 @@ class SortableTest extends CollectionTest
      */
     public function testIsUpgradable()
     {
-        $versions = Version::fromArray('1', '2', '3', '4', '5');
+        $versions = Version::fromArray(range(1, 5));
         $count = count($versions);
         $indexed = new Collection($versions);
         $upgraded = new Sortable($indexed);
@@ -82,7 +85,7 @@ class SortableTest extends CollectionTest
      */
     public function testLast()
     {
-        $versions = Version::fromArray('1', '2', '3');
+        $versions = Version::fromArray(range(1, 3));
         $instance = new Sortable($versions);
         $last = $instance->last();
         $this->assertSame($versions[2], $last);
@@ -93,7 +96,7 @@ class SortableTest extends CollectionTest
      */
     public function testGetSupportsAlias()
     {
-        $instance = new Sortable(Version::fromArray(1, 2, 3));
+        $instance = new Sortable(Version::fromArray(range(1, 3)));
         $this->assertEquals('v3', $instance->get('last')->getId());
         // also make sure it supports the standard get functionality if no alias is found
         $this->assertEquals('v1', $instance->get('v1')->getId());
@@ -119,8 +122,8 @@ class SortableTest extends CollectionTest
      */
     public function getByAliasProvider()
     {
-        $sample1 = Version::fromArray(1, 2, 3, 4, 5);
-        $sample2 = Version::fromArray('v097', 'v098', 'v099', 'v100');
+        $sample1 = Version::fromArray(range(1, 5));
+        $sample2 = Version::fromArray(['v097', 'v098', 'v099', 'v100']);
         return [
             [$sample1, 'last', 'v5'],
             [$sample1, 'first', 'v1'],
@@ -139,5 +142,32 @@ class SortableTest extends CollectionTest
         $instance = new Sortable([]);
         $result = $instance->getByPosition(1);
         $this->assertNull($result);
+    }
+
+    /**
+     * testConstructor
+     * @return Sortable
+     */
+    public function testConstructor()
+    {
+        $instance = new Sortable();
+        $this->assertInstanceOf(Collection::class, $instance);
+        $this->assertCount(0, $instance);
+
+        $version = new V('1');
+        $instance = new Sortable([$version]);
+        $this->assertCount(1, $instance);
+
+        return $instance;
+    }
+
+    /**
+     * createValidVerion
+     * @param string $id
+     * @return VersionInterface
+     */
+    public function createValidVersion($id)
+    {
+        return new V($id);
     }
 }
