@@ -1,5 +1,4 @@
 <?php
-
 /*
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -20,8 +19,7 @@
 
 namespace Baleen\Migrations\Version\Collection;
 
-use Baleen\Migrations\Exception\CollectionException;
-use Baleen\Migrations\Exception\MigrationMissingException;
+use Baleen\Migrations\Exception\Version\Collection\CollectionException;
 use Baleen\Migrations\Version\VersionInterface;
 
 class Migrated extends Sortable
@@ -34,7 +32,6 @@ class Migrated extends Sortable
      * @return bool
      *
      * @throws CollectionException
-     * @throws MigrationMissingException
      */
     public function validate(VersionInterface $element)
     {

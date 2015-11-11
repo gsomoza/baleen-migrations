@@ -126,4 +126,16 @@ class BaseTestCase extends \PHPUnit_Framework_TestCase
             [false],
         ];
     }
+
+    /**
+     * twoTrueFalseProvider
+     * @return array
+     */
+    public function twoTrueFalseProvider()
+    {
+        return [
+            [true, false],
+            [false, true],
+        ];
+    }
 }

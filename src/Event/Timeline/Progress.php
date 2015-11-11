@@ -43,10 +43,10 @@ class Progress
      */
     public function __construct($total, $current)
     {
-        if (!is_numeric($total) || (int)$total < 1) {
+        if (!is_numeric($total) || (int) $total < 1) {
             throw new InvalidArgumentException('Argument "total" must be an integer greater than zero.');
         }
-        $this->total = (int)$total;
+        $this->total = (int) $total;
         $this->setCurrent($current);
     }
 

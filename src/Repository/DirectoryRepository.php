@@ -26,7 +26,7 @@ use Baleen\Migrations\Migration\MigrationInterface;
 use Baleen\Migrations\Version;
 use Baleen\Migrations\Version\Collection\Linked;
 use Baleen\Migrations\Version\Comparator\ComparatorInterface;
-use Baleen\Migrations\Version\Comparator\DefaultComparator;
+use Baleen\Migrations\Version\Comparator\MigrationComparator;
 use Zend\Code\Scanner\DerivedClassScanner;
 use Zend\Code\Scanner\DirectoryScanner;
 
@@ -49,7 +49,8 @@ final class DirectoryRepository extends AbstractRepository
 
     /**
      * @param string $path Full path to the repository's directory
-     * @param string $pattern
+     * @param string $pattern Regex pattern to extract the version ID from a migration's class name. If null it will
+     *                        default to DirectoryRepository::PATTERN_DEFAULT
      * @param FactoryInterface $migrationFactory
      * @param ComparatorInterface $comparator
      *
@@ -57,7 +58,7 @@ final class DirectoryRepository extends AbstractRepository
      */
     public function __construct(
         $path,
-        $pattern = self::PATTERN_DEFAULT,
+        $pattern = null,
         FactoryInterface $migrationFactory = null,
         ComparatorInterface $comparator = null
     ) {
@@ -66,11 +67,11 @@ final class DirectoryRepository extends AbstractRepository
             throw new InvalidArgumentException('Argument "path" is empty or directory does not exist.');
         }
 
-        $pattern = (string) $pattern;
+        $pattern = null === $pattern ? self::PATTERN_DEFAULT : (string) $pattern;
         if (empty($pattern)) {
             throw new InvalidArgumentException('Argument "pattern" cannot be empty.');
         }
-        $this->pattern = (string) $pattern;
+        $this->pattern = $pattern;
 
 
         if (null !== $migrationFactory) {
@@ -78,7 +79,7 @@ final class DirectoryRepository extends AbstractRepository
         }
 
         if (null === $comparator) {
-            $comparator = new DefaultComparator();
+            $comparator = new MigrationComparator();
         }
         $this->setComparator($comparator);
 
@@ -102,7 +103,8 @@ final class DirectoryRepository extends AbstractRepository
             ) {
                 $migration = $this->getMigrationFactory()->create($className);
                 if ($migration instanceof MigrationInterface) {
-                    $version = new Version($className);
+                    $id = hash('sha1', $className);
+                    $version = new Version($id);
                     $version->setMigration($migration);
                     $versions->add($version);
                 }

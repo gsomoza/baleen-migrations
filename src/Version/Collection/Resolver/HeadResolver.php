@@ -19,15 +19,15 @@
 
 namespace Baleen\Migrations\Version\Collection\Resolver;
 
+use Baleen\Migrations\Version\Collection;
 use Baleen\Migrations\Version\Collection\Sortable;
 use Baleen\Migrations\Version\VersionInterface;
-use Doctrine\Common\Collections\Collection;
 
 /**
  * Class HeadResolver
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
-class HeadResolver extends AbstractResolver
+final class HeadResolver extends AbstractResolver
 {
     const HEAD = 'head';
 

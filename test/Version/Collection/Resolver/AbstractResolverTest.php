@@ -19,7 +19,7 @@
 
 namespace BaleenTest\Migrations\Version\Collection\Resolver;
 
-use Baleen\Migrations\Exception\ResolverException;
+use Baleen\Migrations\Exception\Version\Collection\ResolverException;
 use Baleen\Migrations\Version;
 use Baleen\Migrations\Version\Collection;
 use Baleen\Migrations\Version\Collection\Resolver\AbstractResolver;

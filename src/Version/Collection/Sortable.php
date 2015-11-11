@@ -23,9 +23,8 @@ namespace Baleen\Migrations\Version\Collection;
 use Baleen\Migrations\Version\Collection;
 use Baleen\Migrations\Version\Collection\Resolver\ResolverInterface;
 use Baleen\Migrations\Version\Comparator\ComparatorInterface;
-use Baleen\Migrations\Version\Comparator\DefaultComparator;
+use Baleen\Migrations\Version\Comparator\MigrationComparator;
 use Baleen\Migrations\Version\VersionInterface;
-use Doctrine\Common\Collections\Collection as CollectionInterface;
 
 /**
  * A collection of Versions.
@@ -36,9 +35,6 @@ class Sortable extends Collection
 {
     /** @var ComparatorInterface */
     private $comparator;
-
-    /** @var boolean */
-    private $sorted = false;
 
     /**
      * @param VersionInterface[] $versions
@@ -53,7 +49,7 @@ class Sortable extends Collection
         ComparatorInterface $comparator = null
     ) {
         if (null === $comparator) {
-            $comparator = new DefaultComparator();
+            $comparator = new MigrationComparator();
         }
         $this->comparator = $comparator;
 
@@ -86,21 +82,6 @@ class Sortable extends Collection
     }
 
     /**
-     * Merges another set into this one, replacing versions that exist and adding those that don't.
-     *
-     * @param CollectionInterface $collection
-     * @return $this
-     */
-    public function merge(CollectionInterface $collection)
-    {
-        foreach ($collection as $version) {
-            $this->addOrReplace($version);
-        }
-
-        return $this;
-    }
-
-    /**
      * Returns the element at the given position.
      *
      * @param $position
@@ -113,21 +94,10 @@ class Sortable extends Collection
     }
 
     /**
-     * @inheritdoc
+     * @return ComparatorInterface
      */
-    public function add($element)
+    public function getComparator()
     {
-        parent::add($element);
-        $this->sorted = false;
-    }
-
-    /**
-     * Returns whether the collection is sorted or not
-     *
-     * @return bool
-     */
-    public function isSorted()
-    {
-        return $this->sorted;
+        return $this->comparator;
     }
 }

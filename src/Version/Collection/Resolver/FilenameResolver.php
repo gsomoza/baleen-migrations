@@ -14,39 +14,45 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the MIT license. For more information, see
- * <https://github.com/baleen/migrations>.
+ * <http://www.doctrine-project.org>.
  */
 
-namespace Baleen\Migrations\Version\Collection;
+namespace Baleen\Migrations\Version\Collection\Resolver;
 
-use Baleen\Migrations\Exception\Version\Collection\CollectionException;
+use Baleen\Migrations\Version\Collection;
 use Baleen\Migrations\Version\VersionInterface;
 
 /**
- * Represents a set of Versions, all of which must be linked to a Migration.
- *
+ * Class FilenameResolver
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
-class Linked extends Sortable
+final class FilenameResolver extends AbstractResolver
 {
     /**
-     * Validates that migrations added to this set must all have a linked Migration.
+     * doResolve
      *
-     * @param VersionInterface $element
+     * @param $alias
+     * @param Collection $collection
      *
-     * @return bool
-     *
-     * @throws CollectionException
+     * @return VersionInterface|null
      */
-    public function validate(VersionInterface $element)
+    protected function doResolve($alias, Collection $collection)
     {
-        if (!$element->getMigration()) {
-            throw new CollectionException(sprintf(
-                'Version "%s" must have a Migration in order to be accepted into this collection.',
-                $element->getId()
-            ));
+        if (strlen($alias) <= 4 || substr($alias, -4) != '.php') {
+            return null;
         }
 
-        return parent::validate($element);
+        $result = null;
+        foreach ($collection as $version) {
+            if ($version->getMigration()) {
+                $class = new \ReflectionClass($version->getMigration());
+                $file = $class->getFileName();
+                if (strpos($file, $alias) !== false) {
+                    $result = $version;
+                    break;
+                }
+            }
+        }
+        return $result;
     }
 }

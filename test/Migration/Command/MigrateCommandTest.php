@@ -22,7 +22,6 @@ namespace BaleenTest\Migrations\Migration\Command;
 
 use Baleen\Migrations\Migration\Command\MigrateCommand;
 use Baleen\Migrations\Migration\MigrationInterface;
-use Baleen\Migrations\Migration\Options;
 use Baleen\Migrations\Migration\OptionsInterface;
 use BaleenTest\Migrations\BaseTestCase;
 use Mockery as m;

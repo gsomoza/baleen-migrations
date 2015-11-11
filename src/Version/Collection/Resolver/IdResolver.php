@@ -20,23 +20,19 @@
 namespace Baleen\Migrations\Version\Collection\Resolver;
 
 use Baleen\Migrations\Version\Collection;
-use Doctrine\Common\Collections\Collection as CollectionInterface;
 
 /**
- * Resolves version ID's
+ * Resolves version ID's. Should be lowest priority.
  *
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
-class IdResolver extends AbstractResolver
+final class IdResolver extends AbstractResolver
 {
     /**
      * @inheritdoc
      */
-    public function doResolve($alias, CollectionInterface $collection)
+    public function doResolve($alias, Collection $collection)
     {
-        if ($collection instanceof Collection) {
-            return $collection->getById($alias);
-        }
-        return null;
+        return $collection->getById($alias);
     }
 }

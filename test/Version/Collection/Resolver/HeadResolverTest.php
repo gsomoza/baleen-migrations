@@ -19,10 +19,13 @@
 
 namespace BaleenTest\Migrations\Version\Collection\Resolver;
 
+use Baleen\Migrations\Migration\MigrationInterface;
 use Baleen\Migrations\Version;
 use Baleen\Migrations\Version\Collection;
 use Baleen\Migrations\Version\Collection\Resolver\HeadResolver;
 use Baleen\Migrations\Version\Collection\Sortable;
+use Baleen\Migrations\Version\Comparator\IdComparator;
+use Baleen\Migrations\Version\VersionInterface;
 use BaleenTest\Migrations\BaseTestCase;
 use Mockery as m;
 
@@ -43,7 +46,7 @@ class HeadResolverTest extends BaseTestCase
     public function testResolve($versions, $headId, $command = 'HEAD')
     {
         $instance = new HeadResolver();
-        $collection = new Sortable($versions);
+        $collection = new Sortable($versions, null, new IdComparator());
         $result = $instance->resolve($command, $collection);
         $actual = null !== $result ? $result->getId() : null;
         $this->assertEquals($headId, $actual);
@@ -55,28 +58,32 @@ class HeadResolverTest extends BaseTestCase
      */
     public function resolveProvider()
     {
-        $migratedVersion = new Version(5);
-        $migratedVersion->setMigrated(true);
+        /** @var MigrationInterface|m\Mock $migration */
+        $migration = m::mock(MigrationInterface::class);
 
-        $oneVersionNoHead = [new Version(1)];
+        $migratedVersion = new Version('v5', true, clone $migration);
+
+        $oneVersionNoHead = [new Version('v1', false, clone $migration)];
         $oneVersionWithHead = [clone $migratedVersion];
 
         $tenVersionsNoHead = Version::fromArray(range(1,10));
         $tenVersionsWithHead = Version::fromArray(range(1,10));
+        /** @var VersionInterface[] $tenVersionsWithHead */
         $tenVersionsWithHead[8]->setMigrated(true);
 
+        /** @var VersionInterface[] $tenVersionsTwoHeads */
         $tenVersionsTwoHeads = Version::fromArray(range(1,10));
-        reset($tenVersionsTwoHeads)->setMigrated(true);
-        end($tenVersionsTwoHeads)->setMigrated(true);
+        $tenVersionsTwoHeads[0]->setMigrated(true);
+        $tenVersionsTwoHeads[9]->setMigrated(true);
 
         return [
             [[], null],
             [$oneVersionNoHead, null],
-            [$oneVersionWithHead, 5],
-            [$oneVersionWithHead, 5, 'head'],
+            [$oneVersionWithHead, 'v5'],
+            [$oneVersionWithHead, 'v5', 'head'],
             [$tenVersionsNoHead, null],
-            [$tenVersionsWithHead, 9],
-            [$tenVersionsTwoHeads, 10],
+            [$tenVersionsWithHead, 'v9'],
+            [$tenVersionsTwoHeads, 'v10'],
             [$tenVersionsTwoHeads, null, 'notHEAD'],
         ];
     }

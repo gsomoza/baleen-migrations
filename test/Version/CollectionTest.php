@@ -19,20 +19,22 @@
 
 namespace BaleenTest\Migrations\Version;
 
-use Baleen\Migrations\Exception\CollectionException;
 use Baleen\Migrations\Exception\InvalidArgumentException;
+use Baleen\Migrations\Exception\Version\Collection\CollectionException;
+use Baleen\Migrations\Migration\MigrationInterface;
+use Baleen\Migrations\Version;
 use Baleen\Migrations\Version as V;
 use Baleen\Migrations\Version\Collection;
+use Baleen\Migrations\Version\Collection\Migrated;
 use Baleen\Migrations\Version\Collection\Resolver\ResolverInterface;
-use Baleen\Migrations\Version\Collection\Sortable;
-use BaleenTest\Migrations\BaseTestCase;
+use Baleen\Migrations\Version\VersionInterface;
 use Mockery as m;
 use Zend\Stdlib\ArrayUtils;
 
 /**
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
-class CollectionTest extends BaseTestCase
+class CollectionTest extends CollectionTestCase
 {
     /**
      * testConstructorInvalidArgument
@@ -74,42 +76,6 @@ class CollectionTest extends BaseTestCase
     }
 
     /**
-     * @depends testConstructor
-     * @param Collection $instance
-     * @return Collection
-     * @throws CollectionException
-     */
-    public function testAdd(Collection $instance)
-    {
-        $originalCount = count($instance);
-        $version2 = new V('2');
-        $instance->add($version2);
-        $this->assertCount($originalCount + 1, $instance);
-
-        return $instance;
-    }
-
-    /**
-     * @depends testAdd
-     * @param Collection $instance
-     */
-    public function testRemove(Collection $instance)
-    {
-        $originalCount = $instance->count();
-
-        // test remove by version object
-        $version = $instance->getById('1');
-        $instance->removeElement($version);
-        $this->assertCount($originalCount - 1, $instance);
-
-        // test remove by  index
-        $version = $instance->first(); // and only
-        $index = $instance->indexOf($version);
-        $instance->remove($index);
-        $this->assertCount($originalCount - 2, $instance);
-    }
-
-    /**
      * testAddDuplicate
      * @throws CollectionException
      * @throws InvalidArgumentException
@@ -127,7 +93,7 @@ class CollectionTest extends BaseTestCase
      */
     public function testAddOrUpdate()
     {
-        $versions = V::fromArray('v1', 'v2', 'v3');
+        $versions = V::fromArray(range(1, 3));
         $instance = new Collection(array_slice($versions, 0, 2));
         $this->assertTrue($instance->has('v1'));
 
@@ -150,12 +116,12 @@ class CollectionTest extends BaseTestCase
      */
     public function testMerge()
     {
-        $instance1 = new Sortable(V::fromArray('1', '2', '3', '4', '5'));
-        $migrated = V::fromArray('2', '5', '6', '7');
+        $instance1 = new Collection(V::fromArray(range(1,5)));
+        $migrated = V::fromArray(['v2', 'v5', 'v6', 'v7']);
         foreach ($migrated as $v) {
             $v->setMigrated(true);
         }
-        $instance2 = new Sortable($migrated);
+        $instance2 = new Collection($migrated);
 
         $instance1->merge($instance2);
 
@@ -169,9 +135,23 @@ class CollectionTest extends BaseTestCase
      */
     public function testGetReturnsNullIfNotFound()
     {
-        $versions = V::fromArray('v1', 'v2');
-        $instance = new Sortable($versions);
+        $versions = V::fromArray(['v1', 'v2']);
+        $instance = new Collection($versions);
         $this->assertNull($instance->get('v3'));
+    }
+
+    /**
+     * testGetWithVersion
+     */
+    public function testGetWithVersion()
+    {
+        $v = m::mock(VersionInterface::class);
+        $vId = 'v2';
+        /** @var Collection|m\Mock $instance */
+        $instance = m::mock(Collection::class)->makePartial();
+        $instance->shouldReceive('getById')->once()->with($vId)->andReturn($v);
+        $result = $instance->get(new V($vId));
+        $this->assertSame($v, $result);
     }
 
     /**
@@ -179,7 +159,7 @@ class CollectionTest extends BaseTestCase
      */
     public function testArrayAccess()
     {
-        $instance = new Sortable(V::fromArray('v100', 'v101', 'v102'));
+        $instance = new Collection(V::fromArray(['v100', 'v101', 'v102']));
         $this->assertSame('v100', $instance->current()->getId());
         $this->assertSame(0, $instance->key());
         $instance->next();
@@ -190,7 +170,8 @@ class CollectionTest extends BaseTestCase
     public function testAddThrowsExceptionIfValidateFalse()
     {
         $version = new V(1);
-        $instance = m::mock(Collection\Sortable::class)->makePartial();
+        /** @var Collection $instance */
+        $instance = m::mock(Collection::class)->makePartial();
         $instance->shouldReceive('validate')->with($version)->once()->andReturn(false);
         $this->setExpectedException(
             CollectionException::class,
@@ -204,6 +185,7 @@ class CollectionTest extends BaseTestCase
      */
     public function testInvalidateCache()
     {
+        /** @var ResolverInterface|m\Mock $resolver */
         $resolver = m::mock(ResolverInterface::class);
         $instance = new Collection([], $resolver);
         $resolver->shouldReceive('clearCache')->once()->with($instance);
@@ -215,6 +197,7 @@ class CollectionTest extends BaseTestCase
      */
     public function testAddInvalidatesCache()
     {
+        /** @var ResolverInterface|m\Mock $resolver */
         $resolver = m::mock(ResolverInterface::class);
         $instance = new Collection([], $resolver);
         $resolver->shouldReceive('clearCache')->once()->with($instance);
@@ -226,6 +209,7 @@ class CollectionTest extends BaseTestCase
      */
     public function testRemoveInvalidatesCache()
     {
+        /** @var ResolverInterface|m\Mock $resolver */
         $resolver = m::mock(ResolverInterface::class);
         $instance = new Collection([new V('v1')], $resolver);
         $resolver->shouldReceive('clearCache')->once()->with($instance);
@@ -241,5 +225,180 @@ class CollectionTest extends BaseTestCase
         $version = 'v1';
         $this->setExpectedException(InvalidArgumentException::class);
         $instance->add($version);
+    }
+
+    /**
+     * testHydrate
+     *
+     * @param Collection $base
+     * @param Collection $update
+     * @param array $expectations
+     * @param null $exception
+     *
+     * @dataProvider hydrateProvider
+     */
+    public function testHydrate(Collection $base, Collection $update, array $expectations, $exception = null)
+    {
+        if (null !== $exception) {
+            $this->setExpectedException($exception);
+        }
+
+        $base->hydrate($update);
+
+        foreach ($expectations as $v) {
+            /** @var VersionInterface $v */
+            $hydrated = $base->getById($v->getId());
+            $this->assertSame($v->isMigrated(), $hydrated->isMigrated(), $v->getId());
+            $this->assertSame($v->getMigration(), $hydrated->getMigration(), $v->getId());
+        }
+    }
+
+    /**
+     * hydrateProvider
+     */
+    public function hydrateProvider()
+    {
+        $collection = new Collection(V::fromArray(range(1,4)));
+
+        $first = $collection->first();
+        $first->setMigrated(true);
+
+        /** @var MigrationInterface|m\Mock $migration */
+        $migration = m::mock(MigrationInterface::class);
+        $second = $collection->next();
+        $second->setMigration(clone $migration);
+
+        $third = $collection->next();
+        $third->setMigrated(true);
+        $third->setMigration(clone $migration);
+
+        $fourth = $collection->next();
+
+        // 1) hydrated with migrated versions
+        $migrated = new Collection(V::fromArray(range(1, 3)));
+        $this->setMigrated($migrated, true);
+        $migratedExpectations1 = [
+            new V($first->getId(), true, null), // was set to true
+            new V($second->getId(), true, $second->getMigration()), // was set to true, migration didn't change
+            new V($third->getId(), true, $third->getMigration()), // was updated, nothing changed
+            $fourth, // was not updated
+        ];
+
+        // 2) hydrated with linked versions
+        $linked = new Collection(Version::fromArray(range(1, 3)));
+        $this->setMigration($linked, $migration);
+        $migrationExpectations2 = [
+            new V($first->getId(), false, $migration), // migration was set
+            new V($second->getId(), false, $migration), // migration was set
+            new V($third->getId(), false, $migration), // was set to false, migration was set
+            $fourth, // was not updated
+        ];
+
+        // 3) Migrated collection hydrated with a non-migrated collection should throw exception
+        $migratedVersions = V::fromArray(range(1, 4));
+        $this->setMigrated($migratedVersions, true);
+        $migrated = new Migrated($migratedVersions);
+        $notMigrated = new Collection(V::fromArray(range(1, 4)));
+
+        return [
+            [$collection, $migrated, $migratedExpectations1],
+            [$collection, $linked, $migrationExpectations2],
+            [$migrated, $notMigrated, [], CollectionException::class]
+        ];
+    }
+
+    /**
+     * setMigrated
+     * @param array|Collection $collection
+     * @param bool $value
+     * @param int|null $offset
+     * @param int|null $length
+     */
+    protected function setMigrated($collection, $value, $offset = 0, $length = null)
+    {
+        if (is_array($collection)) {
+            $collection = array_slice($collection, $offset, $length);
+        } else {
+            /** @var Collection $collection */
+            $collection = $collection->slice($offset, $length);
+        }
+        foreach ($collection as $version) {
+            /** @var VersionInterface $version */
+            $version->setMigrated((bool) $value);
+        }
+    }
+
+    /**
+     * setMigration
+     * @param array|Collection $collection
+     * @param MigrationInterface $migration
+     * @param int|null $offset
+     * @param int|null $length
+     */
+    protected function setMigration($collection, MigrationInterface $migration, $offset = 0, $length = null)
+    {
+        if (is_array($collection)) {
+            $collection = array_slice($collection, $offset, $length);
+        } else {
+            /** @var Collection $collection */
+            $collection = $collection->slice($offset, $length);
+        }
+        foreach ($collection as $version) {
+            /** @var VersionInterface $version */
+            $version->setMigration($migration);
+        }
+    }
+
+    /**
+     * testIndexOfId
+     * @param Collection $collection
+     * @param $search
+     * @param $expected
+     * @dataProvider indexOfIdProvider
+     */
+    public function testIndexOfId(Collection $collection, $search, $expected)
+    {
+        $result = $collection->indexOfId($search);
+        $this->assertEquals($expected, $result);
+    }
+
+    /**
+     * indexOfIdProvider
+     */
+    public function indexOfIdProvider()
+    {
+        $col1 = new Collection(V::fromArray(range(1,10)));
+        $col2 = new Collection([new V('abcd1234'), new V('abcd9876'), new V('1234abcd'), new V('9876xyz')]);
+        $col3 = new Collection([new V('abcd1234'), new V('abcd1876'), new V('abcd')]);
+        return [
+            // normal matches
+            [$col1, 'v1', 0],
+            [$col1, new V('v2'), 1], // converts parameter to string
+            [$col1, 'v10', 9],
+            [$col1, 'v11', null],
+            // lazy matches
+            [$col1, 'v', null],
+            [$col2, 'v', null],
+            [$col2, 'abcd', null],
+            [$col2, 'abcd1', 0],
+            [$col2, 'abcd9', 1],
+            [$col2, '1', 2],
+            [$col2, '9', 3],
+            [$col2, 'cd12', null], // middle of the string
+            [$col2, 'xyz', null], // should not match end of the string
+            // lazy aborts
+            [$col3, 'abcd', 2], // lazy aborted, but found exact match afterwards
+            [$col3, 'abcd1', null], // lazy aborted and nothing found (test that candidate is reset to null)
+        ];
+    }
+
+    /**
+     * createValidVerion
+     * @param string $id
+     * @return VersionInterface
+     */
+    function createValidVersion($id)
+    {
+        return new Version($id);
     }
 }

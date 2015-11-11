@@ -111,16 +111,18 @@ final class Version implements VersionInterface
      *
      * @param mixed $versionIds
      *
-     * @return VersionInterface[]
+     * @param bool $migrated
+     * @param null $migration
+     * @return Version\VersionInterface[]
      */
-    public static function fromArray($versionIds)
+    public static function fromArray($versionIds, $migrated = false, $migration = null)
     {
-        if (!is_array($versionIds)) {
-            $versionIds = func_get_args();
-        }
         $results = [];
         foreach ($versionIds as $id) {
-            $results[] = new static($id);
+            if (!is_string($id)) {
+                $id = 'v' . (string) $id;
+            }
+            $results[] = new static($id, $migrated, $migration);
         }
 
         return $results;

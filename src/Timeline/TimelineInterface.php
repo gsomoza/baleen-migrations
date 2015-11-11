@@ -53,21 +53,21 @@ interface TimelineInterface
      * Runs migrations up/down so that all versions *before and including* the specified version are "up" and
      * all versions *after* the specified version are "down".
      *
-     * @param VersionInterface $goalVersion
+     * @param VersionInterface $goalUp
      * @param OptionsInterface $options
      */
-    public function goTowards(VersionInterface $goalVersion, OptionsInterface $options);
+    public function goTowards(VersionInterface $goalUp, OptionsInterface $options);
 
     /**
      * Runs a single migration in the specified direction.
      *
      * @param VersionInterface $version
      * @param OptionsInterface $options
-     * @param Progress $progress
+     * @param null|Progress $progress Progress information to be passed into events.
      *
      * @return VersionInterface|false
      */
-    public function runSingle(VersionInterface $version, OptionsInterface $options, Progress $progress);
+    public function runSingle(VersionInterface $version, OptionsInterface $options, Progress $progress = null);
 
     /**
      * getVersions

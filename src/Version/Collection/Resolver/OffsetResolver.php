@@ -19,8 +19,8 @@
 
 namespace Baleen\Migrations\Version\Collection\Resolver;
 
+use Baleen\Migrations\Version\Collection;
 use Baleen\Migrations\Version\Collection\Sortable;
-use Doctrine\Common\Collections\Collection;
 
 /**
  * Class OffsetResolver.
@@ -39,7 +39,7 @@ use Doctrine\Common\Collections\Collection;
  *
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
-class OffsetResolver extends AbstractResolver
+final class OffsetResolver extends AbstractResolver
 {
     const PATTERN = '/^(.*?)([\+\-\~\^]+)([0-9]+)?$/';
 

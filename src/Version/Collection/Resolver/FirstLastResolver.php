@@ -19,15 +19,15 @@
 
 namespace Baleen\Migrations\Version\Collection\Resolver;
 
+use Baleen\Migrations\Version\Collection;
 use Baleen\Migrations\Version\Collection\Sortable;
 use Baleen\Migrations\Version\VersionInterface;
-use Doctrine\Common\Collections\Collection;
 
 /**
  * Class FirstLastResolver
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
-class FirstLastResolver extends AbstractResolver
+final class FirstLastResolver extends AbstractResolver
 {
     const FIRST = 'first';
     const EARLIEST = 'earliest';

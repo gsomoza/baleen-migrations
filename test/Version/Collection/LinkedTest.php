@@ -19,27 +19,31 @@
 
 namespace BaleenTest\Migrations\Version\Collection;
 
-use Baleen\Migrations\Exception\CollectionException;
-use Baleen\Migrations\Version as V;
+use Baleen\Migrations\Exception\Version\Collection\CollectionException;
+use Baleen\Migrations\Migration\MigrationInterface;
 use Baleen\Migrations\Version;
+use Baleen\Migrations\Version as V;
+use Baleen\Migrations\Version\Collection;
 use Baleen\Migrations\Version\Collection\Linked;
 use Baleen\Migrations\Version\Collection\Sortable;
+use Baleen\Migrations\Version\VersionInterface;
+use BaleenTest\Migrations\Version\CollectionTestCase;
 use Mockery as m;
 use Zend\Stdlib\ArrayUtils;
 
 /**
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
-class LinkedTest extends SortableTest
+class LinkedTest extends CollectionTestCase
 {
     /**
      * testAddException
      */
     public function testAddException()
     {
-        $version = new Version('1');
+        $version = new Version('v1');
         $version->setMigrated(true); // but no linked migration
-        $instance = new Version\Collection\Linked();
+        $instance = new Linked();
 
         $this->setExpectedException(CollectionException::class, 'must have a Migration');
         $instance->add($version);
@@ -55,5 +59,33 @@ class LinkedTest extends SortableTest
         $sortable = new Sortable($versions);
         $upgraded = new Linked($sortable);
         $this->assertCount($count, $upgraded);
+    }
+
+    /**
+     * testConstructor
+     * @return Collection
+     */
+    public function testConstructor()
+    {
+        $instance = new Linked();
+        $this->assertInstanceOf(Sortable::class, $instance);
+        $this->assertCount(0, $instance);
+
+        $version = $this->createValidVersion('1');
+        $instance = new Linked([$version]);
+        $this->assertCount(1, $instance);
+
+        return $instance;
+    }
+
+    /**
+     * createValidVersion
+     * @param string $id
+     * @return VersionInterface
+     */
+    public function createValidVersion($id)
+    {
+        $migration = m::mock(MigrationInterface::class);
+        return new V($id, false, $migration);
     }
 }

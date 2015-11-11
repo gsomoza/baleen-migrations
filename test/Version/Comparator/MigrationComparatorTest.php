@@ -17,12 +17,32 @@
  * <http://www.doctrine-project.org>.
  */
 
-namespace Baleen\Migrations\Exception;
+namespace BaleenTest\Migrations\Version\Comparator;
+
+use Baleen\Migrations\Exception\InvalidArgumentException;
+use Baleen\Migrations\Migration\MigrationInterface;
+use Baleen\Migrations\Version;
+use Baleen\Migrations\Version\Comparator\MigrationComparator;
+use Mockery as m;
 
 /**
- * Class ResolverException
+ * Class MigrationComparatorTest
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
-class ResolverException extends CollectionException
+class MigrationComparatorTest extends ComparatorTestCase
 {
+    /**
+     * testCompareThrowsExceptionIfNoMigration
+     * @param $withMigration1
+     * @param $withMigration2
+     * @dataProvider twoTrueFalseProvider
+     */
+    public function testCompareThrowsExceptionIfNoMigration($withMigration1, $withMigration2)
+    {
+        $v1 = new Version('abc', false, $withMigration1 ? m::mock(MigrationInterface::class) : null);
+        $v2 = new Version('xyz', false, $withMigration2 ? m::mock(MigrationInterface::class) : null);
+        $comparator = new MigrationComparator();
+        $this->setExpectedException(InvalidArgumentException::class);
+        $comparator($v1, $v2);
+    }
 }

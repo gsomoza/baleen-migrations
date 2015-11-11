@@ -20,8 +20,10 @@
 
 namespace Baleen\Migrations\Timeline;
 
+use Baleen\Migrations\Exception\InvalidArgumentException;
 use Baleen\Migrations\Exception\MigrationMissingException;
 use Baleen\Migrations\Timeline;
+use Baleen\Migrations\Version\Collection;
 use Baleen\Migrations\Version\Collection\Linked;
 use Baleen\Migrations\Version\Collection\Migrated;
 use Baleen\Migrations\Version\Collection\Resolver\ResolverInterface;
@@ -77,7 +79,7 @@ final class TimelineFactory
      */
     public function create($available, $migrated = [])
     {
-        $collection = $this->prepareCollection($available, $migrated);
+        $collection = $this->prepareCollection($available, $migrated)->sort($this->comparator);
         $timeline = new Timeline($collection);
         $timeline->setEventDispatcher($this->dispatcher);
 
@@ -85,14 +87,13 @@ final class TimelineFactory
     }
 
     /**
-     * Sets versions in $this->availableVersions to migrated if they appear in $this->migratedVersions.
+     * Updates versions in $available with the migration status provided by $migrated.
      *
      * @param array|Linked $available
      * @param array|Migrated $migrated
      *
      * @return Linked
-     *
-     * @throws MigrationMissingException
+     * @throws InvalidArgumentException
      */
     protected function prepareCollection($available, $migrated = [])
     {
@@ -100,23 +101,26 @@ final class TimelineFactory
             $available = new Linked($available, $this->resolver, $this->comparator);
         }
         if (is_array($migrated)) {
-            $migrated = new Sortable($migrated, $this->resolver, $this->comparator);
+            $migrated = new Migrated($migrated, $this->resolver, $this->comparator);
         }
 
-        foreach ($migrated as $version) {
-            $availableVersion = $available->getById($version->getId());
-            if ($availableVersion) {
-                $availableVersion->setMigrated(true);
-            } else {
-                throw new MigrationMissingException(
-                    sprintf(
-                        'Version "%s" is reported as migrated but a corresponding migration could not be found.',
-                        $version->getId()
-                    )
-                );
-            }
+        if (!is_object($available) || !$available instanceof Linked) {
+            throw new InvalidArgumentException(sprintf(
+                'Expected an instance of "%s". Got "%s" instead.',
+                Linked::class,
+                is_object($available) ? get_class($available) : gettype($available)
+            ));
+        }
+        /** @var Linked $available */
+
+        if (!is_object($migrated) || !$migrated instanceof Sortable) {
+            throw new InvalidArgumentException(sprintf(
+                'Expected an instance of "%s". Got "%s" instead.',
+                Sortable::class,
+                is_object($migrated) ? get_class($migrated) : gettype($migrated)
+            ));
         }
 
-        return $available;
+        return $available->hydrate($migrated)->sort($this->comparator);
     }
 }

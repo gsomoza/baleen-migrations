@@ -27,7 +27,16 @@ namespace Baleen\Migrations\Migration;
  */
 interface MigrationInterface
 {
+    /**
+     * Executed when migrating "up"
+     *
+     * @return mixed
+     */
     public function up();
 
+    /**
+     * Executed when migrating "down"
+     * @return mixed
+     */
     public function down();
 }

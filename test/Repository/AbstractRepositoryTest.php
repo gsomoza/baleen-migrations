@@ -22,7 +22,6 @@ namespace BaleenTest\Migrations\Repository;
 use Baleen\Migrations\Exception\RepositoryException;
 use Baleen\Migrations\Migration\Factory\FactoryInterface;
 use Baleen\Migrations\Repository\AbstractRepository;
-use Baleen\Migrations\Repository\DirectoryRepository;
 use BaleenTest\Migrations\BaseTestCase;
 use Mockery as m;
 

@@ -17,30 +17,15 @@
  * <http://www.doctrine-project.org>.
  */
 
-namespace BaleenTest\Migrations\Version\Collection\Resolver;
+namespace Baleen\Migrations\Exception\Version;
 
-use Baleen\Migrations\Version\Collection\Resolver\IdResolver;
-use BaleenTest\Migrations\BaseTestCase;
-use Doctrine\Common\Collections\Collection;
-use Mockery as m;
+use Baleen\Migrations\Exception\BaleenException;
 
 /**
- * Class IdResolverTest
+ * Class ComparatorException
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
-class IdResolverTest extends BaseTestCase
+class ComparatorException extends BaleenException
 {
-    /**
-     * testDoResolveReturnsNullIfNotVersionCollection
-     * @throws \Baleen\Migrations\Exception\ResolverException
-     */
-    public function testDoResolveReturnsNullIfNotVersionCollection()
-    {
-        /** @var Collection|m\Mock $collection */
-        $collection = m::mock(Collection::class);
-        $collection->shouldNotReceive('getById');
-        $resolver = new IdResolver();
-        $result = $resolver->resolve('123', $collection);
-        $this->assertNull($result);
-    }
+
 }

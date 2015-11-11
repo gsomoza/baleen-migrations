@@ -19,7 +19,7 @@
 
 namespace Baleen\Migrations\Version\Collection\Resolver;
 
-use Doctrine\Common\Collections\Collection;
+use Baleen\Migrations\Version\Collection;
 
 /**
  * Interface ResolverInterface

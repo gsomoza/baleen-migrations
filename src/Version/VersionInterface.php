@@ -31,7 +31,7 @@ use Baleen\Migrations\Migration\MigrationInterface;
 interface VersionInterface
 {
     /**
-     * Returns the ID of the version.
+     * Returns the ID of the version. A hash or uuid is recommended.
      *
      * @return string
      */

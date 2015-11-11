@@ -1,9 +1,27 @@
 <?php
+/*
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+ * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+ * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ * This software consists of voluntary contributions made by many individuals
+ * and is licensed under the MIT license. For more information, see
+ * <http://www.doctrine-project.org>.
+ */
 
 namespace Baleen\Migrations\Version;
 
-use Baleen\Migrations\Exception\CollectionException;
 use Baleen\Migrations\Exception\InvalidArgumentException;
+use Baleen\Migrations\Exception\Version\Collection\AlreadyExistsException;
+use Baleen\Migrations\Exception\Version\Collection\CollectionException;
 use Baleen\Migrations\Version\Collection\Resolver\DefaultResolverStackFactory;
 use Baleen\Migrations\Version\Collection\Resolver\ResolverInterface;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -37,6 +55,7 @@ class Collection extends ArrayCollection
      * @param array|\Traversable $versions
      *
      * @param ResolverInterface $resolver
+     *
      * @throws CollectionException
      * @throws InvalidArgumentException
      */
@@ -47,7 +66,7 @@ class Collection extends ArrayCollection
                 $versions = ArrayUtils::iteratorToArray($versions);
             } else {
                 throw new InvalidArgumentException(
-                    "Constructor parameter 'versions' must be an array or Traversable"
+                    "Constructor parameter 'versions' must be an array or Traversable object."
                 );
             }
         }
@@ -131,13 +150,28 @@ class Collection extends ArrayCollection
     {
         $id = (string) $id;
         $result = null;
-        $this->forAll(function ($index, VersionInterface $version) use ($id, &$result) {
-            if ($version->getId() === $id) {
+        $lazy = true;
+        foreach ($this as $index => $version) {
+            // perfect match
+            $currentId = $version->getId();
+            if ($currentId === $id) {
                 $result = $index;
-                return false; // break
+                break;
             }
-            return true; // continue
-        });
+
+            // lazy match:
+            if ($lazy && strlen($id) < strlen($currentId) && substr($currentId, 0, strlen($id)) === $id) {
+                if ($result === null) {
+                    // make this version a candidate, but continue searching to see if any other items also meet the
+                    // condition (in which case we'd know the $id being searched for is "ambiguous")
+                    $result = $index;
+                } else {
+                    // the $id is ambiguous when used for lazy matching
+                    $lazy = false; // abort lazy search, match by exact ID from now on
+                    $result = null; // remove the candidate
+                }
+            }
+        }
         return $result;
     }
 
@@ -174,12 +208,12 @@ class Collection extends ArrayCollection
      *
      * @return bool
      *
-     * @throws CollectionException
+     * @throws AlreadyExistsException
      */
     public function validate(VersionInterface $element)
     {
         if (!$this->isEmpty() && $this->contains($element)) {
-            throw new CollectionException(
+            throw new AlreadyExistsException(
                 sprintf('Item with id "%s" already exists.', $element->getId())
             );
         }
@@ -228,16 +262,16 @@ class Collection extends ArrayCollection
     }
 
     /**
-     * @param $version
+     * @param $key
      *
      * @return VersionInterface|null
      */
-    public function remove($version)
+    public function remove($key)
     {
-        if (is_object($version)) {
-            $result = $this->removeElement($version);
+        if (is_object($key)) {
+            $result = $this->removeElement($key);
         } else {
-            $result = parent::remove($version);
+            $result = parent::remove($key);
         }
 
         if (null !== $result) {
@@ -258,5 +292,51 @@ class Collection extends ArrayCollection
             $this->remove($index);
         }
         $this->add($version);
+    }
+
+    /**
+     * Returns a new collection with "enriched" elements based on the information provided in the parameter.
+     * An "enriched" Version is one that was originally not linked and now is linked, not migrated and now is migrated,
+     * or both.
+     *
+     * @param Collection $versions
+     *
+     * @return static
+     *
+     * @throws CollectionException
+     * @throws InvalidArgumentException
+     */
+    public function hydrate(Collection $versions)
+    {
+        foreach ($versions as $update) {
+            $current = $this->getById($update->getId());
+            if ($current !== null) {
+                $current->setMigrated($update->isMigrated());
+                if ($update->getMigration() !== null) {
+                    $current->setMigration($update->getMigration());
+                }
+                try {
+                    $this->validate($current);
+                } catch (AlreadyExistsException $e) {
+                    // we don't care for this validation, but yes for the rest
+                }
+            }
+        }
+        return $this;
+    }
+
+    /**
+     * Merges another set into this one, replacing versions that exist and adding those that don't.
+     *
+     * @param Collection $collection
+     * @return $this
+     */
+    public function merge(Collection $collection)
+    {
+        foreach ($collection as $version) {
+            $this->addOrReplace($version);
+        }
+
+        return $this;
     }
 }

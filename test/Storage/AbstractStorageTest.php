@@ -21,7 +21,6 @@ namespace BaleenTest\Migrations\Storage;
 use Baleen\Migrations\Exception\StorageException;
 use Baleen\Migrations\Storage\AbstractStorage;
 use Baleen\Migrations\Version\Collection\Migrated;
-use Baleen\Migrations\Version\Comparator\ComparatorInterface;
 use Baleen\Migrations\Version\VersionInterface;
 use BaleenTest\Migrations\BaseTestCase;
 use Mockery as m;
@@ -75,18 +74,8 @@ class AbstractStorageTest extends BaseTestCase
     {
         /** @var AbstractStorage|m\Mock $instance */
         $instance = m::mock(AbstractStorage::class)->shouldAllowMockingProtectedMethods()->makePartial();
-        /** @var ComparatorInterface|m\Mock $comparator */
-        $comparator = m::mock(ComparatorInterface::class);
-        $instance->setComparator($comparator);
         if ($exception) {
             $this->setExpectedException(StorageException::class);
-        } else {
-            $collection->shouldReceive('isSorted')->once()->andReturn($isSorted);
-            if ($isSorted) {
-                $collection->shouldNotReceive('sort');
-            } else {
-                $collection->shouldReceive('sort')->once()->with($comparator);
-            }
         }
         $instance->shouldReceive('doFetchAll')->once()->andReturn($collection);
         $result = $instance->fetchAll();

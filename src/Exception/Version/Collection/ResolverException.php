@@ -14,39 +14,15 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the MIT license. For more information, see
- * <https://github.com/baleen/migrations>.
+ * <http://www.doctrine-project.org>.
  */
 
-namespace Baleen\Migrations\Version\Collection;
-
-use Baleen\Migrations\Exception\Version\Collection\CollectionException;
-use Baleen\Migrations\Version\VersionInterface;
+namespace Baleen\Migrations\Exception\Version\Collection;
 
 /**
- * Represents a set of Versions, all of which must be linked to a Migration.
- *
+ * Class ResolverException
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
-class Linked extends Sortable
+class ResolverException extends CollectionException
 {
-    /**
-     * Validates that migrations added to this set must all have a linked Migration.
-     *
-     * @param VersionInterface $element
-     *
-     * @return bool
-     *
-     * @throws CollectionException
-     */
-    public function validate(VersionInterface $element)
-    {
-        if (!$element->getMigration()) {
-            throw new CollectionException(sprintf(
-                'Version "%s" must have a Migration in order to be accepted into this collection.',
-                $element->getId()
-            ));
-        }
-
-        return parent::validate($element);
-    }
 }

@@ -17,36 +17,15 @@
  * <https://github.com/baleen/migrations>.
  */
 
-namespace Baleen\Migrations\Version\Collection;
+namespace Baleen\Migrations\Exception\Version\Collection;
 
-use Baleen\Migrations\Exception\Version\Collection\CollectionException;
-use Baleen\Migrations\Version\VersionInterface;
+use Baleen\Migrations\Exception\BaleenException;
 
 /**
- * Represents a set of Versions, all of which must be linked to a Migration.
+ * Class CollectionException.
  *
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
-class Linked extends Sortable
+class CollectionException extends BaleenException
 {
-    /**
-     * Validates that migrations added to this set must all have a linked Migration.
-     *
-     * @param VersionInterface $element
-     *
-     * @return bool
-     *
-     * @throws CollectionException
-     */
-    public function validate(VersionInterface $element)
-    {
-        if (!$element->getMigration()) {
-            throw new CollectionException(sprintf(
-                'Version "%s" must have a Migration in order to be accepted into this collection.',
-                $element->getId()
-            ));
-        }
-
-        return parent::validate($element);
-    }
 }

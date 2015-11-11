@@ -29,6 +29,12 @@ use Baleen\Migrations\Version\VersionInterface;
  */
 interface ComparatorInterface
 {
+    /** Compare versions in the normal order */
+    const ORDER_NORMAL = 1;
+
+    /** Compare versions in reverse order */
+    const ORDER_REVERSE = -1;
+
     /**
      * Compares two versions with each other. The comparison function must return an integer less than, equal to, or
      * greater than zero if the first argument is considered to be respectively less than, equal to, or greater than the
@@ -42,8 +48,18 @@ interface ComparatorInterface
     public function __invoke(VersionInterface $version1, VersionInterface $version2);
 
     /**
-     * Returns a reversed version of the comparator
-     * @return $this
+     * MUST return a new instance that sorts in reverse order.
+     *
+     * @return static
      */
     public function reverse();
+
+    /**
+     * MUST return a new instance that sorts in the specified order.
+     *
+     * @param int $order One of ORDER_NORMAL or ORDER_REVERSE.
+     *
+     * @return static
+     */
+    public function withOrder($order);
 }
