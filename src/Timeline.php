@@ -27,7 +27,6 @@ use Baleen\Migrations\Migration\Options;
 use Baleen\Migrations\Migration\OptionsInterface;
 use Baleen\Migrations\Timeline\AbstractTimeline;
 use Baleen\Migrations\Version\Collection\Linked;
-use Baleen\Migrations\Version\Collection\Sortable;
 use Baleen\Migrations\Version\Comparator\ComparatorInterface;
 use Baleen\Migrations\Version\LinkedVersion;
 use Baleen\Migrations\Version\VersionInterface;

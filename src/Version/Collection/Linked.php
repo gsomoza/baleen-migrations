@@ -21,7 +21,6 @@ namespace Baleen\Migrations\Version\Collection;
 
 use Baleen\Migrations\Exception\Version\Collection\CollectionException;
 use Baleen\Migrations\Version\LinkedVersion;
-use Baleen\Migrations\Version\LinkedVersionInterface;
 use Baleen\Migrations\Version\VersionInterface;
 
 /**
@@ -29,15 +28,15 @@ use Baleen\Migrations\Version\VersionInterface;
  *
  * @author Gabriel Somoza <gabriel@strategery.io>
  *
- * @method LinkedVersionInterface first()
- * @method LinkedVersionInterface last()
- * @method LinkedVersionInterface next()
- * @method LinkedVersionInterface current()
- * @method LinkedVersionInterface offsetGet($offset)
- * @method LinkedVersionInterface offsetUnset($offset)
- * @method LinkedVersionInterface[] toArray()
- * @method LinkedVersionInterface[] getValues()
- * @property LinkedVersionInterface[] elements
+ * @method \Baleen\Migrations\Version\LinkedVersionInterface first()
+ * @method \Baleen\Migrations\Version\LinkedVersionInterface last()
+ * @method \Baleen\Migrations\Version\LinkedVersionInterface next()
+ * @method \Baleen\Migrations\Version\LinkedVersionInterface current()
+ * @method \Baleen\Migrations\Version\LinkedVersionInterface offsetGet($offset)
+ * @method \Baleen\Migrations\Version\LinkedVersionInterface offsetUnset($offset)
+ * @method \Baleen\Migrations\Version\LinkedVersionInterface[] toArray()
+ * @method \Baleen\Migrations\Version\LinkedVersionInterface[] getValues()
+ * @property \Baleen\Migrations\Version\LinkedVersionInterface[] elements
  */
 class Linked extends Sortable
 {

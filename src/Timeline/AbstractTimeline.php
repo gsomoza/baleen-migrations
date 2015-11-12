@@ -119,7 +119,7 @@ abstract class AbstractTimeline implements TimelineInterface
         $modified = new Linked();
         $comparator = $collection->getComparator();
 
-        // TODO: add tests to see if rewind is necessary
+        // IMPROVE: add tests to see if rewind is necessary
         $collection->first(); // rewind
         foreach ($collection as $version) {
             $progress->setCurrent($current);

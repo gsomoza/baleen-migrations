@@ -20,7 +20,6 @@
 namespace Baleen\Migrations\Version\Collection\Resolver;
 
 use Baleen\Migrations\Version\Collection;
-use Baleen\Migrations\Version\Collection\Linked;
 use Baleen\Migrations\Version\LinkedVersion;
 use Baleen\Migrations\Version\VersionInterface;
 

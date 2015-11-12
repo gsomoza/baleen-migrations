@@ -20,10 +20,6 @@
 namespace Baleen\Migrations\Version\Collection;
 
 use Baleen\Migrations\Exception\Version\Collection\CollectionException;
-use Baleen\Migrations\Version\Collection\Resolver\ResolverInterface;
-use Baleen\Migrations\Version\Comparator\ComparatorInterface;
-use Baleen\Migrations\Version\Specification\IsMigrated;
-use Baleen\Migrations\Version\Validator\AggregateValidator;
 use Baleen\Migrations\Version\VersionInterface;
 
 /**

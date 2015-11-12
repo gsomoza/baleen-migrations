@@ -19,9 +19,6 @@
 
 namespace Baleen\Migrations\Version\Comparator;
 
-use Baleen\Migrations\Exception\InvalidArgumentException;
-use Baleen\Migrations\Version\LinkedVersion;
-use Baleen\Migrations\Version\LinkedVersionInterface;
 use Baleen\Migrations\Version\VersionInterface;
 
 /**
