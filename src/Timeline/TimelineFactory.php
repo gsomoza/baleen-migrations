@@ -1,5 +1,4 @@
 <?php
-
 /*
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -32,9 +31,11 @@ use Baleen\Migrations\Version\Comparator\ComparatorInterface;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
 /**
+ * {@inheritdoc}
+ *
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
-final class TimelineFactory
+final class TimelineFactory implements TimelineFactoryInterface
 {
     /**
      * @var ResolverInterface
@@ -97,30 +98,9 @@ final class TimelineFactory
      */
     protected function prepareCollection($available, $migrated = [])
     {
-        if (is_array($available)) {
-            $available = new Linked($available, $this->resolver, $this->comparator);
-        }
-        if (is_array($migrated)) {
-            $migrated = new Migrated($migrated, $this->resolver, $this->comparator);
-        }
+        $availableCollection = new Linked($available, $this->resolver, $this->comparator);
+        $migratedCollection = new Migrated($migrated, $this->resolver, $this->comparator);
 
-        if (!is_object($available) || !$available instanceof Linked) {
-            throw new InvalidArgumentException(sprintf(
-                'Expected an instance of "%s". Got "%s" instead.',
-                Linked::class,
-                is_object($available) ? get_class($available) : gettype($available)
-            ));
-        }
-        /** @var Linked $available */
-
-        if (!is_object($migrated) || !$migrated instanceof Sortable) {
-            throw new InvalidArgumentException(sprintf(
-                'Expected an instance of "%s". Got "%s" instead.',
-                Sortable::class,
-                is_object($migrated) ? get_class($migrated) : gettype($migrated)
-            ));
-        }
-
-        return $available->hydrate($migrated)->sort($this->comparator);
+        return $availableCollection->hydrate($migratedCollection)->sort();
     }
 }
