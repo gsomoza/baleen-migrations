@@ -17,28 +17,42 @@
  * <http://www.doctrine-project.org>.
  */
 
-namespace BaleenTest\Migrations\Version\Comparator;
+namespace BaleenTest\Migrations\Version;
 
-use Baleen\Migrations\Version\Comparator\ComparatorAwareTrait;
-use Baleen\Migrations\Version\Comparator\ComparatorInterface;
+use Baleen\Migrations\Migration\MigrationInterface;
+use Baleen\Migrations\Version;
+use Baleen\Migrations\Version\LinkedVersion;
+use Baleen\Migrations\Version\LinkedVersionInterface;
 use BaleenTest\Migrations\BaseTestCase;
 use Mockery as m;
 
 /**
- * Class ComparatorAwareTraitTest
+ * Class LinkedVersionTest
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
-class ComparatorAwareTraitTest extends BaseTestCase
+class LinkedVersionTest extends BaseTestCase
 {
     /**
-     * testGetSetComparator
+     * testConstructor
+     * @return LinkedVersion
      */
-    public function testGetSetComparator()
+    public function testConstructor()
     {
-        $comparator = m::mock(ComparatorInterface::class);
-        $instance = $this->getObjectForTrait(ComparatorAwareTrait::class);
-        $instance->setComparator($comparator);
-        $result = $this->invokeMethod('getComparator', $instance);
-        $this->assertSame($comparator, $result);
+        /** @var MigrationInterface|m\Mock $migration */
+        $migration = m::mock(MigrationInterface::class);
+        $v = new LinkedVersion('v1', false, $migration);
+        $this->assertInstanceOf(Version::class, $v);
+        $this->assertInstanceOf(LinkedVersionInterface::class, $v);
+    }
+
+    /**
+     * testGetMigration
+     */
+    public function testGetMigration()
+    {
+        /** @var MigrationInterface|m\Mock $migration */
+        $migration = m::mock(MigrationInterface::class);
+        $v = new LinkedVersion('v1', false, $migration);
+        $this->assertSame($migration, $v->getMigration());
     }
 }

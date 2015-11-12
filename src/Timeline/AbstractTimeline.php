@@ -23,8 +23,8 @@ use Baleen\Migrations\Event\HasEmitterTrait;
 use Baleen\Migrations\Event\Timeline\Progress;
 use Baleen\Migrations\Exception\InvalidArgumentException;
 use Baleen\Migrations\Migration\Command\MigrateCommand;
-use Baleen\Migrations\Migration\Command\MigrationBus;
 use Baleen\Migrations\Migration\Command\MigrationBusFactory;
+use Baleen\Migrations\Migration\Command\MigrationBusInterface;
 use Baleen\Migrations\Migration\MigrationInterface;
 use Baleen\Migrations\Migration\OptionsInterface;
 use Baleen\Migrations\Version\Collection\Linked;
@@ -41,7 +41,7 @@ abstract class AbstractTimeline implements TimelineInterface
 {
     use HasEmitterTrait;
 
-    /** @var \League\Tactician\CommandBus */
+    /** @var MigrationBusInterface */
     private $migrationBus;
 
     /** @var Linked */
@@ -49,9 +49,9 @@ abstract class AbstractTimeline implements TimelineInterface
 
     /**
      * @param Linked $versions
-     * @param MigrationBus $migrationBus A CommandBus that will be used to run each individual migration.
+     * @param MigrationBusInterface $migrationBus A CommandBus that will be used to run each individual migration.
      */
-    public function __construct(Linked $versions, MigrationBus $migrationBus = null)
+    public function __construct(Linked $versions, MigrationBusInterface $migrationBus = null)
     {
         if (null === $migrationBus) {
             $migrationBus = MigrationBusFactory::create();

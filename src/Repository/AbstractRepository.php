@@ -1,5 +1,4 @@
 <?php
-
 /*
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -24,31 +23,49 @@ use Baleen\Migrations\Exception\RepositoryException;
 use Baleen\Migrations\Migration\Factory\FactoryInterface;
 use Baleen\Migrations\Migration\Factory\SimpleFactory;
 use Baleen\Migrations\Version\Collection\Linked;
-use Baleen\Migrations\Version\Comparator\ComparatorAwareInterface;
-use Baleen\Migrations\Version\Comparator\ComparatorAwareTrait;
+use Baleen\Migrations\Version\Comparator\ComparatorInterface;
+use Baleen\Migrations\Version\Comparator\IdComparator;
 
 /**
  * Class AbstractRepository.
  *
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
-abstract class AbstractRepository implements RepositoryInterface, ComparatorAwareInterface
+abstract class AbstractRepository implements RepositoryInterface
 {
-    use ComparatorAwareTrait;
-
     /**
      * @var FactoryInterface
      */
     private $factory = null;
 
+    /** @var ComparatorInterface */
+    private $comparator = null;
+
     /**
-     * {@inheritdoc}
+     * AbstractRepository constructor
      *
      * @param FactoryInterface $factory
+     * @param ComparatorInterface $comparator
      */
-    final public function setMigrationFactory(FactoryInterface $factory)
+    public function __construct(FactoryInterface $factory = null, ComparatorInterface $comparator = null)
     {
+        if (null === $factory) {
+            $factory = new SimpleFactory();
+        }
         $this->factory = $factory;
+
+        if (null === $comparator) {
+            $comparator = new IdComparator();
+        }
+        $this->comparator = $comparator;
+    }
+
+    /**
+     * @return ComparatorInterface
+     */
+    final private function getComparator()
+    {
+        return $this->comparator;
     }
 
     /**
@@ -58,32 +75,20 @@ abstract class AbstractRepository implements RepositoryInterface, ComparatorAwar
      */
     final protected function getMigrationFactory()
     {
-        if (null === $this->factory) {
-            $this->factory = new SimpleFactory();
-        }
         return $this->factory;
     }
 
     /**
-     * {@inheritdoc}
-     *
-     * @return Linked
-     *
-     * @throws RepositoryException
+     * @inheritdoc
      */
     final public function fetchAll()
     {
         $collection = $this->doFetchAll();
-        if (!is_object($collection) || !$collection instanceof Linked) {
-            throw new RepositoryException(sprintf(
-                'Method AbstractRepository::doFetchAll() must return a "%s" collection. Got "%s" instead.',
-                Linked::class,
-                is_object($collection) ? get_class($collection) : gettype($collection)
-            ));
+        if (!$collection instanceof Linked) {
+            RepositoryException::throwInvalidObjectException($collection, Linked::class);
         }
-        $collection->sort($this->getComparator());
 
-        return $collection;
+        return $collection->sort($this->getComparator());
     }
 
     /**
@@ -91,7 +96,7 @@ abstract class AbstractRepository implements RepositoryInterface, ComparatorAwar
      * Linked collection. It must use a factory (default or supplied by 'setMigrationFactory()') to instantiate
      * each of the migrations.
      *
-     * @return mixed
+     * @return Linked
      */
     abstract protected function doFetchAll();
 }

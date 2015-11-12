@@ -55,26 +55,16 @@ abstract class AbstractResolver implements ResolverInterface
      */
     final public function resolve($alias, Collection $collection)
     {
-        if (is_object($alias)) {
-            $alias = (string) $alias;
-        }
-        if (!is_string($alias)) {
-            return null;
-        }
+        $alias = (string) $alias;
 
-        $result = false;
-        if ($this->cacheEnabled) {
-            $result = $this->cacheGet($alias, $collection);
-        }
+        $result = $this->cacheGet($alias, $collection);
 
         if (false === $result) {
             $result = $this->doResolve($alias, $collection);
-            if (null !== $result && !(is_object($result) && $result instanceof VersionInterface)) {
+            if (null !== $result && !$result instanceof VersionInterface) {
                 throw new ResolverException('Expected result to be either a VersionInterface object or null.');
             }
-            if ($this->cacheEnabled) {
-                $this->cacheSet($alias, $collection, $result);
-            }
+            $this->cacheSet($alias, $collection, $result);
         }
 
         return $result;
@@ -84,30 +74,40 @@ abstract class AbstractResolver implements ResolverInterface
      * Gets an alias from the cache. Returns false if nothing could be found, a Version if the alias was previously
      * resolved to a version, and null if the alias couldn't be resolved in a previous call.
      *
-     * @param $alias
+     * @param string $alias
      * @param Collection $collection
      *
      * @return bool|null|VersionInterface
      */
     private function cacheGet($alias, Collection $collection)
     {
-        $hash = spl_object_hash($collection);
         $result = false;
-        if (isset($this->cache[$hash]) && array_key_exists($alias, $this->cache[$hash])) {
-            $result = $this->cache[$hash][$alias];
+
+        if ($this->cacheEnabled) {
+            $hash = spl_object_hash($collection);
+            if (isset($this->cache[$hash]) && array_key_exists($alias, $this->cache[$hash])) {
+                $result = $this->cache[$hash][$alias];
+            }
         }
+
         return $result;
     }
 
     /**
      * Saves the result of resolving an alias against a given collection into the cache.
      *
-     * @param $alias
-     * @param $collection
-     * @param $result
+     * @param string $alias
+     * @param Collection $collection
+     * @param null|VersionInterface $result
+     *
+     * @return void
      */
     private function cacheSet($alias, $collection, $result)
     {
+        if (!$this->cacheEnabled) {
+            return null;
+        }
+
         $hash = spl_object_hash($collection);
         if (!isset($this->cache[$hash])) {
             $this->cache[$hash] = []; // initialize the collection's cache
@@ -131,7 +131,7 @@ abstract class AbstractResolver implements ResolverInterface
     /**
      * doResolve
      *
-     * @param $alias
+     * @param string $alias
      * @param Collection $collection
      *
      * @return VersionInterface|null

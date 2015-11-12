@@ -38,32 +38,28 @@ class DirectoryRepositoryTest extends BaseTestCase
      * testConstructor
      *
      * @param $path
-     * @param $pattern
      * @param $factory
-     * @param $comparator
+     * @param ComparatorInterface $comparator
+     * @param string $pattern
      * @param string|null $exception
      *
      * @dataProvider constructorProvider
      */
     public function testConstructor(
         $path,
+        FactoryInterface $factory = null,
+        ComparatorInterface $comparator = null,
         $pattern = DirectoryRepository::PATTERN_DEFAULT,
-        $factory = null,
-        $comparator = null,
         $exception = null
     ) {
         if ($exception !== null) {
             $this->setExpectedException($exception);
         }
-        $instance = new DirectoryRepository($path, $pattern, $factory, $comparator);
+        $instance = new DirectoryRepository($path, $factory, $comparator, $pattern);
 
         $factoryMethod = new \ReflectionMethod($instance, 'getMigrationFactory');
         $factoryMethod->setAccessible(true);
         $this->assertInstanceOf(FactoryInterface::class, $factoryMethod->invoke($instance));
-
-        $comparatorMethod = new \ReflectionMethod($instance, 'getComparator');
-        $comparatorMethod->setAccessible(true);
-        $this->assertInstanceOf(ComparatorInterface::class, $comparatorMethod->invoke($instance));
     }
 
     /**
@@ -73,16 +69,16 @@ class DirectoryRepositoryTest extends BaseTestCase
     public function constructorProvider()
     {
         return [
-            [' ', DirectoryRepository::PATTERN_DEFAULT, null, null, InvalidArgumentException::class], // invalid path
-            [false, DirectoryRepository::PATTERN_DEFAULT, null, null, InvalidArgumentException::class], // invalid path
-            [null, DirectoryRepository::PATTERN_DEFAULT, null, null, InvalidArgumentException::class], // invalid path
-            [0, DirectoryRepository::PATTERN_DEFAULT, null, null, InvalidArgumentException::class], // invalid path
-            ['/this/is/not/a/dir', DirectoryRepository::PATTERN_DEFAULT, null, null, InvalidArgumentException::class], // invalid path
+            [' ', null, null, DirectoryRepository::PATTERN_DEFAULT, InvalidArgumentException::class], // invalid path
+            [false, null, null, DirectoryRepository::PATTERN_DEFAULT, InvalidArgumentException::class], // invalid path
+            [null, null, null, DirectoryRepository::PATTERN_DEFAULT, InvalidArgumentException::class], // invalid path
+            [0, null, null, DirectoryRepository::PATTERN_DEFAULT, InvalidArgumentException::class], // invalid path
+            ['/this/is/not/a/dir', null, null, DirectoryRepository::PATTERN_DEFAULT, InvalidArgumentException::class], // invalid path
             [__DIR__], // valid path
-            [__DIR__, '', null, null, InvalidArgumentException::class], // invalid pattern
-            [__DIR__, 'newPattern'], // valid pattern
-            [__DIR__, 'newPattern', m::mock(FactoryInterface::class)], // new factory
-            [__DIR__, 'newPattern', null, m::mock(ComparatorInterface::class)], // new comparator
+            [__DIR__, null, null, '', InvalidArgumentException::class], // invalid pattern
+            [__DIR__, null, null, 'newPattern'], // valid pattern
+            [__DIR__, m::mock(FactoryInterface::class), null, 'newPattern'], // new factory
+            [__DIR__, null, m::mock(ComparatorInterface::class), 'newPattern',], // new comparator
         ];
     }
 
@@ -113,7 +109,7 @@ class DirectoryRepositoryTest extends BaseTestCase
      */
     public function testFetchAll($directory, $count, $regex = DirectoryRepository::PATTERN_DEFAULT)
     {
-        $instance = new DirectoryRepository($directory, $regex);
+        $instance = new DirectoryRepository($directory, null, null, $regex);
         $migrations = $instance->fetchAll();
         $this->assertCount($count, $migrations);
     }
@@ -130,8 +126,7 @@ class DirectoryRepositoryTest extends BaseTestCase
         $factory = m::mock(FactoryInterface::class);
         $factory->shouldReceive('create')->andReturn(m::mock(MigrationInterface::class));
 
-        $instance = new DirectoryRepository($directory);
-        $instance->setMigrationFactory($factory);
+        $instance = new DirectoryRepository($directory, $factory);
         $migrations = $instance->fetchAll();
         $factory->shouldHaveReceived('create')->times($count);
         $this->assertCount($count, $migrations);

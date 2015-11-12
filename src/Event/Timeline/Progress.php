@@ -73,13 +73,13 @@ class Progress
      */
     public function setCurrent($current)
     {
-        if (!is_numeric($current) || (int)$current < 0 || (int)$current > $this->total) {
+        if (!is_numeric($current) || (int) $current < 0 || (int) $current > $this->total) {
             throw new InvalidArgumentException(sprintf(
                 'Argument must be an integer between zero and total (%s). Value given: %s.',
                 $this->total,
-                (int)$current
+                (int) $current
             ));
         }
-        $this->current = (int)$current;
+        $this->current = (int) $current;
     }
 }

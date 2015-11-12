@@ -14,27 +14,38 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the MIT license. For more information, see
- * <https://github.com/baleen/migrations>.
+ * <http://www.doctrine-project.org>.
  */
 
-namespace Baleen\Migrations\Repository;
+namespace Baleen\Migrations\Version\Comparator;
 
-use Baleen\Migrations\Version\Collection\Linked;
+use Baleen\Migrations\Exception\InvalidArgumentException;
+use Baleen\Migrations\Version\LinkedVersionInterface;
+use Baleen\Migrations\Version\VersionInterface;
 
 /**
- * In charge of loading Migration files and instantiating them.
- *
+ * Class ComparesLinkedVersionsTrait
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
-interface RepositoryInterface
+trait ComparesLinkedVersionsTrait
 {
     /**
-     * Must fetch all versions available to the repository, load them with their migrations, and return them as a
-     * Linked collection.
+     * Validates the version is a LinkedVersion and returns the class name of its migration
      *
-     * @return Linked
+     * @param VersionInterface $version
      *
-     * @throws \Baleen\Migrations\Exception\RepositoryException
+     * @return string
+     *
+     * @throws InvalidArgumentException
      */
-    public function fetchAll();
+    final protected function getMigrationClass(VersionInterface $version)
+    {
+        if (!$version instanceof LinkedVersionInterface) {
+            throw new InvalidArgumentException(sprintf(
+                "Expected version %s to be linked to a migration",
+                $version->getId()
+            ));
+        }
+        return get_class($version->getMigration());
+    }
 }

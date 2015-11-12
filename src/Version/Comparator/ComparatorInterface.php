@@ -50,7 +50,7 @@ interface ComparatorInterface
     /**
      * MUST return a new instance that sorts in reverse order.
      *
-     * @return static
+     * @return ComparatorInterface
      */
     public function reverse();
 

@@ -25,4 +25,20 @@ namespace Baleen\Migrations\Exception;
  */
 class BaleenException extends \Exception
 {
+    /**
+     * throwInvalidObjectException
+     *
+     * @param $object
+     * @param $expected
+     *
+     * @throws static
+     */
+    public static function throwInvalidObjectException($object, $expected)
+    {
+        throw new static(sprintf(
+            'Expected an object of type "%s", but got "%s" instead.',
+            $expected,
+            is_object($object) ? get_class($object) : gettype($object)
+        ));
+    }
 }

@@ -20,33 +20,46 @@
 namespace Baleen\Migrations\Version\Collection;
 
 use Baleen\Migrations\Exception\Version\Collection\CollectionException;
+use Baleen\Migrations\Version\LinkedVersion;
+use Baleen\Migrations\Version\LinkedVersionInterface;
 use Baleen\Migrations\Version\VersionInterface;
 
 /**
  * Represents a set of Versions, all of which must be linked to a Migration.
  *
  * @author Gabriel Somoza <gabriel@strategery.io>
+ *
+ * @method LinkedVersionInterface first()
+ * @method LinkedVersionInterface last()
+ * @method LinkedVersionInterface next()
+ * @method LinkedVersionInterface current()
+ * @method LinkedVersionInterface offsetGet($offset)
+ * @method LinkedVersionInterface offsetUnset($offset)
+ * @method LinkedVersionInterface[] toArray()
+ * @method LinkedVersionInterface[] getValues()
+ * @property LinkedVersionInterface[] elements
  */
 class Linked extends Sortable
 {
     /**
-     * Validates that migrations added to this set must all have a linked Migration.
+     * Returns true if the specified version is valid (can be added) to the collection. Otherwise, it MUST throw
+     * an exception.
      *
-     * @param VersionInterface $element
-     *
+     * @param VersionInterface $version
      * @return bool
      *
      * @throws CollectionException
+     * @throws \Baleen\Migrations\Exception\Version\Collection\AlreadyExistsException
      */
-    public function validate(VersionInterface $element)
+    public function validate(VersionInterface $version)
     {
-        if (!$element->getMigration()) {
+        if (!$version instanceof LinkedVersion) {
             throw new CollectionException(sprintf(
-                'Version "%s" must have a Migration in order to be accepted into this collection.',
-                $element->getId()
+                'Invalid class type "%s". This collection only accepts versions instance of "%s".',
+                get_class($version),
+                LinkedVersion::class
             ));
         }
-
-        return parent::validate($element);
+        return parent::validate($version);
     }
 }

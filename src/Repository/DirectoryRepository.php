@@ -1,5 +1,4 @@
 <?php
-
 /*
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -27,6 +26,7 @@ use Baleen\Migrations\Version;
 use Baleen\Migrations\Version\Collection\Linked;
 use Baleen\Migrations\Version\Comparator\ComparatorInterface;
 use Baleen\Migrations\Version\Comparator\MigrationComparator;
+use Baleen\Migrations\Version\LinkedVersion;
 use Zend\Code\Scanner\DerivedClassScanner;
 use Zend\Code\Scanner\DirectoryScanner;
 
@@ -49,18 +49,17 @@ final class DirectoryRepository extends AbstractRepository
 
     /**
      * @param string $path Full path to the repository's directory
-     * @param string $pattern Regex pattern to extract the version ID from a migration's class name. If null it will
-     *                        default to DirectoryRepository::PATTERN_DEFAULT
      * @param FactoryInterface $migrationFactory
      * @param ComparatorInterface $comparator
-     *
+     * @param string $pattern Regex pattern to extract the version ID from a migration's class name. If null it will
+     *                        default to DirectoryRepository::PATTERN_DEFAULT
      * @throws InvalidArgumentException
      */
     public function __construct(
         $path,
-        $pattern = null,
         FactoryInterface $migrationFactory = null,
-        ComparatorInterface $comparator = null
+        ComparatorInterface $comparator = null,
+        $pattern = null
     ) {
         $path = (string) $path;
         if (empty($path) || !is_dir($path)) {
@@ -73,17 +72,9 @@ final class DirectoryRepository extends AbstractRepository
         }
         $this->pattern = $pattern;
 
-
-        if (null !== $migrationFactory) {
-            $this->setMigrationFactory($migrationFactory);
-        }
-
-        if (null === $comparator) {
-            $comparator = new MigrationComparator();
-        }
-        $this->setComparator($comparator);
-
         $this->scanner = new DirectoryScanner($path);
+
+        parent::__construct($migrationFactory, $comparator);
     }
 
     /**
@@ -91,21 +82,20 @@ final class DirectoryRepository extends AbstractRepository
      */
     public function doFetchAll()
     {
-        $versions = new Linked([], null, $this->getComparator());
+        $versions = new Linked();
         $classes = $this->scanner->getClasses(true);
         foreach ($classes as $class) {
             /* @var DerivedClassScanner $class */
             $className = $class->getName();
             $matches = [];
-            if ($class->isInstantiable()
-                && preg_match($this->pattern, $className, $matches)
+            if (preg_match($this->pattern, $className, $matches)
                 && isset($matches[1])
+                && $class->isInstantiable()
             ) {
                 $migration = $this->getMigrationFactory()->create($className);
                 if ($migration instanceof MigrationInterface) {
                     $id = hash('sha1', $className);
-                    $version = new Version($id);
-                    $version->setMigration($migration);
+                    $version = new LinkedVersion($id, false, $migration);
                     $versions->add($version);
                 }
             }

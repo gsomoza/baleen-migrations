@@ -16,31 +16,22 @@
  * and is licensed under the MIT license. For more information, see
  * <http://www.doctrine-project.org>.
  */
-namespace Baleen\Migrations\Version\Comparator;
+
+namespace Baleen\Migrations\Version;
+
+use Baleen\Migrations\Migration\MigrationInterface;
 
 /**
- * Trait ComparatorAwareTrait
+ * LinkedVersionInterface
  *
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
-trait ComparatorAwareTrait
+interface LinkedVersionInterface extends VersionInterface
 {
-    /** @var ComparatorInterface */
-    private $comparator;
-
     /**
-     * @param ComparatorInterface $comparator
+     * Returns the migration associated with this version.
+     *
+     * @return MigrationInterface
      */
-    final public function setComparator(ComparatorInterface $comparator)
-    {
-        $this->comparator = $comparator;
-    }
-
-    /**
-     * @return ComparatorInterface
-     */
-    final protected function getComparator()
-    {
-        return $this->comparator;
-    }
+    public function getMigration();
 }

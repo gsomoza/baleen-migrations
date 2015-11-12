@@ -22,6 +22,7 @@ namespace Baleen\Migrations\Version;
 use Baleen\Migrations\Exception\InvalidArgumentException;
 use Baleen\Migrations\Exception\Version\Collection\AlreadyExistsException;
 use Baleen\Migrations\Exception\Version\Collection\CollectionException;
+use Baleen\Migrations\Version;
 use Baleen\Migrations\Version\Collection\Resolver\DefaultResolverStackFactory;
 use Baleen\Migrations\Version\Collection\Resolver\ResolverInterface;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -32,9 +33,10 @@ use Zend\Stdlib\ArrayUtils;
  *
  * @author Gabriel Somoza <gabriel@strategery.io>
  *
- * IMPROVE: this class has 11 methods. Consider refactoring it to keep number of methods under 10.
+ * IMPROVE: this class has many methods. Consider refactoring it to keep number of methods under 10.
  *
  * @SuppressWarnings(PHPMD.TooManyMethods)
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  *
  * @method VersionInterface first()
  * @method VersionInterface last()
@@ -49,18 +51,20 @@ use Zend\Stdlib\ArrayUtils;
 class Collection extends ArrayCollection
 {
     /** @var ResolverInterface */
-    protected $resolver;
+    private $resolver;
 
     /**
-     * @param array|\Traversable $versions
-     *
+     * @param VersionInterface[]|\Traversable $versions
      * @param ResolverInterface $resolver
      *
-     * @throws CollectionException
+     * @throws AlreadyExistsException
      * @throws InvalidArgumentException
+     * @throws CollectionException
      */
-    public function __construct($versions = array(), ResolverInterface $resolver = null)
-    {
+    public function __construct(
+        $versions = array(),
+        ResolverInterface $resolver = null
+    ) {
         if (!is_array($versions)) {
             if ($versions instanceof \Traversable) {
                 $versions = ArrayUtils::iteratorToArray($versions);
@@ -70,31 +74,24 @@ class Collection extends ArrayCollection
                 );
             }
         }
-        if (null !== $resolver) {
-            $this->setResolver($resolver);
+
+        if (null === $resolver) {
+            $resolver = DefaultResolverStackFactory::create();
         }
+        $this->resolver = $resolver;
+
         foreach ($versions as $version) {
             $this->validate($version);
         }
-        parent::__construct($versions);
-    }
 
-    /**
-     * @param ResolverInterface $resolver
-     */
-    public function setResolver(ResolverInterface $resolver)
-    {
-        $this->resolver = $resolver;
+        parent::__construct($versions);
     }
 
     /**
      * @return ResolverInterface
      */
-    public function getResolver()
+    final protected function getResolver()
     {
-        if (null === $this->resolver) {
-            $this->resolver = DefaultResolverStackFactory::create();
-        }
         return $this->resolver;
     }
 
@@ -204,17 +201,19 @@ class Collection extends ArrayCollection
      * Returns true if the specified version is valid (can be added) to the collection. Otherwise, it MUST throw
      * an exception.
      *
-     * @param VersionInterface $element
+     * @param VersionInterface $version
      *
      * @return bool
      *
      * @throws AlreadyExistsException
+     * @throws CollectionException
      */
-    public function validate(VersionInterface $element)
+    public function validate(VersionInterface $version)
     {
-        if (!$this->isEmpty() && $this->contains($element)) {
+        // validate the version can be added to the collection
+        if (!$this->isEmpty() && $this->contains($version)) {
             throw new AlreadyExistsException(
-                sprintf('Item with id "%s" already exists.', $element->getId())
+                sprintf('Item with id "%s" already exists.', $version->getId())
             );
         }
 
@@ -312,8 +311,10 @@ class Collection extends ArrayCollection
             $current = $this->getById($update->getId());
             if ($current !== null) {
                 $current->setMigrated($update->isMigrated());
-                if ($update->getMigration() !== null) {
-                    $current->setMigration($update->getMigration());
+                if ($update instanceof LinkedVersion && $current instanceof Version) {
+                    $key = $this->indexOf($current);
+                    $current = $current->withMigration($update->getMigration());
+                    $this->set($key, $current);
                 }
                 try {
                     $this->validate($current);

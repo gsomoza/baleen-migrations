@@ -27,6 +27,7 @@ use Baleen\Migrations\Repository\RepositoryInterface;
 use Baleen\Migrations\Version;
 use Baleen\Migrations\Version\Collection\Linked;
 use Baleen\Migrations\Version\Collection\Sortable;
+use Baleen\Migrations\Version\LinkedVersion;
 use BaleenTest\Migrations\BaseTestCase;
 use Mockery as m;
 
@@ -178,17 +179,16 @@ class RepositoryAggregateTest extends BaseTestCase
     {
         /** @var MigrationInterface|m\Mock $migration */
         $migration = m::mock(MigrationInterface::class);
-        $version1 = new Version(1);
-        $version1->setMigration($migration);
-        $version2 = new Version(2);
-        $version2->setMigration($migration);
-        $version3 = new Version(3);
-        $version3->setMigration($migration);
+        $version1 = new LinkedVersion(1, false, $migration);
+        $version2 = new LinkedVersion(2, false, $migration);
+        $version3 = new LinkedVersion(3, false, $migration);
         $versions1 = new Sortable([$version1, $version3]);
         $versions2 = new Sortable([$version1, $version2]);
 
+        /** @var RepositoryInterface|m\Mock $repo1 */
         $repo1 = m::mock(RepositoryInterface::class);
         $repo1->shouldReceive('fetchAll')->zeroOrMoreTimes()->andReturn($versions1);
+        /** @var RepositoryInterface|m\Mock $repo2 */
         $repo2 = m::mock(RepositoryInterface::class);
         $repo2->shouldReceive('fetchAll')->zeroOrMoreTimes()->andReturn($versions2);
 

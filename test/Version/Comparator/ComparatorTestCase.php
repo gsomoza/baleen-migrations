@@ -21,6 +21,7 @@ namespace BaleenTest\Migrations\Version\Comparator;
 
 use Baleen\Migrations\Migration\MigrationInterface;
 use Baleen\Migrations\Version;
+use Baleen\Migrations\Version\LinkedVersion;
 use BaleenTest\Migrations\BaseTestCase;
 use BaleenTest\Migrations\Migrations\AllValid\v201507020419_InterfaceTest;
 use BaleenTest\Migrations\Migrations\CustomRegex\v201507020437_DefaultRegex;
@@ -67,8 +68,8 @@ CODE
         $m1 = new v201507020419_InterfaceTest();
         $m2 = new v201507020437_DefaultRegex();
 
-        $v1 = new Version('abcd1', false, $m1);
-        $v2 = new Version('abcd2', false, $m2);
+        $v1 = new LinkedVersion('abcd1', false, $m1);
+        $v2 = new LinkedVersion('abcd2', false, $m2);
 
         return $comparator($v1, $v2);
     }

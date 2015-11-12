@@ -20,8 +20,6 @@
 
 namespace Baleen\Migrations\Version;
 
-use Baleen\Migrations\Migration\MigrationInterface;
-
 /**
  * Holds meta information about a migration, especially that which is related to its status (i.e. anything that can't
  * be stored in the migration itself).
@@ -40,7 +38,7 @@ interface VersionInterface
     /**
      * Returns whether the version has been migrated or not.
      *
-     * @return mixed
+     * @return bool
      */
     public function isMigrated();
 
@@ -50,20 +48,4 @@ interface VersionInterface
      * @param $migrated boolean
      */
     public function setMigrated($migrated);
-
-    /**
-     * Sets the migration class this version corresponds to.
-     *
-     * @param MigrationInterface $migration
-     *
-     * @return mixed
-     */
-    public function setMigration(MigrationInterface $migration);
-
-    /**
-     * Returns the migration associated with this version.
-     *
-     * @return null|MigrationInterface
-     */
-    public function getMigration();
 }

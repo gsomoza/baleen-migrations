@@ -17,20 +17,41 @@
  * <http://www.doctrine-project.org>.
  */
 
-namespace Baleen\Migrations\Version\Comparator;
+namespace Baleen\Migrations\Version;
+
+use Baleen\Migrations\Exception\InvalidArgumentException;
+use Baleen\Migrations\Migration\MigrationInterface;
+use Baleen\Migrations\Version;
 
 /**
- * Interface ComparatorAwareInterface
- * @package Baleen\Migrations\Version\Comparator
+ * Class LinkedVersion
+ * @author Gabriel Somoza <gabriel@strategery.io>
  */
-interface ComparatorAwareInterface
+final class LinkedVersion extends Version implements LinkedVersionInterface
 {
+    /** @var MigrationInterface */
+    private $migration;
+
     /**
-     * Set the comparator
+     * @param $id string
+     * @param bool $migrated
+     * @param MigrationInterface $migration
      *
-     * @param ComparatorInterface $comparator
-     *
-     * @return void
+     * @throws InvalidArgumentException
      */
-    public function setComparator(ComparatorInterface $comparator);
+    public function __construct($id, $migrated, MigrationInterface $migration)
+    {
+        $this->migration = $migration;
+        parent::__construct($id, $migrated);
+    }
+
+    /**
+     * Returns the migration associated with this version.
+     *
+     * @return MigrationInterface
+     */
+    public function getMigration()
+    {
+        return $this->migration;
+    }
 }

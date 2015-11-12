@@ -20,6 +20,8 @@
 namespace Baleen\Migrations\Version\Comparator;
 
 use Baleen\Migrations\Exception\InvalidArgumentException;
+use Baleen\Migrations\Version\LinkedVersion;
+use Baleen\Migrations\Version\LinkedVersionInterface;
 use Baleen\Migrations\Version\VersionInterface;
 
 /**
@@ -29,18 +31,16 @@ use Baleen\Migrations\Version\VersionInterface;
  */
 final class MigrationComparator extends AbstractComparator
 {
+    use ComparesLinkedVersionsTrait;
+
     /**
      * @inheritdoc
      */
     protected function compare(VersionInterface $version1, VersionInterface $version2)
     {
-        if ($version1->getMigration() === null || $version2->getMigration() === null) {
-            throw new InvalidArgumentException(
-                "Expected both versions to be linked to a migration, but at least one of them isn't."
-            );
-        }
-        $class1 = get_class($version1->getMigration());
-        $class2 = get_class($version2->getMigration());
-        return strcmp($class1, $class2);
+        return strcmp(
+            $this->getMigrationClass($version1),
+            $this->getMigrationClass($version2)
+        );
     }
 }
