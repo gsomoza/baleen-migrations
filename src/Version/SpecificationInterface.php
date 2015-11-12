@@ -14,34 +14,30 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the MIT license. For more information, see
- * <https://github.com/baleen/migrations>.
+ * <http://www.doctrine-project.org>.
  */
 
-namespace Baleen\Migrations\Version\Comparator;
-
-use Baleen\Migrations\Exception\InvalidArgumentException;
-use Baleen\Migrations\Version\LinkedVersionInterface;
-use Baleen\Migrations\Version\VersionInterface;
+namespace Baleen\Migrations\Version;
 
 /**
- * {@inheritDoc}
- *
+ * Interface SpecificationInterface
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
-final class MigrationComparator extends AbstractComparator
+interface SpecificationInterface
 {
     /**
-     * @inheritdoc
+     * Check to see if the specification is satisfied
+     *
+     * @param VersionInterface $version
+     *
+     * @return bool
      */
-    protected function compare(VersionInterface $version1, VersionInterface $version2)
-    {
-        if (!$version1 instanceof LinkedVersionInterface || !$version2 instanceof LinkedVersionInterface) {
-            throw new InvalidArgumentException(
-                "Expected both versions to be linked to a migration, but at least one of them isn't."
-            );
-        }
-        $class1 = get_class($version1->getMigration());
-        $class2 = get_class($version2->getMigration());
-        return strcmp($class1, $class2);
-    }
+    public function isSatisfiedBy(VersionInterface $version);
+
+    /**
+     * Returns a message to be used whenever this spec is broken.
+     *
+     * @return string
+     */
+    public function getErrorMessage();
 }

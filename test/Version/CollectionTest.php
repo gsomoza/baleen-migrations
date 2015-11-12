@@ -21,12 +21,15 @@ namespace BaleenTest\Migrations\Version;
 
 use Baleen\Migrations\Exception\InvalidArgumentException;
 use Baleen\Migrations\Exception\Version\Collection\CollectionException;
+use Baleen\Migrations\Exception\Version\ValidationException;
 use Baleen\Migrations\Migration\MigrationInterface;
 use Baleen\Migrations\Version;
 use Baleen\Migrations\Version as V;
 use Baleen\Migrations\Version\Collection;
 use Baleen\Migrations\Version\Collection\Migrated;
 use Baleen\Migrations\Version\Collection\Resolver\ResolverInterface;
+use Baleen\Migrations\Version\LinkedVersion;
+use Baleen\Migrations\Version\Validator\ValidatorInterface;
 use Baleen\Migrations\Version\VersionInterface;
 use Mockery as m;
 use Zend\Stdlib\ArrayUtils;
@@ -167,16 +170,21 @@ class CollectionTest extends CollectionTestCase
         $this->assertSame(1, $instance->key());
     }
 
+    /**
+     * testAddThrowsExceptionIfValidateFalse
+     * @throws CollectionException
+     * @throws InvalidArgumentException
+     */
     public function testAddThrowsExceptionIfValidateFalse()
     {
-        $version = new V(1);
-        /** @var Collection $instance */
+        $version = new V('v1');
+
+        /** @var Collection|m\Mock $instance */
         $instance = m::mock(Collection::class)->makePartial();
-        $instance->shouldReceive('validate')->with($version)->once()->andReturn(false);
-        $this->setExpectedException(
-            CollectionException::class,
-            'Validate should either return true or throw an exception'
-        );
+        $instance->shouldReceive('validate')->once()->with($version)->andReturn(false);
+
+        $this->setExpectedException(CollectionException::class);
+
         $instance->add($version);
     }
 
@@ -248,8 +256,13 @@ class CollectionTest extends CollectionTestCase
         foreach ($expectations as $v) {
             /** @var VersionInterface $v */
             $hydrated = $base->getById($v->getId());
-            $this->assertSame($v->isMigrated(), $hydrated->isMigrated(), $v->getId());
-            $this->assertSame($v->getMigration(), $hydrated->getMigration(), $v->getId());
+            $this->assertSame(get_class($v), get_class($hydrated), 'Error with version ' . $v->getId());
+            $this->assertSame($v->isMigrated(), $hydrated->isMigrated(), $v->getId(), 'Error with version ' . $v->getId());
+            if ($v instanceof LinkedVersion) {
+                /** @var LinkedVersion $v */
+                /** @var LinkedVersion $hydrated */
+                $this->assertSame($v->getMigration(), $hydrated->getMigration(), 'Error with version ' . $v->getId());
+            }
         }
     }
 
@@ -258,95 +271,49 @@ class CollectionTest extends CollectionTestCase
      */
     public function hydrateProvider()
     {
-        $collection = new Collection(V::fromArray(range(1,4)));
+        $collection = new Collection([new V('v1', false)]);
 
         $first = $collection->first();
-        $first->setMigrated(true);
 
         /** @var MigrationInterface|m\Mock $migration */
         $migration = m::mock(MigrationInterface::class);
-        $second = $collection->next();
-        $second->setMigration(clone $migration);
+        $second = new LinkedVersion('v2', false, clone $migration);
+        $collection->add($second);
 
-        $third = $collection->next();
-        $third->setMigrated(true);
-        $third->setMigration(clone $migration);
+        $third = new LinkedVersion('v3', true, clone $migration);
+        $collection->add($third);
 
-        $fourth = $collection->next();
+        $fourth = new V('v4'); // with defaults
+        $collection->add($fourth);
 
         // 1) hydrated with migrated versions
-        $migrated = new Collection(V::fromArray(range(1, 3)));
-        $this->setMigrated($migrated, true);
+        $migrated = new Collection(V::fromArray(range(1, 3), true));
         $migratedExpectations1 = [
-            new V($first->getId(), true, null), // was set to true
-            new V($second->getId(), true, $second->getMigration()), // was set to true, migration didn't change
-            new V($third->getId(), true, $third->getMigration()), // was updated, nothing changed
+            new V($first->getId(), true), // migrated was set to true
+            new LinkedVersion($second->getId(), true, $second->getMigration()), // was set to true, migration didn't change
+            new LinkedVersion($third->getId(), true, $third->getMigration()), // was updated, nothing changed
             $fourth, // was not updated
         ];
 
         // 2) hydrated with linked versions
-        $linked = new Collection(Version::fromArray(range(1, 3)));
-        $this->setMigration($linked, $migration);
+        $linked = new Collection(LinkedVersion::fromArray(range(1, 3), false, $migration));
         $migrationExpectations2 = [
-            new V($first->getId(), false, $migration), // migration was set
-            new V($second->getId(), false, $migration), // migration was set
-            new V($third->getId(), false, $migration), // was set to false, migration was set
+            new LinkedVersion($first->getId(), false, $migration), // migration was set and type was changed
+            new LinkedVersion($second->getId(), false, $migration), // migration was set
+            new LinkedVersion($third->getId(), false, $migration), // was set to false, migration was set
             $fourth, // was not updated
         ];
 
         // 3) Migrated collection hydrated with a non-migrated collection should throw exception
-        $migratedVersions = V::fromArray(range(1, 4));
-        $this->setMigrated($migratedVersions, true);
-        $migrated = new Migrated($migratedVersions);
+        $migratedVersions = V::fromArray(range(1, 4), true);
+        $migrated2 = new Migrated($migratedVersions);
         $notMigrated = new Collection(V::fromArray(range(1, 4)));
 
         return [
             [$collection, $migrated, $migratedExpectations1],
             [$collection, $linked, $migrationExpectations2],
-            [$migrated, $notMigrated, [], CollectionException::class]
+            [$migrated2, $notMigrated, [], CollectionException::class]
         ];
-    }
-
-    /**
-     * setMigrated
-     * @param array|Collection $collection
-     * @param bool $value
-     * @param int|null $offset
-     * @param int|null $length
-     */
-    protected function setMigrated($collection, $value, $offset = 0, $length = null)
-    {
-        if (is_array($collection)) {
-            $collection = array_slice($collection, $offset, $length);
-        } else {
-            /** @var Collection $collection */
-            $collection = $collection->slice($offset, $length);
-        }
-        foreach ($collection as $version) {
-            /** @var VersionInterface $version */
-            $version->setMigrated((bool) $value);
-        }
-    }
-
-    /**
-     * setMigration
-     * @param array|Collection $collection
-     * @param MigrationInterface $migration
-     * @param int|null $offset
-     * @param int|null $length
-     */
-    protected function setMigration($collection, MigrationInterface $migration, $offset = 0, $length = null)
-    {
-        if (is_array($collection)) {
-            $collection = array_slice($collection, $offset, $length);
-        } else {
-            /** @var Collection $collection */
-            $collection = $collection->slice($offset, $length);
-        }
-        foreach ($collection as $version) {
-            /** @var VersionInterface $version */
-            $version->setMigration($migration);
-        }
     }
 
     /**

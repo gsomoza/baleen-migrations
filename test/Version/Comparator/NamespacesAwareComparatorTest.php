@@ -25,6 +25,7 @@ use Baleen\Migrations\Migration\MigrationInterface;
 use Baleen\Migrations\Version;
 use Baleen\Migrations\Version\Comparator\ComparatorInterface;
 use Baleen\Migrations\Version\Comparator\NamespacesAwareComparator;
+use Baleen\Migrations\Version\LinkedVersion;
 use Mockery as m;
 
 /**
@@ -121,9 +122,9 @@ class NamespacesAwareComparatorTest extends ComparatorTestCase
     public function testCompare($namespaces, $migration1, $migration2, $expected)
     {
         $m1 = $this->createMigration($migration1[0], $migration1[1]);
-        $v1 = new Version(spl_object_hash($m1), false, $m1);
+        $v1 = new LinkedVersion(spl_object_hash($m1), false, $m1);
         $m2 = $this->createMigration($migration2[0], $migration2[1]);
-        $v2 = new Version(spl_object_hash($m2), false, $m2);
+        $v2 = new LinkedVersion(spl_object_hash($m2), false, $m2);
 
         /** @var ComparatorInterface|m\Mock $fallback */
         $fallback = m::mock(ComparatorInterface::class);

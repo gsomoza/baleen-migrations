@@ -20,28 +20,36 @@
 namespace Baleen\Migrations\Version\Collection;
 
 use Baleen\Migrations\Exception\Version\Collection\CollectionException;
+use Baleen\Migrations\Version\Collection\Resolver\ResolverInterface;
+use Baleen\Migrations\Version\Comparator\ComparatorInterface;
+use Baleen\Migrations\Version\Specification\IsMigrated;
+use Baleen\Migrations\Version\Validator\AggregateValidator;
 use Baleen\Migrations\Version\VersionInterface;
 
+/**
+ * Class Migrated
+ * @author Gabriel Somoza <gabriel@strategery.io>
+ */
 class Migrated extends Sortable
 {
     /**
-     * This makes the collection behave like a set - throwing an exception if the version already exists in the set.
+     * Returns true if the specified version is valid (can be added) to the collection. Otherwise, it MUST throw
+     * an exception.
      *
-     * @param VersionInterface $element
+     * @param VersionInterface $version
      *
      * @return bool
      *
      * @throws CollectionException
+     * @throws \Baleen\Migrations\Exception\Version\Collection\AlreadyExistsException
      */
-    public function validate(VersionInterface $element)
+    public function validate(VersionInterface $version)
     {
-        if (!$element->isMigrated()) {
-            throw new CollectionException(sprintf(
-                'Version "%s" must be migrated in order to be accepted into this collection.',
-                $element->getId()
-            ));
+        if (!$version->isMigrated()) {
+            throw new CollectionException(
+                'Invalid version specified. This collection only accepts versions that are migrated.'
+            );
         }
-
-        return parent::validate($element);
+        return parent::validate($version);
     }
 }

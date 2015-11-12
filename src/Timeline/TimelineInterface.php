@@ -23,6 +23,7 @@ namespace Baleen\Migrations\Timeline;
 use Baleen\Migrations\Event\Timeline\Progress;
 use Baleen\Migrations\Migration\OptionsInterface;
 use Baleen\Migrations\Version\Collection\Linked;
+use Baleen\Migrations\Version\LinkedVersion;
 use Baleen\Migrations\Version\VersionInterface;
 
 /**
@@ -61,13 +62,13 @@ interface TimelineInterface
     /**
      * Runs a single migration in the specified direction.
      *
-     * @param VersionInterface $version
+     * @param LinkedVersion $version
      * @param OptionsInterface $options
      * @param null|Progress $progress Progress information to be passed into events.
      *
-     * @return VersionInterface|false
+     * @return LinkedVersion|false
      */
-    public function runSingle(VersionInterface $version, OptionsInterface $options, Progress $progress = null);
+    public function runSingle(LinkedVersion $version, OptionsInterface $options, Progress $progress = null);
 
     /**
      * getVersions

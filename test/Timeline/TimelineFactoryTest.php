@@ -21,6 +21,7 @@ namespace BaleenTest\Migrations\Timeline;
 
 use Baleen\Migrations\Exception\InvalidArgumentException;
 use Baleen\Migrations\Exception\Version\Collection\CollectionException;
+use Baleen\Migrations\Exception\Version\ValidationException;
 use Baleen\Migrations\Timeline\TimelineFactory;
 use Baleen\Migrations\Version as V;
 use Baleen\Migrations\Version;

@@ -22,6 +22,7 @@ namespace Baleen\Migrations\Version;
 use Baleen\Migrations\Exception\InvalidArgumentException;
 use Baleen\Migrations\Exception\Version\Collection\AlreadyExistsException;
 use Baleen\Migrations\Exception\Version\Collection\CollectionException;
+use Baleen\Migrations\Version;
 use Baleen\Migrations\Version\Collection\Resolver\DefaultResolverStackFactory;
 use Baleen\Migrations\Version\Collection\Resolver\ResolverInterface;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -56,11 +57,14 @@ class Collection extends ArrayCollection
      * @param VersionInterface[]|\Traversable $versions
      * @param ResolverInterface $resolver
      *
-     * @throws CollectionException
+     * @throws AlreadyExistsException
      * @throws InvalidArgumentException
+     * @throws CollectionException
      */
-    public function __construct($versions = array(), ResolverInterface $resolver = null)
-    {
+    public function __construct(
+        $versions = array(),
+        ResolverInterface $resolver = null
+    ) {
         if (!is_array($versions)) {
             if ($versions instanceof \Traversable) {
                 $versions = ArrayUtils::iteratorToArray($versions);
@@ -197,17 +201,19 @@ class Collection extends ArrayCollection
      * Returns true if the specified version is valid (can be added) to the collection. Otherwise, it MUST throw
      * an exception.
      *
-     * @param VersionInterface $element
+     * @param VersionInterface $version
      *
      * @return bool
      *
      * @throws AlreadyExistsException
+     * @throws CollectionException
      */
-    public function validate(VersionInterface $element)
+    public function validate(VersionInterface $version)
     {
-        if (!$this->isEmpty() && $this->contains($element)) {
+        // validate the version can be added to the collection
+        if (!$this->isEmpty() && $this->contains($version)) {
             throw new AlreadyExistsException(
-                sprintf('Item with id "%s" already exists.', $element->getId())
+                sprintf('Item with id "%s" already exists.', $version->getId())
             );
         }
 
@@ -305,8 +311,10 @@ class Collection extends ArrayCollection
             $current = $this->getById($update->getId());
             if ($current !== null) {
                 $current->setMigrated($update->isMigrated());
-                if ($update->hasMigration()) {
-                    $current->setMigration($update->getMigration());
+                if ($update instanceof LinkedVersion && $current instanceof Version) {
+                    $key = $this->indexOf($current);
+                    $current = $current->withMigration($update->getMigration());
+                    $this->set($key, $current);
                 }
                 try {
                     $this->validate($current);

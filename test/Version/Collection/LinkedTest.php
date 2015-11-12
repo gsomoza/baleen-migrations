@@ -20,12 +20,14 @@
 namespace BaleenTest\Migrations\Version\Collection;
 
 use Baleen\Migrations\Exception\Version\Collection\CollectionException;
+use Baleen\Migrations\Exception\Version\ValidationException;
 use Baleen\Migrations\Migration\MigrationInterface;
 use Baleen\Migrations\Version;
 use Baleen\Migrations\Version as V;
 use Baleen\Migrations\Version\Collection;
 use Baleen\Migrations\Version\Collection\Linked;
 use Baleen\Migrations\Version\Collection\Sortable;
+use Baleen\Migrations\Version\LinkedVersion;
 use Baleen\Migrations\Version\VersionInterface;
 use BaleenTest\Migrations\Version\CollectionTestCase;
 use Mockery as m;
@@ -45,7 +47,7 @@ class LinkedTest extends CollectionTestCase
         $version->setMigrated(true); // but no linked migration
         $instance = new Linked();
 
-        $this->setExpectedException(CollectionException::class, 'must have a Migration');
+        $this->setExpectedException(CollectionException::class);
         $instance->add($version);
     }
 
@@ -85,7 +87,8 @@ class LinkedTest extends CollectionTestCase
      */
     public function createValidVersion($id)
     {
+        /** @var MigrationInterface|m\Mock $migration */
         $migration = m::mock(MigrationInterface::class);
-        return new V($id, false, $migration);
+        return new LinkedVersion($id, false, $migration);
     }
 }
