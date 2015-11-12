@@ -66,4 +66,11 @@ interface VersionInterface
      * @return null|MigrationInterface
      */
     public function getMigration();
+
+    /**
+     * Returns whether the version has a migration class linked to it or not
+     *
+     * @return bool
+     */
+    public function hasMigration();
 }
