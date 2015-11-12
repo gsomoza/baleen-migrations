@@ -14,34 +14,19 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the MIT license. For more information, see
- * <https://github.com/baleen/migrations>.
+ * <http://www.doctrine-project.org>.
  */
 
 namespace Baleen\Migrations\Migration\Command;
 
-use Baleen\Migrations\Exception\MigrationBusException;
-use League\Tactician\CommandBus;
-
-final class MigrationBus extends CommandBus implements MigrationBusInterface
+interface MigrationBusInterface
 {
     /**
-     * @inheritdoc
+     * Executes the given command and optionally returns a value
+     *
+     * @param object $command
+     *
+     * @return mixed
      */
-    public function __construct(array $middleware)
-    {
-        $foundHandler = false;
-        foreach ($middleware as $object) {
-            if ($object instanceof MigrateHandler) {
-                $foundHandler = true;
-                break;
-            }
-        }
-        if (!$foundHandler) {
-            throw new MigrationBusException(sprintf(
-                'MigrationBus must have at least one instance of "%s"',
-                MigrateHandler::class
-            ));
-        }
-        parent::__construct($middleware);
-    }
+    public function handle($command);
 }
