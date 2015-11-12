@@ -28,6 +28,7 @@ use Baleen\Migrations\Migration\OptionsInterface;
 use Baleen\Migrations\Timeline\AbstractTimeline;
 use Baleen\Migrations\Version\Collection\Linked;
 use Baleen\Migrations\Version\Collection\Sortable;
+use Baleen\Migrations\Version\Comparator\ComparatorInterface;
 use Baleen\Migrations\Version\LinkedVersion;
 use Baleen\Migrations\Version\VersionInterface;
 
@@ -42,58 +43,38 @@ final class Timeline extends AbstractTimeline
      * @param VersionInterface $goal
      * @param OptionsInterface $options
      *
-     * @return Sortable A collection of modified versions
+     * @return Linked A collection of modified versions
      *
      * @throws MigrationMissingException
      */
     public function upTowards(VersionInterface $goal, OptionsInterface $options = null)
     {
-        if (null === $options) {
-            $options = new Options(OptionsInterface::DIRECTION_UP);
-            $options = $options->withExceptionOnSkip(false);
-        } else {
-            $options = $options->withDirection(OptionsInterface::DIRECTION_UP); // make sure its right
-        }
-
-        // get only versions that are not migrated and are lesser than or equal to the goal version
-        $collection = $this->getVersions();
-        $comparator = $collection->getComparator();
-        $collection = $collection->filter(function(VersionInterface $v) use ($goal, $comparator) {
+        $options = $this->getOptionsWithDirection(OptionsInterface::DIRECTION_UP, $options);
+        $comparator = $this->getVersions()->getComparator();
+        // keep versions before the goal that are not migrated
+        $filter = function(VersionInterface $v) use ($goal, $comparator) {
             return !$v->isMigrated() && $comparator($v, $goal) <= 0;
-        });
-        /** @var Linked $collection */
-        $collection = $collection->sort($comparator);
-
-        return $this->runCollection($goal, $options, $collection);
+        };
+        return $this->towards($goal, $options, $comparator, $filter);
     }
 
     /**
      * @param VersionInterface $goal
      * @param OptionsInterface $options
      *
-     * @return Sortable A collection of modified versions
+     * @return Linked A collection of modified versions
      *
      * @throws \Exception
      */
     public function downTowards(VersionInterface $goal, OptionsInterface $options = null)
     {
-        if (null === $options) {
-            $options = new Options(OptionsInterface::DIRECTION_DOWN);
-            $options = $options->withExceptionOnSkip(false);
-        } else {
-            $options = $options->withDirection(OptionsInterface::DIRECTION_DOWN); // make sure its right
-        }
-
-        // get only versions that are not migrated and are lesser than or equal to the goal version
-        $collection = $this->getVersions()->getReverse();
-        $comparator = $collection->getComparator(); // already reversed
-        $collection = $collection->filter(function(VersionInterface $v) use ($goal, $comparator) {
+        $options = $this->getOptionsWithDirection(OptionsInterface::DIRECTION_DOWN, $options);
+        $comparator = $this->getVersions()->getComparator()->reverse();
+        // keep versions before the goal that are not migrated
+        $filter = function(VersionInterface $v) use ($goal, $comparator) {
             return $v->isMigrated() && $comparator($v, $goal) <= 0;
-        });
-        /** @var Linked $collection */
-        $collection = $collection->sort($comparator);
-
-        return $this->runCollection($goal, $options, $collection);
+        };
+        return $this->towards($goal, $options, $comparator, $filter);
     }
 
     /**
@@ -168,5 +149,42 @@ final class Timeline extends AbstractTimeline
         $this->getEmitter()->dispatchMigrationAfter($version, $options, $progress);
 
         return $version;
+    }
+
+    /**
+     * Calculates a collection to be used for the run an initiates it
+     *
+     * @param VersionInterface $goal
+     * @param OptionsInterface $options
+     * @param ComparatorInterface $comparator
+     * @param \Closure $filter
+     *
+     * @return Linked
+     */
+    private function towards(
+        VersionInterface $goal,
+        OptionsInterface $options,
+        ComparatorInterface $comparator,
+        \Closure $filter
+    ) {
+        $collection = $this->getVersions()->filter($filter)->sort($comparator);
+        return $this->runCollection($goal, $options, $collection);
+    }
+
+    /**
+     * Returns an options interface that has the specified direction, optionally using an existing OptionsInterface
+     * instance as the base.
+     *
+     * @param OptionsInterface $options
+     * @param string $direction
+     * @return OptionsInterface
+     */
+    private function getOptionsWithDirection($direction, OptionsInterface $options = null) {
+        if (null === $options) {
+            $options = (new Options($direction))->withExceptionOnSkip(false);
+        } else {
+            $options = $options->withDirection($direction);
+        }
+        return $options;
     }
 }
