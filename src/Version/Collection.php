@@ -52,7 +52,7 @@ class Collection extends ArrayCollection
     protected $resolver;
 
     /**
-     * @param array|\Traversable $versions
+     * @param VersionInterface[]|\Traversable $versions
      *
      * @param ResolverInterface $resolver
      *
