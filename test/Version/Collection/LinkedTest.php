@@ -20,6 +20,7 @@
 namespace BaleenTest\Migrations\Version\Collection;
 
 use Baleen\Migrations\Exception\Version\Collection\CollectionException;
+use Baleen\Migrations\Exception\Version\ValidationException;
 use Baleen\Migrations\Migration\MigrationInterface;
 use Baleen\Migrations\Version;
 use Baleen\Migrations\Version as V;
@@ -45,7 +46,7 @@ class LinkedTest extends CollectionTestCase
         $version->setMigrated(true); // but no linked migration
         $instance = new Linked();
 
-        $this->setExpectedException(CollectionException::class, 'must have a Migration');
+        $this->setExpectedException(ValidationException::class, 'must be linked');
         $instance->add($version);
     }
 

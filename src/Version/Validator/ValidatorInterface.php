@@ -14,37 +14,35 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the MIT license. For more information, see
- * <https://github.com/baleen/migrations>.
+ * <http://www.doctrine-project.org>.
  */
 
-namespace Baleen\Migrations\Version\Collection;
+namespace Baleen\Migrations\Version\Validator;
 
-use Baleen\Migrations\Exception\Version\Collection\CollectionException;
-use Baleen\Migrations\Version\Collection\Resolver\ResolverInterface;
-use Baleen\Migrations\Version\Comparator\ComparatorInterface;
-use Baleen\Migrations\Version\Specification\IsMigrated;
-use Baleen\Migrations\Version\Validator\AggregateValidator;
 use Baleen\Migrations\Version\VersionInterface;
 
 /**
- * Class Migrated
+ * ValidatorInterface
+ *
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
-class Migrated extends Sortable
+interface ValidatorInterface
 {
     /**
-     * @param VersionInterface[]|\Traversable $versions
-     * @param ResolverInterface $resolver
-     * @param ComparatorInterface $comparator
+     * Validates a version using specifications.
      *
-     * @throws \Baleen\Migrations\Exception\InvalidArgumentException
+     * @param VersionInterface $version
+     *
+     * @return bool
      */
-    public function __construct(
-        $versions = [],
-        ResolverInterface $resolver = null,
-        ComparatorInterface $comparator = null
-    ) {
-        $validator = new AggregateValidator([new IsMigrated()]);
-        parent::__construct($versions, $resolver, $comparator, $validator);
-    }
+    public function isValid(VersionInterface $version);
+
+    /**
+     * Returns an array of broken specs and their error messages.
+     *
+     * @param VersionInterface $version
+     *
+     * @return array Keys must be specification class names and values must be error messages
+     */
+    public function getBrokenSpecs(VersionInterface $version);
 }

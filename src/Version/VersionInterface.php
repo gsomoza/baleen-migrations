@@ -40,7 +40,7 @@ interface VersionInterface
     /**
      * Returns whether the version has been migrated or not.
      *
-     * @return mixed
+     * @return bool
      */
     public function isMigrated();
 
@@ -56,9 +56,15 @@ interface VersionInterface
      *
      * @param MigrationInterface $migration
      *
-     * @return mixed
+     * @return void
      */
     public function setMigration(MigrationInterface $migration);
+
+    /**
+     * Should return whether the instance has a migration class attached to it or not
+     * @return bool
+     */
+    public function hasMigration();
 
     /**
      * Returns the migration associated with this version.
@@ -66,11 +72,4 @@ interface VersionInterface
      * @return null|MigrationInterface
      */
     public function getMigration();
-
-    /**
-     * Returns whether the version has a migration class linked to it or not
-     *
-     * @return bool
-     */
-    public function hasMigration();
 }

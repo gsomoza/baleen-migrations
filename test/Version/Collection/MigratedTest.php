@@ -20,6 +20,7 @@
 namespace BaleenTest\Migrations\Version\Collection;
 
 use Baleen\Migrations\Exception\Version\Collection\CollectionException;
+use Baleen\Migrations\Exception\Version\ValidationException;
 use Baleen\Migrations\Migration\MigrationInterface;
 use Baleen\Migrations\Version;
 use Baleen\Migrations\Version as V;
@@ -48,7 +49,7 @@ class MigratedTest extends CollectionTestCase
         $version->setMigrated(false); // this is what we're testing
         $instance = new Migrated();
 
-        $this->setExpectedException(CollectionException::class, 'must be migrated');
+        $this->setExpectedException(ValidationException::class, 'must be migrated');
         $instance->add($version);
     }
 

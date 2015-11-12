@@ -22,8 +22,11 @@ namespace Baleen\Migrations\Version;
 use Baleen\Migrations\Exception\InvalidArgumentException;
 use Baleen\Migrations\Exception\Version\Collection\AlreadyExistsException;
 use Baleen\Migrations\Exception\Version\Collection\CollectionException;
+use Baleen\Migrations\Exception\Version\ValidationException;
 use Baleen\Migrations\Version\Collection\Resolver\DefaultResolverStackFactory;
 use Baleen\Migrations\Version\Collection\Resolver\ResolverInterface;
+use Baleen\Migrations\Version\Validator\AggregateValidator;
+use Baleen\Migrations\Version\Validator\ValidatorInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Zend\Stdlib\ArrayUtils;
 
@@ -52,15 +55,23 @@ class Collection extends ArrayCollection
     /** @var ResolverInterface */
     private $resolver;
 
+    /** @var ValidatorInterface */
+    private $validator;
+
     /**
      * @param VersionInterface[]|\Traversable $versions
      * @param ResolverInterface $resolver
+     * @param ValidatorInterface $validator
      *
-     * @throws CollectionException
+     * @throws AlreadyExistsException
      * @throws InvalidArgumentException
+     * @throws ValidationException
      */
-    public function __construct($versions = array(), ResolverInterface $resolver = null)
-    {
+    public function __construct(
+        $versions = array(),
+        ResolverInterface $resolver = null,
+        ValidatorInterface $validator = null
+    ) {
         if (!is_array($versions)) {
             if ($versions instanceof \Traversable) {
                 $versions = ArrayUtils::iteratorToArray($versions);
@@ -76,11 +87,23 @@ class Collection extends ArrayCollection
         }
         $this->resolver = $resolver;
 
+        if (null === $validator) {
+            $validator = new AggregateValidator([]);
+        }
+        $this->validator = $validator;
         foreach ($versions as $version) {
             $this->validate($version);
         }
 
         parent::__construct($versions);
+    }
+
+    /**
+     * @param ResolverInterface $resolver
+     */
+    public function setResolver(ResolverInterface $resolver)
+    {
+        $this->resolver = $resolver;
     }
 
     /**
@@ -202,9 +225,23 @@ class Collection extends ArrayCollection
      * @return bool
      *
      * @throws AlreadyExistsException
+     * @throws ValidationException
      */
-    public function validate(VersionInterface $element)
+    final public function validate(VersionInterface $element)
     {
+        // validate the version itself
+        /** @var ValidatorInterface $validator */
+        $broken = $this->getValidator()->getBrokenSpecs($element);
+        if (count($broken)) {
+            throw new ValidationException(sprintf(
+                "Cannot accept version %s into the collection because the following validation rules failed:\n" .
+                "%s",
+                $element->getId(),
+                implode("\n", $broken)
+            ));
+        }
+
+        // validate the version can be added to the collection
         if (!$this->isEmpty() && $this->contains($element)) {
             throw new AlreadyExistsException(
                 sprintf('Item with id "%s" already exists.', $element->getId())
@@ -212,6 +249,26 @@ class Collection extends ArrayCollection
         }
 
         return true; // if there are no exceptions then result is true
+    }
+
+    /**
+     * @return ValidatorInterface
+     */
+    final protected function getValidator()
+    {
+        return $this->validator;
+    }
+
+    /**
+     * MUST return a new instance of itself that uses the provided specifications
+     *
+     * @param ValidatorInterface $validator
+     *
+     * @return static
+     */
+    public function withValidator(ValidatorInterface $validator)
+    {
+        return new static($this->toArray(), $this->getResolver(), $validator);
     }
 
     /**

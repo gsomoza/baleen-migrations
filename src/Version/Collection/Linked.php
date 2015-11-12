@@ -20,6 +20,11 @@
 namespace Baleen\Migrations\Version\Collection;
 
 use Baleen\Migrations\Exception\Version\Collection\CollectionException;
+use Baleen\Migrations\Version\Collection\Resolver\ResolverInterface;
+use Baleen\Migrations\Version\Comparator\ComparatorInterface;
+use Baleen\Migrations\Version\Specification\IsLinked;
+use Baleen\Migrations\Version\SpecificationInterface;
+use Baleen\Migrations\Version\Validator\AggregateValidator;
 use Baleen\Migrations\Version\VersionInterface;
 
 /**
@@ -30,23 +35,18 @@ use Baleen\Migrations\Version\VersionInterface;
 class Linked extends Sortable
 {
     /**
-     * Validates that migrations added to this set must all have a linked Migration.
+     * @param VersionInterface[]|\Traversable $versions
+     * @param ResolverInterface $resolver
+     * @param ComparatorInterface $comparator
      *
-     * @param VersionInterface $element
-     *
-     * @return bool
-     *
-     * @throws CollectionException
+     * @throws \Baleen\Migrations\Exception\InvalidArgumentException
      */
-    public function validate(VersionInterface $element)
-    {
-        if (!$element->getMigration()) {
-            throw new CollectionException(sprintf(
-                'Version "%s" must have a Migration in order to be accepted into this collection.',
-                $element->getId()
-            ));
-        }
-
-        return parent::validate($element);
+    public function __construct(
+        $versions = [],
+        ResolverInterface $resolver = null,
+        ComparatorInterface $comparator = null
+    ) {
+        $validator = new AggregateValidator([new IsLinked()]);
+        parent::__construct($versions, $resolver, $comparator, $validator);
     }
 }

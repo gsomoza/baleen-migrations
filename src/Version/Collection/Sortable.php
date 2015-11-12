@@ -24,6 +24,9 @@ use Baleen\Migrations\Version\Collection;
 use Baleen\Migrations\Version\Collection\Resolver\ResolverInterface;
 use Baleen\Migrations\Version\Comparator\ComparatorInterface;
 use Baleen\Migrations\Version\Comparator\MigrationComparator;
+use Baleen\Migrations\Version\SpecificationInterface;
+use Baleen\Migrations\Version\Validator\AggregateValidator;
+use Baleen\Migrations\Version\Validator\ValidatorInterface;
 use Baleen\Migrations\Version\VersionInterface;
 
 /**
@@ -40,21 +43,36 @@ class Sortable extends Collection
      * @param VersionInterface[]|\Traversable $versions
      * @param ResolverInterface $resolver
      * @param ComparatorInterface $comparator
+     * @param ValidatorInterface $validator
      *
      * @throws \Baleen\Migrations\Exception\InvalidArgumentException
      */
     public function __construct(
         $versions = [],
         ResolverInterface $resolver = null,
-        ComparatorInterface $comparator = null
+        ComparatorInterface $comparator = null,
+        ValidatorInterface $validator = null
     ) {
         if (null === $comparator) {
             $comparator = new MigrationComparator();
         }
         $this->comparator = $comparator;
 
-        parent::__construct($versions, $resolver);
+        parent::__construct($versions, $resolver, $validator);
     }
+
+    /**
+     * MUST return a new instance of itself that uses the provided specifications
+     *
+     * @param ValidatorInterface $validator
+     *
+     * @return static
+     */
+    final public function withValidator(ValidatorInterface $validator)
+    {
+        return new static($this->toArray(), $this->getResolver(), $validator, $this->getComparator());
+    }
+
 
     /**
      * Sort the collection

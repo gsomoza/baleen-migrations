@@ -14,37 +14,39 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the MIT license. For more information, see
- * <https://github.com/baleen/migrations>.
+ * <http://www.doctrine-project.org>.
  */
 
-namespace Baleen\Migrations\Version\Collection;
+namespace Baleen\Migrations\Version\Specification;
 
-use Baleen\Migrations\Exception\Version\Collection\CollectionException;
-use Baleen\Migrations\Version\Collection\Resolver\ResolverInterface;
-use Baleen\Migrations\Version\Comparator\ComparatorInterface;
-use Baleen\Migrations\Version\Specification\IsMigrated;
-use Baleen\Migrations\Version\Validator\AggregateValidator;
+use Baleen\Migrations\Version\SpecificationInterface;
 use Baleen\Migrations\Version\VersionInterface;
 
 /**
- * Class Migrated
+ * Class IsLinked
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
-class Migrated extends Sortable
+class IsLinked implements SpecificationInterface
 {
     /**
-     * @param VersionInterface[]|\Traversable $versions
-     * @param ResolverInterface $resolver
-     * @param ComparatorInterface $comparator
+     * Returns whether the supplied version is linked to a migration.
      *
-     * @throws \Baleen\Migrations\Exception\InvalidArgumentException
+     * @param VersionInterface $version
+     *
+     * @return bool
      */
-    public function __construct(
-        $versions = [],
-        ResolverInterface $resolver = null,
-        ComparatorInterface $comparator = null
-    ) {
-        $validator = new AggregateValidator([new IsMigrated()]);
-        parent::__construct($versions, $resolver, $comparator, $validator);
+    public function isSatisfiedBy(VersionInterface $version)
+    {
+        return $version->hasMigration();
+    }
+
+    /**
+     * Returns a message to be used whenever this spec is broken.
+     *
+     * @return string
+     */
+    public function getErrorMessage()
+    {
+        return 'Version must be linked to a migration class';
     }
 }
