@@ -37,7 +37,7 @@ class Sortable extends Collection
     private $comparator;
 
     /**
-     * @param VersionInterface[] $versions
+     * @param VersionInterface[]|\Traversable $versions
      * @param ResolverInterface $resolver
      * @param ComparatorInterface $comparator
      *
