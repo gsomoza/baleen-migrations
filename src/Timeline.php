@@ -28,6 +28,7 @@ use Baleen\Migrations\Migration\OptionsInterface;
 use Baleen\Migrations\Timeline\AbstractTimeline;
 use Baleen\Migrations\Version\Collection\Linked;
 use Baleen\Migrations\Version\Collection\Sortable;
+use Baleen\Migrations\Version\LinkedVersion;
 use Baleen\Migrations\Version\VersionInterface;
 
 /**
@@ -57,7 +58,7 @@ final class Timeline extends AbstractTimeline
         // get only versions that are not migrated and are lesser than or equal to the goal version
         $collection = $this->getVersions();
         $comparator = $collection->getComparator();
-        $collection = $collection->filter(function (VersionInterface $v) use ($goal, $comparator) {
+        $collection = $collection->filter(function(VersionInterface $v) use ($goal, $comparator) {
             return !$v->isMigrated() && $comparator($v, $goal) <= 0;
         });
         /** @var Linked $collection */
@@ -86,7 +87,7 @@ final class Timeline extends AbstractTimeline
         // get only versions that are not migrated and are lesser than or equal to the goal version
         $collection = $this->getVersions()->getReverse();
         $comparator = $collection->getComparator(); // already reversed
-        $collection = $collection->filter(function (VersionInterface $v) use ($goal, $comparator) {
+        $collection = $collection->filter(function(VersionInterface $v) use ($goal, $comparator) {
             return $v->isMigrated() && $comparator($v, $goal) <= 0;
         });
         /** @var Linked $collection */
@@ -129,7 +130,7 @@ final class Timeline extends AbstractTimeline
     }
 
     /**
-     * @param VersionInterface $version
+     * @param LinkedVersion $version
      * @param OptionsInterface $options
      * @param Progress $progress Provides contextual information about current progress if this
      *                           migration is one of many that are being run in batch.
@@ -138,12 +139,9 @@ final class Timeline extends AbstractTimeline
      *
      * @throws TimelineException
      */
-    public function runSingle(VersionInterface $version, OptionsInterface $options, Progress $progress = null)
+    public function runSingle(LinkedVersion $version, OptionsInterface $options, Progress $progress = null)
     {
         $migration = $version->getMigration();
-        if (!$migration) {
-            throw new TimelineException('Invalid version specified: version must be linked to a migration object.');
-        }
 
         if (!$this->shouldMigrate($version, $options)) {
             if ($options->isExceptionOnSkip()) {

@@ -84,7 +84,7 @@ abstract class AbstractResolver implements ResolverInterface
      * Gets an alias from the cache. Returns false if nothing could be found, a Version if the alias was previously
      * resolved to a version, and null if the alias couldn't be resolved in a previous call.
      *
-     * @param $alias
+     * @param string $alias
      * @param Collection $collection
      *
      * @return bool|null|VersionInterface
@@ -102,9 +102,9 @@ abstract class AbstractResolver implements ResolverInterface
     /**
      * Saves the result of resolving an alias against a given collection into the cache.
      *
-     * @param $alias
-     * @param $collection
-     * @param $result
+     * @param string $alias
+     * @param Collection $collection
+     * @param null|VersionInterface $result
      */
     private function cacheSet($alias, $collection, $result)
     {
@@ -131,7 +131,7 @@ abstract class AbstractResolver implements ResolverInterface
     /**
      * doResolve
      *
-     * @param $alias
+     * @param string $alias
      * @param Collection $collection
      *
      * @return VersionInterface|null

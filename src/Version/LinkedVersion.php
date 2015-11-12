@@ -14,34 +14,44 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the MIT license. For more information, see
- * <https://github.com/baleen/migrations>.
+ * <http://www.doctrine-project.org>.
  */
 
-namespace Baleen\Migrations\Version\Comparator;
+namespace Baleen\Migrations\Version;
 
 use Baleen\Migrations\Exception\InvalidArgumentException;
-use Baleen\Migrations\Version\LinkedVersionInterface;
-use Baleen\Migrations\Version\VersionInterface;
+use Baleen\Migrations\Migration\MigrationInterface;
+use Baleen\Migrations\Version;
 
 /**
- * {@inheritDoc}
- *
+ * Class LinkedVersion
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
-final class MigrationComparator extends AbstractComparator
+final class LinkedVersion extends Version implements LinkedVersionInterface
 {
+    /** @var MigrationInterface */
+    private $migration;
+
     /**
-     * @inheritdoc
+     * @param $id string
+     * @param bool $migrated
+     * @param MigrationInterface $migration
+     *
+     * @throws InvalidArgumentException
      */
-    protected function compare(VersionInterface $version1, VersionInterface $version2)
+    public function __construct($id, $migrated, MigrationInterface $migration)
     {
-        if (!$version1 instanceof LinkedVersionInterface || !$version2 instanceof LinkedVersionInterface) {
-            throw new InvalidArgumentException(
-                "Expected both versions to be linked to a migration, but at least one of them isn't."
-            );
-        }
-        $class1 = get_class($version1->getMigration());
-        $class2 = get_class($version2->getMigration());
-        return strcmp($class1, $class2);
+        $this->migration = $migration;
+        parent::__construct($id, $migrated);
+    }
+
+    /**
+     * Returns the migration associated with this version.
+     *
+     * @return MigrationInterface
+     */
+    public function getMigration()
+    {
+        return $this->migration;
     }
 }

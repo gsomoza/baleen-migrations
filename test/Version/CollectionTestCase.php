@@ -84,27 +84,6 @@ abstract class CollectionTestCase extends BaseTestCase
     }
 
     /**
-     * setMigrated
-     * @param array|Collection $collection
-     * @param bool $value
-     * @param int|null $offset
-     * @param int|null $length
-     */
-    protected function setMigrated($collection, $value, $offset = 0, $length = null)
-    {
-        if (is_array($collection)) {
-            $collection = array_slice($collection, $offset, $length);
-        } else {
-            /** @var Collection $collection */
-            $collection = $collection->slice($offset, $length);
-        }
-        foreach ($collection as $version) {
-            /** @var VersionInterface $version */
-            $version->setMigrated((bool) $value);
-        }
-    }
-
-    /**
      * setMigration
      * @param array|Collection $collection
      * @param MigrationInterface $migration

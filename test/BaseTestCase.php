@@ -21,6 +21,7 @@ namespace BaleenTest\Migrations;
 
 use Baleen\Migrations\Migration\MigrationInterface;
 use Baleen\Migrations\Version;
+use Baleen\Migrations\Version\LinkedVersion;
 use Mockery as m;
 
 /**
@@ -28,18 +29,19 @@ use Mockery as m;
  */
 class BaseTestCase extends \PHPUnit_Framework_TestCase
 {
-
+    /**
+     * createVersionsWithMigrations
+     * @param $ids
+     * @return Version\VersionInterface[]
+     */
     protected function createVersionsWithMigrations($ids)
     {
         if (!is_array($ids)) {
             $ids = func_get_args();
         }
-        $versions = Version::fromArray($ids);
         /** @var MigrationInterface|m\Mock $migration */
         $migration = m::mock(MigrationInterface::class);
-        foreach ($versions as $version) {
-            $version->setMigration(clone $migration);
-        }
+        $versions = LinkedVersion::fromArray($ids, false, $migration);
         return $versions;
     }
 

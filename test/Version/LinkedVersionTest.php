@@ -14,34 +14,45 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the MIT license. For more information, see
- * <https://github.com/baleen/migrations>.
+ * <http://www.doctrine-project.org>.
  */
 
-namespace Baleen\Migrations\Version\Comparator;
+namespace BaleenTest\Migrations\Version;
 
-use Baleen\Migrations\Exception\InvalidArgumentException;
+use Baleen\Migrations\Migration\MigrationInterface;
+use Baleen\Migrations\Version;
+use Baleen\Migrations\Version\LinkedVersion;
 use Baleen\Migrations\Version\LinkedVersionInterface;
-use Baleen\Migrations\Version\VersionInterface;
+use BaleenTest\Migrations\BaseTestCase;
+use Mockery as m;
 
 /**
- * {@inheritDoc}
- *
+ * Class LinkedVersionTest
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
-final class MigrationComparator extends AbstractComparator
+class LinkedVersionTest extends BaseTestCase
 {
     /**
-     * @inheritdoc
+     * testConstructor
+     * @return LinkedVersion
      */
-    protected function compare(VersionInterface $version1, VersionInterface $version2)
+    public function testConstructor()
     {
-        if (!$version1 instanceof LinkedVersionInterface || !$version2 instanceof LinkedVersionInterface) {
-            throw new InvalidArgumentException(
-                "Expected both versions to be linked to a migration, but at least one of them isn't."
-            );
-        }
-        $class1 = get_class($version1->getMigration());
-        $class2 = get_class($version2->getMigration());
-        return strcmp($class1, $class2);
+        /** @var MigrationInterface|m\Mock $migration */
+        $migration = m::mock(MigrationInterface::class);
+        $v = new LinkedVersion('v1', false, $migration);
+        $this->assertInstanceOf(Version::class, $v);
+        $this->assertInstanceOf(LinkedVersionInterface::class, $v);
+    }
+
+    /**
+     * testGetMigration
+     */
+    public function testGetMigration()
+    {
+        /** @var MigrationInterface|m\Mock $migration */
+        $migration = m::mock(MigrationInterface::class);
+        $v = new LinkedVersion('v1', false, $migration);
+        $this->assertSame($migration, $v->getMigration());
     }
 }

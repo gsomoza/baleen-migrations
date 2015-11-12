@@ -21,7 +21,9 @@ namespace BaleenTest\Migrations\Timeline;
 
 use Baleen\Migrations\Exception\InvalidArgumentException;
 use Baleen\Migrations\Exception\Version\Collection\CollectionException;
+use Baleen\Migrations\Exception\Version\ValidationException;
 use Baleen\Migrations\Timeline\TimelineFactory;
+use Baleen\Migrations\Timeline\TimelineFactoryInterface;
 use Baleen\Migrations\Version as V;
 use Baleen\Migrations\Version;
 use BaleenTest\Migrations\BaseTestCase;
@@ -42,6 +44,7 @@ class TimelineFactoryTest extends BaseTestCase
             $v->setMigrated(true);
         }
         $factory = new TimelineFactory();
+        $this->assertInstanceOf(TimelineFactoryInterface::class, $factory);
         $timeline = $factory->create($available, $migrated);
         $versions = $timeline->getVersions();
         foreach($versions as $v) {

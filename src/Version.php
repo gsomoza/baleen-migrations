@@ -1,5 +1,4 @@
 <?php
-
 /*
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -22,6 +21,7 @@ namespace Baleen\Migrations;
 
 use Baleen\Migrations\Exception\InvalidArgumentException;
 use Baleen\Migrations\Migration\MigrationInterface;
+use Baleen\Migrations\Version\LinkedVersion;
 use Baleen\Migrations\Version\VersionInterface;
 
 /**
@@ -29,7 +29,7 @@ use Baleen\Migrations\Version\VersionInterface;
  *
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
-final class Version implements VersionInterface
+class Version implements VersionInterface
 {
     /**
      * @var string
@@ -42,18 +42,12 @@ final class Version implements VersionInterface
     private $migrated;
 
     /**
-     * @var MigrationInterface
-     */
-    private $migration;
-
-    /**
      * @param $id string
      * @param bool $migrated
-     * @param MigrationInterface $migration
      *
      * @throws InvalidArgumentException
      */
-    public function __construct($id, $migrated = false, MigrationInterface $migration = null)
+    public function __construct($id, $migrated = false)
     {
         $id = trim((string) $id);
         if (empty($id)) {
@@ -61,13 +55,12 @@ final class Version implements VersionInterface
         }
         $this->id = $id;
         $this->migrated = (bool) $migrated;
-        $this->migration = $migration;
     }
 
     /**
      * {@inheritDoc}
      */
-    public function getId()
+    final public function getId()
     {
         return $this->id;
     }
@@ -75,7 +68,7 @@ final class Version implements VersionInterface
     /**
      * {@inheritDoc}
      */
-    public function isMigrated()
+    final public function isMigrated()
     {
         return $this->migrated;
     }
@@ -83,7 +76,7 @@ final class Version implements VersionInterface
     /**
      * {@inheritDoc}
      */
-    public function setMigrated($migrated)
+    final public function setMigrated($migrated)
     {
         $this->migrated = (bool) $migrated;
     }
@@ -91,19 +84,9 @@ final class Version implements VersionInterface
     /**
      * {@inheritDoc}
      */
-    public function setMigration(MigrationInterface $migration)
+    final public function withMigration(MigrationInterface $migration)
     {
-        $this->migration = $migration;
-    }
-
-    /**
-     * Returns the migration associated with this version.
-     *
-     * @return null|MigrationInterface
-     */
-    public function getMigration()
-    {
-        return $this->migration;
+        return new LinkedVersion($this->getId(), $this->isMigrated(), $migration);
     }
 
     /**
@@ -115,14 +98,15 @@ final class Version implements VersionInterface
      * @param null $migration
      * @return Version\VersionInterface[]
      */
-    public static function fromArray($versionIds, $migrated = false, $migration = null)
+    final public static function fromArray($versionIds, $migrated = false, $migration = null)
     {
         $results = [];
         foreach ($versionIds as $id) {
             if (!is_string($id)) {
                 $id = 'v' . (string) $id;
             }
-            $results[] = new static($id, $migrated, $migration);
+            $class = null === $migration ? static::class : LinkedVersion::class;
+            $results[] = new $class($id, $migrated, $migration);
         }
 
         return $results;
@@ -132,7 +116,7 @@ final class Version implements VersionInterface
      * __toString
      * @return string
      */
-    public function __toString()
+    final public function __toString()
     {
         return $this->getId();
     }
