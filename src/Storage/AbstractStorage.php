@@ -56,7 +56,6 @@ abstract class AbstractStorage implements StorageInterface
      */
     final public function update(VersionInterface $version)
     {
-        $result = null;
         if ($version->isMigrated()) {
             $result = $this->save($version);
         } else {

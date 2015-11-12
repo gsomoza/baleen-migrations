@@ -14,26 +14,27 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the MIT license. For more information, see
- * <https://github.com/baleen/migrations>.
+ * <http://www.doctrine-project.org>.
  */
 
-namespace Baleen\Migrations\Repository;
+namespace Baleen\Migrations\Timeline;
 
-use Baleen\Migrations\Migration\Factory\FactoryInterface;
+use Baleen\Migrations\Timeline;
 use Baleen\Migrations\Version\Collection\Linked;
+use Baleen\Migrations\Version\Collection\Migrated;
 
 /**
- * In charge of loading Migration files and instantiating them.
- *
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
-interface RepositoryInterface
+interface TimelineFactoryInterface
 {
     /**
-     * Must fetch all versions available to the repository, load them with their migrations, and return them as a
-     * Linked collection.
+     * Creates a Timeline instance with all available versions. Those versions that have already been migrated will
+     * be marked accordingly.
      *
-     * @return Linked
+     * @param array|Linked $available
+     * @param array|Migrated $migrated
+     * @return TimelineInterface
      */
-    public function fetchAll();
+    public function create($available, $migrated = []);
 }

@@ -1,5 +1,4 @@
 <?php
-
 /*
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -23,7 +22,7 @@ namespace Baleen\Migrations\Migration\Command;
 use Baleen\Migrations\Exception\MigrationBusException;
 use League\Tactician\CommandBus;
 
-class MigrationBus extends CommandBus
+final class MigrationBus extends CommandBus implements MigrationBusInterface
 {
     /**
      * @inheritdoc
@@ -39,7 +38,7 @@ class MigrationBus extends CommandBus
         }
         if (!$foundHandler) {
             throw new MigrationBusException(sprintf(
-                'MigraitonBus must have at least one instance of "%s"',
+                'MigrationBus must have at least one instance of "%s"',
                 MigrateHandler::class
             ));
         }

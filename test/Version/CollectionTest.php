@@ -21,12 +21,14 @@ namespace BaleenTest\Migrations\Version;
 
 use Baleen\Migrations\Exception\InvalidArgumentException;
 use Baleen\Migrations\Exception\Version\Collection\CollectionException;
+use Baleen\Migrations\Exception\Version\ValidationException;
 use Baleen\Migrations\Migration\MigrationInterface;
 use Baleen\Migrations\Version;
 use Baleen\Migrations\Version as V;
 use Baleen\Migrations\Version\Collection;
 use Baleen\Migrations\Version\Collection\Migrated;
 use Baleen\Migrations\Version\Collection\Resolver\ResolverInterface;
+use Baleen\Migrations\Version\Validator\ValidatorInterface;
 use Baleen\Migrations\Version\VersionInterface;
 use Mockery as m;
 use Zend\Stdlib\ArrayUtils;
@@ -167,16 +169,26 @@ class CollectionTest extends CollectionTestCase
         $this->assertSame(1, $instance->key());
     }
 
+    /**
+     * testAddThrowsExceptionIfValidateFalse
+     * @throws CollectionException
+     * @throws InvalidArgumentException
+     */
     public function testAddThrowsExceptionIfValidateFalse()
     {
-        $version = new V(1);
-        /** @var Collection $instance */
-        $instance = m::mock(Collection::class)->makePartial();
-        $instance->shouldReceive('validate')->with($version)->once()->andReturn(false);
+        $version = new V('v1');
+        /** @var ValidatorInterface|m\Mock $validator */
+        $validator = m::mock(ValidatorInterface::class);
+        $validator->shouldReceive('getBrokenSpecs')->once()->andReturn(['__TEST__']);
+
+        /** @var Collection|m\Mock $instance */
+        $instance = new Collection([], null, $validator);
+
         $this->setExpectedException(
-            CollectionException::class,
-            'Validate should either return true or throw an exception'
+            ValidationException::class,
+            '__TEST__' // shows why it failed
         );
+
         $instance->add($version);
     }
 
@@ -303,7 +315,7 @@ class CollectionTest extends CollectionTestCase
         return [
             [$collection, $migrated, $migratedExpectations1],
             [$collection, $linked, $migrationExpectations2],
-            [$migrated, $notMigrated, [], CollectionException::class]
+            [$migrated, $notMigrated, [], ValidationException::class]
         ];
     }
 

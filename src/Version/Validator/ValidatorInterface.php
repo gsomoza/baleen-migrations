@@ -14,26 +14,35 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the MIT license. For more information, see
- * <https://github.com/baleen/migrations>.
+ * <http://www.doctrine-project.org>.
  */
 
-namespace Baleen\Migrations\Repository;
+namespace Baleen\Migrations\Version\Validator;
 
-use Baleen\Migrations\Migration\Factory\FactoryInterface;
-use Baleen\Migrations\Version\Collection\Linked;
+use Baleen\Migrations\Version\VersionInterface;
 
 /**
- * In charge of loading Migration files and instantiating them.
+ * ValidatorInterface
  *
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
-interface RepositoryInterface
+interface ValidatorInterface
 {
     /**
-     * Must fetch all versions available to the repository, load them with their migrations, and return them as a
-     * Linked collection.
+     * Validates a version using specifications.
      *
-     * @return Linked
+     * @param VersionInterface $version
+     *
+     * @return bool
      */
-    public function fetchAll();
+    public function isValid(VersionInterface $version);
+
+    /**
+     * Returns an array of broken specs and their error messages.
+     *
+     * @param VersionInterface $version
+     *
+     * @return array Keys must be specification class names and values must be error messages
+     */
+    public function getBrokenSpecs(VersionInterface $version);
 }

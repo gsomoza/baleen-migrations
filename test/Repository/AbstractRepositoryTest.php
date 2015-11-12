@@ -37,7 +37,8 @@ class AbstractRepositoryTest extends BaseTestCase
      */
     public function testProvidesDefaultFactory()
     {
-        $instance = m::mock(AbstractRepository::class);
+        // pass constructor arguments to the partial in order to trigger the constructor
+        $instance = m::mock(AbstractRepository::class, [null])->makePartial();
         $method = new \ReflectionMethod($instance, 'getMigrationFactory');
         $method->setAccessible(true);
         $this->assertInstanceOf(FactoryInterface::class, $method->invoke($instance));

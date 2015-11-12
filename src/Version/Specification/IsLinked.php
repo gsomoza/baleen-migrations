@@ -14,26 +14,39 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the MIT license. For more information, see
- * <https://github.com/baleen/migrations>.
+ * <http://www.doctrine-project.org>.
  */
 
-namespace Baleen\Migrations\Repository;
+namespace Baleen\Migrations\Version\Specification;
 
-use Baleen\Migrations\Migration\Factory\FactoryInterface;
-use Baleen\Migrations\Version\Collection\Linked;
+use Baleen\Migrations\Version\SpecificationInterface;
+use Baleen\Migrations\Version\VersionInterface;
 
 /**
- * In charge of loading Migration files and instantiating them.
- *
+ * Class IsLinked
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
-interface RepositoryInterface
+class IsLinked implements SpecificationInterface
 {
     /**
-     * Must fetch all versions available to the repository, load them with their migrations, and return them as a
-     * Linked collection.
+     * Returns whether the supplied version is linked to a migration.
      *
-     * @return Linked
+     * @param VersionInterface $version
+     *
+     * @return bool
      */
-    public function fetchAll();
+    public function isSatisfiedBy(VersionInterface $version)
+    {
+        return $version->hasMigration();
+    }
+
+    /**
+     * Returns a message to be used whenever this spec is broken.
+     *
+     * @return string
+     */
+    public function getErrorMessage()
+    {
+        return 'Version must be linked to a migration class';
+    }
 }

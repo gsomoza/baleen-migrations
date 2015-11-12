@@ -21,6 +21,7 @@ namespace BaleenTest\Migrations\Timeline;
 
 use Baleen\Migrations\Exception\InvalidArgumentException;
 use Baleen\Migrations\Exception\Version\Collection\CollectionException;
+use Baleen\Migrations\Exception\Version\ValidationException;
 use Baleen\Migrations\Timeline\TimelineFactory;
 use Baleen\Migrations\Version as V;
 use Baleen\Migrations\Version;
@@ -65,7 +66,7 @@ class TimelineFactoryTest extends BaseTestCase
 
         $factory = new TimelineFactory();
 
-        $this->setExpectedException(CollectionException::class);
+        $this->setExpectedException(ValidationException::class);
         $factory->create($available, $migrated);
     }
 
@@ -75,7 +76,7 @@ class TimelineFactoryTest extends BaseTestCase
      * @param $migrated
      * @dataProvider createInvalidArgumentsProvider
      */
-    public function testCreateInvalidArgumentsProvider($available, $migrated)
+    public function testCreateInvalidArguments($available, $migrated)
     {
         $this->setExpectedException(InvalidArgumentException::class);
         $factory = new TimelineFactory();

@@ -14,26 +14,30 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the MIT license. For more information, see
- * <https://github.com/baleen/migrations>.
+ * <http://www.doctrine-project.org>.
  */
 
-namespace Baleen\Migrations\Repository;
-
-use Baleen\Migrations\Migration\Factory\FactoryInterface;
-use Baleen\Migrations\Version\Collection\Linked;
+namespace Baleen\Migrations\Version;
 
 /**
- * In charge of loading Migration files and instantiating them.
- *
+ * Interface SpecificationInterface
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
-interface RepositoryInterface
+interface SpecificationInterface
 {
     /**
-     * Must fetch all versions available to the repository, load them with their migrations, and return them as a
-     * Linked collection.
+     * Check to see if the specification is satisfied
      *
-     * @return Linked
+     * @param VersionInterface $version
+     *
+     * @return bool
      */
-    public function fetchAll();
+    public function isSatisfiedBy(VersionInterface $version);
+
+    /**
+     * Returns a message to be used whenever this spec is broken.
+     *
+     * @return string
+     */
+    public function getErrorMessage();
 }

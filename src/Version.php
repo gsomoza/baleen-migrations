@@ -136,4 +136,14 @@ final class Version implements VersionInterface
     {
         return $this->getId();
     }
+
+    /**
+     * Returns whether the version has a migration class linked to it or not
+     *
+     * @return bool
+     */
+    public function hasMigration()
+    {
+        return $this->getMigration() !== null;
+    }
 }

@@ -20,28 +20,31 @@
 namespace Baleen\Migrations\Version\Collection;
 
 use Baleen\Migrations\Exception\Version\Collection\CollectionException;
+use Baleen\Migrations\Version\Collection\Resolver\ResolverInterface;
+use Baleen\Migrations\Version\Comparator\ComparatorInterface;
+use Baleen\Migrations\Version\Specification\IsMigrated;
+use Baleen\Migrations\Version\Validator\AggregateValidator;
 use Baleen\Migrations\Version\VersionInterface;
 
+/**
+ * Class Migrated
+ * @author Gabriel Somoza <gabriel@strategery.io>
+ */
 class Migrated extends Sortable
 {
     /**
-     * This makes the collection behave like a set - throwing an exception if the version already exists in the set.
+     * @param VersionInterface[]|\Traversable $versions
+     * @param ResolverInterface $resolver
+     * @param ComparatorInterface $comparator
      *
-     * @param VersionInterface $element
-     *
-     * @return bool
-     *
-     * @throws CollectionException
+     * @throws \Baleen\Migrations\Exception\InvalidArgumentException
      */
-    public function validate(VersionInterface $element)
-    {
-        if (!$element->isMigrated()) {
-            throw new CollectionException(sprintf(
-                'Version "%s" must be migrated in order to be accepted into this collection.',
-                $element->getId()
-            ));
-        }
-
-        return parent::validate($element);
+    public function __construct(
+        $versions = [],
+        ResolverInterface $resolver = null,
+        ComparatorInterface $comparator = null
+    ) {
+        $validator = new AggregateValidator([new IsMigrated()]);
+        parent::__construct($versions, $resolver, $comparator, $validator);
     }
 }
