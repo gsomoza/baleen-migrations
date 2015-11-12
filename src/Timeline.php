@@ -58,7 +58,7 @@ final class Timeline extends AbstractTimeline
         // get only versions that are not migrated and are lesser than or equal to the goal version
         $collection = $this->getVersions();
         $comparator = $collection->getComparator();
-        $collection = $collection->filter(function (VersionInterface $v) use ($goal, $comparator) {
+        $collection = $collection->filter(function(VersionInterface $v) use ($goal, $comparator) {
             return !$v->isMigrated() && $comparator($v, $goal) <= 0;
         });
         /** @var Linked $collection */
@@ -87,7 +87,7 @@ final class Timeline extends AbstractTimeline
         // get only versions that are not migrated and are lesser than or equal to the goal version
         $collection = $this->getVersions()->getReverse();
         $comparator = $collection->getComparator(); // already reversed
-        $collection = $collection->filter(function (VersionInterface $v) use ($goal, $comparator) {
+        $collection = $collection->filter(function(VersionInterface $v) use ($goal, $comparator) {
             return $v->isMigrated() && $comparator($v, $goal) <= 0;
         });
         /** @var Linked $collection */
