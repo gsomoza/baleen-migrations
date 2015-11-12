@@ -26,6 +26,7 @@ use Baleen\Migrations\Event\Timeline\Progress;
 use Baleen\Migrations\Exception\TimelineException;
 use Baleen\Migrations\Migration\Command\MigrateCommand;
 use Baleen\Migrations\Migration\Command\MigrationBus;
+use Baleen\Migrations\Migration\Command\MigrationBusInterface;
 use Baleen\Migrations\Migration\MigrationInterface;
 use Baleen\Migrations\Migration\Options;
 use Baleen\Migrations\Migration\OptionsInterface;
@@ -468,7 +469,8 @@ class TimelineTest extends BaseTestCase
 
     public function testDoRunUsesMigrationBusToMigrate()
     {
-        $migrationBus = m::mock(MigrationBus::class);
+        /** @var MigrationBusInterface|m\Mock $migrationBus */
+        $migrationBus = m::mock(MigrationBusInterface::class);
         $migrationBus->shouldReceive('handle')->with(m::type(MigrateCommand::class))->once();
 
         $collection = new Linked($this->getNoMigratedVersionsFixture());
