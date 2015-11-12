@@ -75,7 +75,7 @@ class TimelineFactoryTest extends BaseTestCase
      * @param $migrated
      * @dataProvider createInvalidArgumentsProvider
      */
-    public function testCreateInvalidArgumentsProvider($available, $migrated)
+    public function testCreateInvalidArguments($available, $migrated)
     {
         $this->setExpectedException(InvalidArgumentException::class);
         $factory = new TimelineFactory();
