@@ -49,18 +49,17 @@ final class DirectoryRepository extends AbstractRepository
 
     /**
      * @param string $path Full path to the repository's directory
-     * @param string $pattern Regex pattern to extract the version ID from a migration's class name. If null it will
-     *                        default to DirectoryRepository::PATTERN_DEFAULT
      * @param FactoryInterface $migrationFactory
      * @param ComparatorInterface $comparator
-     *
+     * @param string $pattern Regex pattern to extract the version ID from a migration's class name. If null it will
+     *                        default to DirectoryRepository::PATTERN_DEFAULT
      * @throws InvalidArgumentException
      */
     public function __construct(
         $path,
-        $pattern = null,
         FactoryInterface $migrationFactory = null,
-        ComparatorInterface $comparator = null
+        ComparatorInterface $comparator = null,
+        $pattern = null
     ) {
         $path = (string) $path;
         if (empty($path) || !is_dir($path)) {
@@ -73,17 +72,9 @@ final class DirectoryRepository extends AbstractRepository
         }
         $this->pattern = $pattern;
 
-
-        if (null !== $migrationFactory) {
-            $this->setMigrationFactory($migrationFactory);
-        }
-
-        if (null === $comparator) {
-            $comparator = new MigrationComparator();
-        }
-        $this->setComparator($comparator);
-
         $this->scanner = new DirectoryScanner($path);
+
+        parent::__construct($migrationFactory, $comparator);
     }
 
     /**

@@ -32,9 +32,10 @@ use Zend\Stdlib\ArrayUtils;
  *
  * @author Gabriel Somoza <gabriel@strategery.io>
  *
- * IMPROVE: this class has 11 methods. Consider refactoring it to keep number of methods under 10.
+ * IMPROVE: this class has many methods. Consider refactoring it to keep number of methods under 10.
  *
  * @SuppressWarnings(PHPMD.TooManyMethods)
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  *
  * @method VersionInterface first()
  * @method VersionInterface last()
@@ -49,11 +50,10 @@ use Zend\Stdlib\ArrayUtils;
 class Collection extends ArrayCollection
 {
     /** @var ResolverInterface */
-    protected $resolver;
+    private $resolver;
 
     /**
      * @param VersionInterface[]|\Traversable $versions
-     *
      * @param ResolverInterface $resolver
      *
      * @throws CollectionException
@@ -70,31 +70,24 @@ class Collection extends ArrayCollection
                 );
             }
         }
-        if (null !== $resolver) {
-            $this->setResolver($resolver);
+
+        if (null === $resolver) {
+            $resolver = DefaultResolverStackFactory::create();
         }
+        $this->resolver = $resolver;
+
         foreach ($versions as $version) {
             $this->validate($version);
         }
-        parent::__construct($versions);
-    }
 
-    /**
-     * @param ResolverInterface $resolver
-     */
-    public function setResolver(ResolverInterface $resolver)
-    {
-        $this->resolver = $resolver;
+        parent::__construct($versions);
     }
 
     /**
      * @return ResolverInterface
      */
-    public function getResolver()
+    final protected function getResolver()
     {
-        if (null === $this->resolver) {
-            $this->resolver = DefaultResolverStackFactory::create();
-        }
         return $this->resolver;
     }
 
@@ -312,7 +305,7 @@ class Collection extends ArrayCollection
             $current = $this->getById($update->getId());
             if ($current !== null) {
                 $current->setMigrated($update->isMigrated());
-                if ($update->getMigration() !== null) {
+                if ($update->hasMigration()) {
                     $current->setMigration($update->getMigration());
                 }
                 try {
