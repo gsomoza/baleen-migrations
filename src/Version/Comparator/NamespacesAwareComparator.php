@@ -21,6 +21,7 @@ namespace Baleen\Migrations\Version\Comparator;
 
 use Baleen\Migrations\Exception\InvalidArgumentException;
 use Baleen\Migrations\Exception\Version\ComparatorException;
+use Baleen\Migrations\Version\LinkedVersion;
 use Baleen\Migrations\Version\LinkedVersionInterface;
 use Baleen\Migrations\Version\VersionInterface;
 
@@ -31,6 +32,8 @@ use Baleen\Migrations\Version\VersionInterface;
  */
 final class NamespacesAwareComparator extends AbstractComparator
 {
+    use ComparesLinkedVersionsTrait;
+
     /** @var array */
     private $namespaces;
 
@@ -63,6 +66,14 @@ final class NamespacesAwareComparator extends AbstractComparator
     }
 
     /**
+     * @inheritDoc
+     */
+    public function withOrder($order)
+    {
+        return new static($order, $this->fallback, $this->namespaces);
+    }
+
+    /**
      * {@inheritdoc}
      *
      * Given the following $namespaces passed in the constructor:
@@ -85,19 +96,33 @@ final class NamespacesAwareComparator extends AbstractComparator
      */
     protected function compare(VersionInterface $version1, VersionInterface $version2)
     {
-        if (!$version1 instanceof LinkedVersionInterface || !$version2 instanceof LinkedVersionInterface) {
-            throw new InvalidArgumentException(
-                "Expected both versions to be linked to a migration, but at least one of them isn't."
-            );
-        }
-        $class1 = get_class($version1->getMigration());
-        $class2 = get_class($version2->getMigration());
+        $class1 = $this->getMigrationClass($version1);
+        $class2 = $this->getMigrationClass($version2);
 
         if ($class1 === $class2) {
             // exit early in this case
             return 0;
         }
 
+        $res = $this->compareNamespaces($class1, $class2);
+
+        // null = could not determine order | zero = both orders are equal
+        if (empty($res)) {
+            // delegate sorting to the fallback comparator
+            $res = call_user_func($this->fallback, $version1, $version2);
+        }
+        return $res;
+    }
+
+    /**
+     * Compare using namespaces
+     *
+     * @param $class1
+     * @param $class2
+     * @return int|null
+     */
+    private function compareNamespaces($class1, $class2)
+    {
         $res = null;
         // loop from highest namespace priority to lowest
         foreach ($this->namespaces as $namespace) {
@@ -112,19 +137,6 @@ final class NamespacesAwareComparator extends AbstractComparator
                 break; // exit as soon as we found a sort order
             }
         }
-        // null = could not determine order / zero = both orders are equal
-        if (empty($res)) {
-            // delegate sorting to the fallback comparator
-            $res = call_user_func($this->fallback, $version1, $version2);
-        }
         return $res;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function withOrder($order)
-    {
-        return new static($order, $this->fallback, $this->namespaces);
     }
 }

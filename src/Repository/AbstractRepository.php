@@ -24,8 +24,6 @@ use Baleen\Migrations\Exception\RepositoryException;
 use Baleen\Migrations\Migration\Factory\FactoryInterface;
 use Baleen\Migrations\Migration\Factory\SimpleFactory;
 use Baleen\Migrations\Version\Collection\Linked;
-use Baleen\Migrations\Version\Comparator\ComparatorAwareInterface;
-use Baleen\Migrations\Version\Comparator\ComparatorAwareTrait;
 use Baleen\Migrations\Version\Comparator\ComparatorInterface;
 use Baleen\Migrations\Version\Comparator\IdComparator;
 

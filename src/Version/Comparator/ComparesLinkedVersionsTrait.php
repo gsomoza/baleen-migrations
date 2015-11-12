@@ -17,28 +17,35 @@
  * <http://www.doctrine-project.org>.
  */
 
-namespace BaleenTest\Migrations\Version\Comparator;
+namespace Baleen\Migrations\Version\Comparator;
 
-use Baleen\Migrations\Version\Comparator\ComparatorAwareTrait;
-use Baleen\Migrations\Version\Comparator\ComparatorInterface;
-use BaleenTest\Migrations\BaseTestCase;
-use Mockery as m;
+use Baleen\Migrations\Exception\InvalidArgumentException;
+use Baleen\Migrations\Version\LinkedVersionInterface;
+use Baleen\Migrations\Version\VersionInterface;
 
 /**
- * Class ComparatorAwareTraitTest
+ * Class ComparesLinkedVersionsTrait
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
-class ComparatorAwareTraitTest extends BaseTestCase
+trait ComparesLinkedVersionsTrait
 {
     /**
-     * testGetSetComparator
+     * Validates the version is a LinkedVersion and returns the class name of its migration
+     *
+     * @param VersionInterface $version
+     *
+     * @return string
+     *
+     * @throws InvalidArgumentException
      */
-    public function testGetSetComparator()
+    final protected function getMigrationClass(VersionInterface $version)
     {
-        $comparator = m::mock(ComparatorInterface::class);
-        $instance = $this->getObjectForTrait(ComparatorAwareTrait::class);
-        $instance->setComparator($comparator);
-        $result = $this->invokeMethod('getComparator', $instance);
-        $this->assertSame($comparator, $result);
+        if (!$version instanceof LinkedVersionInterface) {
+            throw new InvalidArgumentException(sprintf(
+                "Expected version %s to be linked to a migration",
+                $version->getId()
+            ));
+        }
+        return get_class($version->getMigration());
     }
 }
