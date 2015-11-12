@@ -19,7 +19,6 @@
 
 namespace Baleen\Migrations\Repository;
 
-use Baleen\Migrations\Migration\Factory\FactoryInterface;
 use Baleen\Migrations\Version\Collection\Linked;
 
 /**
@@ -34,6 +33,8 @@ interface RepositoryInterface
      * Linked collection.
      *
      * @return Linked
+     *
+     * @throws \Baleen\Migrations\Exception\RepositoryException
      */
     public function fetchAll();
 }

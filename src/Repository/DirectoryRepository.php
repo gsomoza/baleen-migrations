@@ -1,5 +1,4 @@
 <?php
-
 /*
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -83,15 +82,15 @@ final class DirectoryRepository extends AbstractRepository
      */
     public function doFetchAll()
     {
-        $versions = new Linked([], null, $this->getComparator());
+        $versions = new Linked();
         $classes = $this->scanner->getClasses(true);
         foreach ($classes as $class) {
             /* @var DerivedClassScanner $class */
             $className = $class->getName();
             $matches = [];
-            if ($class->isInstantiable()
-                && preg_match($this->pattern, $className, $matches)
+            if (preg_match($this->pattern, $className, $matches)
                 && isset($matches[1])
+                && $class->isInstantiable()
             ) {
                 $migration = $this->getMigrationFactory()->create($className);
                 if ($migration instanceof MigrationInterface) {

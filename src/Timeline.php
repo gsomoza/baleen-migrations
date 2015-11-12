@@ -52,7 +52,7 @@ final class Timeline extends AbstractTimeline
         $options = $this->getOptionsWithDirection(OptionsInterface::DIRECTION_UP, $options);
         $comparator = $this->getVersions()->getComparator();
         // keep versions before the goal that are not migrated
-        $filter = function(VersionInterface $v) use ($goal, $comparator) {
+        $filter = function (VersionInterface $v) use ($goal, $comparator) {
             return !$v->isMigrated() && $comparator($v, $goal) <= 0;
         };
         return $this->towards($goal, $options, $comparator, $filter);
@@ -71,7 +71,7 @@ final class Timeline extends AbstractTimeline
         $options = $this->getOptionsWithDirection(OptionsInterface::DIRECTION_DOWN, $options);
         $comparator = $this->getVersions()->getComparator()->reverse();
         // keep versions before the goal that are not migrated
-        $filter = function(VersionInterface $v) use ($goal, $comparator) {
+        $filter = function (VersionInterface $v) use ($goal, $comparator) {
             return $v->isMigrated() && $comparator($v, $goal) <= 0;
         };
         return $this->towards($goal, $options, $comparator, $filter);
@@ -179,7 +179,8 @@ final class Timeline extends AbstractTimeline
      * @param string $direction
      * @return OptionsInterface
      */
-    private function getOptionsWithDirection($direction, OptionsInterface $options = null) {
+    private function getOptionsWithDirection($direction, OptionsInterface $options = null)
+    {
         if (null === $options) {
             $options = (new Options($direction))->withExceptionOnSkip(false);
         } else {

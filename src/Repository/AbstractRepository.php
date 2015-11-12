@@ -1,5 +1,4 @@
 <?php
-
 /*
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -64,7 +63,7 @@ abstract class AbstractRepository implements RepositoryInterface
     /**
      * @return ComparatorInterface
      */
-    final protected function getComparator()
+    final private function getComparator()
     {
         return $this->comparator;
     }
@@ -80,25 +79,16 @@ abstract class AbstractRepository implements RepositoryInterface
     }
 
     /**
-     * {@inheritdoc}
-     *
-     * @return Linked
-     *
-     * @throws RepositoryException
+     * @inheritdoc
      */
     final public function fetchAll()
     {
         $collection = $this->doFetchAll();
-        if (!is_object($collection) || !$collection instanceof Linked) {
-            throw new RepositoryException(sprintf(
-                'Method AbstractRepository::doFetchAll() must return a "%s" collection. Got "%s" instead.',
-                Linked::class,
-                is_object($collection) ? get_class($collection) : gettype($collection)
-            ));
+        if (!$collection instanceof Linked) {
+            RepositoryException::throwInvalidObjectException($collection, Linked::class);
         }
-        $collection->sort($this->getComparator());
 
-        return $collection;
+        return $collection->sort($this->getComparator());
     }
 
     /**
@@ -106,7 +96,7 @@ abstract class AbstractRepository implements RepositoryInterface
      * Linked collection. It must use a factory (default or supplied by 'setMigrationFactory()') to instantiate
      * each of the migrations.
      *
-     * @return mixed
+     * @return Linked
      */
     abstract protected function doFetchAll();
 }

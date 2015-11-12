@@ -1,5 +1,4 @@
 <?php
-
 /*
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -41,12 +40,8 @@ abstract class AbstractStorage implements StorageInterface
     final public function fetchAll()
     {
         $collection = $this->doFetchAll();
-        if (!is_object($collection) || !$collection instanceof Migrated) {
-            throw new StorageException(sprintf(
-                'Method AbstractStorage::doFetchAll() must return a "%s" collection. Got "%s" instead."',
-                Migrated::class,
-                is_object($collection) ? get_class($collection) : gettype($collection)
-            ));
+        if (!$collection instanceof Migrated) {
+            StorageException::throwInvalidObjectException($collection, Migrated::class);
         }
         return $collection;
     }
@@ -65,7 +60,7 @@ abstract class AbstractStorage implements StorageInterface
     }
 
     /**
-     * @return VersionInterface[]|Migrated
+     * @return Migrated
      */
     abstract protected function doFetchAll();
 }
