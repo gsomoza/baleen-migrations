@@ -1,5 +1,4 @@
 <?php
-
 /*
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -32,18 +31,9 @@ interface RepositoryInterface
 {
     /**
      * Must fetch all versions available to the repository, load them with their migrations, and return them as a
-     * Linked collection. It must use a factory (default or supplied by 'setMigrationFactory()') to instantiate
-     * each of the migrations.
+     * Linked collection.
      *
      * @return Linked
      */
     public function fetchAll();
-
-    /**
-     * Use a custom factory to create migrations. Useful to inject migration instances with additional dependencies
-     * (e.g. database adapters).
-     *
-     * @param FactoryInterface $factory
-     */
-    public function setMigrationFactory(FactoryInterface $factory);
 }

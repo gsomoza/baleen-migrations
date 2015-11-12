@@ -26,29 +26,49 @@ use Baleen\Migrations\Migration\Factory\SimpleFactory;
 use Baleen\Migrations\Version\Collection\Linked;
 use Baleen\Migrations\Version\Comparator\ComparatorAwareInterface;
 use Baleen\Migrations\Version\Comparator\ComparatorAwareTrait;
+use Baleen\Migrations\Version\Comparator\ComparatorInterface;
+use Baleen\Migrations\Version\Comparator\IdComparator;
 
 /**
  * Class AbstractRepository.
  *
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
-abstract class AbstractRepository implements RepositoryInterface, ComparatorAwareInterface
+abstract class AbstractRepository implements RepositoryInterface
 {
-    use ComparatorAwareTrait;
-
     /**
      * @var FactoryInterface
      */
     private $factory = null;
 
+    /** @var ComparatorInterface */
+    private $comparator = null;
+
     /**
-     * {@inheritdoc}
+     * AbstractRepository constructor
      *
      * @param FactoryInterface $factory
+     * @param ComparatorInterface $comparator
      */
-    final public function setMigrationFactory(FactoryInterface $factory)
+    public function __construct(FactoryInterface $factory = null, ComparatorInterface $comparator = null)
     {
+        if (null === $factory) {
+            $factory = new SimpleFactory();
+        }
         $this->factory = $factory;
+
+        if (null === $comparator) {
+            $comparator = new IdComparator();
+        }
+        $this->comparator = $comparator;
+    }
+
+    /**
+     * @return ComparatorInterface
+     */
+    final protected function getComparator()
+    {
+        return $this->comparator;
     }
 
     /**
@@ -58,9 +78,6 @@ abstract class AbstractRepository implements RepositoryInterface, ComparatorAwar
      */
     final protected function getMigrationFactory()
     {
-        if (null === $this->factory) {
-            $this->factory = new SimpleFactory();
-        }
         return $this->factory;
     }
 
