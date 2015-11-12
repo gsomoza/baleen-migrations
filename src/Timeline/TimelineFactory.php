@@ -73,8 +73,8 @@ final class TimelineFactory implements TimelineFactoryInterface
      * Creates a Timeline instance with all available versions. Those versions that have already been migrated will
      * be marked accordingly.
      *
-     * @param array|Linked $available
-     * @param array|Migrated $migrated
+     * @param \Baleen\Migrations\Version\VersionInterface[]|Linked $available
+     * @param \Baleen\Migrations\Version\VersionInterface[]|Migrated $migrated
      * @return Timeline
      * @throws MigrationMissingException
      */
@@ -90,8 +90,8 @@ final class TimelineFactory implements TimelineFactoryInterface
     /**
      * Updates versions in $available with the migration status provided by $migrated.
      *
-     * @param array|Linked $available
-     * @param array|Migrated $migrated
+     * @param \Baleen\Migrations\Version\VersionInterface[]|Linked $available
+     * @param \Baleen\Migrations\Version\VersionInterface[]|Migrated $migrated
      *
      * @return Linked
      * @throws InvalidArgumentException
