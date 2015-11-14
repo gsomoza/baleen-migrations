@@ -14,7 +14,7 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the MIT license. For more information, see
- * <https://github.com/baleen/migrations>.
+ * <http://www.doctrine-project.org>.
  */
 
 namespace Baleen\Migrations\Exception\Version\Collection;
@@ -22,7 +22,7 @@ namespace Baleen\Migrations\Exception\Version\Collection;
 use Baleen\Migrations\Exception\BaleenException;
 
 /**
- * Class CollectionException.
+ * Class CollectionException
  *
  * @author Gabriel Somoza <gabriel@strategery.io>
  */

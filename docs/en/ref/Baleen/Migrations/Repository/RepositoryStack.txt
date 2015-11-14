@@ -1,8 +1,8 @@
 -----------------------------------------------
-Baleen\\Migrations\\Repository\\RepositoryStack
+Baleen\\Migrations\\VersionRepository\\RepositoryStack
 -----------------------------------------------
 
-.. php:namespace: Baleen\\Migrations\\Repository
+.. php:namespace: Baleen\\Migrations\\VersionRepository
 
 .. php:class:: RepositoryStack
 
@@ -12,11 +12,11 @@ Baleen\\Migrations\\Repository\\RepositoryStack
 
         RepositoryStack constructor.
 
-    .. php:method:: addRepository(RepositoryInterface $repo)
+    .. php:method:: addRepository(MigrationRepositoryInterface $repo)
 
         Adds a single repository to the stack
 
-        :type $repo: RepositoryInterface
+        :type $repo: MigrationRepositoryInterface
         :param $repo:
 
     .. php:method:: addRepositories($repositories)
@@ -29,7 +29,7 @@ Baleen\\Migrations\\Repository\\RepositoryStack
 
         Returns the stack
 
-        :returns: \SplStack|RepositoryInterface[]
+        :returns: \SplStack|MigrationRepositoryInterface[]
 
     .. php:method:: setRepositories($repositories)
 

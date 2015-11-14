@@ -19,9 +19,10 @@
 
 namespace BaleenTest\Migrations\Migration\Factory;
 
-use Baleen\Migrations\Exception\InvalidArgumentException;
 use Baleen\Migrations\Migration\Options;
+use Baleen\Migrations\Migration\Options\Direction;
 use Baleen\Migrations\Migration\OptionsInterface;
+use Baleen\Migrations\Version\VersionId;
 use BaleenTest\Migrations\BaseTestCase;
 use Mockery as m;
 
@@ -36,14 +37,14 @@ class OptionsTest extends BaseTestCase
      */
     public function testConstructor()
     {
-        $direction = Options::DIRECTION_DOWN;
+        $direction = Direction::down();
         $forced = true;
         $dryRun = true;
         $exceptionOnSkip = false;
         $custom = ['foo' => 'bar'];
 
         $instance = new Options($direction, $forced, $dryRun, $exceptionOnSkip, $custom);
-        $this->assertTrue($instance->isDirectionDown(), "Expected option's direction to be down.");
+        $this->assertTrue($instance->getDirection()->isDown(), "Expected option's direction to be down.");
         $this->assertSame($instance->isForced(), $forced);
         $this->assertSame($instance->isDryRun(), $dryRun);
         $this->assertSame($instance->isExceptionOnSkip(), $exceptionOnSkip);
@@ -55,7 +56,7 @@ class OptionsTest extends BaseTestCase
      */
     public function testConstructorDefaults()
     {
-        $instance = new Options(Options::DIRECTION_UP);
+        $instance = new Options();
         $this->assertSame($instance->isForced(), false);
         $this->assertSame($instance->isDryRun(), false);
         $this->assertSame($instance->isExceptionOnSkip(), true);
@@ -63,24 +64,14 @@ class OptionsTest extends BaseTestCase
     }
 
     /**
-     * testWithDirectionExceptionIfNotAllowed
-     */
-    public function testWithDirectionExceptionIfNotAllowed()
-    {
-        $instance = new Options(Options::DIRECTION_UP);
-
-        $this->setExpectedException(InvalidArgumentException::class);
-        $instance->withDirection('foo');
-    }
-
-    /**
      * testIsDirectionDown
      */
     public function testIsDirectionDown()
     {
-        $instance = new Options(Options::DIRECTION_DOWN);
-        $this->assertTrue($instance->isDirectionDown());
-        $this->assertFalse($instance->isDirectionUp());
+        $instance = new Options(Direction::down());
+        $direction = $instance->getDirection();
+        $this->assertTrue($direction->isDown());
+        $this->assertFalse($direction->isUp());
     }
 
     /**
@@ -127,12 +118,13 @@ class OptionsTest extends BaseTestCase
      * testEquals
      * @param OptionsInterface $options2
      *
+     * @param $expected
      * @dataProvider equalsProvider
      */
-    public function testEquals(OptionsInterface $options2, $expected)
+    public function testEquals($options2, $expected)
     {
         $options = new Options();
-        $this->assertEquals($expected, $options->equals($options2));
+        $this->assertEquals($expected, $options->isSameValueAs($options2));
     }
 
     /**
@@ -144,12 +136,62 @@ class OptionsTest extends BaseTestCase
         $baseOptions = new Options();
         return [
             [$baseOptions, true], // same
-            [m::mock(OptionsInterface::class), false], // another class
+            [new VersionId(1), false], // another class
             [$baseOptions->withCustom(['test']), false], // different custom
-            [$baseOptions->withDirection(OptionsInterface::DIRECTION_DOWN), false], // different direction
+            [$baseOptions->withDirection(Direction::down()), false], // different direction
             [$baseOptions->withDryRun(!$baseOptions->isDryRun()), false], // different dry-run
             [$baseOptions->withDryRun(!$baseOptions->isDryRun()), false], // different dry-run
             [$baseOptions->withExceptionOnSkip(!$baseOptions->isExceptionOnSkip()), false], // different exception on skip
+        ];
+    }
+
+    /**
+     * testToString
+     * @return void
+     */
+    public function testToString()
+    {
+        $this->assertNotEmpty((string) new Options());
+    }
+
+    /**
+     * testFromOptionsWithDirection
+     * @param OptionsInterface|null $options
+     * @param $direction
+     * @dataProvider fromOptionsWithDirectionProvider
+     */
+    public function testFromOptionsWithDirection($options, $direction) {
+        $o = Options::fromOptionsWithDirection($direction, $options);
+        $this->assertInstanceOf(Options::class, $o);
+        $this->assertEquals($direction, $o->getDirection());
+        if (null === $options) {
+            // test this is also a default
+            $this->assertFalse($o->isExceptionOnSkip());
+        } else {
+            $this->assertEquals($options->isForced(), $o->isForced());
+            $this->assertEquals($options->isDryRun(), $o->isDryRun());
+            $this->assertEquals($options->isExceptionOnSkip(), $o->isExceptionOnSkip());
+            $this->assertEquals($options->getCustom(), $o->getCustom());
+        }
+    }
+
+    /**
+     * fromOptionsWithDirectionProvider
+     * @return array
+     */
+    public function fromOptionsWithDirectionProvider()
+    {
+        return [
+            [ new Options(), Direction::up() ],
+            [ new Options(), Direction::down() ],
+            [ new Options(Direction::up()), Direction::up() ],
+            [ new Options(Direction::up()), Direction::down() ],
+            [ new Options(null, true), Direction::down() ],
+            [ new Options(null, false, true), Direction::down() ],
+            [ new Options(null, false, false, false), Direction::down() ],
+            [ new Options(null, false, false, true, ['foo' => 'bar']), Direction::down() ],
+            [ new Options(Direction::down()), Direction::up() ],
+            [ null, Direction::up() ],
         ];
     }
 }

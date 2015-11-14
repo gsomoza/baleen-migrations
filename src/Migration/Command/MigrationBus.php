@@ -20,6 +20,8 @@
 namespace Baleen\Migrations\Migration\Command;
 
 use Baleen\Migrations\Exception\MigrationBusException;
+use Baleen\Migrations\Migration\Command\Middleware\SetOptionsMiddleware;
+use Baleen\Migrations\Migration\Command\Middleware\TransactionMiddleware;
 use League\Tactician\CommandBus;
 
 final class MigrationBus extends CommandBus implements MigrationBusInterface
@@ -43,5 +45,27 @@ final class MigrationBus extends CommandBus implements MigrationBusInterface
             ));
         }
         parent::__construct($middleware);
+    }
+
+    /**
+     * factory
+     * @return MigrationBus
+     */
+    public static function createDefaultBus()
+    {
+        return new MigrationBus(static::getDefaultMiddleWare());
+    }
+
+    /**
+     * getDefaultMiddleWare
+     * @return array
+     */
+    public static function getDefaultMiddleWare()
+    {
+        return [
+            new SetOptionsMiddleware(),
+            new TransactionMiddleware(),
+            new MigrateHandler(),
+        ];
     }
 }

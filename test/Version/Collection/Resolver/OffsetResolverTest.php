@@ -19,10 +19,8 @@
 
 namespace BaleenTest\Migrations\Version\Collection\Resolver;
 
-use Baleen\Migrations\Version;
-use Baleen\Migrations\Version\Collection;
+use Baleen\Migrations\Version\Collection\Collection;
 use Baleen\Migrations\Version\Collection\Resolver\OffsetResolver;
-use Baleen\Migrations\Version\Collection\Sortable;
 use BaleenTest\Migrations\BaseTestCase;
 use Mockery as m;
 
@@ -43,9 +41,9 @@ class OffsetResolverTest extends BaseTestCase
     public function testResolve($versions, $alias, $expected)
     {
         $instance = new OffsetResolver();
-        $collection = new Sortable($versions, $instance);
+        $collection = new Collection($versions, $instance);
         $result = $instance->resolve($alias, $collection);
-        $actual = $result ? $result->getId() : null;
+        $actual = $result ? (string) $result->getId() : null;
         $this->assertEquals($expected, $actual);
     }
 
@@ -54,37 +52,35 @@ class OffsetResolverTest extends BaseTestCase
      */
     public function resolveProvider()
     {
-        $versions = Version::fromArray(['v01','v02','v03','v04','v05','v06','v07','v08','v09','v10','v15']);
+        $versions = $this->buildVersions(['v01','v02','v03','v04','v05','v06','v07','v08','v09','v10','v15']);
         return [
-            [[], '0', null], // 0 will get the first element (internally the collection is a 0-indexed array)
-            [$versions, '0', null], // no offset pattern
-            [$versions, '0+', 'v02'],
-            [$versions, '0+++', 'v04'],
-            [$versions, '0+2', 'v03'],
-            [$versions, '0-', null],
-            [$versions, '4-', 'v04'],
-            [$versions, '4~', 'v04'],
-            [$versions, '4--', 'v03'],
-            [$versions, '4~~', 'v03'],
-            [$versions, '4-4', 'v01'],
-            [$versions, '4-5', null],
-            [$versions, '4+++', 'v08'],
-            [$versions, '4+4', 'v09'],
-            [$versions, '4+9', null],
-            [$versions, '9+', 'v15'],
-            [$versions, '9++', null],
-            [$versions, '9-3', 'v07'],
+            [$versions, 'v01+', 'v02'],
+            [$versions, 'v01+++', 'v04'],
+            [$versions, 'v01+2', 'v03'],
+            [$versions, 'v01-', null],
+            [$versions, 'v04-', 'v03'],
+            [$versions, 'v04~', 'v03'],
+            [$versions, 'v04--', 'v02'],
+            [$versions, 'v04~~', 'v02'],
+            [$versions, 'v04-4', null], // there's nothing at getPosition 0
+            [$versions, 'v04-5', null], // there's nothing at getPosition -1
+            [$versions, 'v04+++', 'v07'],
+            [$versions, 'v04+4', 'v08'],
+            [$versions, 'v04+9', null], // there's nothing at getPosition 13
+            [$versions, 'v09+', 'v10'],
+            [$versions, 'v09-3', 'v06'],
             // override operator count
-            [$versions, '4---2', 'v03'],
-            [$versions, '4~~~2', 'v03'],
-            [$versions, '4+++4', 'v09'],
+            [$versions, 'v04---2', 'v02'],
+            [$versions, 'v04~~~2', 'v02'],
+            [$versions, 'v04+++4', 'v08'],
             // test if there's a gap (here between 10 and 15)
-            [$versions, '4+6', 'v15'],
-            [$versions, '9+', 'v15'],
-            [$versions, '9+1', 'v15'],
-            [$versions, '10+', null],
-            [$versions, '10-', 'v10'],
-            [$versions, '10-1', 'v10'],
+            [$versions, 'v09++', 'v15'], // version v15 is at getPosition 11
+            [$versions, 'v04+7', 'v15'],
+            [$versions, 'v10+', 'v15'],
+            [$versions, 'v10+1', 'v15'],
+            [$versions, 'v10+2', null],
+            [$versions, 'v15-', 'v10'],
+            [$versions, 'v15-1', 'v10'],
             // unsupported aliases (by this particular resolver)
             [$versions, null, null],
             [$versions, '', null],
@@ -103,7 +99,7 @@ class OffsetResolverTest extends BaseTestCase
     public function testOnlyResolvesIfSortable()
     {
         $instance = new OffsetResolver();
-        $collection = new Collection(Version::fromArray(range(1, 3)));
+        $collection = new Collection($this->buildVersions(range(1, 3)));
         $result = $instance->resolve('1+', $collection);
         $this->assertNull($result);
     }

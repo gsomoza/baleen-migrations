@@ -1,5 +1,5 @@
 ---------------------------------------------------
-Baleen\\Migrations\\Event\\Timeline\\MigrationEvent
+Baleen\\Migrations\\Service\\Runner\\Event\\Migration\\MigrationEvent
 ---------------------------------------------------
 
 .. php:namespace: Baleen\\Migrations\\Event\\Timeline

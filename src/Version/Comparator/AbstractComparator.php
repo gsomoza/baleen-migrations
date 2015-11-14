@@ -18,6 +18,7 @@
  */
 namespace Baleen\Migrations\Version\Comparator;
 
+use Baleen\Migrations\Migration\Options\Direction;
 use Baleen\Migrations\Version\VersionInterface;
 
 /**
@@ -28,17 +29,19 @@ use Baleen\Migrations\Version\VersionInterface;
 abstract class AbstractComparator implements ComparatorInterface
 {
     /** @var int */
-    private $order = self::ORDER_NORMAL;
+    private $order = 1;
 
     /**
      * MigrationComparator constructor.
      *
-     * @param int $order
+     * @param Direction $direction
      */
-    public function __construct($order = self::ORDER_NORMAL)
+    public function __construct(Direction $direction = null)
     {
-        $order = null === $order ? self::ORDER_NORMAL : (int) $order;
-        $this->order = $order >= 0 ? 1 : -1;
+        if (null === $direction) {
+            $direction = Direction::up();
+        }
+        $this->order = $direction->isUp() ? 1 : -1;
     }
 
     /**
@@ -46,23 +49,23 @@ abstract class AbstractComparator implements ComparatorInterface
      */
     final public function __invoke(VersionInterface $version1, VersionInterface $version2)
     {
-        return $this->compare($version1, $version2) * $this->order;
+        return $this->compare($version1, $version2);
     }
 
     /**
      * @inheritdoc
      */
-    final public function reverse()
+    public function withDirection(Direction $direction)
     {
-        return $this->withOrder($this->order * -1);
+        return new static($direction);
     }
 
     /**
      * @inheritdoc
      */
-    public function withOrder($order)
+    final public function compare(VersionInterface $version1, VersionInterface $version2)
     {
-        return new static($order);
+        return $this->doCompare($version1, $version2) * $this->order;
     }
 
     /**
@@ -74,5 +77,5 @@ abstract class AbstractComparator implements ComparatorInterface
      *
      * @return mixed
      */
-    abstract protected function compare(VersionInterface $version1, VersionInterface $version2);
+    abstract protected function doCompare(VersionInterface $version1, VersionInterface $version2);
 }

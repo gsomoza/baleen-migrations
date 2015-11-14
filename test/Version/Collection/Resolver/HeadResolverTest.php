@@ -19,11 +19,8 @@
 
 namespace BaleenTest\Migrations\Version\Collection\Resolver;
 
-use Baleen\Migrations\Migration\MigrationInterface;
-use Baleen\Migrations\Version;
-use Baleen\Migrations\Version\Collection;
+use Baleen\Migrations\Version\Collection\Collection;
 use Baleen\Migrations\Version\Collection\Resolver\HeadResolver;
-use Baleen\Migrations\Version\Collection\Sortable;
 use Baleen\Migrations\Version\Comparator\IdComparator;
 use Baleen\Migrations\Version\VersionInterface;
 use BaleenTest\Migrations\BaseTestCase;
@@ -37,19 +34,19 @@ class HeadResolverTest extends BaseTestCase
 {
     /**
      * testResolve
-     * @param Version[] $versions
-     * @param $headId
+     * @param \Baleen\Migrations\Version\Version[] $versions
+     * @param $expectedHeadId
      *
      * @param string $command
      * @dataProvider resolveProvider
      */
-    public function testResolve($versions, $headId, $command = 'HEAD')
+    public function testResolve($versions, $expectedHeadId, $command = 'HEAD')
     {
-        $instance = new HeadResolver();
-        $collection = new Sortable($versions, null, new IdComparator());
-        $result = $instance->resolve($command, $collection);
-        $actual = null !== $result ? $result->getId() : null;
-        $this->assertEquals($headId, $actual);
+        $resolver = new HeadResolver();
+        $collection = new Collection($versions, null, new IdComparator());
+        $head = $resolver->resolve($command, $collection);
+        $actual = null !== $head ? $head->getId() : null;
+        $this->assertEquals($expectedHeadId, $actual);
     }
 
     /**
@@ -58,33 +55,30 @@ class HeadResolverTest extends BaseTestCase
      */
     public function resolveProvider()
     {
-        /** @var MigrationInterface|m\Mock $migration */
-        $migration = m::mock(MigrationInterface::class);
+        $migratedVersion = $this->buildVersion('v5', true);
 
-        $migratedVersion = new Version('v5', true, clone $migration);
-
-        $oneVersionNoHead = [new Version('v1', false, clone $migration)];
+        $oneVersionNoHead = [$this->buildVersion('v1', false)];
         $oneVersionWithHead = [clone $migratedVersion];
 
-        $tenVersionsNoHead = Version::fromArray(range(1,10));
-        $tenVersionsWithHead = Version::fromArray(range(1,10));
-        /** @var VersionInterface[] $tenVersionsWithHead */
-        $tenVersionsWithHead[8]->setMigrated(true);
+        $nineVersionsNoHead = $this->buildVersions(range(1,9));
+        $nineVersionsWithHead = $this->buildVersions(range(1,9));
+        /** @var VersionInterface[] $nineVersionsWithHead */
+        $nineVersionsWithHead[8]->setMigrated(true);
 
-        /** @var VersionInterface[] $tenVersionsTwoHeads */
-        $tenVersionsTwoHeads = Version::fromArray(range(1,10));
-        $tenVersionsTwoHeads[0]->setMigrated(true);
-        $tenVersionsTwoHeads[9]->setMigrated(true);
+        /** @var VersionInterface[] $nineVersionsTwoHeads */
+        $nineVersionsTwoHeads = $this->buildVersions(range(1,9));
+        $nineVersionsTwoHeads[0]->setMigrated(true);
+        $nineVersionsTwoHeads[8]->setMigrated(true);
 
         return [
             [[], null],
             [$oneVersionNoHead, null],
             [$oneVersionWithHead, 'v5'],
             [$oneVersionWithHead, 'v5', 'head'],
-            [$tenVersionsNoHead, null],
-            [$tenVersionsWithHead, 'v9'],
-            [$tenVersionsTwoHeads, 'v10'],
-            [$tenVersionsTwoHeads, null, 'notHEAD'],
+            [$nineVersionsNoHead, null],
+            [$nineVersionsWithHead, 'v9'],
+            [$nineVersionsTwoHeads, 'v9'],
+            [$nineVersionsTwoHeads, null, 'notHEAD'],
         ];
     }
 
@@ -93,7 +87,7 @@ class HeadResolverTest extends BaseTestCase
      */
     public function testResolveReturnsNullNotSortable()
     {
-        $instance = new Collection\Resolver\HeadResolver();
+        $instance = new HeadResolver();
         $collection = new Collection(); // not sortable
         $result = $instance->resolve('HEAD', $collection);
         $this->assertNull($result);

@@ -1,10 +1,10 @@
 ---------------------------------------------------
-Baleen\\Migrations\\Repository\\RepositoryInterface
+Baleen\\Migrations\\Migration\\VersionRepository\\MigrationRepositoryInterface
 ---------------------------------------------------
 
-.. php:namespace: Baleen\\Migrations\\Repository
+.. php:namespace: Baleen\\Migrations\\VersionRepository
 
-.. php:interface:: RepositoryInterface
+.. php:interface:: MigrationRepositoryInterface
 
     In charge of loading Migration files and instantiating them.
 

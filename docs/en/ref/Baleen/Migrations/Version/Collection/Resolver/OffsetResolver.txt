@@ -1,8 +1,8 @@
 -----------------------------------------------------------------
-Baleen\\Migrations\\Version\\Collection\\Resolver\\OffsetResolver
+Baleen\\Migrations\\Version\\Version\\Version\\Collection\\Resolver\\OffsetResolver
 -----------------------------------------------------------------
 
-.. php:namespace: Baleen\\Migrations\\Version\\Collection\\Resolver
+.. php:namespace: Baleen\\Migrations\\Version\\Version\\Version\\Collection\\Resolver
 
 .. php:class:: OffsetResolver
 
@@ -31,7 +31,7 @@ Baleen\\Migrations\\Version\\Collection\\Resolver\\OffsetResolver
         :param $alias:
         :type $collection: Collection
         :param $collection:
-        :returns: \Baleen\Migrations\Version\VersionInterface|null|string
+        :returns: \Baleen\Migrations\Version\Version\Version\VersionInterface|null|string
 
     .. php:method:: __construct($cacheEnabled = true)
 

@@ -6,5 +6,5 @@ Baleen\\Migrations\\Storage
 
 .. toctree::
 
-   AbstractStorage
-   StorageInterface
+   VersionRepository
+   MigrationRepositoryInterface

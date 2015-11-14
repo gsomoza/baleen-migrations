@@ -26,7 +26,7 @@ use Baleen\Migrations\Version\VersionInterface;
  * Class Migrated
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
-class Migrated extends Sortable
+class Migrated extends Collection
 {
     /**
      * Returns true if the specified version is valid (can be added) to the collection. Otherwise, it MUST throw
@@ -37,13 +37,12 @@ class Migrated extends Sortable
      * @return bool
      *
      * @throws CollectionException
-     * @throws \Baleen\Migrations\Exception\Version\Collection\AlreadyExistsException
      */
     public function validate(VersionInterface $version)
     {
         if (!$version->isMigrated()) {
             throw new CollectionException(
-                'Invalid version specified. This collection only accepts versions that are migrated.'
+                'Invalid version specified: this collection only accepts versions that are migrated.'
             );
         }
         return parent::validate($version);

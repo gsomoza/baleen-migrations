@@ -38,12 +38,20 @@ class MigrateCommandTest extends BaseTestCase
     /** @var m\Mock|OptionsInterface */
     protected $options;
 
+    /**
+     * setUp
+     * @return void
+     */
     public function setUp()
     {
         $this->migration = m::mock(MigrationInterface::class);
         $this->options = m::mock(OptionsInterface::class);
     }
 
+    /**
+     * testConstructor
+     * @return void
+     */
     public function testConstructor()
     {
         $instance = new MigrateCommand($this->migration, $this->options);
@@ -51,8 +59,13 @@ class MigrateCommandTest extends BaseTestCase
         $this->assertSame($this->options, $instance->getOptions());
     }
 
+    /**
+     * testSetMigration
+     * @return void
+     */
     public function testSetMigration()
     {
+        /** @var MigrationInterface|m\Mock $migration */
         $migration = m::mock(MigrationInterface::class);
         $this->assertNotSame($this->migration, $migration);
 
@@ -61,6 +74,10 @@ class MigrateCommandTest extends BaseTestCase
         $this->assertSame($migration, $instance->getMigration());
     }
 
+    /**
+     * testSetOptions
+     * @return void
+     */
     public function testSetOptions()
     {
         /** @var OptionsInterface $options */
@@ -72,5 +89,4 @@ class MigrateCommandTest extends BaseTestCase
 
         $this->assertSame($options, $instance->getOptions());
     }
-
 }

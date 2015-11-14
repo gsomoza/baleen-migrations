@@ -1,8 +1,8 @@
 ----------------------------------------------------------------
-Baleen\\Migrations\\Version\\Collection\\Resolver\\ResolverStack
+Baleen\\Migrations\\Version\\Version\\Version\\Collection\\Resolver\\ResolverStack
 ----------------------------------------------------------------
 
-.. php:namespace: Baleen\\Migrations\\Version\\Collection\\Resolver
+.. php:namespace: Baleen\\Migrations\\Version\\Version\\Version\\Collection\\Resolver
 
 .. php:class:: ResolverStack
 
@@ -29,7 +29,7 @@ Baleen\\Migrations\\Version\\Collection\\Resolver\\ResolverStack
         :param $alias:
         :type $collection: Collection
         :param $collection:
-        :returns: \Baleen\Migrations\Version\VersionInterface|null
+        :returns: \Baleen\Migrations\Version\Version\Version\VersionInterface|null
 
     .. php:method:: resolve($alias, Collection $collection)
 

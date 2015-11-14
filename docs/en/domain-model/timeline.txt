@@ -76,22 +76,22 @@ will be fired are:
 .. glossary::
 
     Before Collection
-    ``EventInterface::COLLECTION_BEFORE``
+    ``DomainEventInterface::COLLECTION_BEFORE``
         Fired before the Timeline executes one of the *collection methods* (upTowards, downTowards, goTowards). The
         listener callback will receive a `CollectionEvent` object as a parameter, which includes information about the
         collection of versions, the `Options` and the *target* version.
 
     After Collection
-    ``EventInterface::COLLECTION_AFTER``
+    ``DomainEventInterface::COLLECTION_AFTER``
         Same as above, but fired once the the collection method has finished executing all scheduled migrations.
 
     Before Migration
-    ``EventInterface::MIGRATION_BEFORE``
+    ``DomainEventInterface::MIGRATION_BEFORE``
         Fired before the Timeline executes a single migration, which occurs both as part of executing ``runSingle`` and
         also for each of the migrations executed by any *collection method*.
 
     After Migration
-    ``EventInterface::MIGRATION_AFTER``
+    ``DomainEventInterface::MIGRATION_AFTER``
         Same as above, but fired once the migration has finished.
 
 Baleen uses Symfony's Event Dispatcher component, so listening to timeline events is very easy:
@@ -104,7 +104,7 @@ Baleen uses Symfony's Event Dispatcher component, so listening to timeline event
     $dispatcher = $timeline->getEventDispatcher();
 
     $dispatcher->addListener(
-        EventInterface::COLLECTION_BEFORE,
+        DomainEventInterface::COLLECTION_BEFORE,
         function ($event, $name) {
             // do something
         }

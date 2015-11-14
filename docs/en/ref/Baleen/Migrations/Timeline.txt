@@ -8,7 +8,7 @@ Baleen\\Migrations\\Timeline
 
     .. php:attr:: emitter
 
-        protected EmitterInterface
+        protected PublisherInterface
 
     .. php:method:: upTowards($goalVersion, OptionsInterface $options = null)
 
@@ -69,7 +69,7 @@ Baleen\\Migrations\\Timeline
 
         Must create and return a default specialised dispatcher.
 
-        :returns: \Baleen\Migrations\Event\EmitterInterface
+        :returns: \Baleen\Migrations\Shared\Event\PublisherInterface
 
     .. php:method:: doRun(MigrationInterface $migration, OptionsInterface $options)
 
@@ -109,13 +109,13 @@ Baleen\\Migrations\\Timeline
 
         Returns the emitter for the class. Creates one if necessary.
 
-        :returns: EmitterInterface
+        :returns: PublisherInterface
 
-    .. php:method:: setEmitter(EmitterInterface $emitter)
+    .. php:method:: setEmitter(PublisherInterface $emitter)
 
         Sets the emitter for the class.
 
-        :type $emitter: EmitterInterface
+        :type $emitter: PublisherInterface
         :param $emitter:
 
     .. php:method:: getEventDispatcher()

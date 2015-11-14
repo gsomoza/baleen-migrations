@@ -20,7 +20,7 @@
 namespace Baleen\Migrations\Version\Collection\Resolver;
 
 use Baleen\Migrations\Exception\Version\Collection\ResolverException;
-use Baleen\Migrations\Version\Collection;
+use Baleen\Migrations\Version\Collection\Collection;
 use Baleen\Migrations\Version\VersionInterface;
 
 /**
@@ -97,7 +97,7 @@ abstract class AbstractResolver implements ResolverInterface
      * Saves the result of resolving an alias against a given collection into the cache.
      *
      * @param string $alias
-     * @param Collection $collection
+     * @param \Baleen\Migrations\Version\Collection\Collection $collection
      * @param null|VersionInterface $result
      *
      * @return void

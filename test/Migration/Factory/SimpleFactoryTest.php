@@ -23,6 +23,7 @@ namespace BaleenTest\Migrations\Migration\Factory;
 use Baleen\Migrations\Exception\InvalidArgumentException;
 use Baleen\Migrations\Migration\Factory\SimpleFactory;
 use Baleen\Migrations\Migration\Options;
+use Baleen\Migrations\Migration\Options\Direction;
 use Baleen\Migrations\Migration\OptionsInterface;
 use BaleenTest\Migrations\BaseTestCase;
 
@@ -62,7 +63,7 @@ class SimpleFactoryTest extends BaseTestCase
     {
         $factory = new SimpleFactory();
         $this->setExpectedException(InvalidArgumentException::class);
-        $factory->create(Options::class, OptionsInterface::DIRECTION_DOWN); // no array!
+        $factory->create(Options::class, Direction::down()); // no array!
     }
 
     /**
@@ -71,8 +72,9 @@ class SimpleFactoryTest extends BaseTestCase
     public function testCreateWithArgs()
     {
         $factory = new SimpleFactory();
-        $result = $factory->create(Options::class, [OptionsInterface::DIRECTION_DOWN]);
+        /** @var OptionsInterface $result */
+        $result = $factory->create(Options::class, [Direction::down()]);
         $this->assertInstanceOf(Options::class, $result);
-        $this->assertTrue($result->isDirectionDown());
+        $this->assertTrue($result->getDirection()->isDown());
     }
 }

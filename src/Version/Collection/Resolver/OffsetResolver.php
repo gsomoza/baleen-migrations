@@ -19,8 +19,8 @@
 
 namespace Baleen\Migrations\Version\Collection\Resolver;
 
-use Baleen\Migrations\Version\Collection;
-use Baleen\Migrations\Version\Collection\Sortable;
+use Baleen\Migrations\Version\Collection\Collection;
+use Baleen\Migrations\Version\VersionInterface;
 
 /**
  * Class OffsetResolver.
@@ -44,7 +44,7 @@ final class OffsetResolver extends AbstractResolver
     const PATTERN = '/^(.*?)([\+\-\~\^]+)([0-9]+)?$/';
 
     /**
-     * Resolves an alias into a Version.
+     * @{inheritdoc}
      *
      * IMPROVE: this method has an NPath complexity of 400. The configured NPath complexity threshold is 200.
      *
@@ -53,14 +53,10 @@ final class OffsetResolver extends AbstractResolver
      * @param string $alias
      * @param Collection $collection
      *
-     * @return \Baleen\Migrations\Version\VersionInterface|null|string
+     * @return VersionInterface|null
      */
     protected function doResolve($alias, Collection $collection)
     {
-        if (!$collection instanceof Sortable) {
-            return null;
-        }
-
         // parse alias
         $matches = [];
         if (!preg_match(self::PATTERN, $alias, $matches)) {
@@ -82,8 +78,8 @@ final class OffsetResolver extends AbstractResolver
         $multiplier = $operator === '+' ? 1 : -1;
         $offset = $count * $multiplier;
 
-        // find version by absolute position + offset
-        $absolutePos = $collection->indexOf($absoluteVersion);
-        return $collection->get($absolutePos + $offset);
+        // find version by absolute getPosition + offset
+        $absolutePos = $collection->getPosition($absoluteVersion);
+        return $collection->getByPosition($absolutePos + $offset);
     }
 }

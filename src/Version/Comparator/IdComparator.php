@@ -22,21 +22,16 @@ namespace Baleen\Migrations\Version\Comparator;
 use Baleen\Migrations\Version\VersionInterface;
 
 /**
- * Class IdComparator
+ * Compares version ids. Useful mostly for testing.
+ *
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
 final class IdComparator extends AbstractComparator
 {
     /**
-     * The internal compare function. Should return less than zero (0), zero or greater than zero if the first item is
-     * respectively less than, equal to, or greater than the second item.
-     *
-     * @param VersionInterface $version1
-     * @param VersionInterface $version2
-     *
-     * @return mixed
+     * @inheritdoc
      */
-    protected function compare(VersionInterface $version1, VersionInterface $version2)
+    protected function doCompare(VersionInterface $version1, VersionInterface $version2)
     {
         return strcmp($version1->getId(), $version2->getId());
     }

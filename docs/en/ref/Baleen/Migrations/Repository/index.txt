@@ -1,12 +1,12 @@
 ''''''''''''''''''''''''''''''
-Baleen\\Migrations\\Repository
+Baleen\\Migrations\\VersionRepository
 ''''''''''''''''''''''''''''''
 
-.. php:namespace: Baleen\\Migrations\\Repository
+.. php:namespace: Baleen\\Migrations\\VersionRepository
 
 .. toctree::
 
-   AbstractRepository
-   DirectoryRepository
-   RepositoryInterface
+   MigrationRepository
+   DirectoryRepositoryMapper
+   MigrationRepositoryInterface
    RepositoryStack

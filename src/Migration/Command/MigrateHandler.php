@@ -31,10 +31,10 @@ final class MigrateHandler extends AbstractMiddleware
     /**
      * {@inheritDoc}
      */
-    public function doExecute(MigrateCommand $command, callable $next)
+    protected function doExecute(MigrateCommand $command, callable $next)
     {
         $migration = $command->getMigration();
-        $direction = $command->getOptions()->getDirection();
+        $direction = $command->getOptions()->getDirection()->isUp() ? 'up' : 'down';
 
         $migration->$direction();
     }

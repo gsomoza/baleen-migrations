@@ -19,8 +19,7 @@
 
 namespace Baleen\Migrations\Version\Collection\Resolver;
 
-use Baleen\Migrations\Version\Collection;
-use Baleen\Migrations\Version\Collection\Sortable;
+use Baleen\Migrations\Version\Collection\Collection;
 use Baleen\Migrations\Version\VersionInterface;
 
 /**
@@ -44,9 +43,6 @@ final class FirstLastResolver extends AbstractResolver
      */
     protected function doResolve($alias, Collection $collection)
     {
-        if (!$collection instanceof Sortable) {
-            return null;
-        }
         $result = null;
         switch (strtolower($alias)) {
             case self::LAST:

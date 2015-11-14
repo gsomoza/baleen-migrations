@@ -1,15 +1,15 @@
 ---------------------------------------------
-Baleen\\Migrations\\Version\\VersionInterface
+Baleen\\Migrations\\Version\\Version\\Version\\VersionInterface
 ---------------------------------------------
 
-.. php:namespace: Baleen\\Migrations\\Version
+.. php:namespace: Baleen\\Migrations\\Version\\Version\\Version
 
 .. php:interface:: VersionInterface
 
     Holds meta information about a migration, especially that which is related to its status (i.e. anything that can't
     be stored in the migration itself).
 
-    .. php:method:: getId()
+    .. php:method:: toString()
 
         Returns the ID of the version.
 

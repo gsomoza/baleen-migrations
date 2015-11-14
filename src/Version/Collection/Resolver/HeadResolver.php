@@ -19,8 +19,7 @@
 
 namespace Baleen\Migrations\Version\Collection\Resolver;
 
-use Baleen\Migrations\Version\Collection;
-use Baleen\Migrations\Version\Collection\Sortable;
+use Baleen\Migrations\Version\Collection\Collection;
 use Baleen\Migrations\Version\VersionInterface;
 
 /**
@@ -41,7 +40,7 @@ final class HeadResolver extends AbstractResolver
      */
     protected function doResolve($alias, Collection $collection)
     {
-        if (!$collection instanceof Sortable || strtolower($alias) !== self::HEAD) {
+        if (strtolower($alias) !== self::HEAD) {
             return null;
         }
 

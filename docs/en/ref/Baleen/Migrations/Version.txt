@@ -1,5 +1,5 @@
 ---------------------------
-Baleen\\Migrations\\Version
+Baleen\\Migrations\\Version\\Version\\Version
 ---------------------------
 
 .. php:namespace: Baleen\\Migrations
@@ -16,7 +16,7 @@ Baleen\\Migrations\\Version
         :type $migration: MigrationInterface
         :param $migration:
 
-    .. php:method:: getId()
+    .. php:method:: toString()
 
         {@inheritDoc}
 
@@ -43,7 +43,7 @@ Baleen\\Migrations\\Version
 
         :returns: null|MigrationInterface
 
-    .. php:method:: fromArray($versionIds)
+    .. php:method:: buildVersions($versionIds)
 
         Creates a list of versions based on specified IDs.
 

@@ -1,12 +1,12 @@
 --------------------------------------------------
-Baleen\\Migrations\\Repository\\AbstractRepository
+Baleen\\Migrations\\Migration\\VersionRepository\\MigrationRepository
 --------------------------------------------------
 
-.. php:namespace: Baleen\\Migrations\\Repository
+.. php:namespace: Baleen\\Migrations\\VersionRepository
 
-.. php:class:: AbstractRepository
+.. php:class:: MigrationRepository
 
-    Class AbstractRepository.
+    Class MigrationRepository.
 
     .. php:method:: setMigrationFactory(FactoryInterface $factory)
 
