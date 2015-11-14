@@ -17,34 +17,35 @@
  * <http://www.doctrine-project.org>.
  */
 
-namespace Baleen\Migrations\Version\Comparator;
+namespace BaleenTest\Migrations\Exception;
 
-use Baleen\Migrations\Exception\InvalidArgumentException;
-use Baleen\Migrations\Version\LinkedVersionInterface;
-use Baleen\Migrations\Version\VersionInterface;
+use Baleen\Migrations\Exception\BaleenException;
+use BaleenTest\Migrations\BaseTestCase;
+use Mockery as m;
 
 /**
- * Class ComparesLinkedVersionsTrait
+ * Class BaleenExceptionTest
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
-trait ComparesLinkedVersionsTrait
+class BaleenExceptionTest extends BaseTestCase
 {
     /**
-     * Validates the version is a LinkedVersion and returns the class name of its migration
-     *
-     * @param VersionInterface $version
-     *
-     * @return string
-     *
-     * @throws InvalidArgumentException
+     * testThrowInvalidObjectExceptionWithObject
      */
-    final protected function getMigrationClass(VersionInterface $version)
+    public function testThrowInvalidObjectExceptionWithObject()
     {
-        if (!$version instanceof LinkedVersionInterface) {
-            InvalidArgumentException::invalidObjectException($version, LinkedVersionInterface::class);
-            // @codeCoverageIgnoreStart
-            // because execution will never reach this point
-        }
-        return get_class($version->getMigration());
+        $object = new \stdClass();
+        $this->setExpectedException(BaleenException::class, 'stdClass');
+        BaleenException::invalidObjectException($object, 'foobar');
+    }
+
+    /**
+     * testThrowInvalidObjectExceptionWithScalar
+     */
+    public function testThrowInvalidObjectExceptionWithScalar()
+    {
+        $object = 'oops';
+        $this->setExpectedException(BaleenException::class, 'string');
+        BaleenException::invalidObjectException($object, 'foobar');
     }
 }
