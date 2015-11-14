@@ -19,8 +19,7 @@
 
 namespace Baleen\Migrations\Version\Collection\Resolver;
 
-use Baleen\Migrations\Version\Collection;
-use Baleen\Migrations\Version\LinkedVersion;
+use Baleen\Migrations\Version\Collection\Collection;
 use Baleen\Migrations\Version\VersionInterface;
 
 /**
@@ -45,13 +44,12 @@ final class FilenameResolver extends AbstractResolver
 
         $result = null;
         foreach ($collection as $version) {
-            if ($version instanceof LinkedVersion) {
-                $class = new \ReflectionClass($version->getMigration());
-                $file = $class->getFileName();
-                if (strpos($file, $alias) !== false) {
-                    $result = $version;
-                    break;
-                }
+            /** @var VersionInterface $version */
+            $class = new \ReflectionClass($version->getMigration());
+            $file = $class->getFileName();
+            if (strpos($file, $alias) !== false) {
+                $result = $version;
+                break;
             }
         }
         return $result;

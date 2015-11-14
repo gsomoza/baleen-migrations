@@ -20,12 +20,10 @@
 namespace BaleenTest\Migrations\Version\Collection\Resolver;
 
 use Baleen\Migrations\Migration\MigrationInterface;
-use Baleen\Migrations\Version;
-use Baleen\Migrations\Version\Collection;
+use Baleen\Migrations\Version\Collection\Collection;
 use Baleen\Migrations\Version\Collection\Resolver\FilenameResolver;
-use Baleen\Migrations\Version\LinkedVersion;
 use BaleenTest\Migrations\BaseTestCase;
-use BaleenTest\Migrations\Migrations\AllValid\v201507020419_InterfaceTest;
+use BaleenTest\Migrations\Fixtures\Migrations\AllValid\v201507020419_InterfaceTest;
 use Mockery as m;
 
 /**
@@ -44,8 +42,8 @@ class FilenameResolverTest extends BaseTestCase
      */
     public function testResolve(MigrationInterface $migration, $filename, $expectNull = false)
     {
-        $v1 = new Version('v1');
-        $v2 = new LinkedVersion('v2', false, $migration);
+        $v1 = $this->buildVersion(1);
+        $v2 = $this->buildVersion(2, false, $migration);
         $collection = new Collection([$v1, $v2]);
         $resolver = new FilenameResolver();
         $result = $resolver->resolve($filename, $collection);

@@ -1,8 +1,8 @@
 ---------------------------------------------------------------
-Baleen\\Migrations\\Version\\Collection\\Resolver\\HeadResolver
+Baleen\\Migrations\\Version\\Version\\Version\\Collection\\Resolver\\HeadResolver
 ---------------------------------------------------------------
 
-.. php:namespace: Baleen\\Migrations\\Version\\Collection\\Resolver
+.. php:namespace: Baleen\\Migrations\\Version\\Version\\Version\\Collection\\Resolver
 
 .. php:class:: HeadResolver
 

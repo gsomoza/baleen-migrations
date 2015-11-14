@@ -1,8 +1,8 @@
 ----------------------------------------------------------
-Baleen\\Migrations\\Version\\Comparator\\DefaultComparator
+Baleen\\Migrations\\Version\\Version\\Version\\Comparator\\DefaultComparator
 ----------------------------------------------------------
 
-.. php:namespace: Baleen\\Migrations\\Version\\Comparator
+.. php:namespace: Baleen\\Migrations\\Version\\Version\\Version\\Comparator
 
 .. php:class:: DefaultComparator
 

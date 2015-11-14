@@ -1,8 +1,8 @@
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Baleen\\Migrations\\Version\\Collection\\Resolver
+Baleen\\Migrations\\Version\\Version\\Version\\Collection\\Resolver
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. php:namespace: Baleen\\Migrations\\Version\\Collection\\Resolver
+.. php:namespace: Baleen\\Migrations\\Version\\Version\\Version\\Collection\\Resolver
 
 .. toctree::
 
@@ -10,7 +10,7 @@ Baleen\\Migrations\\Version\\Collection\\Resolver
    DefaultResolverStackFactory
    FirstLastResolver
    HeadResolver
-   IdResolver
+   LazyIdResolver
    OffsetResolver
    ResolverInterface
    ResolverStack

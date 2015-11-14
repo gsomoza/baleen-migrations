@@ -1,10 +1,10 @@
 -------------------------------------------------------------
-Baleen\\Migrations\\Version\\Collection\\Resolver\\IdResolver
+Baleen\\Migrations\\Version\\Version\\Version\\Collection\\Resolver\\LazyIdResolver
 -------------------------------------------------------------
 
-.. php:namespace: Baleen\\Migrations\\Version\\Collection\\Resolver
+.. php:namespace: Baleen\\Migrations\\Version\\Version\\Version\\Collection\\Resolver
 
-.. php:class:: IdResolver
+.. php:class:: LazyIdResolver
 
     Resolves version ID's
 

@@ -1,8 +1,8 @@
 ------------------------------------------------------------------------------
-Baleen\\Migrations\\Version\\Collection\\Resolver\\DefaultResolverStackFactory
+Baleen\\Migrations\\Version\\Version\\Version\\Collection\\Resolver\\DefaultResolverStackFactory
 ------------------------------------------------------------------------------
 
-.. php:namespace: Baleen\\Migrations\\Version\\Collection\\Resolver
+.. php:namespace: Baleen\\Migrations\\Version\\Version\\Version\\Collection\\Resolver
 
 .. php:class:: DefaultResolverStackFactory
 

@@ -45,6 +45,10 @@ class SetOptionsMiddlewareTest extends BaseTestCase
     /** @var callable */
     protected $next;
 
+    /**
+     * setUp
+     * @return void
+     */
     public function setUp()
     {
         $this->migration = m::mock(MigrationInterface::class);
@@ -52,12 +56,21 @@ class SetOptionsMiddlewareTest extends BaseTestCase
         $this->next = function() {};
     }
 
+    /**
+     * testIsAbstractMiddleware
+     * @return void
+     */
     public function testIsAbstractMiddleware()
     {
         $instance = new SetOptionsMiddleware();
         $this->assertInstanceOf(AbstractMiddleware::class, $instance);
     }
 
+    /**
+     * testExecute
+     * @return void
+     * @throws \Baleen\Migrations\Exception\InvalidArgumentException
+     */
     public function testExecute()
     {
         $nextCalled = false;
@@ -69,9 +82,15 @@ class SetOptionsMiddlewareTest extends BaseTestCase
         $this->assertTrue($nextCalled, 'expected SetOptionsMiddleware::execute() to call $next().');
     }
 
+    /**
+     * testExecuteOptionsAwareMigration
+     * @return void
+     * @throws \Baleen\Migrations\Exception\InvalidArgumentException
+     */
     public function testExecuteOptionsAwareMigration()
     {
         $instance = new SetOptionsMiddleware();
+        /** @var MigrationInterface|m\Mock $migration */
         $migration = m::mock(MigrationInterface::class . ', ' . OptionsAwareInterface::class);
         $migration->shouldReceive('setOptions')->with($this->command->getOptions())->once();
         $this->command->setMigration($migration);

@@ -12,7 +12,7 @@ The following example illustrates how you can use Baleen migrations from within 
     require __DIR__ . '/vendor/autoload.php';
 
     // The repository is in charge of loading all available migrations.
-    $repository = new DirectoryRepository(__DIR__ . '/migrations');
+    $repository = new DirectoryRepositoryMapper(__DIR__ . '/migrations');
     $available = $repository->getAllAvailableMigrations();
 
     /* The Storage retrieves a list of versions that have already been run.

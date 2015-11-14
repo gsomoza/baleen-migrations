@@ -20,6 +20,8 @@
 namespace Baleen\Migrations\Migration;
 
 use Baleen\Migrations\Exception\InvalidArgumentException;
+use Baleen\Migrations\Migration\Options\Direction;
+use Baleen\Migrations\Shared\ValueObjectInterface;
 
 /**
  * @{inheritdoc}
@@ -31,12 +33,7 @@ use Baleen\Migrations\Exception\InvalidArgumentException;
 final class Options implements OptionsInterface
 {
     /**
-     * @var array
-     */
-    private $allowedDirections;
-
-    /**
-     * @var string
+     * @var Direction
      */
     private $direction;
 
@@ -70,17 +67,17 @@ final class Options implements OptionsInterface
      * @throws InvalidArgumentException
      */
     public function __construct(
-        $direction = self::DIRECTION_UP,
+        Direction $direction = null,
         $forced = false,
         $dryRun = false,
         $exceptionOnSkip = true,
         array $custom = []
     ) {
-        $this->allowedDirections = [
-            self::DIRECTION_UP,
-            self::DIRECTION_DOWN,
-        ];
-        $this->setDirection($direction);
+        if (null === $direction) {
+            $direction = Direction::up();
+        }
+        $this->direction = $direction;
+
         $this->forced = (bool) $forced;
         $this->dryRun = (bool) $dryRun;
         $this->exceptionOnSkip = (bool) $exceptionOnSkip;
@@ -88,23 +85,9 @@ final class Options implements OptionsInterface
     }
 
     /**
-     * setDirection
-     * @param $direction
-     * @throws InvalidArgumentException
-     */
-    private function setDirection($direction)
-    {
-        if (!in_array($direction, $this->allowedDirections)) {
-            throw new InvalidArgumentException(
-                sprintf('Unknown direction "%s". Valid options are "up" or "down".', $direction)
-            );
-        }
-        $this->direction = $direction;
-    }
-
-    /**
      * getDirection
-     * @return string
+     *
+     * @return Direction
      */
     public function getDirection()
     {
@@ -112,31 +95,15 @@ final class Options implements OptionsInterface
     }
 
     /**
-     * @param string $direction
+     * @param Direction $direction
      *
      * @return static
      *
      * @throws InvalidArgumentException
      */
-    public function withDirection($direction)
+    public function withDirection(Direction $direction)
     {
         return new static($direction, $this->forced, $this->dryRun, $this->exceptionOnSkip, $this->custom);
-    }
-
-    /**
-     * @return bool
-     */
-    public function isDirectionUp()
-    {
-        return $this->direction == self::DIRECTION_UP;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isDirectionDown()
-    {
-        return $this->direction == self::DIRECTION_DOWN;
     }
 
     /**
@@ -210,18 +177,47 @@ final class Options implements OptionsInterface
     }
 
     /**
-     * Compares the current instance with another instance of options to see if they contain the same values.
-     *
-     * @param OptionsInterface $options
-     * @return bool
+     * @inheritdoc
      */
-    public function equals(OptionsInterface $options)
+    public function isSameValueAs(ValueObjectInterface $options)
     {
+        if (!$options instanceof OptionsInterface) {
+            return false;
+        }
+
         return get_class($options) === get_class($this)
-            && $this->getDirection() === $options->getDirection()
+            && $this->getDirection()->isSameValueAs($options->getDirection())
             && $this->isForced() === $options->isForced()
             && $this->isDryRun() === $options->isDryRun()
             && $this->isExceptionOnSkip() === $options->isExceptionOnSkip()
             && $this->getCustom() == $options->getCustom();
+    }
+
+    /**
+     * fromOptionsWithDirection
+     *
+     * @param Direction $direction
+     * @param OptionsInterface|null $options
+     *
+     * @return static
+     */
+    public static function fromOptionsWithDirection(Direction $direction, OptionsInterface $options = null)
+    {
+        if (null === $options) {
+            $options = (new static($direction))->withExceptionOnSkip(false);
+        } else {
+            $options = $options->withDirection($direction);
+        }
+        return $options;
+    }
+
+    /**
+     * Returns a string representation of the object.
+     *
+     * @return string
+     */
+    public function __toString()
+    {
+        return __CLASS__ . '@' . spl_object_hash($this);
     }
 }

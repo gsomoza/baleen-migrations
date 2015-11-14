@@ -19,13 +19,10 @@
 
 namespace BaleenTest\Migrations\Version\Comparator;
 
-use Baleen\Migrations\Exception\InvalidArgumentException;
 use Baleen\Migrations\Exception\Version\ComparatorException;
-use Baleen\Migrations\Migration\MigrationInterface;
-use Baleen\Migrations\Version;
+use Baleen\Migrations\Migration\Options\Direction;
 use Baleen\Migrations\Version\Comparator\ComparatorInterface;
 use Baleen\Migrations\Version\Comparator\NamespacesAwareComparator;
-use Baleen\Migrations\Version\LinkedVersion;
 use Mockery as m;
 
 /**
@@ -34,7 +31,7 @@ use Mockery as m;
  */
 class NamespacesAwareComparatorTest extends ComparatorTestCase
 {
-    const NS_VALID = 'BaleenTest\\Migrations\\Migrations\\AllValid\\';
+    const NS_VALID = 'BaleenTest\\Migrations\\Fixtures\\Migrations\\AllValid\\';
 
     /**
      * testConstructor
@@ -43,7 +40,7 @@ class NamespacesAwareComparatorTest extends ComparatorTestCase
     {
         /** @var ComparatorInterface $fallback */
         $fallback = m::mock(ComparatorInterface::class);
-        $instance = new NamespacesAwareComparator(1, $fallback, ['test']);
+        $instance = new NamespacesAwareComparator($fallback, ['test']);
         $this->assertInstanceOf(ComparatorInterface::class, $instance);
     }
 
@@ -55,57 +52,53 @@ class NamespacesAwareComparatorTest extends ComparatorTestCase
         /** @var ComparatorInterface $fallback */
         $fallback = m::mock(ComparatorInterface::class);
         $this->setExpectedException(ComparatorException::class);
-        new NamespacesAwareComparator(1, $fallback, []);
+        new NamespacesAwareComparator($fallback, []);
     }
 
     /**
      * testConstructorOrder
      *
-     * @param $order
+     * @param $direction
      * @param $expected
-     * @dataProvider constructorOrderProvider
+     * @dataProvider constructorDirectionProvider
      */
-    public function testConstructorOrder($order, $expected)
+    public function testConstructorDirection($direction, $expected)
     {
         /** @var ComparatorInterface $fallback */
         $fallback = m::mock(ComparatorInterface::class);
         // $v1 is greater than $v2 here because its namespace appears in the comparator
-        $comparator = new NamespacesAwareComparator($order, $fallback, [self::NS_VALID]);
+        $comparator = new NamespacesAwareComparator($fallback, [self::NS_VALID], $direction);
         $result = $this->simpleCompare($comparator);
         $this->assertEquals($expected, $result);
     }
 
     /**
-     * constructorOrderProvider
+     * constructorDirectionProvider
      * @return array
      */
-    public function constructorOrderProvider()
+    public function constructorDirectionProvider()
     {
         // $v1 is greater than $v2 here because its namespace appears in the comparator
         return [
             // normal order
             [null, 1],
-            [0, 1],
-            [1, 1],
-            [10, 1],
-            ['10', 1],
+            [Direction::up(), 1],
             // reverse order
-            [-1, -1],
-            ['-1', -1],
+            [Direction::down(), -1],
         ];
     }
 
     /**
-     * testWithOrder
+     * testWithDirection
      */
-    public function testWithOrder()
+    public function testWithDirection()
     {
         /** @var ComparatorInterface $fallback */
         $fallback = m::mock(ComparatorInterface::class);
         // $v1 is greater than $v2 here because its namespace appears in the comparator
-        $comparator = new NamespacesAwareComparator(1, $fallback, [self::NS_VALID]);
+        $comparator = new NamespacesAwareComparator($fallback, [self::NS_VALID]);
         // but we're reversing the comparator
-        $comparator = $comparator->withOrder(-1);
+        $comparator = $comparator->withDirection(Direction::down());
         $result = $this->simpleCompare($comparator);
         // so we expect the result to be negative
         $this->assertEquals(-1, $result);
@@ -122,13 +115,13 @@ class NamespacesAwareComparatorTest extends ComparatorTestCase
     public function testCompare($namespaces, $migration1, $migration2, $expected)
     {
         $m1 = $this->createMigration($migration1[0], $migration1[1]);
-        $v1 = new LinkedVersion(spl_object_hash($m1), false, $m1);
+        $v1 = $this->buildVersion(null, false, $m1);
         $m2 = $this->createMigration($migration2[0], $migration2[1]);
-        $v2 = new LinkedVersion(spl_object_hash($m2), false, $m2);
+        $v2 = $this->buildVersion(null, false, $m2);
 
         /** @var ComparatorInterface|m\Mock $fallback */
         $fallback = m::mock(ComparatorInterface::class);
-        $comparator = new NamespacesAwareComparator(1, $fallback, $namespaces);
+        $comparator = new NamespacesAwareComparator($fallback, $namespaces);
 
         if ($expected === 'fallback') {
             $fallback->shouldReceive('__invoke')->once()->andReturn(-1);
@@ -158,35 +151,6 @@ class NamespacesAwareComparatorTest extends ComparatorTestCase
             // one unused namespace => should use fallback
             [ ['Klm'], ['Abc', 'Version'], ['Xyz', 'Version'], 'fallback' ],
             [ ['Klm'], ['Xyz', 'Version'], ['Abc', 'Version'], 'fallback' ],
-        ];
-    }
-
-    /**
-     * testCompareThrowsExceptionIfNoMigration
-     * @param $withMigration1
-     * @param $withMigration2
-     * @dataProvider compareThrowsExceptionIfNoMigrationProvider
-     */
-    public function testCompareThrowsExceptionIfNoMigration($withMigration1, $withMigration2)
-    {
-        $v1 = new Version('abc', false, $withMigration1 ? m::mock(MigrationInterface::class) : null);
-        $v2 = new Version('xyz', false, $withMigration2 ? m::mock(MigrationInterface::class) : null);
-        /** @var ComparatorInterface|m\Mock $fallback */
-        $fallback = m::mock(ComparatorInterface::class);
-        $comparator = new NamespacesAwareComparator(1, $fallback, ['test']);
-        $this->setExpectedException(InvalidArgumentException::class);
-        $comparator($v1, $v2);
-    }
-
-    /**
-     * twoTrueFalseProvider
-     * @return array
-     */
-    public function compareThrowsExceptionIfNoMigrationProvider()
-    {
-        return [
-            [true, false],
-            [false, true],
         ];
     }
 }

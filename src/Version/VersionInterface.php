@@ -1,5 +1,4 @@
 <?php
-
 /*
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -20,32 +19,62 @@
 
 namespace Baleen\Migrations\Version;
 
+use Baleen\Migrations\Migration\Command\MigrateCommand;
+use Baleen\Migrations\Migration\MigrationInterface;
+use Baleen\Migrations\Migration\OptionsInterface;
+use Baleen\Migrations\Shared\EntityInterface;
+
 /**
  * Holds meta information about a migration, especially that which is related to its status (i.e. anything that can't
  * be stored in the migration itself).
  *
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
-interface VersionInterface
+interface VersionInterface extends EntityInterface
 {
     /**
-     * Returns the ID of the version. A hash or uuid is recommended.
+     * Returns the ID value object for this version.
      *
-     * @return string
+     * @return VersionId
      */
     public function getId();
 
     /**
-     * Returns whether the version has been migrated or not.
+     * Returns whether the version has been migrated or not. Returns NULL if unknown.
      *
-     * @return bool
+     * @return null|bool
      */
     public function isMigrated();
 
     /**
-     * Sets whether the version has already been migrated or not.
+     * Indicate whether this version has been migrated or not.
      *
-     * @param $migrated boolean
+     * @param bool|null $migrated
+     *
+     * @return static
      */
     public function setMigrated($migrated);
+
+    /**
+     * Returns the entity's ID as string
+     *
+     * @return string
+     */
+    public function __toString();
+
+    /**
+     * Returns a MigrateCommand that can be used to migrate this version using the specified options.
+     *
+     * @param OptionsInterface $options
+     *
+     * @return MigrateCommand
+     */
+    public function getMigrateCommand(OptionsInterface $options);
+
+    /**
+     * Returns the FQCN of the MigrationInterface object. Used for sorting with some comparators.
+     *
+     * @return MigrationInterface
+     */
+    public function getMigration();
 }

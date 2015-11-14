@@ -1,5 +1,5 @@
 --------------------------------------------------
-Baleen\\Migrations\\Exception\\RepositoryException
+Baleen\\Migrations\\Exception\\Migration\\VersionRepository\\RepositoryException
 --------------------------------------------------
 
 .. php:namespace: Baleen\\Migrations\\Exception

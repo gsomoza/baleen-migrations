@@ -19,21 +19,20 @@
 namespace Baleen\Migrations\Migration;
 
 use Baleen\Migrations\Exception\InvalidArgumentException;
+use Baleen\Migrations\Migration\Options\Direction;
+use Baleen\Migrations\Shared\ValueObjectInterface;
 
 /**
  * Options value object. Used to configure the migration jobs and provide information about them to the migration.
  *
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
-interface OptionsInterface
+interface OptionsInterface extends ValueObjectInterface
 {
-    const DIRECTION_UP = 'up';
-    const DIRECTION_DOWN = 'down';
-
     /**
      * The direction that we're migrating
      *
-     * @return string
+     * @return Direction
      */
     public function getDirection();
 
@@ -41,23 +40,13 @@ interface OptionsInterface
      * MUST return a new OptionsInterface instance with the same property values as the current one except for the new
      * direction.
      *
-     * @param string $direction
+     * @param Direction $direction
      *
      * @return static
      *
      * @throws InvalidArgumentException
      */
-    public function withDirection($direction);
-
-    /**
-     * @return bool
-     */
-    public function isDirectionUp();
-
-    /**
-     * @return bool
-     */
-    public function isDirectionDown();
+    public function withDirection(Direction $direction);
 
     /**
      * @return bool
@@ -117,9 +106,14 @@ interface OptionsInterface
     public function withCustom(array $custom);
 
     /**
-     * Returns true if the current object is the same as the parameter.
-     * @param OptionsInterface $options
-     * @return boolean
+     * Returns an OptionsInterface object with the specified direction. Creates a default one if the second parameter
+     * is not specified.
+     *
+     * @param Direction $direction
+     * @param OptionsInterface|null $options If present, will use the values from this parameter as defaults for the new
+     *                                       instance.
+     *
+     * @return static
      */
-    public function equals(OptionsInterface $options);
+    public static function fromOptionsWithDirection(Direction $direction, OptionsInterface $options = null);
 }

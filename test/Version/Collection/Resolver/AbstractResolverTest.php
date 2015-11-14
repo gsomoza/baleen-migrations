@@ -20,8 +20,8 @@
 namespace BaleenTest\Migrations\Version\Collection\Resolver;
 
 use Baleen\Migrations\Exception\Version\Collection\ResolverException;
-use Baleen\Migrations\Version;
-use Baleen\Migrations\Version\Collection;
+use Baleen\Migrations\Migration\MigrationInterface;
+use Baleen\Migrations\Version\Collection\Collection;
 use Baleen\Migrations\Version\Collection\Resolver\AbstractResolver;
 use Baleen\Migrations\Version\VersionInterface;
 use BaleenTest\Migrations\BaseTestCase;
@@ -97,10 +97,12 @@ class AbstractResolverTest extends BaseTestCase
     public function resolveWithoutCacheProvider()
     {
         $v = m::mock(VersionInterface::class);
+        /** @var MigrationInterface|m\Mock $migration */
+        $migration = m::mock(MigrationInterface::class);
         return [
             ['v1', $v],
             ['v2', null],
-            [new Version('v1'), $v],
+            [$this->buildVersion('v1', false, $migration), $v],
         ];
     }
 

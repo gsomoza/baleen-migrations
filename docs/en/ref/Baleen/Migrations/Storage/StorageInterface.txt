@@ -1,10 +1,10 @@
 ---------------------------------------------
-Baleen\\Migrations\\Storage\\StorageInterface
+Baleen\\Migrations\\Version\\VersionRepository\\MigrationRepositoryInterface
 ---------------------------------------------
 
 .. php:namespace: Baleen\\Migrations\\Storage
 
-.. php:interface:: StorageInterface
+.. php:interface:: MigrationRepositoryInterface
 
     Provides a collection of Versions that have been migrated.
 

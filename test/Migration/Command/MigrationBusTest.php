@@ -20,6 +20,7 @@
 namespace BaleenTest\Migrations\Migration\Command;
 
 use Baleen\Migrations\Exception\MigrationBusException;
+use Baleen\Migrations\Migration\Command\Middleware\AbstractMiddleware;
 use Baleen\Migrations\Migration\Command\MigrateHandler;
 use Baleen\Migrations\Migration\Command\MigrationBus;
 use BaleenTest\Migrations\BaseTestCase;
@@ -31,11 +32,35 @@ use Mockery as m;
  */
 class MigrationBusTest extends BaseTestCase
 {
-
+    /**
+     * testThrowsExceptionIfNoMigrateHandler
+     * @return void
+     */
     public function testThrowsExceptionIfNoMigrateHandler()
     {
         $this->setExpectedException(MigrationBusException::class, MigrateHandler::class);
-        $instance = new MigrationBus([]);
+        new MigrationBus([]);
     }
 
+    /**
+     * testCreateDefaultBus
+     * @return void
+     */
+    public function testCreateDefaultBus()
+    {
+        $bus = MigrationBus::createDefaultBus();
+        $this->assertInstanceOf(MigrationBus::class, $bus);
+    }
+
+    /**
+     * testGetDefaultMiddleware
+     * @return void
+     */
+    public function testGetDefaultMiddleware()
+    {
+        $defaults = MigrationBus::getDefaultMiddleWare();
+        $this->assertTrue(is_array($defaults));
+        $this->assertNotEmpty($defaults);
+        $this->assertContainsOnlyInstancesOf(AbstractMiddleware::class, $defaults);
+    }
 }

@@ -1,8 +1,8 @@
 -----------------------------------------------------------------
-Baleen\\Migrations\\Version\\Comparator\\ComparatorAwareInterface
+Baleen\\Migrations\\Version\\Version\\Version\\Comparator\\ComparatorAwareInterface
 -----------------------------------------------------------------
 
-.. php:namespace: Baleen\\Migrations\\Version\\Comparator
+.. php:namespace: Baleen\\Migrations\\Version\\Version\\Version\\Comparator
 
 .. php:interface:: ComparatorAwareInterface
 

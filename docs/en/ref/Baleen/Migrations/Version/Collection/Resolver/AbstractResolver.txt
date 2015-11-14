@@ -1,8 +1,8 @@
 -------------------------------------------------------------------
-Baleen\\Migrations\\Version\\Collection\\Resolver\\AbstractResolver
+Baleen\\Migrations\\Version\\Version\\Version\\Collection\\Resolver\\AbstractResolver
 -------------------------------------------------------------------
 
-.. php:namespace: Baleen\\Migrations\\Version\\Collection\\Resolver
+.. php:namespace: Baleen\\Migrations\\Version\\Version\\Version\\Collection\\Resolver
 
 .. php:class:: AbstractResolver
 

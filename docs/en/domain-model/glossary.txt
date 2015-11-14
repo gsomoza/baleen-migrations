@@ -17,7 +17,7 @@ as to provide information about the different models that make up the "migration
          order):
 
              * :term:`Timeline`
-             * :term:`Repository`
+             * :term:`VersionRepository`
              * :term:`Storage`
              * :term:`Version`
              * :term:`Migration`
@@ -42,8 +42,8 @@ as to provide information about the different models that make up the "migration
       During a migrationm the target resource or migration target is WHAT's being migrated. It can be a database, an
       image, other files, etc. There should only be one target resource for any given Migration Ecosystem.
 
-   Repository
-      The Repository is an object that knows where to find :term:`migrations <migration>`. It must use a factory to
+   VersionRepository
+      The VersionRepository is an object that knows where to find :term:`migrations <migration>`. It must use a factory to
       instantiate each migration.
 
    Storage

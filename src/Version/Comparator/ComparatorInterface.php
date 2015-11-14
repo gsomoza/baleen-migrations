@@ -20,6 +20,7 @@
 
 namespace Baleen\Migrations\Version\Comparator;
 
+use Baleen\Migrations\Migration\Options\Direction;
 use Baleen\Migrations\Version\VersionInterface;
 
 /**
@@ -29,16 +30,8 @@ use Baleen\Migrations\Version\VersionInterface;
  */
 interface ComparatorInterface
 {
-    /** Compare versions in the normal order */
-    const ORDER_NORMAL = 1;
-
-    /** Compare versions in reverse order */
-    const ORDER_REVERSE = -1;
-
     /**
-     * Compares two versions with each other. The comparison function must return an integer less than, equal to, or
-     * greater than zero if the first argument is considered to be respectively less than, equal to, or greater than the
-     * second.
+     * MUST call static::compare()
      *
      * @param VersionInterface $version1
      * @param VersionInterface $version2
@@ -48,18 +41,23 @@ interface ComparatorInterface
     public function __invoke(VersionInterface $version1, VersionInterface $version2);
 
     /**
-     * MUST return a new instance that sorts in reverse order.
+     * Compares two versions with each other. The comparison function must return an integer less than, equal to, or
+     * greater than zero if the first argument is considered to be respectively less than, equal to, or greater than the
+     * second.
+     *
+     * @param VersionInterface $version1
+     * @param VersionInterface $version2
+     *
+     * @return mixed
+     */
+    public function compare(VersionInterface $version1, VersionInterface $version2);
+
+    /**
+     * MUST return a new instance that sorts in the order specified by the direction value object.
+     *
+     * @param Direction $direction
      *
      * @return ComparatorInterface
      */
-    public function reverse();
-
-    /**
-     * MUST return a new instance that sorts in the specified order.
-     *
-     * @param int $order One of ORDER_NORMAL or ORDER_REVERSE.
-     *
-     * @return static
-     */
-    public function withOrder($order);
+    public function withDirection(Direction $direction);
 }

@@ -1,5 +1,4 @@
 <?php
-
 /*
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -22,6 +21,9 @@ namespace BaleenTest\Migrations\Migration\Command\Middleware;
 
 use Baleen\Migrations\Exception\InvalidArgumentException;
 use Baleen\Migrations\Migration\Command\Middleware\AbstractMiddleware;
+use Baleen\Migrations\Migration\Command\MigrateCommand;
+use Baleen\Migrations\Migration\MigrationInterface;
+use Baleen\Migrations\Migration\Options;
 use BaleenTest\Migrations\BaseTestCase;
 use League\Tactician\Middleware;
 use Mockery as m;
@@ -32,20 +34,52 @@ use Mockery as m;
  */
 class AbstractMiddlewareTest extends BaseTestCase
 {
-
-
+    /**
+     * testIsMiddleware
+     * @return void
+     */
     public function testIsMiddleware()
     {
+        /** @var AbstractMiddleware|m\Mock $instance */
         $instance = m::mock(AbstractMiddleware::class)->makePartial();
         $this->assertInstanceOf(Middleware::class, $instance);
     }
 
+    /**
+     * testExecuteFailsIfNotMigrationCommand
+     * @return void
+     * @throws InvalidArgumentException
+     */
     public function testExecuteFailsIfNotMigrationCommand()
     {
+        /** @var AbstractMiddleware|m\Mock $instance */
         $instance = m::mock(AbstractMiddleware::class)->makePartial();
 
         $this->setExpectedException(InvalidArgumentException::class);
-        $instance->execute('test', function(){});
+        $instance->execute(new \stdClass(), function(){});
     }
 
+    /**
+     * testExecute
+     * @return void
+     */
+    public function testExecute()
+    {
+        /** @var AbstractMiddleware|m\Mock $instance */
+        $instance = m::mock(AbstractMiddleware::class)
+            ->shouldAllowMockingProtectedMethods()
+            ->makePartial();
+
+        /** @var MigrationInterface|m\Mock $migration */
+        $migration = m::mock(MigrationInterface::class);
+        $command = new MigrateCommand($migration, new Options());
+        $next = function() {};
+
+        $instance->shouldReceive('doExecute')->with($command, $next)->once()->andReturn('test');
+
+        $result = $instance->execute($command, $next);
+
+        // test doExecute result is returned as-is
+        $this->assertSame('test', $result);
+    }
 }

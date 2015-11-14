@@ -78,7 +78,7 @@ Creating specialised Migration classes is very easy: all that's needed is a migr
 implement in their migrations.
 
 If your abstract migration class has dependencies that need to be injected through its constructor then simply create
-a ``Migration\Factory\FactoryInterface`` instance and pass it to the :term:`Repository`:
+a ``Migration\Factory\FactoryInterface`` instance and pass it to the :term:`VersionRepository`:
 
 .. code-block:: php
 

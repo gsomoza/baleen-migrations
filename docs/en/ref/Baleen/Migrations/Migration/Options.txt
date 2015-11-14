@@ -87,7 +87,7 @@ Baleen\\Migrations\\Migration\\Options
         :param $custom:
         :returns: static
 
-    .. php:method:: equals(OptionsInterface $options)
+    .. php:method:: isSameValueAs(OptionsInterface $options)
 
         Compares the current instance with another instance of options to see if
         they contain the same values.

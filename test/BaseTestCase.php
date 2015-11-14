@@ -20,8 +20,9 @@
 namespace BaleenTest\Migrations;
 
 use Baleen\Migrations\Migration\MigrationInterface;
-use Baleen\Migrations\Version;
-use Baleen\Migrations\Version\LinkedVersion;
+use Baleen\Migrations\Version\Version;
+use Baleen\Migrations\Version\VersionId;
+use Baleen\Migrations\Version\VersionInterface;
 use Mockery as m;
 
 /**
@@ -30,18 +31,16 @@ use Mockery as m;
 class BaseTestCase extends \PHPUnit_Framework_TestCase
 {
     /**
-     * createVersionsWithMigrations
+     * buildVersionWithMigrations
      * @param $ids
-     * @return Version\VersionInterface[]
+     * @return VersionInterface[]
      */
-    protected function createVersionsWithMigrations($ids)
+    protected function buildVersionWithMigrations($ids)
     {
         if (!is_array($ids)) {
             $ids = func_get_args();
         }
-        /** @var MigrationInterface|m\Mock $migration */
-        $migration = m::mock(MigrationInterface::class);
-        $versions = LinkedVersion::fromArray($ids, false, $migration);
+        $versions = $this->buildVersions($ids, false);
         return $versions;
     }
 
@@ -139,5 +138,46 @@ class BaseTestCase extends \PHPUnit_Framework_TestCase
             [true, false],
             [false, true],
         ];
+    }
+
+    /**
+     * buildVersions
+     * @param $versions
+     * @param bool $migrated
+     * @return VersionInterface[]
+     */
+    public function buildVersions($versions, $migrated = false) {
+        $self = $this;
+        return array_map(function($version) use ($migrated, $self) {
+            return $self->buildVersion($version, $migrated);
+        }, $versions);
+    }
+
+    /**
+     * buildVersion
+     * @param mixed $id
+     * @param bool $migrated
+     * @param MigrationInterface|null $migration
+     * @return Version
+     */
+    public function buildVersion($id = null, $migrated = false, MigrationInterface $migration = null)
+    {
+        if (null === $migration) {
+            /** @var MigrationInterface|m\Mock $migration */
+            $migration = m::mock(MigrationInterface::class);
+        }
+
+        if (null === $id) {
+            $id = VersionId::fromMigration($migration);
+        } elseif (is_integer($id)) {
+            $id = 'v' . $id;
+        } elseif (is_object($id) && $id instanceof VersionInterface) {
+            $id = $id->getId();
+        }
+        if (!is_object($id)) {
+            $id = new VersionId($id);
+        }
+
+        return new Version($migration, (bool) $migrated, $id);
     }
 }

@@ -1,12 +1,12 @@
 --------------------------------------------
-Baleen\\Migrations\\Storage\\AbstractStorage
+Baleen\\Migrations\\Version\\VersionRepository\\VersionRepository
 --------------------------------------------
 
 .. php:namespace: Baleen\\Migrations\\Storage
 
-.. php:class:: AbstractStorage
+.. php:class:: VersionRepository
 
-    Class AbstractStorage.
+    Class VersionRepository.
 
     .. php:method:: fetchAll()
 

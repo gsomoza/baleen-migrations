@@ -79,6 +79,7 @@ class TransactionMiddlewareTest extends BaseTestCase
             $nextCalled = false;
 
             $instance = new TransactionMiddleware();
+            /** @var MigrationInterface|m\Mock $migration */
             $migration = m::mock(MigrationInterface::class . ', ' . TransactionAwareInterface::class);
 
             if ($abort) {

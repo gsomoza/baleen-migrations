@@ -22,22 +22,20 @@ namespace Baleen\Migrations\Version\Comparator;
 use Baleen\Migrations\Version\VersionInterface;
 
 /**
- * {@inheritDoc}
+ * Compares two migration classes (FQCNs) with strcmp.
  *
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
 final class MigrationComparator extends AbstractComparator
 {
-    use ComparesLinkedVersionsTrait;
-
     /**
      * @inheritdoc
      */
-    protected function compare(VersionInterface $version1, VersionInterface $version2)
+    protected function doCompare(VersionInterface $version1, VersionInterface $version2)
     {
         return strcmp(
-            $this->getMigrationClass($version1),
-            $this->getMigrationClass($version2)
+            get_class($version1->getMigration()),
+            get_class($version2->getMigration())
         );
     }
 }

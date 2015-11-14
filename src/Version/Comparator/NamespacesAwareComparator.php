@@ -21,6 +21,7 @@ namespace Baleen\Migrations\Version\Comparator;
 
 use Baleen\Migrations\Exception\InvalidArgumentException;
 use Baleen\Migrations\Exception\Version\ComparatorException;
+use Baleen\Migrations\Migration\Options\Direction;
 use Baleen\Migrations\Version\VersionInterface;
 
 /**
@@ -30,8 +31,6 @@ use Baleen\Migrations\Version\VersionInterface;
  */
 final class NamespacesAwareComparator extends AbstractComparator
 {
-    use ComparesLinkedVersionsTrait;
-
     /** @var array */
     private $namespaces;
 
@@ -41,12 +40,12 @@ final class NamespacesAwareComparator extends AbstractComparator
     /**
      * NamespacesAwareComparator constructor.
      *
-     * @param int $order
+     * @param Direction $direction
      * @param ComparatorInterface $fallbackComparator
      * @param array $namespaces Namespaces with keys ordered by priority (highest priority first)
      * @throws ComparatorException
      */
-    public function __construct($order, ComparatorInterface $fallbackComparator, array $namespaces)
+    public function __construct(ComparatorInterface $fallbackComparator, array $namespaces, Direction $direction = null)
     {
         $this->fallback = $fallbackComparator;
 
@@ -60,15 +59,15 @@ final class NamespacesAwareComparator extends AbstractComparator
         krsort($namespaces); // we search from highest to lowest priority
         $this->namespaces = $namespaces;
 
-        parent::__construct($order);
+        parent::__construct($direction);
     }
 
     /**
      * @inheritDoc
      */
-    public function withOrder($order)
+    public function withDirection(Direction $direction)
     {
-        return new static($order, $this->fallback, $this->namespaces);
+        return new static($this->fallback, $this->namespaces, $direction);
     }
 
     /**
@@ -92,10 +91,10 @@ final class NamespacesAwareComparator extends AbstractComparator
      * @return mixed
      * @throws InvalidArgumentException
      */
-    protected function compare(VersionInterface $version1, VersionInterface $version2)
+    protected function doCompare(VersionInterface $version1, VersionInterface $version2)
     {
-        $class1 = $this->getMigrationClass($version1);
-        $class2 = $this->getMigrationClass($version2);
+        $class1 = get_class($version1->getMigration());
+        $class2 = get_class($version2->getMigration());
 
         if ($class1 === $class2) {
             // exit early in this case

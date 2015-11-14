@@ -1,8 +1,8 @@
 --------------------------------------------------------------------
-Baleen\\Migrations\\Version\\Collection\\Resolver\\ResolverInterface
+Baleen\\Migrations\\Version\\Version\\Version\\Collection\\Resolver\\ResolverInterface
 --------------------------------------------------------------------
 
-.. php:namespace: Baleen\\Migrations\\Version\\Collection\\Resolver
+.. php:namespace: Baleen\\Migrations\\Version\\Version\\Version\\Collection\\Resolver
 
 .. php:interface:: ResolverInterface
 
@@ -16,7 +16,7 @@ Baleen\\Migrations\\Version\\Collection\\Resolver\\ResolverInterface
         :param $alias:
         :type $collection: Collection
         :param $collection:
-        :returns: \Baleen\Migrations\Version\VersionInterface|null
+        :returns: \Baleen\Migrations\Version\Version\Version\VersionInterface|null
 
     .. php:method:: clearCache(Collection $collection = null)
 
