@@ -116,7 +116,7 @@ class VersionRepositoryTest extends BaseTestCase
 
 
         $collection = new Collection($versions);
-        $result = $repo->saveCollection($collection);
+        $result = $repo->updateAll($collection);
 
         $this->assertEquals('something', $result);
     }

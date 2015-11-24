@@ -75,12 +75,21 @@ final class VersionRepository implements VersionRepositoryInterface
     /**
      * @inheritdoc
      */
-    public function saveCollection(Collection $versions)
+    public function updateAll(Collection $versions)
     {
-        $ids = $versions->map(function (VersionInterface $v) {
+        $mapToIds = function(VersionInterface $v) {
             return $v->getId();
+        };
+        list($migrated, $notMigrated) = $versions->partition(function(VersionInterface $v) {
+            return $v->isMigrated();
         });
-        return $this->mapper->saveAll($ids);
+        $migratedIds = array_map($mapToIds, $migrated);
+        $notMigratedIds = array_map($mapToIds, $notMigrated);
+
+        $saveResult = $this->mapper->saveAll($migratedIds);
+        $deleteResult = $this->mapper->deleteAll($notMigratedIds);
+
+        return $saveResult && $deleteResult;
     }
 
     /**

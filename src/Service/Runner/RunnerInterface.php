@@ -37,7 +37,7 @@ interface RunnerInterface
      * @param VersionInterface $target
      * @param OptionsInterface $options
      *
-     * @return CollectionInterface A collection of modified versions.
+     * @return CollectionInterface|VersionInterface
      */
     public function run(VersionInterface $target, OptionsInterface $options);
 

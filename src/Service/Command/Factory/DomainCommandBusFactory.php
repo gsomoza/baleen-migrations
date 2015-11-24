@@ -26,7 +26,7 @@ use Baleen\Migrations\Service\Command\Migrate\Converge\ConvergeHandler;
 use Baleen\Migrations\Service\Command\Migrate\Single\SingleCommand;
 use Baleen\Migrations\Service\Command\Migrate\Single\SingleHandler;
 use Baleen\Migrations\Service\Runner\Factory\CollectionRunnerFactory;
-use Baleen\Migrations\Service\Runner\RunnerInterface;
+use Baleen\Migrations\Service\Runner\MigrationRunner;
 use Baleen\Migrations\Shared\Event\PublisherInterface;
 use League\Tactician\CommandBus;
 use League\Tactician\Setup\QuickStart;
@@ -37,7 +37,7 @@ use League\Tactician\Setup\QuickStart;
  */
 final class DomainCommandBusFactory
 {
-    /** @var RunnerInterface */
+    /** @var MigrationRunner */
     private $migrationRunner;
 
     /** @var PublisherInterface */
@@ -45,10 +45,11 @@ final class DomainCommandBusFactory
 
     /**
      * DomainCommandBusFactory constructor.
+     *
      * @param PublisherInterface $publisher
-     * @param \Baleen\Migrations\Service\Runner\RunnerInterface $migrationRunner
+     * @param MigrationRunner $migrationRunner
      */
-    public function __construct(PublisherInterface $publisher, RunnerInterface $migrationRunner)
+    public function __construct(PublisherInterface $publisher, MigrationRunner $migrationRunner)
     {
         $this->migrationRunner = $migrationRunner;
         $this->publisher = $publisher;

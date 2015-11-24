@@ -23,6 +23,7 @@ use Baleen\Migrations\Migration\Options;
 use Baleen\Migrations\Migration\OptionsInterface;
 use Baleen\Migrations\Service\Command\Migrate\AbstractMigrateCommand;
 use Baleen\Migrations\Shared\Collection\CollectionInterface;
+use Baleen\Migrations\Version\Repository\VersionRepositoryInterface;
 use Baleen\Migrations\Version\VersionInterface;
 
 /**
@@ -40,14 +41,16 @@ class CollectionCommand extends AbstractMigrateCommand
      * @param CollectionInterface $collection
      * @param VersionInterface $target
      * @param OptionsInterface $options
+     * @param VersionRepositoryInterface $versionRepository
      */
     public function __construct(
         CollectionInterface $collection,
         VersionInterface $target,
-        OptionsInterface $options
+        OptionsInterface $options,
+        VersionRepositoryInterface $versionRepository
     ) {
         $this->collection = $collection;
-        parent::__construct($target, $options);
+        parent::__construct($target, $options, $versionRepository);
     }
 
     /**

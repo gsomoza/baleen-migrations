@@ -24,6 +24,7 @@ use Baleen\Migrations\Version\VersionInterface;
 
 /**
  * Class CollectionHandler
+ *
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
 final class CollectionHandler extends AbstractFactoryHandler
@@ -33,7 +34,7 @@ final class CollectionHandler extends AbstractFactoryHandler
      *
      * @param CollectionCommand $command
      *
-     * @return \Baleen\Migrations\Shared\Collection\CollectionInterface
+     * @return bool The result of saving the collection of updated versions to the repository
      */
     public function handle(CollectionCommand $command)
     {
@@ -51,6 +52,8 @@ final class CollectionHandler extends AbstractFactoryHandler
         };
         $collection = $collection->filter($filter)->sort($comparator);
 
-        return $this->createRunnerFor($collection)->run($target, $options);
+        $changed = $this->createRunnerFor($collection)->run($target, $options);
+
+        return $command->getVersionRepository()->updateAll($changed);
     }
 }

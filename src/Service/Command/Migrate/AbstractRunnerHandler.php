@@ -27,7 +27,7 @@ use Baleen\Migrations\Service\Runner\RunnerInterface;
  */
 abstract class AbstractRunnerHandler
 {
-    /** @var \Baleen\Migrations\Service\Runner\RunnerInterface */
+    /** @var RunnerInterface */
     private $runner;
 
     /**
