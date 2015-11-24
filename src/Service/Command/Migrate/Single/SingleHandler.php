@@ -21,6 +21,7 @@ namespace Baleen\Migrations\Service\Command\Migrate\Single;
 
 use Baleen\Migrations\Service\Command\Migrate\AbstractRunnerHandler;
 use Baleen\Migrations\Service\Command\Migrate\Single;
+use Baleen\Migrations\Service\Runner\MigrationRunner;
 use Baleen\Migrations\Version\VersionInterface;
 
 /**
@@ -39,11 +40,13 @@ final class SingleHandler extends AbstractRunnerHandler
      */
     public function handle(SingleCommand $command)
     {
+        /** @var MigrationRunner $runner */
         $runner = $this->getRunner();
         $runner->setContext($command->getContext());
-        return $runner->run(
+        $version = $runner->run(
             $command->getTarget(),
             $command->getOptions()
         );
+        return $command->getVersionRepository()->update($version);
     }
 }

@@ -24,6 +24,8 @@ use Baleen\Migrations\Service\Command\Migrate\AbstractMigrateCommand;
 use Baleen\Migrations\Shared\Event\Context\CollectionContext;
 use Baleen\Migrations\Shared\Event\Context\CollectionContextInterface;
 use Baleen\Migrations\Shared\Event\Progress;
+use Baleen\Migrations\Version\Repository\VersionRepository;
+use Baleen\Migrations\Version\Repository\VersionRepositoryInterface;
 use Baleen\Migrations\Version\VersionInterface;
 
 /**
@@ -33,7 +35,7 @@ use Baleen\Migrations\Version\VersionInterface;
  */
 final class SingleCommand extends AbstractMigrateCommand
 {
-    /** @var \Baleen\Migrations\Shared\Event\Context\CollectionContextInterface */
+    /** @var CollectionContextInterface */
     private $context;
 
     /**
@@ -41,11 +43,13 @@ final class SingleCommand extends AbstractMigrateCommand
      *
      * @param VersionInterface $target
      * @param OptionsInterface $options
-     * @param \Baleen\Migrations\Shared\Event\Context\CollectionContextInterface $context
+     * @param VersionRepositoryInterface $versionRepository
+     * @param CollectionContextInterface $context
      */
     public function __construct(
         VersionInterface $target,
         OptionsInterface $options,
+        VersionRepositoryInterface $versionRepository,
         CollectionContextInterface $context = null
     ) {
         if (null === $context) {
@@ -53,11 +57,11 @@ final class SingleCommand extends AbstractMigrateCommand
         }
         $this->context = $context;
 
-        parent::__construct($target, $options);
+        parent::__construct($target, $options, $versionRepository);
     }
 
     /**
-     * @return \Baleen\Migrations\Shared\Event\Context\CollectionContextInterface
+     * @return CollectionContextInterface
      */
     public function getContext()
     {

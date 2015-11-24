@@ -14,7 +14,7 @@ Baleen\\Migrations\\Version\\VersionRepository\\MigrationRepositoryInterface
 
         :returns: Migrated
 
-    .. php:method:: saveCollection(Migrated $versions)
+    .. php:method:: updateAll(Migrated $versions)
 
         Write a collection of versions to the storage file.
 

@@ -67,7 +67,7 @@ final class MigrationRunner extends AbstractRunner
      * @param VersionInterface $version
      * @param OptionsInterface $options
      *
-     * @return VersionInterface|false
+     * @return VersionInterface
      *
      * @throws RunnerException
      */

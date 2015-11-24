@@ -68,6 +68,15 @@ interface VersionMapperInterface
     public function save(VersionId $id);
 
     /**
+     * Deletes an array of VersionId objects
+     *
+     * @param VersionId[] $id
+     *
+     * @return bool True on success.
+     */
+    public function deleteAll(array $id);
+
+    /**
      * Deletes an id from storage
      *
      * @param VersionId $id

@@ -21,6 +21,7 @@ namespace Baleen\Migrations\Service\Command\Migrate\Converge;
 use Baleen\Migrations\Migration\OptionsInterface;
 use Baleen\Migrations\Service\Command\Migrate\Collection;
 use Baleen\Migrations\Shared\Collection\CollectionInterface;
+use Baleen\Migrations\Version\Repository\VersionRepositoryInterface;
 use Baleen\Migrations\Version\VersionInterface;
 use League\Tactician\CommandBus;
 
@@ -40,15 +41,17 @@ final class ConvergeCommand extends Collection\CollectionCommand
      * @param VersionInterface $target
      * @param OptionsInterface $options
      * @param CommandBus $domainBus
+     * @param VersionRepositoryInterface $versionRepository
      */
     public function __construct(
         CollectionInterface $collection,
         VersionInterface $target,
         OptionsInterface $options,
-        CommandBus $domainBus
+        CommandBus $domainBus,
+        VersionRepositoryInterface $versionRepository
     ) {
         $this->domainBus = $domainBus;
-        parent::__construct($collection, $target, $options);
+        parent::__construct($collection, $target, $options, $versionRepository);
     }
 
     /**

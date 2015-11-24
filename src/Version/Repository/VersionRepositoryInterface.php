@@ -47,13 +47,14 @@ interface VersionRepositoryInterface
     public function fetch($id);
 
     /**
-     * Write a collection of VersionIds to the storage mapper.
+     * Updates the storage by adding all versions from the collection that are migrated, and remove all versions which
+     * are NOT migrated.
      *
-     * @param \Baleen\Migrations\Version\Collection\Collection $versions
+     * @param Collection $versions
      *
      * @return bool Returns false on failure.
      */
-    public function saveCollection(Collection $versions);
+    public function updateAll(Collection $versions);
 
     /**
      * Saves or deletes a version depending on whether the version is respectively migrated or not.

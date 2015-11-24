@@ -21,6 +21,7 @@ namespace Baleen\Migrations\Service\Command\Migrate;
 
 use Baleen\Migrations\Migration\Options;
 use Baleen\Migrations\Migration\OptionsInterface;
+use Baleen\Migrations\Version\Repository\VersionRepositoryInterface;
 use Baleen\Migrations\Version\VersionInterface;
 
 /**
@@ -35,16 +36,24 @@ abstract class AbstractMigrateCommand
     /** @var OptionsInterface */
     private $options;
 
+    /** @var VersionRepositoryInterface */
+    private $versionRepository;
+
     /**
      * CollectionCommand constructor.
      *
      * @param VersionInterface $target
      * @param OptionsInterface $options
+     * @param VersionRepositoryInterface $versionRepository
      */
-    public function __construct(VersionInterface $target, OptionsInterface $options)
-    {
+    public function __construct(
+        VersionInterface $target,
+        OptionsInterface $options,
+        VersionRepositoryInterface $versionRepository
+    ) {
         $this->target = $target;
         $this->options = $options;
+        $this->versionRepository = $versionRepository;
     }
 
     /**
@@ -61,5 +70,14 @@ abstract class AbstractMigrateCommand
     final public function getOptions()
     {
         return $this->options;
+    }
+
+    /**
+     * getVersionRepository
+     *
+     * @return VersionRepositoryInterface
+     */
+    final public function getVersionRepository() {
+        return $this->versionRepository;
     }
 }

@@ -32,7 +32,7 @@ Baleen\\Migrations\\Version\\VersionRepository\\VersionRepository
 
         :returns: ComparatorInterface
 
-    .. php:method:: saveCollection(Migrated $versions)
+    .. php:method:: updateAll(Migrated $versions)
 
         Write a collection of versions to the storage file.
 

@@ -20,6 +20,7 @@
 namespace Baleen\Migrations\Service\Command\Migrate\Converge;
 
 use Baleen\Migrations\Migration\Options\Direction;
+use Baleen\Migrations\Service\Command\Migrate\AbstractRunnerHandler;
 use Baleen\Migrations\Service\Command\Migrate\Collection\CollectionCommand;
 
 /**
@@ -49,7 +50,12 @@ final class ConvergeHandler
         $changed = clone $collection;
         $changed->clear();
 
-        $upCommand = new CollectionCommand($collection, $targetUp, $options->withDirection(Direction::up()));
+        $upCommand = new CollectionCommand(
+            $collection,
+            $targetUp,
+            $options->withDirection(Direction::up()),
+            $command->getVersionRepository()
+        );
         $upChanges = $domainBus->handle($upCommand);
         if (!empty($upChanges)) {
             $changed->merge($upChanges);
@@ -57,7 +63,12 @@ final class ConvergeHandler
 
         // if we're not yet at the end of the queue (where no migrations can go down)
         if (null !== $targetDown) {
-            $downCommand = new CollectionCommand($collection, $targetDown, $options->withDirection(Direction::down()));
+            $downCommand = new CollectionCommand(
+                $collection,
+                $targetDown,
+                $options->withDirection(Direction::down()),
+                $command->getVersionRepository()
+            );
             $downChanges = $domainBus->handle($downCommand);
             if (!empty($downChanges)) {
                 $changed->merge($downChanges);
