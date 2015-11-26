@@ -94,10 +94,10 @@ class VersionRepositoryTest extends BaseTestCase
     }
 
     /**
-     * testSaveCollection
+     * testUpdateAll
      * @return void
      */
-    public function testSaveCollection()
+    public function testUpdateAll()
     {
         /** @var VersionMapperInterface|m\Mock $mapper */
         $mapper = m::mock(VersionMapperInterface::class);
@@ -105,20 +105,40 @@ class VersionRepositoryTest extends BaseTestCase
         $versions = $this->buildVersions(range(1, 5));
 
         $ids = array_map(function (VersionInterface $v) { return $v->getId(); }, $versions);
-        $mapper->shouldReceive('saveAll')->once()->with(m::on(function (array $values) use ($ids) {
+        $mapper->shouldReceive('saveAll')->with(m::on(function (array $values) use ($ids) {
             foreach ($values as $value) {
                 if (!in_array($value, $ids)) {
                     return false;
                 }
             }
             return true;
-        }))->andReturn('something');
+        }))->once()->andReturn(true); // returning true is important here
 
+        $mapper->shouldReceive('deleteAll')->with(m::on(function (array $values) use ($ids) {
+            foreach ($values as $value) {
+                if (!in_array($value, $ids)) {
+                    return false;
+                }
+            }
+            return true;
+        }))->once()->andReturn(false); // returning false is important here
 
         $collection = new Collection($versions);
         $result = $repo->updateAll($collection);
 
-        $this->assertEquals('something', $result);
+        $this->assertEquals(false, $result);
+    }
+
+    /**
+     * testUpdateAllExistsEarlyIfEmpty
+     * @return void
+     */
+    public function testUpdateAllExistsEarlyIfEmpty()
+    {
+        /** @var VersionMapperInterface|m\Mock $mapper */
+        $mapper = m::mock(VersionMapperInterface::class);
+        $repo = new VersionRepository($mapper);
+        $repo->updateAll(new Collection());
     }
 
     /**

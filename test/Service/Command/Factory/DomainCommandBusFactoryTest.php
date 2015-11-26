@@ -20,6 +20,8 @@
 namespace BaleenTest\Migrations\Service\Command\Factory;
 
 use Baleen\Migrations\Service\Command\Factory\DomainCommandBusFactory;
+use Baleen\Migrations\Service\Runner\ContextualRunnerInterface;
+use Baleen\Migrations\Service\Runner\MigrationRunner;
 use Baleen\Migrations\Service\Runner\RunnerInterface;
 use Baleen\Migrations\Shared\Event\PublisherInterface;
 use BaleenTest\Migrations\BaseTestCase;
@@ -39,7 +41,7 @@ class DomainCommandBusFactoryTest extends BaseTestCase
     public function testCreateQuickStartBus()
     {
         $factory = $this->createFactory();
-        $bus = $factory->createQuickStartBus();
+        $bus = $factory->createWithInMemoryLocator();
         $this->assertInstanceOf(CommandBus::class, $bus);
     }
 
@@ -71,8 +73,8 @@ class DomainCommandBusFactoryTest extends BaseTestCase
             $publisher = m::mock(PublisherInterface::class);
         }
         if (null === $runner) {
-            /** @var RunnerInterface|m\Mock $runner */
-            $runner = m::mock(RunnerInterface::class);
+            /** @var ContextualRunnerInterface|m\Mock $runner */
+            $runner = m::mock(ContextualRunnerInterface::class);
         }
         return new DomainCommandBusFactory($publisher, $runner);
     }

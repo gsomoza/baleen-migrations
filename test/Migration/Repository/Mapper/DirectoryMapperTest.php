@@ -24,7 +24,7 @@ use Baleen\Migrations\Exception\Migration\Repository\RepositoryException;
 use Baleen\Migrations\Migration\Factory\FactoryInterface;
 use Baleen\Migrations\Migration\MigrationInterface;
 use Baleen\Migrations\Migration\Repository\Mapper\DirectoryMapper;
-use Baleen\Migrations\Migration\Repository\Mapper\RepositoryMapperInterface;
+use Baleen\Migrations\Migration\Repository\Mapper\MigrationMapperInterface;
 use BaleenTest\Migrations\BaseTestCase;
 use Mockery as m;
 
@@ -54,7 +54,7 @@ class DirectoryMapperTest extends BaseTestCase
         $factory = m::mock(FactoryInterface::class);
         $mapper = new DirectoryMapper($path, $factory, $pattern);
 
-        $this->assertInstanceOf(RepositoryMapperInterface::class, $mapper);
+        $this->assertInstanceOf(MigrationMapperInterface::class, $mapper);
     }
 
     /**
@@ -81,7 +81,7 @@ class DirectoryMapperTest extends BaseTestCase
     public function testInstanceOfRepositoryInterface()
     {
         $instance = new DirectoryMapper(__DIR__);
-        $this->assertInstanceOf(RepositoryMapperInterface::class, $instance);
+        $this->assertInstanceOf(MigrationMapperInterface::class, $instance);
     }
 
     /**

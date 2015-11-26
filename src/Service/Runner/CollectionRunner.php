@@ -20,10 +20,13 @@
 namespace Baleen\Migrations\Service\Runner;
 
 use Baleen\Migrations\Migration\OptionsInterface;
+use Baleen\Migrations\Service\Command\HasCollectionTrait;
 use Baleen\Migrations\Service\Runner\Event\Collection\CollectionAfterEvent;
 use Baleen\Migrations\Service\Runner\Event\Collection\CollectionBeforeEvent;
 use Baleen\Migrations\Shared\Collection\CollectionInterface;
 use Baleen\Migrations\Shared\Event\Context\CollectionContext;
+use Baleen\Migrations\Shared\Event\MutePublisher;
+use Baleen\Migrations\Shared\Event\Publisher\HasInternalPublisherTrait;
 use Baleen\Migrations\Shared\Event\PublisherInterface;
 use Baleen\Migrations\Version\Collection\Collection;
 use Baleen\Migrations\Version\VersionInterface;
@@ -32,33 +35,32 @@ use Baleen\Migrations\Version\VersionInterface;
  * Class CollectionRunner
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
-final class CollectionRunner extends AbstractRunner
+final class CollectionRunner implements RunnerInterface
 {
-    /** @var CollectionInterface */
-    private $collection;
+    use HasCollectionTrait;
+    use HasInternalPublisherTrait;
 
-    /** @var MigrationRunner */
+    /** @var ContextualRunnerInterface */
     private $migrationRunner;
 
     /**
      * CollectionRunner constructor.
      * @param CollectionInterface $collection
-     * @param RunnerInterface $migrationRunner Will be use to run each individual migration
+     * @param ContextualRunnerInterface $migrationRunner Will be use to run each individual migration
      * @param PublisherInterface $publisher
      */
     public function __construct(
         CollectionInterface $collection,
-        RunnerInterface $migrationRunner = null,
+        ContextualRunnerInterface $migrationRunner = null,
         PublisherInterface $publisher = null
     ) {
-        $this->collection = $collection;
-
         if (null === $migrationRunner) {
             $migrationRunner = new MigrationRunner(null, $publisher);
         }
         $this->migrationRunner = $migrationRunner;
 
-        parent::__construct($publisher);
+        $this->setCollection($collection);
+        $this->setPublisher($publisher);
     }
 
     /**
@@ -72,9 +74,9 @@ final class CollectionRunner extends AbstractRunner
     public function run(VersionInterface $target, OptionsInterface $options)
     {
         $current = 1;
-        $collection = $this->collection;
+        $collection = $this->getCollection();
         $context = CollectionContext::createWithProgress(max($collection->count(), 1), $current);
-        $this->migrationRunner->setContext($context);
+        $migrationRunner = $this->migrationRunner->withContext($context);
 
         $this->getPublisher()->publish(new CollectionBeforeEvent($target, $options, $collection));
 
@@ -85,7 +87,7 @@ final class CollectionRunner extends AbstractRunner
         $collection->first(); // rewind
         foreach ($collection as $version) {
             $context->getProgress()->update($current);
-            $result = $this->migrationRunner->run($version, $options);
+            $result = $migrationRunner->run($version, $options);
             if ($result) {
                 $modified->add($version);
             }
@@ -96,8 +98,6 @@ final class CollectionRunner extends AbstractRunner
         }
 
         $this->getPublisher()->publish(new CollectionAfterEvent($target, $options, $collection));
-
-        $this->migrationRunner->clearContext();
 
         return $modified;
     }

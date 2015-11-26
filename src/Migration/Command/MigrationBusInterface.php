@@ -28,5 +28,5 @@ interface MigrationBusInterface
      *
      * @return mixed
      */
-    public function handle(MigrateCommand $command);
+    public function handle($command);
 }

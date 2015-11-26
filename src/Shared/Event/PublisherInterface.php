@@ -26,11 +26,6 @@ namespace Baleen\Migrations\Shared\Event;
  */
 interface PublisherInterface
 {
-    const COLLECTION_BEFORE = 'baleen.migrate.before';
-    const COLLECTION_AFTER = 'baleen.migrate.after';
-    const MIGRATION_BEFORE = 'baleen.single.before';
-    const MIGRATION_AFTER = 'baleen.single.after';
-
     /**
      * Publishes a Domain Event
      *

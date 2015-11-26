@@ -25,7 +25,11 @@ use Baleen\Migrations\Migration\Command\MigrationBusInterface;
 use Baleen\Migrations\Migration\OptionsInterface;
 use Baleen\Migrations\Service\Runner\Event\Migration\MigrateAfterEvent;
 use Baleen\Migrations\Service\Runner\Event\Migration\MigrateBeforeEvent;
+use Baleen\Migrations\Shared\Event\Context\CollectionContext;
 use Baleen\Migrations\Shared\Event\Context\CollectionContextInterface;
+use Baleen\Migrations\Shared\Event\Context\ContextInterface;
+use Baleen\Migrations\Shared\Event\Context\HasContextTrait;
+use Baleen\Migrations\Shared\Event\Publisher\HasInternalPublisherTrait;
 use Baleen\Migrations\Shared\Event\PublisherInterface;
 use Baleen\Migrations\Version\VersionInterface;
 
@@ -36,8 +40,11 @@ use Baleen\Migrations\Version\VersionInterface;
  *
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
-final class MigrationRunner extends AbstractRunner
+final class MigrationRunner implements ContextualRunnerInterface
 {
+    use HasInternalPublisherTrait;
+    use HasContextTrait;
+
     /** @var MigrationBusInterface */
     private $migrationBus;
 
@@ -58,7 +65,12 @@ final class MigrationRunner extends AbstractRunner
         }
         $this->migrationBus = $migrationBus;
 
-        parent::__construct($publisher, $context);
+        if (null === $context) {
+            $context = CollectionContext::createWithProgress(1, 1);
+        }
+        $this->setContext($context);
+
+        $this->setPublisher($publisher);
     }
 
     /**
@@ -123,5 +135,12 @@ final class MigrationRunner extends AbstractRunner
     {
         $command = $version->getMigrateCommand($options);
         $this->migrationBus->handle($command);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    final public function withContext(ContextInterface $context) {
+        return new static($this->migrationBus, $this->getPublisher(), $context);
     }
 }

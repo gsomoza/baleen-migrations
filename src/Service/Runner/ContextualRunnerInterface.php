@@ -14,46 +14,26 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the MIT license. For more information, see
- * <https://github.com/baleen/migrations>.
+ * <http://www.doctrine-project.org>.
  */
 
-namespace Baleen\Migrations\Migration\Command\Middleware;
+namespace Baleen\Migrations\Service\Runner;
 
-use Baleen\Migrations\Migration\Capabilities\TransactionAwareInterface;
-use Baleen\Migrations\Migration\Command\MigrateCommand;
-use League\Tactician\Middleware;
+use Baleen\Migrations\Shared\Event\Context\ContextInterface;
 
 /**
- * Wraps the migration in a transaction if the migration implements
- * TransactionAwareInterface.
+ * Interface ContextualRunnerInterface
  *
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
-final class TransactionMiddleware implements Middleware
+interface ContextualRunnerInterface extends RunnerInterface
 {
     /**
-     * execute
+     * Returns a new instance of this object with the same publisher but new context
      *
-     * @param MigrateCommand $command
-     * @param callable $next
+     * @param ContextInterface $context
      *
-     * @return void
+     * @return static
      */
-    public function execute($command, callable $next)
-    {
-        $migration = $command->getMigration();
-        if (!$migration instanceof TransactionAwareInterface) {
-            $next($command);
-            return;
-        }
-
-        $result = null;
-        try {
-            $migration->begin();
-            $next($command);
-            $migration->finish();
-        } catch (\Exception $e) {
-            $migration->abort($e);
-        }
-    }
+    public function withContext(ContextInterface $context);
 }

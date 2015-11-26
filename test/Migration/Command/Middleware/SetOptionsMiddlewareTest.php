@@ -27,6 +27,7 @@ use Baleen\Migrations\Migration\Command\MigrateCommand;
 use Baleen\Migrations\Migration\MigrationInterface;
 use Baleen\Migrations\Migration\Options;
 use BaleenTest\Migrations\BaseTestCase;
+use League\Tactician\Middleware;
 use Mockery as m;
 
 /**
@@ -63,7 +64,7 @@ class SetOptionsMiddlewareTest extends BaseTestCase
     public function testIsAbstractMiddleware()
     {
         $instance = new SetOptionsMiddleware();
-        $this->assertInstanceOf(AbstractMiddleware::class, $instance);
+        $this->assertInstanceOf(Middleware::class, $instance);
     }
 
     /**

@@ -24,7 +24,7 @@ namespace Baleen\Migrations\Service\Runner\Event\Collection;
  *
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
-class CollectionBeforeEvent extends CollectionEvent
+final class CollectionBeforeEvent extends CollectionEvent
 {
-
+    const EVENT_NAME = 'baleen.migrate.before';
 }

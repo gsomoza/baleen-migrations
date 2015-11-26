@@ -24,6 +24,7 @@ use Baleen\Migrations\Service\Command\Migrate\AbstractRunnerHandler;
 use Baleen\Migrations\Service\Command\Migrate\Single\SingleHandler;
 use Baleen\Migrations\Service\Runner\RunnerInterface;
 use Baleen\Migrations\Shared\Event\Context\ContextInterface;
+use Baleen\Migrations\Version\Repository\VersionRepositoryInterface;
 use Baleen\Migrations\Version\VersionInterface;
 use BaleenTest\Migrations\Service\Command\Migrate\HandlerTestCase;
 use Mockery as m;
@@ -35,22 +36,16 @@ use Mockery as m;
 class SingleHandlerTest extends HandlerTestCase
 {
     /**
-     * testConstruct
-     * @return void
-     */
-    public function testConstruct()
-    {
-        $handler = $this->createHandler();
-        $this->assertInstanceOf(AbstractRunnerHandler::class, $handler);
-    }
-
-    /**
      * testHandle
      * @return void
      */
     public function testHandle()
     {
         $handler = $this->createHandler();
+
+        /** @var VersionInterface|m\Mock $version */
+        $version = m::mock(VersionInterface::class);
+
         /** @var RunnerInterface|m\Mock $runner */
         $runner = $this->invokeMethod('getRunner', $handler);
         $runner->shouldReceive('run')
@@ -59,12 +54,17 @@ class SingleHandlerTest extends HandlerTestCase
                 m::type(OptionsInterface::class)
             )
             ->once()
-            ->andReturn('foo');
+            ->andReturn($version);
         $runner->shouldReceive('setContext')
             ->with(m::type(ContextInterface::class))
             ->once();
 
         $command = SingleCommandTest::createMockedCommand();
+
+        /** @var VersionRepositoryInterface|m\Mock $storage */
+        $storage = $command->getVersionRepository();
+        $storage->shouldReceive('update')->with($version)->once()->andReturn('foo');
+
         $result = $handler->handle($command);
 
         $this->assertEquals('foo', $result);

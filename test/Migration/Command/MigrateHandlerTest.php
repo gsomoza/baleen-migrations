@@ -26,6 +26,7 @@ use Baleen\Migrations\Migration\MigrationInterface;
 use Baleen\Migrations\Migration\Options;
 use Baleen\Migrations\Migration\Options\Direction;
 use BaleenTest\Migrations\BaseTestCase;
+use League\Tactician\Middleware;
 use Mockery as m;
 
 /**
@@ -41,7 +42,7 @@ class MigrateHandlerTest extends BaseTestCase
     public function testConstructor()
     {
         $handler = new MigrateHandler();
-        $this->assertInstanceOf(AbstractMiddleware::class, $handler);
+        $this->assertInstanceOf(Middleware::class, $handler);
     }
 
     /**

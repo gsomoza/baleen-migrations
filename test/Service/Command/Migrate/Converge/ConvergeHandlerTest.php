@@ -25,6 +25,7 @@ use Baleen\Migrations\Service\Command\Migrate\Converge\ConvergeCommand;
 use Baleen\Migrations\Service\Command\Migrate\Converge\ConvergeHandler;
 use Baleen\Migrations\Service\Runner\RunnerInterface;
 use Baleen\Migrations\Version\Collection\Collection;
+use Baleen\Migrations\Version\Repository\VersionRepositoryInterface;
 use BaleenTest\Migrations\BaseTestCase;
 use League\Tactician\CommandBus;
 use Mockery as m;
@@ -76,7 +77,9 @@ class ConvergeHandlerTest extends BaseTestCase
             ->once()
             ->andReturn($downChanges);
 
-        $command = new ConvergeCommand($collection, $v1, new Options(), $domainBus);
+        /** @var VersionRepositoryInterface|m\Mock $storage */
+        $storage = m::mock(VersionRepositoryInterface::class);
+        $command = new ConvergeCommand($collection, $v1, new Options(), $domainBus, $storage);
 
         $changed = $handler->handle($command);
 

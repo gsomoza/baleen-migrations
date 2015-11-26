@@ -17,37 +17,20 @@
  * <http://www.doctrine-project.org>.
  */
 
-namespace Baleen\Migrations\Service\Runner;
+namespace Baleen\Migrations\Shared\Event\Publisher;
 
-use Baleen\Migrations\Shared\Event\Context\ContextInterface;
 use Baleen\Migrations\Shared\Event\MutePublisher;
 use Baleen\Migrations\Shared\Event\PublisherInterface;
 
 /**
- * Class AbstractRunner
+ * Class HasInternalPublisherTrait
+ *
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
-abstract class AbstractRunner implements RunnerInterface
+trait HasInternalPublisherTrait
 {
     /** @var PublisherInterface */
     private $publisher;
-
-    /** @var ContextInterface */
-    private $context;
-
-    /**
-     * AbstractRunner constructor.
-     * @param PublisherInterface $publisher
-     * @param ContextInterface $context
-     */
-    public function __construct(PublisherInterface $publisher = null, ContextInterface $context = null)
-    {
-        if (null === $publisher) {
-            $publisher = new MutePublisher();
-        }
-        $this->publisher = $publisher;
-        $this->context = $context;
-    }
 
     /**
      * @return PublisherInterface
@@ -58,25 +41,13 @@ abstract class AbstractRunner implements RunnerInterface
     }
 
     /**
-     * getContext
-     * @return ContextInterface|null
+     * @param PublisherInterface $publisher
      */
-    final protected function getContext() {
-        return $this->context;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    final public function setContext(ContextInterface $context) {
-        $this->context = $context;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    final public function clearContext()
+    final protected function setPublisher(PublisherInterface $publisher = null)
     {
-        $this->context = null;
+        if (null === $publisher) {
+            $publisher = new MutePublisher();
+        }
+        $this->publisher = $publisher;
     }
 }

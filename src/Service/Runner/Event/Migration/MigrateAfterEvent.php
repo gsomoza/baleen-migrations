@@ -24,7 +24,7 @@ namespace Baleen\Migrations\Service\Runner\Event\Migration;
  *
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
-class MigrateAfterEvent extends MigrationEvent
+final class MigrateAfterEvent extends MigrationEvent
 {
-
+    const EVENT_NAME = 'baleen.single.after';
 }

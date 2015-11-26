@@ -27,6 +27,7 @@ use Baleen\Migrations\Migration\Command\MigrateCommand;
 use Baleen\Migrations\Migration\MigrationInterface;
 use Baleen\Migrations\Migration\OptionsInterface;
 use BaleenTest\Migrations\BaseTestCase;
+use League\Tactician\Middleware;
 use Mockery as m;
 
 /**
@@ -45,6 +46,10 @@ class TransactionMiddlewareTest extends BaseTestCase
     /** @var callable */
     protected $next;
 
+    /**
+     * setUp
+     * @return void
+     */
     public function setUp()
     {
         $this->migration = m::mock(MigrationInterface::class);
@@ -54,12 +59,20 @@ class TransactionMiddlewareTest extends BaseTestCase
         $this->next = function() {};
     }
 
+    /**
+     * testIsAbstractMiddleware
+     * @return void
+     */
     public function testIsAbstractMiddleware()
     {
         $instance = new TransactionMiddleware();
-        $this->assertInstanceOf(AbstractMiddleware::class, $instance);
+        $this->assertInstanceOf(Middleware::class, $instance);
     }
 
+    /**
+     * testExecute
+     * @return void
+     */
     public function testExecute()
     {
         $nextCalled = false;
@@ -68,9 +81,13 @@ class TransactionMiddlewareTest extends BaseTestCase
         $instance->execute($this->command, function() use (&$nextCalled) {
             $nextCalled = true;
         });
-        $this->assertTrue($nextCalled, 'expected SetOptionsMiddleware::doExecute() to call $next().');
+        $this->assertTrue($nextCalled, 'expected SetOptionsMiddleware::execute() to call $next().');
     }
 
+    /**
+     * testExecuteOptionsAwareMigration
+     * @return void
+     */
     public function testExecuteOptionsAwareMigration()
     {
         $testCases = [true, false];

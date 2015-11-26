@@ -19,7 +19,7 @@
 
 namespace Baleen\Migrations\Version\Repository;
 
-use Baleen\Migrations\Version\Collection\Collection;
+use Baleen\Migrations\Shared\Collection\CollectionInterface;
 use Baleen\Migrations\Version\VersionId;
 use Baleen\Migrations\Version\VersionInterface;
 
@@ -50,11 +50,11 @@ interface VersionRepositoryInterface
      * Updates the storage by adding all versions from the collection that are migrated, and remove all versions which
      * are NOT migrated.
      *
-     * @param Collection $versions
+     * @param CollectionInterface $versions
      *
      * @return bool Returns false on failure.
      */
-    public function updateAll(Collection $versions);
+    public function updateAll(CollectionInterface $versions);
 
     /**
      * Saves or deletes a version depending on whether the version is respectively migrated or not.
