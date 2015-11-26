@@ -35,20 +35,28 @@ final class NamespacesAwareComparator extends AbstractComparator
     private $namespaces;
 
     /** @var ComparatorInterface */
-    private $fallback;
+    private $fallbackComparator;
 
     /**
      * NamespacesAwareComparator constructor.
      *
-     * @param Direction $direction
      * @param ComparatorInterface $fallbackComparator
      * @param array $namespaces Namespaces with keys ordered by priority (highest priority first)
+     *
      * @throws ComparatorException
      */
-    public function __construct(ComparatorInterface $fallbackComparator, array $namespaces, Direction $direction = null)
+    public function __construct(ComparatorInterface $fallbackComparator, array $namespaces)
     {
-        $this->fallback = $fallbackComparator;
+        $this->fallbackComparator = $fallbackComparator;
+        $this->setNamespaces($namespaces);
+    }
 
+    /**
+     * @param array $namespaces
+     * @throws ComparatorException
+     */
+    private function setNamespaces($namespaces)
+    {
         if (empty($namespaces)) {
             throw new ComparatorException('Expected at least one namespace for this comparator.');
         }
@@ -58,16 +66,6 @@ final class NamespacesAwareComparator extends AbstractComparator
         }
         krsort($namespaces); // we search from highest to lowest priority
         $this->namespaces = $namespaces;
-
-        parent::__construct($direction);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function withDirection(Direction $direction)
-    {
-        return new static($this->fallback, $this->namespaces, $direction);
     }
 
     /**
@@ -88,10 +86,11 @@ final class NamespacesAwareComparator extends AbstractComparator
      * @param VersionInterface $version1
      * @param VersionInterface $version2
      *
-     * @return mixed
+     * @return int
+     *
      * @throws InvalidArgumentException
      */
-    protected function doCompare(VersionInterface $version1, VersionInterface $version2)
+    public function compare(VersionInterface $version1, VersionInterface $version2)
     {
         $class1 = get_class($version1->getMigration());
         $class2 = get_class($version2->getMigration());
@@ -106,7 +105,7 @@ final class NamespacesAwareComparator extends AbstractComparator
         // null = could not determine order | zero = both orders are equal
         if (empty($res)) {
             // delegate sorting to the fallback comparator
-            $res = call_user_func($this->fallback, $version1, $version2);
+            $res = call_user_func($this->fallbackComparator, $version1, $version2);
         }
         return $res;
     }

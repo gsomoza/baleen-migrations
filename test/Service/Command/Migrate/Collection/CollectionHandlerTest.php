@@ -21,7 +21,6 @@ namespace BaleenTest\Migrations\Service\Command\Migrate\Collection;
 
 use Baleen\Migrations\Migration\Options\Direction;
 use Baleen\Migrations\Migration\OptionsInterface;
-use Baleen\Migrations\Service\Command\Migrate\AbstractFactoryHandler;
 use Baleen\Migrations\Service\Command\Migrate\Collection\CollectionHandler;
 use Baleen\Migrations\Service\Runner\Factory\CollectionRunnerFactoryInterface;
 use Baleen\Migrations\Service\Runner\RunnerInterface;
@@ -50,26 +49,26 @@ class CollectionHandlerTest extends HandlerTestCase
 
         /** @var OptionsInterface|m\Mock $options */
         $options= $command->getOptions();
+        $direction = Direction::down();
         $options->shouldReceive('getDirection')
             ->once()
             ->withNoArgs()
-            ->andReturn(Direction::down()); // using 'down' because its more declarative for the ->isDown test below
+            ->andReturn($direction); // using 'down' because its more declarative for the ->isDown test below
 
         /** @var CollectionInterface|m\Mock $filteredCollection */
         $filteredCollection = m::mock(CollectionInterface::class);
 
         /** @var ComparatorInterface|m\Mock $comparator */
         $comparator = m::mock(ComparatorInterface::class);
-        $comparator->shouldReceive('withDirection')
-            ->once()
-            ->with(m::on(function (Direction $direction) {
-                return $direction->isDown(); // test is forces the direction specified in options
-            }))
-            ->andReturnSelf();
         $comparator->shouldReceive('compare')
             ->with(m::type(VersionInterface::class), $command->getTarget())
             ->once()
             ->andReturn(0);
+        if ($direction->isDown()) {
+            $comparator->shouldReceive('getReverse')->once()->withNoArgs()->andReturnSelf();
+        } else {
+            $comparator->shouldNotReceive('getReverse');
+        }
 
         /** @var CollectionInterface|m\Mock $collection */
         $collection = $command->getCollection();

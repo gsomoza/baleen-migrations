@@ -22,17 +22,45 @@ namespace Baleen\Migrations\Version\Comparator;
 use Baleen\Migrations\Version\VersionInterface;
 
 /**
- * Compares version ids. Useful mostly for testing.
+ * Class ReversedComparator
  *
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
-final class IdComparator extends AbstractComparator
+final class ReversedComparator extends AbstractComparator
 {
+    /** @var ComparatorInterface */
+    private $internalComparator;
+
     /**
-     * @inheritdoc
+     * ReversedComparator constructor.
+     *
+     * @param ComparatorInterface $internalComparator The comparator to reverse.
+     */
+    public function __construct(ComparatorInterface $internalComparator)
+    {
+        $this->internalComparator = $internalComparator;
+    }
+
+    /**
+     * Compares two versions with each other using the internal comparator, and returns the opposite result.
+     *
+     * @param VersionInterface $version1
+     * @param VersionInterface $version2
+     *
+     * @return int
      */
     public function compare(VersionInterface $version1, VersionInterface $version2)
     {
-        return strcmp($version1->getId(), $version2->getId());
+        return $this->internalComparator->compare($version1, $version2) * -1;
+    }
+
+    /**
+     * Returns a comparator that sorts in the opposite direction.
+     *
+     * @return static
+     */
+    public function getReverse()
+    {
+        return $this->internalComparator;
     }
 }

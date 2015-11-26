@@ -217,7 +217,7 @@ class Collection extends AbstractCollection implements ResolvableCollectionInter
      */
     public function getReverse()
     {
-        return $this->sort($this->comparator->withDirection(Direction::down()));
+        return $this->sort($this->comparator->getReverse());
     }
 
     /**
