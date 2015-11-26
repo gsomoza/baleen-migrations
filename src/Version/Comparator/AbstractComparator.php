@@ -16,34 +16,17 @@
  * and is licensed under the MIT license. For more information, see
  * <http://www.doctrine-project.org>.
  */
+
 namespace Baleen\Migrations\Version\Comparator;
 
-use Baleen\Migrations\Migration\Options\Direction;
 use Baleen\Migrations\Version\VersionInterface;
 
 /**
  * Class AbstractComparator
- *
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
 abstract class AbstractComparator implements ComparatorInterface
 {
-    /** @var int */
-    private $order = 1;
-
-    /**
-     * MigrationComparator constructor.
-     *
-     * @param Direction $direction
-     */
-    public function __construct(Direction $direction = null)
-    {
-        if (null === $direction) {
-            $direction = Direction::up();
-        }
-        $this->order = $direction->isUp() ? 1 : -1;
-    }
-
     /**
      * @inheritDoc
      */
@@ -55,27 +38,8 @@ abstract class AbstractComparator implements ComparatorInterface
     /**
      * @inheritdoc
      */
-    public function withDirection(Direction $direction)
+    public function getReverse()
     {
-        return new static($direction);
+        return new ReversedComparator($this);
     }
-
-    /**
-     * @inheritdoc
-     */
-    final public function compare(VersionInterface $version1, VersionInterface $version2)
-    {
-        return $this->doCompare($version1, $version2) * $this->order;
-    }
-
-    /**
-     * The internal compare function. Should return less than zero (0), zero or greater than zero if the first item is
-     * respectively less than, equal to, or greater than the second item.
-     *
-     * @param VersionInterface $version1
-     * @param VersionInterface $version2
-     *
-     * @return mixed
-     */
-    abstract protected function doCompare(VersionInterface $version1, VersionInterface $version2);
 }

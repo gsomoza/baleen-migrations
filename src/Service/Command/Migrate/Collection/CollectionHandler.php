@@ -57,7 +57,10 @@ final class CollectionHandler
         $collection = $command->getCollection();
         $options = $command->getOptions();
         $direction = $options->getDirection();
-        $comparator = $collection->getComparator()->withDirection($direction);
+        $comparator = $collection->getComparator();
+        if ($direction->isDown()) {
+            $comparator = $comparator->getReverse();
+        }
 
         // filter to only get versions that need to be migrated
         $filter = function (VersionInterface $v) use ($target, $comparator, $direction) {

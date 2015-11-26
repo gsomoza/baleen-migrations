@@ -31,7 +31,7 @@ final class MigrationComparator extends AbstractComparator
     /**
      * @inheritdoc
      */
-    protected function doCompare(VersionInterface $version1, VersionInterface $version2)
+    public function compare(VersionInterface $version1, VersionInterface $version2)
     {
         return strcmp(
             get_class($version1->getMigration()),

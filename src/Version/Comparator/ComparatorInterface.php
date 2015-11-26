@@ -48,16 +48,14 @@ interface ComparatorInterface
      * @param VersionInterface $version1
      * @param VersionInterface $version2
      *
-     * @return mixed
+     * @return int
      */
     public function compare(VersionInterface $version1, VersionInterface $version2);
 
     /**
-     * MUST return a new instance that sorts in the order specified by the direction value object.
+     * Returns a new comparator that sorts in the opposite direction.
      *
-     * @param Direction $direction
-     *
-     * @return ComparatorInterface
+     * @return static
      */
-    public function withDirection(Direction $direction);
+    public function getReverse();
 }

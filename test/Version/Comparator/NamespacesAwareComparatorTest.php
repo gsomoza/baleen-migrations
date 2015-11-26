@@ -67,7 +67,11 @@ class NamespacesAwareComparatorTest extends ComparatorTestCase
         /** @var ComparatorInterface $fallback */
         $fallback = m::mock(ComparatorInterface::class);
         // $v1 is greater than $v2 here because its namespace appears in the comparator
-        $comparator = new NamespacesAwareComparator($fallback, [self::NS_VALID], $direction);
+        $comparator = new NamespacesAwareComparator($fallback, [self::NS_VALID]);
+        /** @var Direction $direction */
+        if (null !== $direction && $direction->isDown()) {
+            $comparator = $comparator->getReverse();
+        }
         $result = $this->simpleCompare($comparator);
         $this->assertEquals($expected, $result);
     }
@@ -98,7 +102,7 @@ class NamespacesAwareComparatorTest extends ComparatorTestCase
         // $v1 is greater than $v2 here because its namespace appears in the comparator
         $comparator = new NamespacesAwareComparator($fallback, [self::NS_VALID]);
         // but we're reversing the comparator
-        $comparator = $comparator->withDirection(Direction::down());
+        $comparator = $comparator->getReverse();
         $result = $this->simpleCompare($comparator);
         // so we expect the result to be negative
         $this->assertEquals(-1, $result);

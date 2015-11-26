@@ -237,7 +237,7 @@ class CollectionTest extends CollectionTestCase
     public function testFirstLastSorted()
     {
         $versions = $this->buildVersions(range(1, 3));
-        $reversedIdComparator = (new IdComparator())->withDirection(Direction::down());
+        $reversedIdComparator = (new IdComparator())->getReverse();
         // will sort versions by id, in reverse order (highest first)
         $collection = new Collection($versions, null, $reversedIdComparator);
         $sorted = $collection->sort();
