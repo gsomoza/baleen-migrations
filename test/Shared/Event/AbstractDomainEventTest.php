@@ -40,7 +40,7 @@ class AbstractDomainEventTest extends BaseTestCase
         $event = m::mock(AbstractDomainEvent::class, [])->makePartial();
         $this->assertInstanceOf(DomainEventInterface::class, $event);
         $this->assertInstanceOf(\DateTime::class, $event->getOccurredOn());
-        $this->assertTrue(is_integer($event->getEventVersion()));
+        $this->assertTrue(is_integer($event->getVersion()));
     }
 
     /**
@@ -71,8 +71,13 @@ class AbstractDomainEventTest extends BaseTestCase
         $event->shouldReceive('getAdditionalPayload')->once()->andReturn($customPayload);
 
         $result = $event->getPayload();
+
         $this->assertArraySubset($customPayload, $result);
+
         $this->assertArrayHasKey('occurred_on', $result);
         $this->assertInstanceOf(\DateTime::class, $result['occurred_on']);
+
+        $this->assertArrayHasKey('version', $result);
+        $this->assertTrue(is_numeric($result['version']), $result);
     }
 }

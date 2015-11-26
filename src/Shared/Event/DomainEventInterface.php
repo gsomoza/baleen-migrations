@@ -31,7 +31,7 @@ interface DomainEventInterface
      *
      * @return int
      */
-    public function getEventVersion();
+    public function getVersion();
 
     /**
      * DateTime for when the event was created

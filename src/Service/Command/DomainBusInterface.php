@@ -33,5 +33,5 @@ interface DomainBusInterface
      *
      * @return mixed
      */
-    public function handle(DomainCommandInterface $command);
+    public function handle($command);
 }

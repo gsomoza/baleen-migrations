@@ -27,6 +27,7 @@ use Baleen\Migrations\Service\Runner\Factory\CollectionRunnerFactoryInterface;
 use Baleen\Migrations\Service\Runner\RunnerInterface;
 use Baleen\Migrations\Shared\Collection\CollectionInterface;
 use Baleen\Migrations\Version\Comparator\ComparatorInterface;
+use Baleen\Migrations\Version\Repository\VersionRepositoryInterface;
 use Baleen\Migrations\Version\VersionInterface;
 use BaleenTest\Migrations\Service\Command\Migrate\HandlerTestCase;
 use Mockery as m;
@@ -37,16 +38,6 @@ use Mockery as m;
  */
 class CollectionHandlerTest extends HandlerTestCase
 {
-    /**
-     * testConstructor
-     * @return void
-     */
-    public function testConstructor()
-    {
-        $handler = $this->createHandler();
-        $this->assertInstanceOf(AbstractFactoryHandler::class, $handler);
-    }
-
     /**
      * testHandle
      * @return void
@@ -99,6 +90,8 @@ class CollectionHandlerTest extends HandlerTestCase
             }))
             ->once()
             ->andReturnSelf();
+        $collection->shouldReceive('sort')
+            ->once()->with($comparator)->andReturn($filteredCollection);
 
         /** @var RunnerInterface|m\Mock $runner */
         $runner = $this->invokeMethod('createRunnerFor', $handler, [$collection]);
@@ -108,10 +101,11 @@ class CollectionHandlerTest extends HandlerTestCase
                 m::type(OptionsInterface::class)
             )
             ->once()
-            ->andReturn('foo');
+            ->andReturn($filteredCollection);
 
-        $collection->shouldReceive('sort')
-            ->once()->with($comparator)->andReturn($filteredCollection);
+        /** @var VersionRepositoryInterface|m\Mock $storage */
+        $storage = $command->getVersionRepository();
+        $storage->shouldReceive('updateAll')->with($filteredCollection)->once()->andReturn('foo');
 
         $result = $handler->handle($command);
 

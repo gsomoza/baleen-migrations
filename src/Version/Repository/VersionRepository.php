@@ -19,6 +19,7 @@
 
 namespace Baleen\Migrations\Version\Repository;
 
+use Baleen\Migrations\Shared\Collection\CollectionInterface;
 use Baleen\Migrations\Version\Collection\Collection;
 use Baleen\Migrations\Version\Repository\Mapper\VersionMapperInterface;
 use Baleen\Migrations\Version\VersionId;
@@ -75,7 +76,7 @@ final class VersionRepository implements VersionRepositoryInterface
     /**
      * @inheritdoc
      */
-    public function updateAll(Collection $versions)
+    public function updateAll(CollectionInterface $versions)
     {
         if ($versions->isEmpty()) {
             return true; // nothing to do - exit early
@@ -84,8 +85,8 @@ final class VersionRepository implements VersionRepositoryInterface
         $mapToIds = function(VersionInterface $v) {
             return $v->getId();
         };
-        /** @var Collection $migrated */
-        /** @var Collection $notMigrated */
+        /** @var CollectionInterface $migrated */
+        /** @var CollectionInterface $notMigrated */
         list($migrated, $notMigrated) = $versions->partition(function($i, VersionInterface $v) {
             return $v->isMigrated();
         });

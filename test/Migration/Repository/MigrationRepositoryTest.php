@@ -21,6 +21,7 @@ namespace BaleenTest\Migrations\Migration\Repository;
 
 use Baleen\Migrations\Migration\MigrationInterface;
 use Baleen\Migrations\Migration\Repository\Mapper\Definition;
+use Baleen\Migrations\Migration\Repository\Mapper\MigrationMapperInterface;
 use Baleen\Migrations\Migration\Repository\Mapper\RepositoryMapperInterface;
 use Baleen\Migrations\Migration\Repository\MigrationRepository;
 use Baleen\Migrations\Shared\Collection\CollectionInterface;
@@ -42,8 +43,8 @@ class MigrationRepositoryTest extends BaseTestCase
      */
     public function testFetchAll()
     {
-        /** @var RepositoryMapperInterface|m\Mock $mapper */
-        $mapper = m::mock(RepositoryMapperInterface::class);
+        /** @var MigrationMapperInterface|m\Mock $mapper */
+        $mapper = m::mock(MigrationMapperInterface::class);
         $definitions = $this->buildDefinitions(range(1, 5));
         $mapper->shouldReceive(['fetchAll' => $definitions])->once();
 

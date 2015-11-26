@@ -20,9 +20,11 @@
 namespace BaleenTest\Migrations\Service\Command\Migrate\Collection;
 
 use Baleen\Migrations\Migration\OptionsInterface;
+use Baleen\Migrations\Service\Command\DomainCommandInterface;
 use Baleen\Migrations\Service\Command\Migrate\AbstractMigrateCommand;
 use Baleen\Migrations\Service\Command\Migrate\Collection\CollectionCommand;
 use Baleen\Migrations\Shared\Collection\CollectionInterface;
+use Baleen\Migrations\Version\Repository\VersionRepositoryInterface;
 use Baleen\Migrations\Version\VersionInterface;
 use BaleenTest\Migrations\BaseTestCase;
 use Mockery as m;
@@ -45,7 +47,9 @@ class CollectionCommandTest extends BaseTestCase
         $target = m::mock(VersionInterface::class);
         /** @var OptionsInterface|m\Mock $options */
         $options = m::mock(OptionsInterface::class);
-        return new CollectionCommand($collection, $target, $options);
+        /** @var VersionRepositoryInterface $versionRepository */
+        $versionRepository = m::mock(VersionRepositoryInterface::class);
+        return new CollectionCommand($collection, $target, $options, $versionRepository);
     }
 
     /**
@@ -55,6 +59,6 @@ class CollectionCommandTest extends BaseTestCase
     public function testConstructor()
     {
         $command = static::createMockedCommand();
-        $this->assertInstanceOf(AbstractMigrateCommand::class, $command);
+        $this->assertInstanceOf(DomainCommandInterface::class, $command);
     }
 }

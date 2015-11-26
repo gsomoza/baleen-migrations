@@ -24,6 +24,7 @@ use Baleen\Migrations\Migration\Command\Middleware\AbstractMiddleware;
 use Baleen\Migrations\Migration\Command\MigrateHandler;
 use Baleen\Migrations\Migration\Command\MigrationBus;
 use BaleenTest\Migrations\BaseTestCase;
+use League\Tactician\Middleware;
 use Mockery as m;
 
 /**
@@ -61,6 +62,6 @@ class MigrationBusTest extends BaseTestCase
         $defaults = MigrationBus::getDefaultMiddleWare();
         $this->assertTrue(is_array($defaults));
         $this->assertNotEmpty($defaults);
-        $this->assertContainsOnlyInstancesOf(AbstractMiddleware::class, $defaults);
+        $this->assertContainsOnlyInstancesOf(Middleware::class, $defaults);
     }
 }

@@ -40,19 +40,4 @@ interface RunnerInterface
      * @return CollectionInterface|VersionInterface
      */
     public function run(VersionInterface $target, OptionsInterface $options);
-
-    /**
-     * Set context information for this migrationRunner
-     *
-     * @param ContextInterface $context
-     * @return void
-     */
-    public function setContext(ContextInterface $context);
-
-    /**
-     * Clear the context information for this migrationRunner
-     *
-     * @return ContextInterface|null The deleted context, if any
-     */
-    public function clearContext();
 }
