@@ -18,8 +18,14 @@
  */
 
 namespace Baleen\Migrations\Service\Command\Migrate\Converge;
+
 use Baleen\Migrations\Migration\OptionsInterface;
+use Baleen\Migrations\Service\Command\DomainCommandInterface;
+use Baleen\Migrations\Service\Command\HasCollectionTrait;
+use Baleen\Migrations\Service\Command\HasOptionsTrait;
+use Baleen\Migrations\Service\Command\HasVersionRepositoryTrait;
 use Baleen\Migrations\Service\Command\Migrate\Collection;
+use Baleen\Migrations\Service\Command\Migrate\HasTargetTrait;
 use Baleen\Migrations\Shared\Collection\CollectionInterface;
 use Baleen\Migrations\Version\Repository\VersionRepositoryInterface;
 use Baleen\Migrations\Version\VersionInterface;
@@ -29,8 +35,13 @@ use League\Tactician\CommandBus;
  * Class ConvergeCommand
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
-final class ConvergeCommand extends Collection\CollectionCommand
+final class ConvergeCommand implements DomainCommandInterface
 {
+    use HasCollectionTrait;
+    use HasTargetTrait;
+    use HasOptionsTrait;
+    use HasVersionRepositoryTrait;
+
     /** @var CommandBus */
     private $domainBus;
 
@@ -51,7 +62,10 @@ final class ConvergeCommand extends Collection\CollectionCommand
         VersionRepositoryInterface $versionRepository
     ) {
         $this->domainBus = $domainBus;
-        parent::__construct($collection, $target, $options, $versionRepository);
+        $this->setCollection($collection);
+        $this->setTarget($target);
+        $this->setOptions($options);
+        $this->setVersionRepository($versionRepository);
     }
 
     /**

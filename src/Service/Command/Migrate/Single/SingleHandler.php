@@ -21,7 +21,9 @@ namespace Baleen\Migrations\Service\Command\Migrate\Single;
 
 use Baleen\Migrations\Service\Command\Migrate\AbstractRunnerHandler;
 use Baleen\Migrations\Service\Command\Migrate\Single;
+use Baleen\Migrations\Service\Runner\HasRunnerTrait;
 use Baleen\Migrations\Service\Runner\MigrationRunner;
+use Baleen\Migrations\Service\Runner\RunnerInterface;
 use Baleen\Migrations\Version\VersionInterface;
 
 /**
@@ -29,8 +31,20 @@ use Baleen\Migrations\Version\VersionInterface;
  *
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
-final class SingleHandler extends AbstractRunnerHandler
+final class SingleHandler
 {
+    use HasRunnerTrait;
+
+    /**
+     * SingleHandler constructor.
+     *
+     * @param RunnerInterface $runner
+     */
+    public function __construct(RunnerInterface $runner)
+    {
+        $this->setRunner($runner);
+    }
+
     /**
      * handle
      *

@@ -20,11 +20,13 @@
 namespace Baleen\Migrations\Service\Command\Migrate\Single;
 
 use Baleen\Migrations\Migration\OptionsInterface;
-use Baleen\Migrations\Service\Command\Migrate\AbstractMigrateCommand;
+use Baleen\Migrations\Service\Command\DomainCommandInterface;
+use Baleen\Migrations\Service\Command\HasOptionsTrait;
+use Baleen\Migrations\Service\Command\HasVersionRepositoryTrait;
+use Baleen\Migrations\Service\Command\Migrate\HasTargetTrait;
 use Baleen\Migrations\Shared\Event\Context\CollectionContext;
 use Baleen\Migrations\Shared\Event\Context\CollectionContextInterface;
 use Baleen\Migrations\Shared\Event\Progress;
-use Baleen\Migrations\Version\Repository\VersionRepository;
 use Baleen\Migrations\Version\Repository\VersionRepositoryInterface;
 use Baleen\Migrations\Version\VersionInterface;
 
@@ -33,8 +35,12 @@ use Baleen\Migrations\Version\VersionInterface;
  *
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
-final class SingleCommand extends AbstractMigrateCommand
+final class SingleCommand implements DomainCommandInterface
 {
+    use HasTargetTrait;
+    use HasOptionsTrait;
+    use HasVersionRepositoryTrait;
+
     /** @var CollectionContextInterface */
     private $context;
 
@@ -55,9 +61,11 @@ final class SingleCommand extends AbstractMigrateCommand
         if (null === $context) {
             $context = new CollectionContext(new Progress(1, 1));
         }
-        $this->context = $context;
 
-        parent::__construct($target, $options, $versionRepository);
+        $this->context = $context;
+        $this->setTarget($target);
+        $this->setOptions($options);
+        $this->setVersionRepository($versionRepository);
     }
 
     /**

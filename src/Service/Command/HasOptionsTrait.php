@@ -14,38 +14,31 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the MIT license. For more information, see
- * <https://github.com/baleen/migrations>.
+ * <http://www.doctrine-project.org>.
  */
 
-namespace Baleen\Migrations\Migration\Command\Middleware;
+namespace Baleen\Migrations\Service\Command;
 
-use Baleen\Migrations\Migration\Capabilities\OptionsAwareInterface;
-use Baleen\Migrations\Migration\Command\MigrateCommand;
-use League\Tactician\Middleware;
+use Baleen\Migrations\Migration\OptionsInterface;
 
-/**
- * Checks if a migration is an instance of OptionsAwareInterface and if so sends it
- * the options available in the command.
- *
- * @author Gabriel Somoza <gabriel@strategery.io>
- */
-final class SetOptionsMiddleware implements Middleware
+trait HasOptionsTrait
 {
-    /**
-     * execute
-     *
-     * @param MigrateCommand $command
-     * @param callable $next
-     *
-     * @return mixed
-     */
-    public function execute($command, callable $next)
-    {
-        $migration = $command->getMigration();
-        if ($migration instanceof OptionsAwareInterface) {
-            $migration->setOptions($command->getOptions());
-        }
+    /** @var OptionsInterface */
+    private $options;
 
-        $next($command);
+    /**
+     * @return OptionsInterface
+     */
+    final public function getOptions()
+    {
+        return $this->options;
+    }
+
+    /**
+     * @param OptionsInterface $options
+     */
+    final protected function setOptions(OptionsInterface $options)
+    {
+        $this->options = $options;
     }
 }

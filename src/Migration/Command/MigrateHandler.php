@@ -20,18 +20,24 @@
 namespace Baleen\Migrations\Migration\Command;
 
 use Baleen\Migrations\Migration\Command\Middleware\AbstractMiddleware;
+use League\Tactician\Middleware;
 
 /**
  * Class MigrateHandler.
  *
  * @author Gabriel Somoza <gabriel@stragery.io>
  */
-final class MigrateHandler extends AbstractMiddleware
+final class MigrateHandler implements Middleware
 {
     /**
-     * {@inheritDoc}
+     * execute
+     *
+     * @param MigrateCommand $command
+     * @param callable $next
+     *
+     * @return void
      */
-    protected function doExecute(MigrateCommand $command, callable $next)
+    public function execute($command, callable $next)
     {
         $migration = $command->getMigration();
         $direction = $command->getOptions()->getDirection()->isUp() ? 'up' : 'down';

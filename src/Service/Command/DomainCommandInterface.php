@@ -17,37 +17,14 @@
  * <http://www.doctrine-project.org>.
  */
 
-namespace Baleen\Migrations\Service\Command\Migrate;
-
-use Baleen\Migrations\Service\Runner\Factory\CollectionRunnerFactoryInterface;
-use Baleen\Migrations\Shared\Collection\CollectionInterface;
+namespace Baleen\Migrations\Service\Command;
 
 /**
- * Class AbstractFactoryHandler
+ * Interface DomainCommandInterface
  *
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
-abstract class AbstractFactoryHandler
+interface DomainCommandInterface
 {
-    /** @var CollectionRunnerFactoryInterface */
-    private $factory;
 
-    /**
-     * CollectionHandler constructor.
-     * @param CollectionRunnerFactoryInterface $factory
-     */
-    public function __construct(CollectionRunnerFactoryInterface $factory)
-    {
-        $this->factory = $factory;
-    }
-
-    /**
-     * createRunnerFor
-     *
-     * @param CollectionInterface $collection
-     * @return mixed
-     */
-    final protected function createRunnerFor(CollectionInterface $collection) {
-        return $this->factory->create($collection);
-    }
 }

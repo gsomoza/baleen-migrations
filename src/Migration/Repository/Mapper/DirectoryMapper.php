@@ -31,7 +31,7 @@ use Zend\Code\Scanner\DirectoryScanner;
  *
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
-final class DirectoryMapper implements RepositoryMapperInterface
+final class DirectoryMapper implements MigrationMapperInterface
 {
     const PATTERN_DEFAULT = '/v([0-9]+).*/';
 

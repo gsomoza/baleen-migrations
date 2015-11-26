@@ -19,6 +19,8 @@
 
 namespace Baleen\Migrations\Service\Command\Factory;
 
+use Baleen\Migrations\Service\Command\DomainBus;
+use Baleen\Migrations\Service\Command\DomainBusInterface;
 use Baleen\Migrations\Service\Command\Migrate\Collection\CollectionCommand;
 use Baleen\Migrations\Service\Command\Migrate\Collection\CollectionHandler;
 use Baleen\Migrations\Service\Command\Migrate\Converge\ConvergeCommand;
@@ -29,7 +31,7 @@ use Baleen\Migrations\Service\Runner\Factory\CollectionRunnerFactory;
 use Baleen\Migrations\Service\Runner\MigrationRunner;
 use Baleen\Migrations\Shared\Event\PublisherInterface;
 use League\Tactician\CommandBus;
-use League\Tactician\Setup\QuickStart;
+use League\Tactician\Handler\Locator\InMemoryLocator;
 
 /**
  * Class DomainCommandBusFactory
@@ -58,11 +60,12 @@ final class DomainCommandBusFactory
     /**
      * create
      *
-     * @return CommandBus
+     * @return DomainBusInterface
      */
-    public function createQuickStartBus()
+    public function createWithInMemoryLocator()
     {
-        return QuickStart::create($this->getCommandHandlerMapping());
+        $locator = new InMemoryLocator($this->getCommandHandlerMapping());
+        return DomainBus::createWithLocator($locator);
     }
 
     /**

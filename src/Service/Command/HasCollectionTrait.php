@@ -14,45 +14,36 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the MIT license. For more information, see
- * <https://github.com/baleen/migrations>.
+ * <http://www.doctrine-project.org>.
  */
 
-namespace Baleen\Migrations\Migration\Command\Middleware;
+namespace Baleen\Migrations\Service\Command;
 
-use Baleen\Migrations\Migration\Capabilities\TransactionAwareInterface;
-use Baleen\Migrations\Migration\Command\MigrateCommand;
-use League\Tactician\Middleware;
+use Baleen\Migrations\Shared\Collection\CollectionInterface;
 
 /**
- * Wraps the migration in a transaction if the migration implements
- * TransactionAwareInterface.
+ * Class HasCollectionTrait
  *
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
-final class TransactionMiddleware implements Middleware
+trait HasCollectionTrait
 {
-    /**
-     * execute
-     *
-     * @param MigrateCommand $command
-     * @param callable $next
-     *
-     * @return void
-     */
-    public function execute($command, callable $next)
-    {
-        $migration = $command->getMigration();
-        if (!$migration instanceof TransactionAwareInterface) {
-            $next($command);
-        }
+    /** @var CollectionInterface */
+    private $collection;
 
-        $result = null;
-        try {
-            $migration->begin();
-            $next($command);
-            $migration->finish();
-        } catch (\Exception $e) {
-            $migration->abort($e);
-        }
+    /**
+     * @return CollectionInterface
+     */
+    final public function getCollection()
+    {
+        return $this->collection;
+    }
+
+    /**
+     * @param CollectionInterface $collection
+     */
+    final protected function setCollection(CollectionInterface $collection)
+    {
+        $this->collection = $collection;
     }
 }
