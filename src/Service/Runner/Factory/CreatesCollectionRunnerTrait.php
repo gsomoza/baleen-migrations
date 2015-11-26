@@ -17,33 +17,33 @@
  * <http://www.doctrine-project.org>.
  */
 
-namespace Baleen\Migrations\Service\Command\Migrate;
+namespace Baleen\Migrations\Service\Runner\Factory;
 
-use Baleen\Migrations\Service\Runner\RunnerInterface;
+use Baleen\Migrations\Service\Runner\CollectionRunner;
+use Baleen\Migrations\Shared\Collection\CollectionInterface;
 
 /**
- * Class AbstractRunnerHandler
+ * Trait CreatesCollectionRunnerTrait
+ *
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
-abstract class AbstractRunnerHandler
+trait CreatesCollectionRunnerTrait
 {
-    /** @var RunnerInterface */
-    private $runner;
+    /** @var CollectionRunnerFactoryInterface */
+    private $factory;
 
-    /**
-     * AbstractRunnerHandler constructor.
-     * @param RunnerInterface $runner
-     */
-    public function __construct(RunnerInterface $runner)
-    {
-        $this->runner = $runner;
+    final protected function setFactory(CollectionRunnerFactoryInterface $factory) {
+        $this->factory = $factory;
     }
 
     /**
-     * @return RunnerInterface
+     * createRunnerFor
+     *
+     * @param CollectionInterface $collection
+     *
+     * @return CollectionRunner
      */
-    protected function getRunner()
-    {
-        return $this->runner;
+    final protected function createRunnerFor(CollectionInterface $collection) {
+        return $this->factory->create($collection);
     }
 }

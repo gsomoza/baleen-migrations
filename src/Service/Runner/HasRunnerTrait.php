@@ -14,45 +14,34 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the MIT license. For more information, see
- * <https://github.com/baleen/migrations>.
+ * <http://www.doctrine-project.org>.
  */
 
-namespace Baleen\Migrations\Migration\Command\Middleware;
-
-use Baleen\Migrations\Migration\Capabilities\TransactionAwareInterface;
-use Baleen\Migrations\Migration\Command\MigrateCommand;
-use League\Tactician\Middleware;
+namespace Baleen\Migrations\Service\Runner;
 
 /**
- * Wraps the migration in a transaction if the migration implements
- * TransactionAwareInterface.
+ * Class HasRunnerTrait
  *
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
-final class TransactionMiddleware implements Middleware
+trait HasRunnerTrait
 {
-    /**
-     * execute
-     *
-     * @param MigrateCommand $command
-     * @param callable $next
-     *
-     * @return void
-     */
-    public function execute($command, callable $next)
-    {
-        $migration = $command->getMigration();
-        if (!$migration instanceof TransactionAwareInterface) {
-            $next($command);
-        }
+    /** @var RunnerInterface */
+    private $runner;
 
-        $result = null;
-        try {
-            $migration->begin();
-            $next($command);
-            $migration->finish();
-        } catch (\Exception $e) {
-            $migration->abort($e);
-        }
+    /**
+     * @param RunnerInterface $runner
+     */
+    final protected function setRunner(RunnerInterface $runner)
+    {
+        $this->runner = $runner;
+    }
+
+    /**
+     * @return RunnerInterface
+     */
+    final public function getRunner()
+    {
+        return $this->runner;
     }
 }

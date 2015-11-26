@@ -24,9 +24,9 @@ interface MigrationBusInterface
     /**
      * Executes the given command and optionally returns a value
      *
-     * @param object $command
+     * @param MigrateCommand $command
      *
      * @return mixed
      */
-    public function handle($command);
+    public function handle(MigrateCommand $command);
 }

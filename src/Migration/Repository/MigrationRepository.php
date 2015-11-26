@@ -20,7 +20,7 @@
 namespace Baleen\Migrations\Migration\Repository;
 
 use Baleen\Migrations\Migration\Repository\Mapper\DefinitionInterface;
-use Baleen\Migrations\Migration\Repository\Mapper\RepositoryMapperInterface;
+use Baleen\Migrations\Migration\Repository\Mapper\MigrationMapperInterface;
 use Baleen\Migrations\Version\Collection\Collection;
 use Baleen\Migrations\Version\Comparator\ComparatorInterface;
 use Baleen\Migrations\Version\Comparator\MigrationComparator;
@@ -41,19 +41,19 @@ final class MigrationRepository implements MigrationRepositoryInterface
     /** @var VersionRepositoryInterface */
     private $storage;
 
-    /** @var RepositoryMapperInterface */
+    /** @var MigrationMapperInterface */
     private $mapper;
 
     /**
      * MigrationRepository constructor
      *
      * @param VersionRepositoryInterface $storage
-     * @param RepositoryMapperInterface $mapper
+     * @param MigrationMapperInterface $mapper
      * @param ComparatorInterface $comparator
      */
     public function __construct(
         VersionRepositoryInterface $storage,
-        RepositoryMapperInterface $mapper,
+        MigrationMapperInterface $mapper,
         ComparatorInterface $comparator = null
     ) {
         if (null === $comparator) {

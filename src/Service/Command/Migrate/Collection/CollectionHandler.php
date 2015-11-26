@@ -20,6 +20,9 @@
 namespace Baleen\Migrations\Service\Command\Migrate\Collection;
 
 use Baleen\Migrations\Service\Command\Migrate\AbstractFactoryHandler;
+use Baleen\Migrations\Service\Runner\Factory\CollectionRunnerFactoryInterface;
+use Baleen\Migrations\Service\Runner\Factory\CreatesCollectionRunnerTrait;
+use Baleen\Migrations\Version\Collection\Collection;
 use Baleen\Migrations\Version\VersionInterface;
 
 /**
@@ -27,8 +30,20 @@ use Baleen\Migrations\Version\VersionInterface;
  *
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
-final class CollectionHandler extends AbstractFactoryHandler
+final class CollectionHandler
 {
+    use CreatesCollectionRunnerTrait;
+
+    /**
+     * CollectionHandler constructor.
+     * @param CollectionRunnerFactoryInterface $factory
+     */
+    public function __construct(CollectionRunnerFactoryInterface $factory)
+    {
+        $this->setFactory($factory);
+    }
+
+
     /**
      * Handle an "up" migration against a collection
      *
@@ -50,9 +65,12 @@ final class CollectionHandler extends AbstractFactoryHandler
                     && $comparator->compare($v, $target) <= 0; // version must be before or be equal to target (not
                                                                // affected by direction because comparator is reversed)
         };
-        $collection = $collection->filter($filter)->sort($comparator);
+        $scheduled = $collection->filter($filter)->sort($comparator);
+        // we don't check if $scheduled is empty after filtering because the collection-before and -after events should
+        // still be triggered by the runner
 
-        $changed = $this->createRunnerFor($collection)->run($target, $options);
+        /** @var Collection $changed */
+        $changed = $this->createRunnerFor($scheduled)->run($target, $options);
 
         return $command->getVersionRepository()->updateAll($changed);
     }

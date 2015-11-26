@@ -14,45 +14,36 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the MIT license. For more information, see
- * <https://github.com/baleen/migrations>.
+ * <http://www.doctrine-project.org>.
  */
 
-namespace Baleen\Migrations\Migration\Command\Middleware;
+namespace Baleen\Migrations\Service\Command;
 
-use Baleen\Migrations\Migration\Capabilities\TransactionAwareInterface;
-use Baleen\Migrations\Migration\Command\MigrateCommand;
-use League\Tactician\Middleware;
+use Baleen\Migrations\Version\Repository\VersionRepositoryInterface;
 
 /**
- * Wraps the migration in a transaction if the migration implements
- * TransactionAwareInterface.
+ * Class HasVersionRepositoryTrait
  *
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
-final class TransactionMiddleware implements Middleware
+trait HasVersionRepositoryTrait
 {
-    /**
-     * execute
-     *
-     * @param MigrateCommand $command
-     * @param callable $next
-     *
-     * @return void
-     */
-    public function execute($command, callable $next)
-    {
-        $migration = $command->getMigration();
-        if (!$migration instanceof TransactionAwareInterface) {
-            $next($command);
-        }
+    /** @var VersionRepositoryInterface */
+    private $versionRepository;
 
-        $result = null;
-        try {
-            $migration->begin();
-            $next($command);
-            $migration->finish();
-        } catch (\Exception $e) {
-            $migration->abort($e);
-        }
+    /**
+     * @return VersionRepositoryInterface
+     */
+    final public function getVersionRepository()
+    {
+        return $this->versionRepository;
+    }
+
+    /**
+     * @param VersionRepositoryInterface $versionRepository
+     */
+    final protected function setVersionRepository(VersionRepositoryInterface $versionRepository)
+    {
+        $this->versionRepository = $versionRepository;
     }
 }

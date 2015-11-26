@@ -14,45 +14,24 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the MIT license. For more information, see
- * <https://github.com/baleen/migrations>.
+ * <http://www.doctrine-project.org>.
  */
 
-namespace Baleen\Migrations\Migration\Command\Middleware;
-
-use Baleen\Migrations\Migration\Capabilities\TransactionAwareInterface;
-use Baleen\Migrations\Migration\Command\MigrateCommand;
-use League\Tactician\Middleware;
+namespace Baleen\Migrations\Service\Command;
 
 /**
- * Wraps the migration in a transaction if the migration implements
- * TransactionAwareInterface.
+ * Interface DomainBusInterface
  *
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
-final class TransactionMiddleware implements Middleware
+interface DomainBusInterface
 {
     /**
-     * execute
+     * handle
      *
-     * @param MigrateCommand $command
-     * @param callable $next
+     * @param DomainCommandInterface $command
      *
-     * @return void
+     * @return mixed
      */
-    public function execute($command, callable $next)
-    {
-        $migration = $command->getMigration();
-        if (!$migration instanceof TransactionAwareInterface) {
-            $next($command);
-        }
-
-        $result = null;
-        try {
-            $migration->begin();
-            $next($command);
-            $migration->finish();
-        } catch (\Exception $e) {
-            $migration->abort($e);
-        }
-    }
+    public function handle(DomainCommandInterface $command);
 }

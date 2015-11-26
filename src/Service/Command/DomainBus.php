@@ -17,19 +17,38 @@
  * <http://www.doctrine-project.org>.
  */
 
-namespace Baleen\Migrations\Migration\Repository\Mapper;
+namespace Baleen\Migrations\Service\Command;
+
+use League\Tactician\CommandBus;
+use League\Tactician\Handler\CommandHandlerMiddleware;
+use League\Tactician\Handler\CommandNameExtractor\ClassNameExtractor;
+use League\Tactician\Handler\Locator\HandlerLocator;
+use League\Tactician\Handler\MethodNameInflector\HandleInflector;
+use League\Tactician\Plugins\LockingMiddleware;
 
 /**
- * Interface VersionMapperInterface
- *
+ * Class DomainBus
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
-interface RepositoryMapperInterface
+final class DomainBus extends CommandBus implements DomainBusInterface
 {
     /**
-     * Must return an array of DefinitionInterface objects
+     * create
      *
-     * @return DefinitionInterface[]
+     * @param HandlerLocator $locator
+     *
+     * @return DomainBus
      */
-    public function fetchAll();
+    public static function createWithLocator(HandlerLocator $locator)
+    {
+        $handlerMiddleware = new CommandHandlerMiddleware(
+            new ClassNameExtractor(),
+            $locator,
+            new HandleInflector()
+        );
+
+        $lockingMiddleware = new LockingMiddleware();
+
+        return new DomainBus([$lockingMiddleware, $handlerMiddleware]);
+    }
 }

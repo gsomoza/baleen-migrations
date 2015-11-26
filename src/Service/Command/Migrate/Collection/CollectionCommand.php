@@ -21,7 +21,12 @@ namespace Baleen\Migrations\Service\Command\Migrate\Collection;
 
 use Baleen\Migrations\Migration\Options;
 use Baleen\Migrations\Migration\OptionsInterface;
+use Baleen\Migrations\Service\Command\DomainCommandInterface;
+use Baleen\Migrations\Service\Command\HasCollectionTrait;
+use Baleen\Migrations\Service\Command\HasOptionsTrait;
+use Baleen\Migrations\Service\Command\HasVersionRepositoryTrait;
 use Baleen\Migrations\Service\Command\Migrate\AbstractMigrateCommand;
+use Baleen\Migrations\Service\Command\Migrate\HasTargetTrait;
 use Baleen\Migrations\Shared\Collection\CollectionInterface;
 use Baleen\Migrations\Version\Repository\VersionRepositoryInterface;
 use Baleen\Migrations\Version\VersionInterface;
@@ -30,10 +35,12 @@ use Baleen\Migrations\Version\VersionInterface;
  * Class CollectionCommand
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
-class CollectionCommand extends AbstractMigrateCommand
+final class CollectionCommand implements DomainCommandInterface
 {
-    /** @var CollectionInterface */
-    private $collection;
+    use HasCollectionTrait;
+    use HasTargetTrait;
+    use HasOptionsTrait;
+    use HasVersionRepositoryTrait;
 
     /**
      * CollectionCommand constructor.
@@ -49,16 +56,9 @@ class CollectionCommand extends AbstractMigrateCommand
         OptionsInterface $options,
         VersionRepositoryInterface $versionRepository
     ) {
-        $this->collection = $collection;
-        parent::__construct($target, $options, $versionRepository);
-    }
-
-    /**
-     * getCollection
-     *
-     * @return CollectionInterface
-     */
-    final public function getCollection() {
-        return $this->collection;
+        $this->setCollection($collection);
+        $this->setTarget($target);
+        $this->setOptions($options);
+        $this->setVersionRepository($versionRepository);
     }
 }
