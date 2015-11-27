@@ -19,6 +19,7 @@
 
 namespace Baleen\Migrations\Migration\Repository;
 
+use Baleen\Migrations\Migration\Command\MigrationBusInterface;
 use Baleen\Migrations\Version\Collection\Collection;
 
 /**

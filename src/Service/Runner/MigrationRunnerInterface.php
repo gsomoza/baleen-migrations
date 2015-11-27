@@ -22,11 +22,11 @@ namespace Baleen\Migrations\Service\Runner;
 use Baleen\Migrations\Shared\Event\Context\ContextInterface;
 
 /**
- * Interface ContextualRunnerInterface
+ * Interface MigrationRunnerInterface
  *
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
-interface ContextualRunnerInterface extends RunnerInterface
+interface MigrationRunnerInterface extends RunnerInterface
 {
     /**
      * Returns a new instance of this object with the same publisher but new context

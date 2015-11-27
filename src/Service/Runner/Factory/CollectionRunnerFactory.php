@@ -20,7 +20,7 @@
 namespace Baleen\Migrations\Service\Runner\Factory;
 
 use Baleen\Migrations\Service\Runner\CollectionRunner;
-use Baleen\Migrations\Service\Runner\ContextualRunnerInterface;
+use Baleen\Migrations\Service\Runner\MigrationRunnerInterface;
 use Baleen\Migrations\Service\Runner\RunnerInterface;
 use Baleen\Migrations\Shared\Collection\CollectionInterface;
 use Baleen\Migrations\Shared\Event\Publisher\HasInternalPublisherTrait;
@@ -34,15 +34,15 @@ final class CollectionRunnerFactory implements CollectionRunnerFactoryInterface
 {
     use HasInternalPublisherTrait;
 
-    /** @var ContextualRunnerInterface */
+    /** @var MigrationRunnerInterface */
     private $migrationRunner;
 
     /**
      * CollectionRunnerFactory constructor.
      * @param PublisherInterface $publisher
-     * @param ContextualRunnerInterface $migrationRunner
+     * @param MigrationRunnerInterface $migrationRunner
      */
-    public function __construct(PublisherInterface $publisher = null, ContextualRunnerInterface $migrationRunner = null)
+    public function __construct(PublisherInterface $publisher = null, MigrationRunnerInterface $migrationRunner = null)
     {
         $this->setPublisher($publisher);
         $this->migrationRunner = $migrationRunner;

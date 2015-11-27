@@ -20,7 +20,6 @@
 namespace Baleen\Migrations\Version\Repository;
 
 use Baleen\Migrations\Shared\Collection\CollectionInterface;
-use Baleen\Migrations\Version\Collection\Collection;
 use Baleen\Migrations\Version\Repository\Mapper\VersionMapperInterface;
 use Baleen\Migrations\Version\VersionId;
 use Baleen\Migrations\Version\VersionInterface;

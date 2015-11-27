@@ -40,31 +40,21 @@ use Baleen\Migrations\Version\VersionInterface;
  *
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
-final class MigrationRunner implements ContextualRunnerInterface
+final class MigrationRunner implements MigrationRunnerInterface
 {
     use HasInternalPublisherTrait;
     use HasContextTrait;
 
-    /** @var MigrationBusInterface */
-    private $migrationBus;
-
     /**
      * MigrationRunner constructor.
      *
-     * @param MigrationBusInterface $migrationBus
      * @param PublisherInterface $publisher
      * @param CollectionContextInterface $context
      */
     public function __construct(
-        MigrationBusInterface $migrationBus = null,
         PublisherInterface $publisher = null,
         CollectionContextInterface $context = null
     ) {
-        if (null === $migrationBus) {
-            $migrationBus = MigrationBus::createDefaultBus();
-        }
-        $this->migrationBus = $migrationBus;
-
         if (null === $context) {
             $context = CollectionContext::createWithProgress(1, 1);
         }
@@ -79,7 +69,7 @@ final class MigrationRunner implements ContextualRunnerInterface
      * @param VersionInterface $version
      * @param OptionsInterface $options
      *
-     * @return VersionInterface
+     * @return false|MigrateAfterEvent
      *
      * @throws RunnerException
      */
@@ -101,15 +91,13 @@ final class MigrationRunner implements ContextualRunnerInterface
         // Dispatch MIGRATE_BEFORE
         $this->getPublisher()->publish(new MigrateBeforeEvent($version, $options, $this->getContext()));
 
-        $this->doRun($version, $options);
-
-        // this is safe because it won't get executed if an exception is thrown during migration
-        $version->setMigrated($options->getDirection()->isUp());
+        $version->migrate($options); // state will be changed
 
         // Dispatch MIGRATE_AFTER
-        $this->getPublisher()->publish(new MigrateAfterEvent($version, $options, $this->getContext()));
+        $event = new MigrateAfterEvent($version, $options, $this->getContext());
+        $this->getPublisher()->publish($event);
 
-        return $version;
+        return $event;
     }
 
     /**
@@ -127,20 +115,9 @@ final class MigrationRunner implements ContextualRunnerInterface
     }
 
     /**
-     * @param VersionInterface $version
-     * @param OptionsInterface $options
-     * @return bool
-     */
-    protected function doRun(VersionInterface $version, OptionsInterface $options)
-    {
-        $command = $version->getMigrateCommand($options);
-        $this->migrationBus->handle($command);
-    }
-
-    /**
      * @inheritdoc
      */
     final public function withContext(ContextInterface $context) {
-        return new static($this->migrationBus, $this->getPublisher(), $context);
+        return new static($this->getPublisher(), $context);
     }
 }

@@ -45,8 +45,7 @@ final class FilenameResolver extends AbstractResolver
         $result = null;
         foreach ($collection as $version) {
             /** @var VersionInterface $version */
-            $class = new \ReflectionClass($version->getMigration());
-            $file = $class->getFileName();
+            $file = $version->getMigrationFileName();
             if (strpos($file, $alias) !== false) {
                 $result = $version;
                 break;

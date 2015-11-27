@@ -85,19 +85,4 @@ class VersionTest extends BaseTestCase
         $this->assertFalse($v2->isSameIdentityAs($v1));
         $this->assertFalse($v1->isSameIdentityAs($anotherEntity));
     }
-
-    /**
-     * testGetMigrateCommand
-     * @return void
-     */
-    public function testGetMigrateCommand()
-    {
-        /** @var OptionsInterface|m\Mock $options */
-        $options = m::mock(OptionsInterface::class);
-        $v = $this->buildVersion(1);
-        $result = $v->getMigrateCommand($options);
-        $this->assertInstanceOf(MigrateCommand::class, $result);
-        $this->assertSame($options, $result->getOptions());
-        $this->assertInstanceOf(MigrationInterface::class, $result->getMigration());
-    }
 }

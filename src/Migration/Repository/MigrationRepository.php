@@ -19,6 +19,8 @@
 
 namespace Baleen\Migrations\Migration\Repository;
 
+use Baleen\Migrations\Migration\Command\HasMigrationBusTrait;
+use Baleen\Migrations\Migration\Command\MigrationBusInterface;
 use Baleen\Migrations\Migration\Repository\Mapper\DefinitionInterface;
 use Baleen\Migrations\Migration\Repository\Mapper\MigrationMapperInterface;
 use Baleen\Migrations\Version\Collection\Collection;
@@ -35,6 +37,8 @@ use Baleen\Migrations\Version\VersionId;
  */
 final class MigrationRepository implements MigrationRepositoryInterface
 {
+    use HasMigrationBusTrait;
+
     /** @var ComparatorInterface */
     private $comparator = null;
 
@@ -50,17 +54,21 @@ final class MigrationRepository implements MigrationRepositoryInterface
      * @param VersionRepositoryInterface $storage
      * @param MigrationMapperInterface $mapper
      * @param ComparatorInterface $comparator
+     * @param MigrationBusInterface $migrationBus
      */
     public function __construct(
         VersionRepositoryInterface $storage,
         MigrationMapperInterface $mapper,
-        ComparatorInterface $comparator = null
+        ComparatorInterface $comparator = null,
+        MigrationBusInterface $migrationBus = null
     ) {
         if (null === $comparator) {
             // this is the default because we're hashing IDs by default
             $comparator = new MigrationComparator();
         }
         $this->comparator = $comparator;
+
+        $this->setMigrationBus($migrationBus);
 
         $this->storage = $storage;
         $this->mapper = $mapper;
@@ -82,7 +90,7 @@ final class MigrationRepository implements MigrationRepositoryInterface
             $migration = $definition->getMigration();
             $id = $definition->getId();
             $migrated = in_array($id->toString(), $stored);
-            $version = new Version($migration, $migrated, $id);
+            $version = new Version($migration, $migrated, $id, $this->getMigrationBus());
             $collection->add($version);
         }
 

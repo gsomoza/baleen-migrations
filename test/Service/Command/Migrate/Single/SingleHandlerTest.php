@@ -22,8 +22,12 @@ namespace BaleenTest\Migrations\Service\Command\Migrate\Single;
 use Baleen\Migrations\Migration\OptionsInterface;
 use Baleen\Migrations\Service\Command\Migrate\AbstractRunnerHandler;
 use Baleen\Migrations\Service\Command\Migrate\Single\SingleHandler;
+use Baleen\Migrations\Service\Runner\Event\Migration\MigrateAfterEvent;
+use Baleen\Migrations\Service\Runner\MigrationRunner;
+use Baleen\Migrations\Service\Runner\MigrationRunnerInterface;
 use Baleen\Migrations\Service\Runner\RunnerInterface;
 use Baleen\Migrations\Shared\Event\Context\ContextInterface;
+use Baleen\Migrations\Shared\Event\DomainEventInterface;
 use Baleen\Migrations\Version\Repository\VersionRepositoryInterface;
 use Baleen\Migrations\Version\VersionInterface;
 use BaleenTest\Migrations\Service\Command\Migrate\HandlerTestCase;
@@ -46,6 +50,11 @@ class SingleHandlerTest extends HandlerTestCase
         /** @var VersionInterface|m\Mock $version */
         $version = m::mock(VersionInterface::class);
 
+        /** @var DomainEventInterface|m\Mock $afterEvent */
+        $afterEvent = m::mock(DomainEventInterface::class, [
+            'getTarget' => $version,
+        ]);
+
         /** @var RunnerInterface|m\Mock $runner */
         $runner = $this->invokeMethod('getRunner', $handler);
         $runner->shouldReceive('run')
@@ -54,7 +63,7 @@ class SingleHandlerTest extends HandlerTestCase
                 m::type(OptionsInterface::class)
             )
             ->once()
-            ->andReturn($version);
+            ->andReturn($afterEvent);
         $runner->shouldReceive('setContext')
             ->with(m::type(ContextInterface::class))
             ->once();
@@ -77,7 +86,8 @@ class SingleHandlerTest extends HandlerTestCase
      */
     protected function createHandler(RunnerInterface $runner = null) {
         if (null === $runner) {
-            $runner = $this->getRunnerMock();
+            /** @var MigrationRunnerInterface|m\Mock $runner */
+            $runner = m::mock(MigrationRunnerInterface::class);
         }
         return new SingleHandler($runner);
     }

@@ -47,15 +47,6 @@ interface VersionInterface extends EntityInterface
     public function isMigrated();
 
     /**
-     * Indicate whether this version has been migrated or not.
-     *
-     * @param bool|null $migrated
-     *
-     * @return static
-     */
-    public function setMigrated($migrated);
-
-    /**
      * Returns the entity's ID as string
      *
      * @return string
@@ -63,18 +54,26 @@ interface VersionInterface extends EntityInterface
     public function __toString();
 
     /**
-     * Returns a MigrateCommand that can be used to migrate this version using the specified options.
+     * Executes a MigrateCommand through the migrationBus
      *
      * @param OptionsInterface $options
      *
-     * @return MigrateCommand
+     * @return void
      */
-    public function getMigrateCommand(OptionsInterface $options);
+    public function migrate(OptionsInterface $options);
 
     /**
-     * Returns the FQCN of the MigrationInterface object. Used for sorting with some comparators.
+     * Returns the FQCN of the Migration. Used for sorting.
      *
-     * @return MigrationInterface
+     * @return string
      */
-    public function getMigration();
+    public function getMigrationClassName();
+
+    /**
+     * The filename of the file in which the migration class has been defined. If the class is defined in a PHP
+     * extension, FALSE is returned.
+     *
+     * @return string|false
+     */
+    public function getMigrationFileName();
 }

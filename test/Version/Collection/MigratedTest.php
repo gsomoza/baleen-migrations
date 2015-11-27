@@ -48,10 +48,7 @@ class MigratedTest extends CollectionTestCase
      */
     public function testCanUpgradeFromCollection()
     {
-        $versions = $this->buildVersions(range(1, 5));
-        foreach ($versions as $version) {
-            $version->setMigrated(true);
-        }
+        $versions = $this->buildVersions(range(1, 5), true);
         $count = count($versions);
         $indexed = new Collection($versions);
         $upgraded = new Migrated($indexed);

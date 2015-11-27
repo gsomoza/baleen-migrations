@@ -19,11 +19,10 @@
 
 namespace Baleen\Migrations\Service\Command\Migrate\Single;
 
-use Baleen\Migrations\Service\Command\Migrate\AbstractRunnerHandler;
 use Baleen\Migrations\Service\Command\Migrate\Single;
 use Baleen\Migrations\Service\Runner\HasRunnerTrait;
 use Baleen\Migrations\Service\Runner\MigrationRunner;
-use Baleen\Migrations\Service\Runner\RunnerInterface;
+use Baleen\Migrations\Service\Runner\MigrationRunnerInterface;
 use Baleen\Migrations\Version\VersionInterface;
 
 /**
@@ -38,9 +37,9 @@ final class SingleHandler
     /**
      * SingleHandler constructor.
      *
-     * @param RunnerInterface $runner
+     * @param MigrationRunnerInterface $runner
      */
-    public function __construct(RunnerInterface $runner)
+    public function __construct(MigrationRunnerInterface $runner)
     {
         $this->setRunner($runner);
     }
@@ -57,10 +56,10 @@ final class SingleHandler
         /** @var MigrationRunner $runner */
         $runner = $this->getRunner();
         $runner->setContext($command->getContext());
-        $version = $runner->run(
+        $event = $runner->run(
             $command->getTarget(),
             $command->getOptions()
         );
-        return $command->getVersionRepository()->update($version);
+        return $command->getVersionRepository()->update($event->getTarget());
     }
 }

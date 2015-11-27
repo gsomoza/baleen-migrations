@@ -17,30 +17,34 @@
  * <http://www.doctrine-project.org>.
  */
 
-namespace Baleen\Migrations\Service\Runner;
-
-use Baleen\Migrations\Migration\OptionsInterface;
-use Baleen\Migrations\Service\Runner\Event\Migration\MigrateAfterEvent;
-use Baleen\Migrations\Shared\Collection\CollectionInterface;
-use Baleen\Migrations\Shared\Event\Context\ContextInterface;
-use Baleen\Migrations\Shared\Event\DomainEventInterface;
-use Baleen\Migrations\Version\VersionInterface;
+namespace Baleen\Migrations\Migration\Command;
 
 /**
- * Describes an object that can run a CollectionAbstract of Versions
+ * Class HasMigrationBusTrait
  *
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
-interface RunnerInterface
+trait HasMigrationBusTrait
 {
+    /** @var MigrationBusInterface */
+    private $bus;
+
     /**
-     * Runs a collection of versions towards the specified goal and using the specified options
-     *
-     * @param VersionInterface $target
-     * @param OptionsInterface $options
-     *
-     * @return DomainEventInterface An event with information on the changes to versions applied through the runner,
-     *                              which can be used by the client to update the repository if necessary.
+     * @return MigrationBusInterface
      */
-    public function run(VersionInterface $target, OptionsInterface $options);
+    final public function getMigrationBus()
+    {
+        return $this->bus;
+    }
+
+    /**
+     * @param null|MigrationBusInterface $bus If null, will create a default migration bus
+     */
+    final protected function setMigrationBus(MigrationBusInterface $bus = null)
+    {
+        if (null === $bus) {
+            $bus = MigrationBus::createDefaultBus();
+        }
+        $this->bus = $bus;
+    }
 }

@@ -92,8 +92,8 @@ final class NamespacesAwareComparator extends AbstractComparator
      */
     public function compare(VersionInterface $version1, VersionInterface $version2)
     {
-        $class1 = get_class($version1->getMigration());
-        $class2 = get_class($version2->getMigration());
+        $class1 = $version1->getMigrationClassName();
+        $class2 = $version2->getMigrationClassName();
 
         if ($class1 === $class2) {
             // exit early in this case

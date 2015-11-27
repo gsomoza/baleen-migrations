@@ -34,8 +34,8 @@ final class MigrationComparator extends AbstractComparator
     public function compare(VersionInterface $version1, VersionInterface $version2)
     {
         return strcmp(
-            get_class($version1->getMigration()),
-            get_class($version2->getMigration())
+            $version1->getMigrationClassName(),
+            $version2->getMigrationClassName()
         );
     }
 }
