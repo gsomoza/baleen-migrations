@@ -20,10 +20,10 @@
 namespace BaleenTest\Migrations\Service\Runner;
 
 use Baleen\Migrations\Exception\Service\Runner\RunnerException;
-use Baleen\Migrations\Migration\Command\MigrateCommand;
-use Baleen\Migrations\Migration\Command\MigrateHandler;
-use Baleen\Migrations\Migration\Command\MigrationBus;
-use Baleen\Migrations\Migration\Command\MigrationBusInterface;
+use Baleen\Migrations\Service\MigrationBus\MigrateCommand;
+use Baleen\Migrations\Service\MigrationBus\MigrateHandler;
+use Baleen\Migrations\Service\MigrationBus\MigrationBus;
+use Baleen\Migrations\Service\MigrationBus\MigrationBusInterface;
 use Baleen\Migrations\Migration\Options;
 use Baleen\Migrations\Migration\Options\Direction;
 use Baleen\Migrations\Migration\OptionsInterface;

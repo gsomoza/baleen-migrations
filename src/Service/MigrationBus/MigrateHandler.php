@@ -17,25 +17,31 @@
  * <https://github.com/baleen/migrations>.
  */
 
-namespace Baleen\Migrations\Migration\Repository;
+namespace Baleen\Migrations\Service\MigrationBus;
 
-use Baleen\Migrations\Service\MigrationBus\MigrationBusInterface;
-use Baleen\Migrations\Version\Collection\Collection;
+use Baleen\Migrations\Service\MigrationBus\Middleware\AbstractMiddleware;
+use League\Tactician\Middleware;
 
 /**
- * In charge of loading Migration files and instantiating them.
+ * Class MigrateHandler.
  *
- * @author Gabriel Somoza <gabriel@strategery.io>
+ * @author Gabriel Somoza <gabriel@stragery.io>
  */
-interface MigrationRepositoryInterface
+final class MigrateHandler implements Middleware
 {
     /**
-     * Must fetch all versions available to the repository, load them with their migrations and state, and return them
-     * as a collection.
+     * execute
      *
-     * @return Collection
+     * @param MigrateCommand $command
+     * @param callable $next
      *
-     * @throws \Baleen\Migrations\Exception\Migration\Repository\RepositoryException
+     * @return void
      */
-    public function fetchAll();
+    public function execute($command, callable $next)
+    {
+        $migration = $command->getMigration();
+        $direction = $command->getOptions()->getDirection()->isUp() ? 'up' : 'down';
+
+        $migration->$direction();
+    }
 }

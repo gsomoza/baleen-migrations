@@ -14,28 +14,19 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the MIT license. For more information, see
- * <https://github.com/baleen/migrations>.
+ * <http://www.doctrine-project.org>.
  */
 
-namespace Baleen\Migrations\Migration\Repository;
+namespace Baleen\Migrations\Service\MigrationBus;
 
-use Baleen\Migrations\Service\MigrationBus\MigrationBusInterface;
-use Baleen\Migrations\Version\Collection\Collection;
-
-/**
- * In charge of loading Migration files and instantiating them.
- *
- * @author Gabriel Somoza <gabriel@strategery.io>
- */
-interface MigrationRepositoryInterface
+interface MigrationBusInterface
 {
     /**
-     * Must fetch all versions available to the repository, load them with their migrations and state, and return them
-     * as a collection.
+     * Executes the given command and optionally returns a value
      *
-     * @return Collection
+     * @param MigrateCommand $command
      *
-     * @throws \Baleen\Migrations\Exception\Migration\Repository\RepositoryException
+     * @return mixed
      */
-    public function fetchAll();
+    public function handle($command);
 }

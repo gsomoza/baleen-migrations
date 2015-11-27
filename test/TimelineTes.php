@@ -21,7 +21,7 @@ namespace BaleenTest\Migrations;
 
 use Baleen\Migrations\Migration\Options;
 use Baleen\Migrations\Migration\Options\Direction;
-use Baleen\Migrations\Service\Command\Migrate\Collection\CollectionCommand;
+use Baleen\Migrations\Service\DomainBus\Migrate\Collection\CollectionCommand;
 use Baleen\Migrations\Timeline;
 use Baleen\Migrations\Timeline\TimelineInterface;
 use Baleen\Migrations\Version\Collection\Collection;

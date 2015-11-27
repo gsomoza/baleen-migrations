@@ -19,8 +19,8 @@
 
 namespace Baleen\Migrations\Migration\Repository;
 
-use Baleen\Migrations\Migration\Command\HasMigrationBusTrait;
-use Baleen\Migrations\Migration\Command\MigrationBusInterface;
+use Baleen\Migrations\Service\MigrationBus\HasMigrationBusTrait;
+use Baleen\Migrations\Service\MigrationBus\MigrationBusInterface;
 use Baleen\Migrations\Migration\Repository\Mapper\DefinitionInterface;
 use Baleen\Migrations\Migration\Repository\Mapper\MigrationMapperInterface;
 use Baleen\Migrations\Version\Collection\Collection;

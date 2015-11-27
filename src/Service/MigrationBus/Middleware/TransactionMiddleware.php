@@ -17,25 +17,43 @@
  * <https://github.com/baleen/migrations>.
  */
 
-namespace Baleen\Migrations\Migration\Repository;
+namespace Baleen\Migrations\Service\MigrationBus\Middleware;
 
-use Baleen\Migrations\Service\MigrationBus\MigrationBusInterface;
-use Baleen\Migrations\Version\Collection\Collection;
+use Baleen\Migrations\Migration\Capabilities\TransactionAwareInterface;
+use Baleen\Migrations\Service\MigrationBus\MigrateCommand;
+use League\Tactician\Middleware;
 
 /**
- * In charge of loading Migration files and instantiating them.
+ * Wraps the migration in a transaction if the migration implements
+ * TransactionAwareInterface.
  *
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
-interface MigrationRepositoryInterface
+final class TransactionMiddleware implements Middleware
 {
     /**
-     * Must fetch all versions available to the repository, load them with their migrations and state, and return them
-     * as a collection.
+     * execute
      *
-     * @return Collection
+     * @param MigrateCommand $command
+     * @param callable $next
      *
-     * @throws \Baleen\Migrations\Exception\Migration\Repository\RepositoryException
+     * @return void
      */
-    public function fetchAll();
+    public function execute($command, callable $next)
+    {
+        $migration = $command->getMigration();
+        if (!$migration instanceof TransactionAwareInterface) {
+            $next($command);
+            return;
+        }
+
+        $result = null;
+        try {
+            $migration->begin();
+            $next($command);
+            $migration->finish();
+        } catch (\Exception $e) {
+            $migration->abort($e);
+        }
+    }
 }
