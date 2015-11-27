@@ -19,7 +19,9 @@
 
 namespace Baleen\Migrations\Version;
 
+use Baleen\Migrations\Migration\Command\HasMigrationBusTrait;
 use Baleen\Migrations\Migration\Command\MigrateCommand;
+use Baleen\Migrations\Migration\Command\MigrationBusInterface;
 use Baleen\Migrations\Migration\MigrationInterface;
 use Baleen\Migrations\Migration\OptionsInterface;
 use Baleen\Migrations\Shared\EntityInterface;
@@ -31,6 +33,8 @@ use Baleen\Migrations\Shared\EntityInterface;
  */
 final class Version implements VersionInterface
 {
+    use HasMigrationBusTrait;
+
     /** @var VersionId */
     private $id;
 
@@ -44,11 +48,14 @@ final class Version implements VersionInterface
      * @param MigrationInterface $migration
      * @param bool $migrated
      * @param null|VersionId $id Optionally force the ID to be something specific.
-     *
-     * @throws \Baleen\Migrations\Exception\InvalidArgumentException
+     * @param null|MigrationBusInterface $bus
      */
-    public function __construct(MigrationInterface $migration, $migrated, VersionId $id = null)
-    {
+    public function __construct(
+        MigrationInterface $migration,
+        $migrated,
+        VersionId $id = null,
+        MigrationBusInterface $bus = null
+    ) {
         if (null === $id) {
             $id = VersionId::fromMigration($migration);
         }
@@ -56,6 +63,7 @@ final class Version implements VersionInterface
 
         $this->migration = $migration;
         $this->migrated = (bool) $migrated;
+        $this->setMigrationBus($bus);
     }
 
     /**
@@ -95,26 +103,37 @@ final class Version implements VersionInterface
     }
 
     /**
-     * @inheritDoc
+     * @inheritdoc
      */
-    public function setMigrated($migrated)
+    public function getMigrationClassName()
     {
-        $this->migrated = $migrated;
+        return get_class($this->getMigration());
     }
 
     /**
      * @inheritdoc
      */
-    public function getMigrateCommand(OptionsInterface $options)
+    public function getMigrationFileName()
     {
-        return new MigrateCommand($this->getMigration(), $options);
+        $class = new \ReflectionClass($this->getMigration());
+        $file = $class->getFileName();
+        return $file;
     }
 
     /**
      * @inheritdoc
      */
-    public function getMigration()
+    public function migrate(OptionsInterface $options)
     {
+        $command = new MigrateCommand($this->getMigration(), $options);
+        $this->getMigrationBus()->handle($command);
+        $this->migrated = $options->getDirection()->isUp();
+    }
+
+    /**
+     * @return MigrationInterface
+     */
+    protected function getMigration() {
         return $this->migration;
     }
 }

@@ -135,10 +135,7 @@ class CollectionTest extends CollectionTestCase
     public function testMerge()
     {
         $instance1 = new Collection($this->buildVersions(range(1,5)));
-        $migrated = $this->buildVersions(['v2', 'v5', 'v6', 'v7']);
-        foreach ($migrated as $v) {
-            $v->setMigrated(true);
-        }
+        $migrated = $this->buildVersions(['v2', 'v5', 'v6', 'v7'], true);
         $instance2 = new Collection($migrated);
 
         $instance1->merge($instance2);
@@ -331,11 +328,11 @@ class CollectionTest extends CollectionTestCase
     public function testExistsSatisfied()
     {
         $versions = $this->buildVersions(range(1,10));
-        $versions[8]->setMigrated(true);
+        $versions[8] = $this->buildVersion(9, true);
 
         foreach ($versions as $index => $v) {
             /** @var MigrationInterface|m\Mock $migration */
-            $migration = $v->getMigration();
+            $migration = $this->invokeMethod('getMigration', $v);
             if ($index <= 8) {
                 $migration->shouldReceive('up')->once();
             } else {
@@ -346,7 +343,7 @@ class CollectionTest extends CollectionTestCase
         $collection = new Collection($versions);
         $result = $collection->exists(function ($index, VersionInterface $v) {
             /** @var MigrationInterface|m\Mock $migration */
-            $migration = $v->getMigration();
+            $migration = $this->invokeMethod('getMigration', $v);
             $migration->up(); // this won't affect the next statement
             return $v->isMigrated();
         });
@@ -363,13 +360,15 @@ class CollectionTest extends CollectionTestCase
 
         foreach ($versions as $v) {
             /** @var MigrationInterface|m\Mock $migration */
-            $migration = $v->getMigration();
+            $migration = $this->invokeMethod('getMigration', $v);
             $migration->shouldReceive('up')->once();
         }
 
         $collection = new Collection($versions);
         $result = $collection->exists(function ($index, VersionInterface $v) {
-            $v->getMigration()->up();
+            /** @var MigrationInterface $migration */
+            $migration = $this->invokeMethod('getMigration', $v);
+            $migration->up();
             return $v->isMigrated();
         });
         $this->assertFalse($result);
@@ -385,13 +384,15 @@ class CollectionTest extends CollectionTestCase
 
         foreach ($versions as $v) {
             /** @var MigrationInterface|m\Mock $migration */
-            $migration = $v->getMigration();
+            $migration = $this->invokeMethod('getMigration', $v);
             $migration->shouldReceive('up')->once();
         }
 
         $collection = new Collection($versions);
         $result = $collection->forAll(function ($index, VersionInterface $v) {
-            $v->getMigration()->up();
+            /** @var MigrationInterface|m\Mock $migration */
+            $migration = $this->invokeMethod('getMigration', $v);
+            $migration->up();
             return !$v->isMigrated();
         });
         $this->assertTrue($result);
@@ -404,12 +405,11 @@ class CollectionTest extends CollectionTestCase
     public function testForAllNotSatisfied()
     {
         $versions = $this->buildVersions(range(1,5));
+        $versions[3] = $this->buildVersion(4, true);
 
-        $versions[3]->setMigrated(true);
-
-        foreach ($versions as $index => $version) {
+        foreach ($versions as $index => $v) {
             /** @var MigrationInterface|m\Mock $migration */
-            $migration = $version->getMigration();
+            $migration = $this->invokeMethod('getMigration', $v);
             if ($index > 3) {
                 $migration->shouldNotReceive('up');
             } else {
@@ -419,7 +419,9 @@ class CollectionTest extends CollectionTestCase
 
         $collection = new Collection($versions);
         $result = $collection->forAll(function ($index, VersionInterface $v) {
-            $v->getMigration()->up();
+            /** @var MigrationInterface|m\Mock $migration */
+            $migration = $this->invokeMethod('getMigration', $v);
+            $migration->up();
             return !$v->isMigrated();
         });
         $this->assertFalse($result);

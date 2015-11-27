@@ -20,6 +20,8 @@
 namespace Baleen\Migrations\Service\Command\Migrate\Collection;
 
 use Baleen\Migrations\Service\Command\Migrate\AbstractFactoryHandler;
+use Baleen\Migrations\Service\Runner\Event\Collection\CollectionAfterEvent;
+use Baleen\Migrations\Service\Runner\Event\Migration\MigrateAfterEvent;
 use Baleen\Migrations\Service\Runner\Factory\CollectionRunnerFactoryInterface;
 use Baleen\Migrations\Service\Runner\Factory\CreatesCollectionRunnerTrait;
 use Baleen\Migrations\Version\Collection\Collection;
@@ -72,9 +74,8 @@ final class CollectionHandler
         // we don't check if $scheduled is empty after filtering because the collection-before and -after events should
         // still be triggered by the runner
 
-        /** @var Collection $changed */
-        $changed = $this->createRunnerFor($scheduled)->run($target, $options);
+        $event = $this->createRunnerFor($scheduled)->run($target, $options);
 
-        return $command->getVersionRepository()->updateAll($changed);
+        return $command->getVersionRepository()->updateAll($event->getCollection());
     }
 }

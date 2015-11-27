@@ -63,12 +63,12 @@ class HeadResolverTest extends BaseTestCase
         $nineVersionsNoHead = $this->buildVersions(range(1,9));
         $nineVersionsWithHead = $this->buildVersions(range(1,9));
         /** @var VersionInterface[] $nineVersionsWithHead */
-        $nineVersionsWithHead[8]->setMigrated(true);
+        $nineVersionsWithHead[8] = $this->buildVersion(9, true);
 
         /** @var VersionInterface[] $nineVersionsTwoHeads */
         $nineVersionsTwoHeads = $this->buildVersions(range(1,9));
-        $nineVersionsTwoHeads[0]->setMigrated(true);
-        $nineVersionsTwoHeads[8]->setMigrated(true);
+        $nineVersionsTwoHeads[0] = $this->buildVersion(1, true);
+        $nineVersionsTwoHeads[8] = $this->buildVersion(9, true);
 
         return [
             [[], null],

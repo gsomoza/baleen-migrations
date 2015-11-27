@@ -22,6 +22,7 @@ namespace BaleenTest\Migrations\Service\Command\Migrate\Collection;
 use Baleen\Migrations\Migration\Options\Direction;
 use Baleen\Migrations\Migration\OptionsInterface;
 use Baleen\Migrations\Service\Command\Migrate\Collection\CollectionHandler;
+use Baleen\Migrations\Service\Runner\Event\Collection\CollectionAfterEvent;
 use Baleen\Migrations\Service\Runner\Factory\CollectionRunnerFactoryInterface;
 use Baleen\Migrations\Service\Runner\RunnerInterface;
 use Baleen\Migrations\Shared\Collection\CollectionInterface;
@@ -92,6 +93,9 @@ class CollectionHandlerTest extends HandlerTestCase
         $collection->shouldReceive('sort')
             ->once()->with($comparator)->andReturn($filteredCollection);
 
+        /** @var VersionInterface|m\Mock $target */
+        $target = m::mock(VersionInterface::class);
+
         /** @var RunnerInterface|m\Mock $runner */
         $runner = $this->invokeMethod('createRunnerFor', $handler, [$collection]);
         $runner->shouldReceive('run')
@@ -100,7 +104,7 @@ class CollectionHandlerTest extends HandlerTestCase
                 m::type(OptionsInterface::class)
             )
             ->once()
-            ->andReturn($filteredCollection);
+            ->andReturn(new CollectionAfterEvent($target, $options, $filteredCollection));
 
         /** @var VersionRepositoryInterface|m\Mock $storage */
         $storage = $command->getVersionRepository();

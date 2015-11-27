@@ -26,5 +26,5 @@ namespace Baleen\Migrations\Service\Runner\Event\Migration;
  */
 final class MigrateBeforeEvent extends MigrationEvent
 {
-    const EVENT_NAME = 'baleen.single.before';
+    const EVENT_NAME = 'baleen.migrate.before';
 }

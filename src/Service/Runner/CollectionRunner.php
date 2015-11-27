@@ -40,22 +40,22 @@ final class CollectionRunner implements RunnerInterface
     use HasCollectionTrait;
     use HasInternalPublisherTrait;
 
-    /** @var ContextualRunnerInterface */
+    /** @var MigrationRunnerInterface */
     private $migrationRunner;
 
     /**
      * CollectionRunner constructor.
      * @param CollectionInterface $collection
-     * @param ContextualRunnerInterface $migrationRunner Will be use to run each individual migration
+     * @param MigrationRunnerInterface $migrationRunner Will be use to run each individual migration
      * @param PublisherInterface $publisher
      */
     public function __construct(
         CollectionInterface $collection,
-        ContextualRunnerInterface $migrationRunner = null,
+        MigrationRunnerInterface $migrationRunner = null,
         PublisherInterface $publisher = null
     ) {
         if (null === $migrationRunner) {
-            $migrationRunner = new MigrationRunner(null, $publisher);
+            $migrationRunner = new MigrationRunner($publisher);
         }
         $this->migrationRunner = $migrationRunner;
 
@@ -69,7 +69,7 @@ final class CollectionRunner implements RunnerInterface
      * @param VersionInterface $target
      * @param OptionsInterface $options
      *
-     * @return CollectionInterface
+     * @return CollectionAfterEvent
      */
     public function run(VersionInterface $target, OptionsInterface $options)
     {
@@ -97,8 +97,9 @@ final class CollectionRunner implements RunnerInterface
             $current += 1;
         }
 
-        $this->getPublisher()->publish(new CollectionAfterEvent($target, $options, $collection));
+        $event = new CollectionAfterEvent($target, $options, $modified);
+        $this->getPublisher()->publish($event);
 
-        return $modified;
+        return $event;
     }
 }

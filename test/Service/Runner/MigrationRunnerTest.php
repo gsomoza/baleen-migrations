@@ -31,6 +31,7 @@ use Baleen\Migrations\Service\Runner\Event\Migration\MigrateAfterEvent;
 use Baleen\Migrations\Service\Runner\Event\Migration\MigrateBeforeEvent;
 use Baleen\Migrations\Service\Runner\MigrationRunner;
 use Baleen\Migrations\Service\Runner\RunnerInterface;
+use Baleen\Migrations\Shared\Event\Context\CollectionContext;
 use Baleen\Migrations\Shared\Event\Context\CollectionContextInterface;
 use Baleen\Migrations\Shared\Event\PublisherInterface;
 use Baleen\Migrations\Version\Collection\Collection;
@@ -58,20 +59,18 @@ class MigrationRunnerTest extends RunnerTestCase
      */
     public function testConstructorPublisherIsOptional()
     {
-        /** @var MigrationBusInterface|m\Mock $bus */
-        $bus = m::mock(MigrationBusInterface::class);
-        new MigrationRunner($bus); // should not blow up when publisher is not specified
+        new MigrationRunner(); // should not blow up when publisher is not specified
     }
 
     /**
      * testConstructorWithNoPublisher
      * @return void
      */
-    public function testConstructorBusIsOptional()
+    public function testConstructorContextIsOptional()
     {
-        /** @var PublisherInterface|m\Mock $publisher */
-        $publisher = m::mock(PublisherInterface::class);
-        new MigrationRunner(null, $publisher); // should not blow up when bus is not specified
+        /** @var CollectionContextInterface|m\Mock $context */
+        $context = m::mock(CollectionContextInterface::class);
+        new MigrationRunner(null, $context); // should not blow up when publisher is not specified
     }
 
     /**
@@ -87,21 +86,16 @@ class MigrationRunnerTest extends RunnerTestCase
     {
         $collection = new Collection($this->getMixedVersionsFixture());
 
-        /** @var MigrationBusInterface|m\Mock $bus */
-        $bus = m::mock(MigrationBusInterface::class);
-
         /** @var PublisherInterface|m\Mock $publisher */
         $publisher = m::mock(PublisherInterface::class);
         $publisher->shouldReceive('publish')->zeroOrMoreTimes();
 
         /** @var CollectionContextInterface|m\Mock $context */
         $context = m::mock(CollectionContextInterface::class);
-        $runner = new MigrationRunner($bus, $publisher, $context);
+        $runner = new MigrationRunner($publisher, $context);
 
         /** @var VersionInterface $version */
         $version = $collection->find($id);
-
-        $bus->shouldReceive('handle')->zeroOrMoreTimes()->with(MigrateCommand::class)->andReturn($version);
 
         if ($expectation == 'exception') {
             $this->setExpectedException(RunnerException::class);
@@ -116,9 +110,9 @@ class MigrationRunnerTest extends RunnerTestCase
             $publisher->shouldHaveReceived('publish')->with(m::type(MigrateAfterEvent::class));
             $publisher->shouldHaveReceived('publish')->with(m::type(MigrateBeforeEvent::class));
 
-            $bus->shouldHaveReceived('handle')->once();
             $this->assertTrue($version->isMigrated() == $options->getDirection()->isUp());
-            $this->assertSame($version, $result);
+            $this->assertInstanceOf(MigrateAfterEvent::class, $result);
+            $this->assertSame($version, $result->getTarget());
         }
     }
 
@@ -140,18 +134,14 @@ class MigrationRunnerTest extends RunnerTestCase
     /**
      * createMigrationRunner
      * @param PublisherInterface|null $publisher
-     * @param MigrationBus|null $migrationBus
      * @return MigrationRunner
      */
-    private function createMigrationRunner(PublisherInterface $publisher = null, MigrationBus $migrationBus = null)
+    private function createMigrationRunner(PublisherInterface $publisher = null)
     {
         if (null === $publisher) {
             /** @var PublisherInterface|m\Mock $publisher */
             $publisher = m::mock(PublisherInterface::class);
         }
-        if (null === $migrationBus) {
-            $migrationBus = new MigrationBus([new MigrateHandler()]);
-        }
-        return new MigrationRunner($migrationBus, $publisher);
+        return new MigrationRunner($publisher);
     }
 }
