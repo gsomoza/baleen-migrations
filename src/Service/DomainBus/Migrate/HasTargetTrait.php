@@ -14,28 +14,36 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the MIT license. For more information, see
- * <https://github.com/baleen/migrations>.
+ * <http://www.doctrine-project.org>.
  */
 
-namespace Baleen\Migrations\Migration\Repository;
+namespace Baleen\Migrations\Service\DomainBus\Migrate;
 
-use Baleen\Migrations\Service\MigrationBus\MigrationBusInterface;
-use Baleen\Migrations\Version\Collection\Collection;
+use Baleen\Migrations\Version\VersionInterface;
 
 /**
- * In charge of loading Migration files and instantiating them.
+ * Class HasTargetTrait
  *
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
-interface MigrationRepositoryInterface
+trait HasTargetTrait
 {
+    /** @var VersionInterface */
+    private $target;
+
     /**
-     * Must fetch all versions available to the repository, load them with their migrations and state, and return them
-     * as a collection.
-     *
-     * @return Collection
-     *
-     * @throws \Baleen\Migrations\Exception\Migration\Repository\RepositoryException
+     * @return VersionInterface
      */
-    public function fetchAll();
+    final public function getTarget()
+    {
+        return $this->target;
+    }
+
+    /**
+     * @param VersionInterface $target
+     */
+    final protected function setTarget(VersionInterface $target)
+    {
+        $this->target = $target;
+    }
 }

@@ -19,7 +19,7 @@
 
 namespace Baleen\Migrations\Version;
 
-use Baleen\Migrations\Migration\Command\MigrateCommand;
+use Baleen\Migrations\Service\MigrationBus\MigrateCommand;
 use Baleen\Migrations\Migration\MigrationInterface;
 use Baleen\Migrations\Migration\OptionsInterface;
 use Baleen\Migrations\Shared\EntityInterface;

@@ -17,25 +17,35 @@
  * <https://github.com/baleen/migrations>.
  */
 
-namespace Baleen\Migrations\Migration\Repository;
+namespace Baleen\Migrations\Service\MigrationBus\Middleware;
 
-use Baleen\Migrations\Service\MigrationBus\MigrationBusInterface;
-use Baleen\Migrations\Version\Collection\Collection;
+use Baleen\Migrations\Migration\Capabilities\OptionsAwareInterface;
+use Baleen\Migrations\Service\MigrationBus\MigrateCommand;
+use League\Tactician\Middleware;
 
 /**
- * In charge of loading Migration files and instantiating them.
+ * Checks if a migration is an instance of OptionsAwareInterface and if so sends it
+ * the options available in the command.
  *
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
-interface MigrationRepositoryInterface
+final class SetOptionsMiddleware implements Middleware
 {
     /**
-     * Must fetch all versions available to the repository, load them with their migrations and state, and return them
-     * as a collection.
+     * execute
      *
-     * @return Collection
+     * @param MigrateCommand $command
+     * @param callable $next
      *
-     * @throws \Baleen\Migrations\Exception\Migration\Repository\RepositoryException
+     * @return mixed
      */
-    public function fetchAll();
+    public function execute($command, callable $next)
+    {
+        $migration = $command->getMigration();
+        if ($migration instanceof OptionsAwareInterface) {
+            $migration->setOptions($command->getOptions());
+        }
+
+        $next($command);
+    }
 }

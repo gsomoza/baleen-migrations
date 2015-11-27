@@ -14,28 +14,41 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the MIT license. For more information, see
- * <https://github.com/baleen/migrations>.
+ * <http://www.doctrine-project.org>.
  */
 
-namespace Baleen\Migrations\Migration\Repository;
+namespace Baleen\Migrations\Service\DomainBus;
 
-use Baleen\Migrations\Service\MigrationBus\MigrationBusInterface;
-use Baleen\Migrations\Version\Collection\Collection;
+use League\Tactician\CommandBus;
+use League\Tactician\Handler\CommandHandlerMiddleware;
+use League\Tactician\Handler\CommandNameExtractor\ClassNameExtractor;
+use League\Tactician\Handler\Locator\HandlerLocator;
+use League\Tactician\Handler\MethodNameInflector\HandleInflector;
+use League\Tactician\Plugins\LockingMiddleware;
 
 /**
- * In charge of loading Migration files and instantiating them.
- *
+ * Class DomainBus
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
-interface MigrationRepositoryInterface
+final class DomainBus extends CommandBus implements DomainBusInterface
 {
     /**
-     * Must fetch all versions available to the repository, load them with their migrations and state, and return them
-     * as a collection.
+     * create
      *
-     * @return Collection
+     * @param HandlerLocator $locator
      *
-     * @throws \Baleen\Migrations\Exception\Migration\Repository\RepositoryException
+     * @return DomainBus
      */
-    public function fetchAll();
+    public static function createWithLocator(HandlerLocator $locator)
+    {
+        $handlerMiddleware = new CommandHandlerMiddleware(
+            new ClassNameExtractor(),
+            $locator,
+            new HandleInflector()
+        );
+
+        $lockingMiddleware = new LockingMiddleware();
+
+        return new DomainBus([$lockingMiddleware, $handlerMiddleware]);
+    }
 }

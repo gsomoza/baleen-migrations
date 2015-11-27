@@ -14,28 +14,37 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the MIT license. For more information, see
- * <https://github.com/baleen/migrations>.
+ * <http://www.doctrine-project.org>.
  */
 
-namespace Baleen\Migrations\Migration\Repository;
-
-use Baleen\Migrations\Service\MigrationBus\MigrationBusInterface;
-use Baleen\Migrations\Version\Collection\Collection;
+namespace Baleen\Migrations\Service\MigrationBus;
 
 /**
- * In charge of loading Migration files and instantiating them.
+ * Class HasMigrationBusTrait
  *
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
-interface MigrationRepositoryInterface
+trait HasMigrationBusTrait
 {
+    /** @var MigrationBusInterface */
+    private $bus;
+
     /**
-     * Must fetch all versions available to the repository, load them with their migrations and state, and return them
-     * as a collection.
-     *
-     * @return Collection
-     *
-     * @throws \Baleen\Migrations\Exception\Migration\Repository\RepositoryException
+     * @return MigrationBusInterface
      */
-    public function fetchAll();
+    final public function getMigrationBus()
+    {
+        return $this->bus;
+    }
+
+    /**
+     * @param null|MigrationBusInterface $bus If null, will create a default migration bus
+     */
+    final protected function setMigrationBus(MigrationBusInterface $bus = null)
+    {
+        if (null === $bus) {
+            $bus = MigrationBus::createDefaultBus();
+        }
+        $this->bus = $bus;
+    }
 }

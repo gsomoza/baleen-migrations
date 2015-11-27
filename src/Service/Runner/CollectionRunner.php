@@ -20,7 +20,7 @@
 namespace Baleen\Migrations\Service\Runner;
 
 use Baleen\Migrations\Migration\OptionsInterface;
-use Baleen\Migrations\Service\Command\HasCollectionTrait;
+use Baleen\Migrations\Service\DomainBus\HasCollectionTrait;
 use Baleen\Migrations\Service\Runner\Event\Collection\CollectionAfterEvent;
 use Baleen\Migrations\Service\Runner\Event\Collection\CollectionBeforeEvent;
 use Baleen\Migrations\Shared\Collection\CollectionInterface;

@@ -20,8 +20,8 @@
 namespace Baleen\Migrations\Service\Runner;
 
 use Baleen\Migrations\Exception\Service\Runner\RunnerException;
-use Baleen\Migrations\Migration\Command\MigrationBus;
-use Baleen\Migrations\Migration\Command\MigrationBusInterface;
+use Baleen\Migrations\Service\MigrationBus\MigrationBus;
+use Baleen\Migrations\Service\MigrationBus\MigrationBusInterface;
 use Baleen\Migrations\Migration\OptionsInterface;
 use Baleen\Migrations\Service\Runner\Event\Migration\MigrateAfterEvent;
 use Baleen\Migrations\Service\Runner\Event\Migration\MigrateBeforeEvent;
