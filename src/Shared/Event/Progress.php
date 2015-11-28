@@ -70,7 +70,7 @@ final class Progress
     /**
      * Update the current progress
      *
-     * @param $newProgress
+     * @param integer $newProgress
      *
      * @return void
      *

@@ -77,7 +77,7 @@ final class Direction implements ValueObjectInterface
      * @return string
      */
     public function getDirection() {
-       return $this->direction;
+        return $this->direction;
     }
 
     /**

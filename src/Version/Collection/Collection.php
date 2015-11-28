@@ -21,14 +21,12 @@ namespace Baleen\Migrations\Version\Collection;
 
 use Baleen\Migrations\Exception\InvalidArgumentException;
 use Baleen\Migrations\Exception\Version\Collection\CollectionException;
-use Baleen\Migrations\Migration\Options\Direction;
 use Baleen\Migrations\Shared\Collection\AbstractCollection;
 use Baleen\Migrations\Version\Collection\Resolver\DefaultResolverStackFactory;
 use Baleen\Migrations\Version\Collection\Resolver\ResolverInterface;
 use Baleen\Migrations\Version\Comparator\ComparatorInterface;
 use Baleen\Migrations\Version\Comparator\MigrationComparator;
 use Baleen\Migrations\Version\VersionInterface;
-use Zend\Stdlib\ArrayUtils;
 
 /**
  * Class CollectionAbstract.
@@ -141,7 +139,7 @@ class Collection extends AbstractCollection implements ResolvableCollectionInter
     /**
      * Add a version to the collection
      *
-     * @param mixed $version
+     * @param VersionInterface $version
      *
      * @return bool
      *

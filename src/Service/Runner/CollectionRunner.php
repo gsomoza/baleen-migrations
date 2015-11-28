@@ -25,7 +25,6 @@ use Baleen\Migrations\Service\Runner\Event\Collection\CollectionAfterEvent;
 use Baleen\Migrations\Service\Runner\Event\Collection\CollectionBeforeEvent;
 use Baleen\Migrations\Shared\Collection\CollectionInterface;
 use Baleen\Migrations\Shared\Event\Context\CollectionContext;
-use Baleen\Migrations\Shared\Event\MutePublisher;
 use Baleen\Migrations\Shared\Event\Publisher\HasInternalPublisherTrait;
 use Baleen\Migrations\Shared\Event\PublisherInterface;
 use Baleen\Migrations\Version\Collection\Collection;

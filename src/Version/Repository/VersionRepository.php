@@ -81,12 +81,12 @@ final class VersionRepository implements VersionRepositoryInterface
             return true; // nothing to do - exit early
         }
 
-        $mapToIds = function(VersionInterface $v) {
+        $mapToIds = function (VersionInterface $v) {
             return $v->getId();
         };
         /** @var CollectionInterface $migrated */
         /** @var CollectionInterface $notMigrated */
-        list($migrated, $notMigrated) = $versions->partition(function($i, VersionInterface $v) {
+        list($migrated, $notMigrated) = $versions->partition(function ($i, VersionInterface $v) {
             return $v->isMigrated();
         });
         $migratedIds = $migrated->map($mapToIds);

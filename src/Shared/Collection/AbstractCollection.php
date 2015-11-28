@@ -127,7 +127,7 @@ abstract class AbstractCollection implements CollectionInterface
     public function remove($key)
     {
         $key = (string) $key;
-        if ( ! isset($this->elements[$key]) && ! array_key_exists($key, $this->elements)) {
+        if (!isset($this->elements[$key]) && !array_key_exists($key, $this->elements)) {
             return null;
         }
 
@@ -270,7 +270,7 @@ abstract class AbstractCollection implements CollectionInterface
     final public function forAll(Closure $p)
     {
         foreach ($this->elements as $key => $element) {
-            if ( ! $p($key, $element)) {
+            if (!$p($key, $element)) {
                 return false;
             }
         }

@@ -83,7 +83,7 @@ interface CollectionInterface extends Countable, IteratorAggregate
      *
      * @param string|integer $key The kex/index of the element to remove.
      *
-     * @return mixed The removed element or NULL, if the collection did not contain the element.
+     * @return null|VersionInterface The removed element or NULL, if the collection did not contain the element.
      */
     public function remove($key);
 
@@ -214,7 +214,7 @@ interface CollectionInterface extends Countable, IteratorAggregate
      * @param int      $offset The offset to start from.
      * @param int|null $length The maximum number of elements to return, or null for no limit.
      *
-     * @return array
+     * @return VersionInterface[]
      */
     public function slice($offset, $length = null);
 
