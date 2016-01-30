@@ -19,7 +19,7 @@ methods are perfectly symmetrical to each other:
 .. code-block:: php
 
     <?php
-    class v001_AddHireDateToStaff extends MigrationInterface
+    class v001_AddHireDateToStaff implements MigrationInterface
     {
 
         // a constructor would go here to set up the connection
