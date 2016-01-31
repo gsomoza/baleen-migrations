@@ -23,7 +23,7 @@ use Baleen\Migrations\Exception\InvalidArgumentException;
 use Baleen\Migrations\Service\MigrationBus\MigrateCommand;
 use Baleen\Migrations\Migration\MigrationInterface;
 use Baleen\Migrations\Migration\OptionsInterface;
-use Baleen\Migrations\Shared\EntityInterface;
+use Baleen\Migrations\Common\EntityInterface;
 use Baleen\Migrations\Version\Version;
 use Baleen\Migrations\Version\VersionId;
 use Baleen\Migrations\Version\VersionInterface;

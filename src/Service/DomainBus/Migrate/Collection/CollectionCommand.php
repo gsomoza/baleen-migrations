@@ -27,7 +27,7 @@ use Baleen\Migrations\Service\DomainBus\HasOptionsTrait;
 use Baleen\Migrations\Service\DomainBus\HasVersionRepositoryTrait;
 use Baleen\Migrations\Service\DomainBus\Migrate\AbstractMigrateCommand;
 use Baleen\Migrations\Service\DomainBus\Migrate\HasTargetTrait;
-use Baleen\Migrations\Shared\Collection\CollectionInterface;
+use Baleen\Migrations\Common\Collection\CollectionInterface;
 use Baleen\Migrations\Version\Repository\VersionRepositoryInterface;
 use Baleen\Migrations\Version\VersionInterface;
 

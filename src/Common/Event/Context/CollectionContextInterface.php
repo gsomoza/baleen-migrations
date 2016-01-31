@@ -17,48 +17,21 @@
  * <http://www.doctrine-project.org>.
  */
 
-namespace Baleen\Migrations\Shared\Event\Context;
+namespace Baleen\Migrations\Common\Event\Context;
 
-use Baleen\Migrations\Shared\Event\Progress;
+use Baleen\Migrations\Common\Event\Progress;
 
 /**
- * Class CollectionContext
+ * Specifies context information to events that occur inside a collection
+ *
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
-final class CollectionContext implements CollectionContextInterface
+interface CollectionContextInterface extends ContextInterface
 {
-    /** @var Progress */
-    private $progress;
-
-    /**
-     * CollectionContext constructor.
-     * @param Progress $progress
-     */
-    public function __construct(Progress $progress)
-    {
-        $this->progress = $progress;
-    }
-
     /**
      * Returns a Progress object that can indicate the current progress of the run.
      *
-     * @return null|\Baleen\Migrations\Shared\Event\Progress
+     * @return null|Progress
      */
-    public function getProgress()
-    {
-        return $this->progress;
-    }
-
-    /**
-     * Creates a new instance with an instance of Progress created with the specified parameters
-     *
-     * @param $total
-     * @param $current
-     *
-     * @return static
-     */
-    public static function createWithProgress($total, $current)
-    {
-        return new static(new Progress($total, $current));
-    }
+    public function getProgress();
 }

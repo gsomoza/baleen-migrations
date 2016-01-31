@@ -22,7 +22,7 @@ namespace BaleenTest\Migrations\Version\Collection;
 use Baleen\Migrations\Exception\Version\Collection\CollectionException;
 use Baleen\Migrations\Version\Collection\Collection;
 use Baleen\Migrations\Version\Collection\Migrated;
-use BaleenTest\Migrations\Shared\Collection\CollectionTestCase;
+use BaleenTest\Migrations\Common\Collection\CollectionTestCase;
 use Mockery as m;
 use Zend\Stdlib\ArrayUtils;
 

@@ -26,7 +26,7 @@ use Baleen\Migrations\Service\Runner\Event\Collection\CollectionAfterEvent;
 use Baleen\Migrations\Service\Runner\Event\Collection\CollectionBeforeEvent;
 use Baleen\Migrations\Service\Runner\Event\Migration\MigrateBeforeEvent;
 use Baleen\Migrations\Service\Runner\Event\Migration\MigrationEvent;
-use Baleen\Migrations\Shared\Event\PublisherInterface;
+use Baleen\Migrations\Common\Event\PublisherInterface;
 use Baleen\Migrations\Version\Collection\Collection;
 use Baleen\Migrations\Version\Comparator\IdComparator;
 use Baleen\Migrations\Version\VersionInterface;

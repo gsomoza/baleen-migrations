@@ -31,7 +31,7 @@ use Baleen\Migrations\Service\Runner\HasRunnerTrait;
 use Baleen\Migrations\Service\Runner\MigrationRunnerInterface;
 use Baleen\Migrations\Service\Runner\Factory\CollectionRunnerFactory;
 use Baleen\Migrations\Service\Runner\MigrationRunner;
-use Baleen\Migrations\Shared\Event\PublisherInterface;
+use Baleen\Migrations\Common\Event\PublisherInterface;
 use League\Tactician\CommandBus;
 use League\Tactician\Handler\Locator\InMemoryLocator;
 

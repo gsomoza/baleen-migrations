@@ -22,7 +22,7 @@ namespace Baleen\Migrations\Version;
 use Baleen\Migrations\Service\MigrationBus\MigrateCommand;
 use Baleen\Migrations\Migration\MigrationInterface;
 use Baleen\Migrations\Migration\OptionsInterface;
-use Baleen\Migrations\Shared\EntityInterface;
+use Baleen\Migrations\Common\EntityInterface;
 
 /**
  * Holds meta information about a migration, especially that which is related to its status (i.e. anything that can't

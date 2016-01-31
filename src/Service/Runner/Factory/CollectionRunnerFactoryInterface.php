@@ -19,7 +19,7 @@
 
 namespace Baleen\Migrations\Service\Runner\Factory;
 use Baleen\Migrations\Service\Runner\RunnerInterface;
-use Baleen\Migrations\Shared\Collection\CollectionInterface;
+use Baleen\Migrations\Common\Collection\CollectionInterface;
 
 /**
  * Interface CollectionRunnerFactoryInterface

@@ -19,7 +19,7 @@
 
 namespace Baleen\Migrations\Service\DomainBus;
 
-use Baleen\Migrations\Shared\Collection\CollectionInterface;
+use Baleen\Migrations\Common\Collection\CollectionInterface;
 
 /**
  * Class HasCollectionTrait

@@ -54,7 +54,7 @@ class OldTimelineTestCases extends BaseTestCase
         list($before, ) = $collection->partition(function ($i, VersionInterface $v) use ($comparator, $goal) {
             return $comparator->compare($v, $goal) <= 0;
         });
-        /** @var \Baleen\Migrations\Shared\Collection\CollectionInterface $before */
+        /** @var \Baleen\Migrations\Common\Collection\CollectionInterface $before */
 
         foreach ($before as $version) {
             /** @var VersionInterface $version */

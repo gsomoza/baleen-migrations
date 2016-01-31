@@ -17,7 +17,7 @@
  * <http://www.doctrine-project.org>.
  */
 
-namespace BaleenTest\Migrations\Shared\Collection;
+namespace BaleenTest\Migrations\Common\Collection;
 
 use Baleen\Migrations\Version\Collection\Collection;
 use BaleenTest\Migrations\BaseTestCase;

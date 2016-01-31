@@ -21,7 +21,7 @@ namespace Baleen\Migrations\Migration;
 
 use Baleen\Migrations\Exception\InvalidArgumentException;
 use Baleen\Migrations\Migration\Options\Direction;
-use Baleen\Migrations\Shared\ValueObjectInterface;
+use Baleen\Migrations\Common\ValueObjectInterface;
 
 /**
  * @{inheritdoc}

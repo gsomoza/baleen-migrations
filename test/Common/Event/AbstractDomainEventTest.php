@@ -17,10 +17,10 @@
  * <http://www.doctrine-project.org>.
  */
 
-namespace BaleenTest\Migrations\Shared\Event;
+namespace BaleenTest\Migrations\Common\Event;
 
-use Baleen\Migrations\Shared\Event\AbstractDomainEvent;
-use Baleen\Migrations\Shared\Event\DomainEventInterface;
+use Baleen\Migrations\Common\Event\AbstractDomainEvent;
+use Baleen\Migrations\Common\Event\DomainEventInterface;
 use BaleenTest\Migrations\BaseTestCase;
 use Mockery as m;
 

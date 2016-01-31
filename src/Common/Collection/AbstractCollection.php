@@ -17,7 +17,7 @@
  * <http://www.doctrine-project.org>.
  */
 
-namespace Baleen\Migrations\Shared\Collection;
+namespace Baleen\Migrations\Common\Collection;
 
 use ArrayIterator;
 use Baleen\Migrations\Exception\InvalidArgumentException;

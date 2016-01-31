@@ -17,39 +17,37 @@
  * <http://www.doctrine-project.org>.
  */
 
-namespace BaleenTest\Migrations\Shared\Event;
+namespace Baleen\Migrations\Common\Event\Publisher;
 
-use Baleen\Migrations\Shared\Event\DomainEventInterface;
-use Baleen\Migrations\Shared\Event\MutePublisher;
-use Baleen\Migrations\Shared\Event\PublisherInterface;
-use BaleenTest\Migrations\BaseTestCase;
-use Mockery as m;
+use Baleen\Migrations\Common\Event\MutePublisher;
+use Baleen\Migrations\Common\Event\PublisherInterface;
 
 /**
- * Class MutePublisherTest
+ * Class HasInternalPublisherTrait
+ *
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
-class MutePublisherTest extends BaseTestCase
+trait HasInternalPublisherTrait
 {
+    /** @var PublisherInterface */
+    private $publisher;
+
     /**
-     * testConstructor
-     * @return void
+     * @return PublisherInterface
      */
-    public function testConstructor()
+    final protected function getPublisher()
     {
-        $publisher = new MutePublisher();
-        $this->assertInstanceOf(PublisherInterface::class, $publisher);
+        return $this->publisher;
     }
 
     /**
-     * testPublish
-     * @return void
+     * @param PublisherInterface $publisher
      */
-    public function testPublish()
+    final protected function setPublisher(PublisherInterface $publisher = null)
     {
-        /** @var DomainEventInterface|m\Mock $event */
-        $event = m::mock(DomainEventInterface::class);
-        $publisher = new MutePublisher();
-        $publisher->publish($event);
+        if (null === $publisher) {
+            $publisher = new MutePublisher();
+        }
+        $this->publisher = $publisher;
     }
 }

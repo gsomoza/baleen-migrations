@@ -17,7 +17,7 @@
  * <http://www.doctrine-project.org>.
  */
 
-namespace Baleen\Migrations\Shared\Event\Context;
+namespace Baleen\Migrations\Common\Event\Context;
 
 /**
  * Class HasContextTrait

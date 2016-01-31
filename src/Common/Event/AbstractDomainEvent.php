@@ -17,7 +17,7 @@
  * <http://www.doctrine-project.org>.
  */
 
-namespace Baleen\Migrations\Shared\Event;
+namespace Baleen\Migrations\Common\Event;
 
 use DateTime;
 

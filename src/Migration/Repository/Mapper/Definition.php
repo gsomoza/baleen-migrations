@@ -19,7 +19,7 @@
 
 namespace Baleen\Migrations\Migration\Repository\Mapper;
 use Baleen\Migrations\Migration\MigrationInterface;
-use Baleen\Migrations\Shared\ValueObjectInterface;
+use Baleen\Migrations\Common\ValueObjectInterface;
 use Baleen\Migrations\Version\VersionId;
 
 /**

@@ -25,12 +25,12 @@ use Baleen\Migrations\Service\MigrationBus\MigrationBusInterface;
 use Baleen\Migrations\Migration\OptionsInterface;
 use Baleen\Migrations\Service\Runner\Event\Migration\MigrateAfterEvent;
 use Baleen\Migrations\Service\Runner\Event\Migration\MigrateBeforeEvent;
-use Baleen\Migrations\Shared\Event\Context\CollectionContext;
-use Baleen\Migrations\Shared\Event\Context\CollectionContextInterface;
-use Baleen\Migrations\Shared\Event\Context\ContextInterface;
-use Baleen\Migrations\Shared\Event\Context\HasContextTrait;
-use Baleen\Migrations\Shared\Event\Publisher\HasInternalPublisherTrait;
-use Baleen\Migrations\Shared\Event\PublisherInterface;
+use Baleen\Migrations\Common\Event\Context\CollectionContext;
+use Baleen\Migrations\Common\Event\Context\CollectionContextInterface;
+use Baleen\Migrations\Common\Event\Context\ContextInterface;
+use Baleen\Migrations\Common\Event\Context\HasContextTrait;
+use Baleen\Migrations\Common\Event\Publisher\HasInternalPublisherTrait;
+use Baleen\Migrations\Common\Event\PublisherInterface;
 use Baleen\Migrations\Version\VersionInterface;
 
 /**

@@ -14,31 +14,24 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the MIT license. For more information, see
- * <http://www.doctrine-project.org>.
+ * <https://github.com/baleen/migrations>.
  */
 
-namespace Baleen\Migrations\Shared;
+namespace Baleen\Migrations\Common\Event;
 
 /**
- * The interface for a Value Object in the domain
+ * An object that can emit domain events
  *
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
-interface ValueObjectInterface
+interface PublisherInterface
 {
     /**
-     * Compares this instance to another value object and returns true if they're equal.
+     * Publishes a Domain Event
      *
-     * @param ValueObjectInterface $object
+     * @param \Baleen\Migrations\Common\Event\DomainEventInterface $event
      *
-     * @return bool
+     * @return void
      */
-    public function isSameValueAs(ValueObjectInterface $object);
-
-    /**
-     * Returns a string representation of the object.
-     *
-     * @return string
-     */
-    public function __toString();
+    public function publish(DomainEventInterface $event);
 }

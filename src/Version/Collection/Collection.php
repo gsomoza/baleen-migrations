@@ -22,7 +22,7 @@ namespace Baleen\Migrations\Version\Collection;
 use Baleen\Migrations\Exception\InvalidArgumentException;
 use Baleen\Migrations\Exception\Version\Collection\CollectionException;
 use Baleen\Migrations\Migration\Options\Direction;
-use Baleen\Migrations\Shared\Collection\AbstractCollection;
+use Baleen\Migrations\Common\Collection\AbstractCollection;
 use Baleen\Migrations\Version\Collection\Resolver\DefaultResolverStackFactory;
 use Baleen\Migrations\Version\Collection\Resolver\ResolverInterface;
 use Baleen\Migrations\Version\Comparator\ComparatorInterface;

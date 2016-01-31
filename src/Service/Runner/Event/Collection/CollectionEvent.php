@@ -20,8 +20,8 @@
 namespace Baleen\Migrations\Service\Runner\Event\Collection;
 
 use Baleen\Migrations\Migration\OptionsInterface;
-use Baleen\Migrations\Shared\Collection\CollectionInterface;
-use Baleen\Migrations\Shared\Event\AbstractDomainEvent;
+use Baleen\Migrations\Common\Collection\CollectionInterface;
+use Baleen\Migrations\Common\Event\AbstractDomainEvent;
 use Baleen\Migrations\Version\VersionInterface;
 use DateTime;
 

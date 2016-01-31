@@ -24,9 +24,9 @@ use Baleen\Migrations\Service\DomainBus\DomainCommandInterface;
 use Baleen\Migrations\Service\DomainBus\HasOptionsTrait;
 use Baleen\Migrations\Service\DomainBus\HasVersionRepositoryTrait;
 use Baleen\Migrations\Service\DomainBus\Migrate\HasTargetTrait;
-use Baleen\Migrations\Shared\Event\Context\CollectionContext;
-use Baleen\Migrations\Shared\Event\Context\CollectionContextInterface;
-use Baleen\Migrations\Shared\Event\Progress;
+use Baleen\Migrations\Common\Event\Context\CollectionContext;
+use Baleen\Migrations\Common\Event\Context\CollectionContextInterface;
+use Baleen\Migrations\Common\Event\Progress;
 use Baleen\Migrations\Version\Repository\VersionRepositoryInterface;
 use Baleen\Migrations\Version\VersionInterface;
 

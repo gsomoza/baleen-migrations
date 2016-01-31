@@ -24,7 +24,7 @@ use Baleen\Migrations\Service\MigrationBus\MigrateCommand;
 use Baleen\Migrations\Service\MigrationBus\MigrationBusInterface;
 use Baleen\Migrations\Migration\MigrationInterface;
 use Baleen\Migrations\Migration\OptionsInterface;
-use Baleen\Migrations\Shared\EntityInterface;
+use Baleen\Migrations\Common\EntityInterface;
 
 /**
  * {@inheritDoc}

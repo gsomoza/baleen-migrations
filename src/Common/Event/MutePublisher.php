@@ -14,36 +14,29 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the MIT license. For more information, see
- * <https://github.com/baleen/migrations>.
+ * <http://www.doctrine-project.org>.
  */
 
-namespace Baleen\Migrations\Shared\Event;
+namespace Baleen\Migrations\Common\Event;
 
 /**
- * Interface MigrationsEvent.
+ * Class MutePublisher
+ *
+ * Does not emit the events.
  *
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
-interface DomainEventInterface
+final class MutePublisher implements PublisherInterface
 {
     /**
-     * To help e.g. with deserialization logic
+     * Publishes a Domain Event
      *
-     * @return int
-     */
-    public function getVersion();
-
-    /**
-     * DateTime for when the event was created
+     * @param \Baleen\Migrations\Common\Event\DomainEventInterface $event
      *
-     * @return \DateTime
+     * @return void
      */
-    public function getOccurredOn();
-
-    /**
-     * Returns the event's payload as an array of key => value objects
-     *
-     * @return array
-     */
-    public function getPayload();
+    public function publish(DomainEventInterface $event)
+    {
+        return;
+    }
 }

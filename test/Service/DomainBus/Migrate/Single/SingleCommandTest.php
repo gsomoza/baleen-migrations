@@ -21,7 +21,7 @@ namespace BaleenTest\Migrations\Service\DomainBus\Migrate\Single;
 
 use Baleen\Migrations\Migration\OptionsInterface;
 use Baleen\Migrations\Service\DomainBus\Migrate\Single\SingleCommand;
-use Baleen\Migrations\Shared\Event\Context\CollectionContextInterface;
+use Baleen\Migrations\Common\Event\Context\CollectionContextInterface;
 use Baleen\Migrations\Version\Repository\VersionRepositoryInterface;
 use Baleen\Migrations\Version\VersionInterface;
 use BaleenTest\Migrations\BaseTestCase;

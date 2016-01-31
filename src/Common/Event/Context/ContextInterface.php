@@ -17,21 +17,14 @@
  * <http://www.doctrine-project.org>.
  */
 
-namespace Baleen\Migrations\Shared\Event\Context;
-
-use Baleen\Migrations\Shared\Event\Progress;
+namespace Baleen\Migrations\Common\Event\Context;
 
 /**
- * Specifies context information to events that occur inside a collection
+ * Interface ContextInterface
  *
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
-interface CollectionContextInterface extends ContextInterface
+interface ContextInterface
 {
-    /**
-     * Returns a Progress object that can indicate the current progress of the run.
-     *
-     * @return null|Progress
-     */
-    public function getProgress();
+
 }

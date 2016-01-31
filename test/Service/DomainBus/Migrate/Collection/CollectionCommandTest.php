@@ -23,7 +23,7 @@ use Baleen\Migrations\Migration\OptionsInterface;
 use Baleen\Migrations\Service\DomainBus\DomainCommandInterface;
 use Baleen\Migrations\Service\DomainBus\Migrate\AbstractMigrateCommand;
 use Baleen\Migrations\Service\DomainBus\Migrate\Collection\CollectionCommand;
-use Baleen\Migrations\Shared\Collection\CollectionInterface;
+use Baleen\Migrations\Common\Collection\CollectionInterface;
 use Baleen\Migrations\Version\Repository\VersionRepositoryInterface;
 use Baleen\Migrations\Version\VersionInterface;
 use BaleenTest\Migrations\BaseTestCase;

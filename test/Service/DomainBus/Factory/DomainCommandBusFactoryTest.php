@@ -23,7 +23,7 @@ use Baleen\Migrations\Service\DomainBus\Factory\DomainCommandBusFactory;
 use Baleen\Migrations\Service\Runner\MigrationRunnerInterface;
 use Baleen\Migrations\Service\Runner\MigrationRunner;
 use Baleen\Migrations\Service\Runner\RunnerInterface;
-use Baleen\Migrations\Shared\Event\PublisherInterface;
+use Baleen\Migrations\Common\Event\PublisherInterface;
 use BaleenTest\Migrations\BaseTestCase;
 use League\Tactician\CommandBus;
 use Mockery as m;

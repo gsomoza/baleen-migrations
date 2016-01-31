@@ -21,9 +21,9 @@ namespace Baleen\Migrations\Service\Runner;
 
 use Baleen\Migrations\Migration\OptionsInterface;
 use Baleen\Migrations\Service\Runner\Event\Migration\MigrateAfterEvent;
-use Baleen\Migrations\Shared\Collection\CollectionInterface;
-use Baleen\Migrations\Shared\Event\Context\ContextInterface;
-use Baleen\Migrations\Shared\Event\DomainEventInterface;
+use Baleen\Migrations\Common\Collection\CollectionInterface;
+use Baleen\Migrations\Common\Event\Context\ContextInterface;
+use Baleen\Migrations\Common\Event\DomainEventInterface;
 use Baleen\Migrations\Version\VersionInterface;
 
 /**

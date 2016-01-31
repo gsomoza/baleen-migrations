@@ -22,9 +22,9 @@ namespace Baleen\Migrations\Service\Runner\Factory;
 use Baleen\Migrations\Service\Runner\CollectionRunner;
 use Baleen\Migrations\Service\Runner\MigrationRunnerInterface;
 use Baleen\Migrations\Service\Runner\RunnerInterface;
-use Baleen\Migrations\Shared\Collection\CollectionInterface;
-use Baleen\Migrations\Shared\Event\Publisher\HasInternalPublisherTrait;
-use Baleen\Migrations\Shared\Event\PublisherInterface;
+use Baleen\Migrations\Common\Collection\CollectionInterface;
+use Baleen\Migrations\Common\Event\Publisher\HasInternalPublisherTrait;
+use Baleen\Migrations\Common\Event\PublisherInterface;
 
 /**
  * Class CollectionRunnerFactory

@@ -21,7 +21,7 @@ namespace BaleenTest\Migrations\Service\Runner\Event;
 
 use Baleen\Migrations\Migration\OptionsInterface;
 use Baleen\Migrations\Service\Runner\Event\Collection\CollectionEvent;
-use Baleen\Migrations\Shared\Collection\CollectionInterface;
+use Baleen\Migrations\Common\Collection\CollectionInterface;
 use Baleen\Migrations\Version\VersionInterface;
 use BaleenTest\Migrations\BaseTestCase;
 use Mockery as m;

@@ -24,7 +24,7 @@ use Baleen\Migrations\Migration\Repository\Mapper\Definition;
 use Baleen\Migrations\Migration\Repository\Mapper\MigrationMapperInterface;
 use Baleen\Migrations\Migration\Repository\Mapper\RepositoryMapperInterface;
 use Baleen\Migrations\Migration\Repository\MigrationRepository;
-use Baleen\Migrations\Shared\Collection\CollectionInterface;
+use Baleen\Migrations\Common\Collection\CollectionInterface;
 use Baleen\Migrations\Version\Collection\Collection;
 use Baleen\Migrations\Version\Repository\VersionRepositoryInterface as VersionRepositoryInterface;
 use Baleen\Migrations\Version\VersionId;

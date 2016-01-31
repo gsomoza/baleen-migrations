@@ -20,7 +20,7 @@
 namespace Baleen\Migrations\Migration\Options;
 
 use Baleen\Migrations\Exception\InvalidArgumentException;
-use Baleen\Migrations\Shared\ValueObjectInterface;
+use Baleen\Migrations\Common\ValueObjectInterface;
 
 /**
  * Class Direction

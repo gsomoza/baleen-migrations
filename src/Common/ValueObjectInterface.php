@@ -17,21 +17,28 @@
  * <http://www.doctrine-project.org>.
  */
 
-namespace Baleen\Migrations\Shared;
+namespace Baleen\Migrations\Common;
 
 /**
- * Defines a domain entity
+ * The interface for a Value Object in the domain
  *
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
-interface EntityInterface
+interface ValueObjectInterface
 {
     /**
-     * Returns whether this object shares the same identity with another entity.
+     * Compares this instance to another value object and returns true if they're equal.
      *
-     * @param EntityInterface $entity
+     * @param ValueObjectInterface $object
      *
      * @return bool
      */
-    public function isSameIdentityAs(EntityInterface $entity);
+    public function isSameValueAs(ValueObjectInterface $object);
+
+    /**
+     * Returns a string representation of the object.
+     *
+     * @return string
+     */
+    public function __toString();
 }

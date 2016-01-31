@@ -17,10 +17,10 @@
  * <http://www.doctrine-project.org>.
  */
 
-namespace BaleenTest\Migrations\Shared\Event;
+namespace BaleenTest\Migrations\Common\Event;
 
 use Baleen\Migrations\Exception\InvalidArgumentException;
-use Baleen\Migrations\Shared\Event\Progress;
+use Baleen\Migrations\Common\Event\Progress;
 use BaleenTest\Migrations\BaseTestCase;
 use Mockery as m;
 

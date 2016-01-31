@@ -17,26 +17,21 @@
  * <http://www.doctrine-project.org>.
  */
 
-namespace Baleen\Migrations\Shared\Event;
+namespace Baleen\Migrations\Common;
 
 /**
- * Class MutePublisher
- *
- * Does not emit the events.
+ * Defines a domain entity
  *
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
-final class MutePublisher implements PublisherInterface
+interface EntityInterface
 {
     /**
-     * Publishes a Domain Event
+     * Returns whether this object shares the same identity with another entity.
      *
-     * @param \Baleen\Migrations\Shared\Event\DomainEventInterface $event
+     * @param EntityInterface $entity
      *
-     * @return void
+     * @return bool
      */
-    public function publish(DomainEventInterface $event)
-    {
-        return;
-    }
+    public function isSameIdentityAs(EntityInterface $entity);
 }

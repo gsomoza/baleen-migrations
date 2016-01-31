@@ -21,7 +21,7 @@ namespace Baleen\Migrations\Version;
 
 use Baleen\Migrations\Exception\InvalidArgumentException;
 use Baleen\Migrations\Migration\MigrationInterface;
-use Baleen\Migrations\Shared\ValueObjectInterface;
+use Baleen\Migrations\Common\ValueObjectInterface;
 
 /**
  * The simplest form of a Version

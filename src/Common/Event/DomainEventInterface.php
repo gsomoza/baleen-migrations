@@ -14,17 +14,36 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the MIT license. For more information, see
- * <http://www.doctrine-project.org>.
+ * <https://github.com/baleen/migrations>.
  */
 
-namespace Baleen\Migrations\Shared\Event\Context;
+namespace Baleen\Migrations\Common\Event;
 
 /**
- * Interface ContextInterface
+ * Interface MigrationsEvent.
  *
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
-interface ContextInterface
+interface DomainEventInterface
 {
+    /**
+     * To help e.g. with deserialization logic
+     *
+     * @return int
+     */
+    public function getVersion();
 
+    /**
+     * DateTime for when the event was created
+     *
+     * @return \DateTime
+     */
+    public function getOccurredOn();
+
+    /**
+     * Returns the event's payload as an array of key => value objects
+     *
+     * @return array
+     */
+    public function getPayload();
 }

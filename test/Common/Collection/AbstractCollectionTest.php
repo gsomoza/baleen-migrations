@@ -17,10 +17,10 @@
  * <http://www.doctrine-project.org>.
  */
 
-namespace BaleenTest\Migrations\Shared\Collection;
+namespace BaleenTest\Migrations\Common\Collection;
 
-use Baleen\Migrations\Shared\Collection\AbstractCollection;
-use Baleen\Migrations\Shared\Collection\CollectionInterface;
+use Baleen\Migrations\Common\Collection\AbstractCollection;
+use Baleen\Migrations\Common\Collection\CollectionInterface;
 use Baleen\Migrations\Version\VersionInterface;
 use BaleenTest\Migrations\BaseTestCase;
 use Mockery as m;

@@ -35,7 +35,7 @@ final class ConvergeHandler
      *
      * @param ConvergeCommand $command
      *
-     * @return \Baleen\Migrations\Shared\Collection\CollectionInterface
+     * @return \Baleen\Migrations\Common\Collection\CollectionInterface
      */
     public function handle(ConvergeCommand $command)
     {

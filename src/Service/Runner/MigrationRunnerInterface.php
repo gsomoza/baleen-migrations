@@ -19,7 +19,7 @@
 
 namespace Baleen\Migrations\Service\Runner;
 
-use Baleen\Migrations\Shared\Event\Context\ContextInterface;
+use Baleen\Migrations\Common\Event\Context\ContextInterface;
 
 /**
  * Interface MigrationRunnerInterface

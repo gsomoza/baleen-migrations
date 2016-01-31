@@ -20,10 +20,10 @@
 namespace Baleen\Migrations\Service\Runner\Event\Migration;
 
 use Baleen\Migrations\Migration\OptionsInterface;
-use Baleen\Migrations\Shared\Event\AbstractDomainEvent;
-use Baleen\Migrations\Shared\Event\Context\CollectionContext;
-use Baleen\Migrations\Shared\Event\Context\CollectionContextInterface;
-use Baleen\Migrations\Shared\Event\Progress;
+use Baleen\Migrations\Common\Event\AbstractDomainEvent;
+use Baleen\Migrations\Common\Event\Context\CollectionContext;
+use Baleen\Migrations\Common\Event\Context\CollectionContextInterface;
+use Baleen\Migrations\Common\Event\Progress;
 use Baleen\Migrations\Version\VersionInterface;
 use DateTime;
 

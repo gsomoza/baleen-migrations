@@ -23,11 +23,11 @@ use Baleen\Migrations\Migration\OptionsInterface;
 use Baleen\Migrations\Service\DomainBus\HasCollectionTrait;
 use Baleen\Migrations\Service\Runner\Event\Collection\CollectionAfterEvent;
 use Baleen\Migrations\Service\Runner\Event\Collection\CollectionBeforeEvent;
-use Baleen\Migrations\Shared\Collection\CollectionInterface;
-use Baleen\Migrations\Shared\Event\Context\CollectionContext;
-use Baleen\Migrations\Shared\Event\MutePublisher;
-use Baleen\Migrations\Shared\Event\Publisher\HasInternalPublisherTrait;
-use Baleen\Migrations\Shared\Event\PublisherInterface;
+use Baleen\Migrations\Common\Collection\CollectionInterface;
+use Baleen\Migrations\Common\Event\Context\CollectionContext;
+use Baleen\Migrations\Common\Event\MutePublisher;
+use Baleen\Migrations\Common\Event\Publisher\HasInternalPublisherTrait;
+use Baleen\Migrations\Common\Event\PublisherInterface;
 use Baleen\Migrations\Version\Collection\Collection;
 use Baleen\Migrations\Version\VersionInterface;
 
