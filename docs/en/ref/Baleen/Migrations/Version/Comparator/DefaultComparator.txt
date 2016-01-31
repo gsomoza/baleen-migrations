@@ -1,8 +1,8 @@
 ----------------------------------------------------------
-Baleen\\Migrations\\Version\\Version\\Version\\Comparator\\DefaultComparator
+Baleen\\Migrations\\Delta\\Delta\\Delta\\Comparator\\DefaultComparator
 ----------------------------------------------------------
 
-.. php:namespace: Baleen\\Migrations\\Version\\Version\\Version\\Comparator
+.. php:namespace: Baleen\\Migrations\\Delta\\Delta\\Delta\\Comparator
 
 .. php:class:: DefaultComparator
 
@@ -15,15 +15,15 @@ Baleen\\Migrations\\Version\\Version\\Version\\Comparator\\DefaultComparator
         :type $order: int
         :param $order:
 
-    .. php:method:: __invoke(VersionInterface $version1, VersionInterface $version2)
+    .. php:method:: __invoke(DeltaInterface $version1, DeltaInterface $version2)
 
         Migrations1\v01
         Migrations11\v01
         Migrations2\v01
 
-        :type $version1: VersionInterface
+        :type $version1: DeltaInterface
         :param $version1:
-        :type $version2: VersionInterface
+        :type $version2: DeltaInterface
         :param $version2:
 
     .. php:method:: reverse()

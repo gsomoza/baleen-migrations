@@ -13,5 +13,5 @@ Baleen\\Migrations
    Storage/index
    Timeline/index
    Timeline
-   Version/index
-   Version
+   Delta/index
+   Delta

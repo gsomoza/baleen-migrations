@@ -20,7 +20,7 @@
 namespace Baleen\Migrations\Migration\Repository\Mapper;
 
 use Baleen\Migrations\Migration\MigrationInterface;
-use Baleen\Migrations\Version\VersionId;
+use Baleen\Migrations\Delta\DeltaId;
 
 /**
  * Interface DefinitionInterface
@@ -32,7 +32,7 @@ interface DefinitionInterface
     /**
      * Returns the ID assigned to this migration
      *
-     * @return VersionId
+     * @return DeltaId
      */
     public function getId();
 

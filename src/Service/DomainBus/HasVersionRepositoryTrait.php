@@ -19,7 +19,7 @@
 
 namespace Baleen\Migrations\Service\DomainBus;
 
-use Baleen\Migrations\Version\Repository\VersionRepositoryInterface;
+use Baleen\Migrations\Delta\Repository\VersionRepositoryInterface;
 
 /**
  * Class HasVersionRepositoryTrait

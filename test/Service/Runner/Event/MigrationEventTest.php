@@ -25,7 +25,7 @@ use Baleen\Migrations\Service\Runner\Event\Migration\MigrationEvent;
 use Baleen\Migrations\Common\Event\Context\CollectionContext;
 use Baleen\Migrations\Common\Event\Context\CollectionContextInterface;
 use Baleen\Migrations\Common\Event\Progress;
-use Baleen\Migrations\Version\VersionInterface;
+use Baleen\Migrations\Delta\DeltaInterface;
 use BaleenTest\Migrations\BaseTestCase;
 use DateTime;
 use Mockery as m;
@@ -42,8 +42,8 @@ class MigrationEventTest extends BaseTestCase
      */
     public function testGetTarget()
     {
-        /** @var VersionInterface|m\Mock $expected */
-        $expected = m::mock(VersionInterface::class);
+        /** @var DeltaInterface|m\Mock $expected */
+        $expected = m::mock(DeltaInterface::class);
         $event = $this->createEvent($expected);
         $actual = $event->getTarget();
         $this->assertSame($expected, $actual);
@@ -121,21 +121,21 @@ class MigrationEventTest extends BaseTestCase
 
     /**
      * createEvent
-     * @param VersionInterface $target
+     * @param DeltaInterface $target
      * @param OptionsInterface $options
      * @param CollectionContextInterface|null $context
      * @param DateTime|null $occurredOn
      * @return \Baleen\Migrations\Service\Runner\Event\Migration\MigrationEvent
      */
     private function createEvent(
-        VersionInterface $target = null,
+        DeltaInterface $target = null,
         OptionsInterface $options = null,
         CollectionContextInterface $context = null,
         DateTime $occurredOn = null
     ) {
         if (null === $target) {
-            /** @var VersionInterface|m\Mock $target */
-            $target = m::mock(VersionInterface::class);
+            /** @var DeltaInterface|m\Mock $target */
+            $target = m::mock(DeltaInterface::class);
         }
         if (null === $options) {
             /** @var OptionsInterface|m\Mock $collection */

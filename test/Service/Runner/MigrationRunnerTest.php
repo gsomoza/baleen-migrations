@@ -34,8 +34,8 @@ use Baleen\Migrations\Service\Runner\RunnerInterface;
 use Baleen\Migrations\Common\Event\Context\CollectionContext;
 use Baleen\Migrations\Common\Event\Context\CollectionContextInterface;
 use Baleen\Migrations\Common\Event\PublisherInterface;
-use Baleen\Migrations\Version\Collection\Collection;
-use Baleen\Migrations\Version\VersionInterface;
+use Baleen\Migrations\Delta\Collection\Collection;
+use Baleen\Migrations\Delta\DeltaInterface;
 use Mockery as m;
 
 /**
@@ -94,7 +94,7 @@ class MigrationRunnerTest extends RunnerTestCase
         $context = m::mock(CollectionContextInterface::class);
         $runner = new MigrationRunner($publisher, $context);
 
-        /** @var VersionInterface $version */
+        /** @var DeltaInterface $version */
         $version = $collection->find($id);
 
         if ($expectation == 'exception') {

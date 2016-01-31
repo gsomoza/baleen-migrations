@@ -20,7 +20,7 @@
 namespace Baleen\Migrations\Migration\Repository;
 
 use Baleen\Migrations\Service\MigrationBus\MigrationBusInterface;
-use Baleen\Migrations\Version\Collection\Collection;
+use Baleen\Migrations\Delta\Collection\Collection;
 
 /**
  * In charge of loading Migration files and instantiating them.

@@ -1,8 +1,8 @@
 """""""""""""""""""""""""""""""""""""""
-Baleen\\Migrations\\Version\\Version\\Version\\Collection
+Baleen\\Migrations\\Delta\\Delta\\Delta\\Collection
 """""""""""""""""""""""""""""""""""""""
 
-.. php:namespace: Baleen\\Migrations\\Version\\Version\\Version\\Collection
+.. php:namespace: Baleen\\Migrations\\Delta\\Delta\\Delta\\Collection
 
 .. toctree::
 

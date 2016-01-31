@@ -27,8 +27,8 @@ use Baleen\Migrations\Service\DomainBus\HasVersionRepositoryTrait;
 use Baleen\Migrations\Service\DomainBus\Migrate\Collection;
 use Baleen\Migrations\Service\DomainBus\Migrate\HasTargetTrait;
 use Baleen\Migrations\Common\Collection\CollectionInterface;
-use Baleen\Migrations\Version\Repository\VersionRepositoryInterface;
-use Baleen\Migrations\Version\VersionInterface;
+use Baleen\Migrations\Delta\Repository\VersionRepositoryInterface;
+use Baleen\Migrations\Delta\DeltaInterface;
 use League\Tactician\CommandBus;
 
 /**
@@ -49,14 +49,14 @@ final class ConvergeCommand implements DomainCommandInterface
      * CollectionCommand constructor.
      *
      * @param \Baleen\Migrations\Common\Collection\CollectionInterface $collection
-     * @param VersionInterface $target
+     * @param DeltaInterface $target
      * @param OptionsInterface $options
      * @param CommandBus $domainBus
      * @param VersionRepositoryInterface $versionRepository
      */
     public function __construct(
         CollectionInterface $collection,
-        VersionInterface $target,
+        DeltaInterface $target,
         OptionsInterface $options,
         CommandBus $domainBus,
         VersionRepositoryInterface $versionRepository

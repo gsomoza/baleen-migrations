@@ -1,8 +1,8 @@
 -------------------------------------------------
-Baleen\\Migrations\\Version\\Version\\Version\\Collection\\Migrated
+Baleen\\Migrations\\Delta\\Delta\\Delta\\Collection\\Migrated
 -------------------------------------------------
 
-.. php:namespace: Baleen\\Migrations\\Version\\Version\\Version\\Collection
+.. php:namespace: Baleen\\Migrations\\Delta\\Delta\\Delta\\Collection
 
 .. php:class:: Migrated
 
@@ -10,18 +10,18 @@ Baleen\\Migrations\\Version\\Version\\Version\\Collection\\Migrated
 
         protected ResolverInterface
 
-    .. php:method:: validate(VersionInterface $element)
+    .. php:method:: validate(DeltaInterface $element)
 
         This makes the collection behave like a set - throwing an exception if the
         version already exists in the set.
 
-        :type $element: VersionInterface
+        :type $element: DeltaInterface
         :param $element:
         :returns: bool
 
     .. php:method:: __construct($versions = [], ResolverInterface $resolver = null, ComparatorInterface $comparator = null)
 
-        :type $versions: VersionInterface[]
+        :type $versions: DeltaInterface[]
         :param $versions:
         :type $resolver: ResolverInterface
         :param $resolver:
@@ -56,7 +56,7 @@ Baleen\\Migrations\\Version\\Version\\Version\\Collection\\Migrated
         Returns the element at the given position.
 
         :param $position:
-        :returns: null|VersionInterface
+        :returns: null|DeltaInterface
 
     .. php:method:: add($element)
 
@@ -85,14 +85,14 @@ Baleen\\Migrations\\Version\\Version\\Version\\Collection\\Migrated
         :param $key: If an alias is given then it will be resolved to an element. Otherwise the $key will be used to fetch the element by index.
         :type $resolve: bool
         :param $resolve: Whether to use the resolver or not.
-        :returns: VersionInterface|null Null if not present
+        :returns: DeltaInterface|null Null if not present
 
     .. php:method:: getById($id)
 
         Gets a version by id
 
         :param $id:
-        :returns: VersionInterface
+        :returns: DeltaInterface
 
     .. php:method:: indexOfId($id)
 
@@ -109,7 +109,7 @@ Baleen\\Migrations\\Version\\Version\\Version\\Collection\\Migrated
 
         :type $alias: string
         :param $alias:
-        :returns: VersionInterface|null
+        :returns: DeltaInterface|null
 
     .. php:method:: has($index, $resolve = true)
 
@@ -127,12 +127,12 @@ Baleen\\Migrations\\Version\\Version\\Version\\Collection\\Migrated
     .. php:method:: remove($version)
 
         :param $version:
-        :returns: VersionInterface|null
+        :returns: DeltaInterface|null
 
-    .. php:method:: addOrReplace(VersionInterface $version)
+    .. php:method:: addOrReplace(DeltaInterface $version)
 
         Adds a new version to the collection if it doesn't exist or replaces it if
         it does.
 
-        :type $version: VersionInterface
+        :type $version: DeltaInterface
         :param $version:

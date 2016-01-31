@@ -24,7 +24,7 @@ use Baleen\Migrations\Service\Runner\Event\Migration\MigrateAfterEvent;
 use Baleen\Migrations\Common\Collection\CollectionInterface;
 use Baleen\Migrations\Common\Event\Context\ContextInterface;
 use Baleen\Migrations\Common\Event\DomainEventInterface;
-use Baleen\Migrations\Version\VersionInterface;
+use Baleen\Migrations\Delta\DeltaInterface;
 
 /**
  * Describes an object that can run a CollectionAbstract of Versions
@@ -36,11 +36,11 @@ interface RunnerInterface
     /**
      * Runs a collection of versions towards the specified goal and using the specified options
      *
-     * @param VersionInterface $target
+     * @param DeltaInterface $target
      * @param OptionsInterface $options
      *
      * @return DomainEventInterface An event with information on the changes to versions applied through the runner,
      *                              which can be used by the client to update the repository if necessary.
      */
-    public function run(VersionInterface $target, OptionsInterface $options);
+    public function run(DeltaInterface $target, OptionsInterface $options);
 }

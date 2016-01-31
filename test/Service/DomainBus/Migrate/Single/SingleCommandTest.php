@@ -22,10 +22,10 @@ namespace BaleenTest\Migrations\Service\DomainBus\Migrate\Single;
 use Baleen\Migrations\Migration\OptionsInterface;
 use Baleen\Migrations\Service\DomainBus\Migrate\Single\SingleCommand;
 use Baleen\Migrations\Common\Event\Context\CollectionContextInterface;
-use Baleen\Migrations\Version\Repository\VersionRepositoryInterface;
-use Baleen\Migrations\Version\VersionInterface;
+use Baleen\Migrations\Delta\Repository\VersionRepositoryInterface;
+use Baleen\Migrations\Delta\DeltaInterface;
 use BaleenTest\Migrations\BaseTestCase;
-use BaleenTest\Migrations\Version\Repository\VersionRepositoryTest;
+use BaleenTest\Migrations\Delta\Repository\VersionRepositoryTest;
 use Mockery as m;
 
 /**
@@ -40,8 +40,8 @@ class SingleCommandTest extends BaseTestCase
      */
     public static function createMockedCommand()
     {
-        /** @var VersionInterface|m\Mock $target */
-        $target = m::mock(VersionInterface::class);
+        /** @var DeltaInterface|m\Mock $target */
+        $target = m::mock(DeltaInterface::class);
         /** @var OptionsInterface $options */
         $options = m::mock(OptionsInterface::class);
         /** @var VersionRepositoryInterface|m\Mock $storage */

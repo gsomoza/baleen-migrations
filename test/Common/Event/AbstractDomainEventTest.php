@@ -77,7 +77,7 @@ class AbstractDomainEventTest extends BaseTestCase
         $this->assertArrayHasKey('occurred_on', $result);
         $this->assertInstanceOf(\DateTime::class, $result['occurred_on']);
 
-        $this->assertArrayHasKey('version', $result);
-        $this->assertTrue(is_numeric($result['version']), $result);
+        $this->assertArrayHasKey('sequence_id', $result);
+        $this->assertTrue(is_numeric($result['sequence_id']), $result);
     }
 }

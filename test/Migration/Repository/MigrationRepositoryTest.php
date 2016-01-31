@@ -25,10 +25,10 @@ use Baleen\Migrations\Migration\Repository\Mapper\MigrationMapperInterface;
 use Baleen\Migrations\Migration\Repository\Mapper\RepositoryMapperInterface;
 use Baleen\Migrations\Migration\Repository\MigrationRepository;
 use Baleen\Migrations\Common\Collection\CollectionInterface;
-use Baleen\Migrations\Version\Collection\Collection;
-use Baleen\Migrations\Version\Repository\VersionRepositoryInterface as VersionRepositoryInterface;
-use Baleen\Migrations\Version\VersionId;
-use Baleen\Migrations\Version\VersionInterface;
+use Baleen\Migrations\Delta\Collection\Collection;
+use Baleen\Migrations\Delta\Repository\VersionRepositoryInterface as VersionRepositoryInterface;
+use Baleen\Migrations\Delta\DeltaId;
+use Baleen\Migrations\Delta\DeltaInterface;
 use BaleenTest\Migrations\BaseTestCase;
 use Mockery as m;
 
@@ -59,7 +59,7 @@ class MigrationRepositoryTest extends BaseTestCase
         $this->assertInstanceOf(CollectionInterface::class, $collection);
         $this->assertCount(5, $collection);
         $migrated = new Collection($collection->slice(3)); // elements 3 to 5
-        $this->assertTrue($migrated->forAll(function ($index, VersionInterface $v) {
+        $this->assertTrue($migrated->forAll(function ($index, DeltaInterface $v) {
             return $v->isMigrated();
         }), 'Expected elements 3 to 5 to be migrated.');
     }
@@ -104,7 +104,7 @@ class MigrationRepositoryTest extends BaseTestCase
         return array_map(
             function ($migrationMockName) {
                 // note that this "Migration$id" string must correspond to the same string in ::buildDefinitions
-                return VersionId::fromNative($migrationMockName);
+                return DeltaId::fromNative($migrationMockName);
             },
             $this->getMigrationMockNames($range)
         );

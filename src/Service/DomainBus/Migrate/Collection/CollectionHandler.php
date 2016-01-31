@@ -24,8 +24,8 @@ use Baleen\Migrations\Service\Runner\Event\Collection\CollectionAfterEvent;
 use Baleen\Migrations\Service\Runner\Event\Migration\MigrateAfterEvent;
 use Baleen\Migrations\Service\Runner\Factory\CollectionRunnerFactoryInterface;
 use Baleen\Migrations\Service\Runner\Factory\CreatesCollectionRunnerTrait;
-use Baleen\Migrations\Version\Collection\Collection;
-use Baleen\Migrations\Version\VersionInterface;
+use Baleen\Migrations\Delta\Collection\Collection;
+use Baleen\Migrations\Delta\DeltaInterface;
 
 /**
  * Class CollectionHandler
@@ -65,7 +65,7 @@ final class CollectionHandler
         }
 
         // filter to only get versions that need to be migrated
-        $filter = function (VersionInterface $v) use ($target, $comparator, $direction) {
+        $filter = function (DeltaInterface $v) use ($target, $comparator, $direction) {
             return ($direction->isUp() ^ $v->isMigrated()) // direction must be opposite to migration status
                     && $comparator->compare($v, $target) <= 0; // version must be before or be equal to target (not
                                                                // affected by direction because comparator is reversed)

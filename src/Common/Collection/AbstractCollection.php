@@ -23,7 +23,7 @@ use ArrayIterator;
 use Baleen\Migrations\Exception\InvalidArgumentException;
 use Baleen\Migrations\Exception\Version\Collection\AlreadyExistsException;
 use Baleen\Migrations\Exception\Version\Collection\CollectionException;
-use Baleen\Migrations\Version\VersionInterface;
+use Baleen\Migrations\Delta\DeltaInterface;
 use Closure;
 use Zend\Stdlib\ArrayUtils;
 
@@ -39,14 +39,14 @@ abstract class AbstractCollection implements CollectionInterface
     /**
      * An array containing the entries of this collection.
      *
-     * @var VersionInterface[]
+     * @var DeltaInterface[]
      */
     private $elements;
 
     /**
      * Initializes a new AbstractCollection.
      *
-     * @param VersionInterface[] $elements
+     * @param DeltaInterface[] $elements
      *
      * @throws AlreadyExistsException
      * @throws CollectionException
@@ -66,8 +66,8 @@ abstract class AbstractCollection implements CollectionInterface
 
         $this->elements = [];
         foreach ($elements as $element) {
-            if (!is_object($element) || !$element instanceof VersionInterface) {
-                throw CollectionException::invalidObjectException($element, VersionInterface::class);
+            if (!is_object($element) || !$element instanceof DeltaInterface) {
+                throw CollectionException::invalidObjectException($element, DeltaInterface::class);
             }
             $this->add($element);
         }
@@ -149,7 +149,7 @@ abstract class AbstractCollection implements CollectionInterface
     /**
      * {@inheritDoc}
      */
-    final public function containsVersion(VersionInterface $version)
+    final public function containsVersion(DeltaInterface $version)
     {
         $key = (string) $version->getId();
         return $this->contains($key);
@@ -205,7 +205,7 @@ abstract class AbstractCollection implements CollectionInterface
     /**
      * {@inheritDoc}
      */
-    public function replace(VersionInterface $version)
+    public function replace(DeltaInterface $version)
     {
         $key = $version->getId()->toString();
         $replacedElement = $this->contains($key) ? $this->get($key) : null;
@@ -217,7 +217,7 @@ abstract class AbstractCollection implements CollectionInterface
     /**
      * {@inheritDoc}
      */
-    public function add(VersionInterface $value)
+    public function add(DeltaInterface $value)
     {
         $key = $value->getId()->toString();
         if ($this->contains($key)) {

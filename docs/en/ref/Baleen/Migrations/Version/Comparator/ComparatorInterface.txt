@@ -1,14 +1,14 @@
 ------------------------------------------------------------
-Baleen\\Migrations\\Version\\Version\\Version\\Comparator\\ComparatorInterface
+Baleen\\Migrations\\Delta\\Delta\\Delta\\Comparator\\ComparatorInterface
 ------------------------------------------------------------
 
-.. php:namespace: Baleen\\Migrations\\Version\\Version\\Version\\Comparator
+.. php:namespace: Baleen\\Migrations\\Delta\\Delta\\Delta\\Comparator
 
 .. php:interface:: ComparatorInterface
 
     Compares two version with each other.
 
-    .. php:method:: __invoke(VersionInterface $version1, VersionInterface $version2)
+    .. php:method:: __invoke(DeltaInterface $version1, DeltaInterface $version2)
 
         Compares two versions with each other. The comparison function must return
         an integer less than, equal to, or
@@ -16,9 +16,9 @@ Baleen\\Migrations\\Version\\Version\\Version\\Comparator\\ComparatorInterface
         less than, equal to, or greater than the
         second.
 
-        :type $version1: VersionInterface
+        :type $version1: DeltaInterface
         :param $version1:
-        :type $version2: VersionInterface
+        :type $version2: DeltaInterface
         :param $version2:
         :returns: int
 

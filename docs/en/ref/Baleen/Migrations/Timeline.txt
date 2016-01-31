@@ -12,7 +12,7 @@ Baleen\\Migrations\\Timeline
 
     .. php:method:: upTowards($goalVersion, OptionsInterface $options = null)
 
-        :type $goalVersion: VersionInterface|string
+        :type $goalVersion: DeltaInterface|string
         :param $goalVersion:
         :type $options: OptionsInterface
         :param $options:
@@ -20,7 +20,7 @@ Baleen\\Migrations\\Timeline
 
     .. php:method:: downTowards($goalVersion, OptionsInterface $options = null)
 
-        :type $goalVersion: VersionInterface|string
+        :type $goalVersion: DeltaInterface|string
         :param $goalVersion:
         :type $options: OptionsInterface
         :param $options:
@@ -37,15 +37,15 @@ Baleen\\Migrations\\Timeline
         :param $options:
         :returns: Linked A collection of versions that were *changed* during the process. Note that this collection may significantly defer from what would be obtained by $this->getVersions()
 
-    .. php:method:: runSingle(VersionInterface $version, OptionsInterface $options, Progress $progress = null)
+    .. php:method:: runSingle(DeltaInterface $version, OptionsInterface $options, Progress $progress = null)
 
-        :type $version: VersionInterface
+        :type $version: DeltaInterface
         :param $version:
         :type $options: OptionsInterface
         :param $options:
         :type $progress: Progress
         :param $progress: Provides contextual information about current progress if this migration is one of many that are being run in batch.
-        :returns: VersionInterface|false
+        :returns: DeltaInterface|false
 
     .. php:method:: __construct(Linked $versions, MigrationBus $migrationBus = null)
 
@@ -54,12 +54,12 @@ Baleen\\Migrations\\Timeline
         :type $migrationBus: MigrationBus
         :param $migrationBus: A CommandBus that will be used to run each individual migration.
 
-    .. php:method:: shouldMigrate(VersionInterface $version, OptionsInterface $options)
+    .. php:method:: shouldMigrate(DeltaInterface $version, OptionsInterface $options)
 
         Returns true if the operatin is forced, or if the direction is the
         opposite to the state of the migration.
 
-        :type $version: VersionInterface
+        :type $version: DeltaInterface
         :param $version:
         :type $options: OptionsInterface
         :param $options:
@@ -79,11 +79,11 @@ Baleen\\Migrations\\Timeline
         :param $options:
         :returns: bool
 
-    .. php:method:: runCollection(VersionInterface $goalVersion, OptionsInterface $options, Linked $collection)
+    .. php:method:: runCollection(DeltaInterface $goalVersion, OptionsInterface $options, Linked $collection)
 
         Executes migrations against a collection
 
-        :type $goalVersion: VersionInterface
+        :type $goalVersion: DeltaInterface
         :param $goalVersion:
         :type $options: OptionsInterface
         :param $options:

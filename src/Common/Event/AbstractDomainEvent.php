@@ -38,15 +38,15 @@ abstract class AbstractDomainEvent implements DomainEventInterface
      * AbstractDomainEvent constructor.
      *
      * @param DateTime $occurredOn
-     * @param int $version
+     * @param int $sequenceId
      */
-    public function __construct(DateTime $occurredOn = null, $version = null)
+    public function __construct(DateTime $occurredOn = null, $sequenceId = null)
     {
         if (null === $occurredOn) {
             $occurredOn = new DateTime(); // now
         }
         $this->occurredOn = $occurredOn;
-        $this->version = (int) $version;
+        $this->version = (int) $sequenceId;
     }
 
     /**
@@ -71,7 +71,7 @@ abstract class AbstractDomainEvent implements DomainEventInterface
     final public function getPayload() {
         return array_merge([
             'occurred_on' => $this->getOccurredOn(),
-            'version' => $this->getVersion(),
+            'sequence_id' => $this->getVersion(),
         ], $this->getAdditionalPayload());
     }
 

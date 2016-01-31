@@ -28,8 +28,8 @@ use Baleen\Migrations\Service\Runner\MigrationRunnerInterface;
 use Baleen\Migrations\Service\Runner\RunnerInterface;
 use Baleen\Migrations\Common\Event\Context\ContextInterface;
 use Baleen\Migrations\Common\Event\DomainEventInterface;
-use Baleen\Migrations\Version\Repository\VersionRepositoryInterface;
-use Baleen\Migrations\Version\VersionInterface;
+use Baleen\Migrations\Delta\Repository\VersionRepositoryInterface;
+use Baleen\Migrations\Delta\DeltaInterface;
 use BaleenTest\Migrations\Service\DomainBus\Migrate\HandlerTestCase;
 use Mockery as m;
 
@@ -47,8 +47,8 @@ class SingleHandlerTest extends HandlerTestCase
     {
         $handler = $this->createHandler();
 
-        /** @var VersionInterface|m\Mock $version */
-        $version = m::mock(VersionInterface::class);
+        /** @var DeltaInterface|m\Mock $version */
+        $version = m::mock(DeltaInterface::class);
 
         /** @var DomainEventInterface|m\Mock $afterEvent */
         $afterEvent = m::mock(DomainEventInterface::class, [
@@ -59,7 +59,7 @@ class SingleHandlerTest extends HandlerTestCase
         $runner = $this->invokeMethod('getRunner', $handler);
         $runner->shouldReceive('run')
             ->with(
-                m::type(VersionInterface::class),
+                m::type(DeltaInterface::class),
                 m::type(OptionsInterface::class)
             )
             ->once()

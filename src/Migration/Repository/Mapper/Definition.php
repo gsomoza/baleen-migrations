@@ -20,7 +20,7 @@
 namespace Baleen\Migrations\Migration\Repository\Mapper;
 use Baleen\Migrations\Migration\MigrationInterface;
 use Baleen\Migrations\Common\ValueObjectInterface;
-use Baleen\Migrations\Version\VersionId;
+use Baleen\Migrations\Delta\DeltaId;
 
 /**
  * Class Definition
@@ -29,7 +29,7 @@ use Baleen\Migrations\Version\VersionId;
  */
 final class Definition implements DefinitionInterface
 {
-    /** @var VersionId */
+    /** @var DeltaId */
     private $id;
 
     /** @var MigrationInterface */
@@ -43,9 +43,9 @@ final class Definition implements DefinitionInterface
     public function __construct(MigrationInterface $migration, $id = null)
     {
         if (null === $id) {
-            $id = VersionId::fromMigration($migration);
+            $id = DeltaId::fromMigration($migration);
         } else {
-            $id = new VersionId((string) $id);
+            $id = new DeltaId((string) $id);
         }
         $this->id = $id;
 

@@ -31,7 +31,7 @@ use Baleen\Migrations\Common\Event\Context\ContextInterface;
 use Baleen\Migrations\Common\Event\Context\HasContextTrait;
 use Baleen\Migrations\Common\Event\Publisher\HasInternalPublisherTrait;
 use Baleen\Migrations\Common\Event\PublisherInterface;
-use Baleen\Migrations\Version\VersionInterface;
+use Baleen\Migrations\Delta\DeltaInterface;
 
 /**
  * Class MigrationRunner
@@ -66,19 +66,19 @@ final class MigrationRunner implements MigrationRunnerInterface
     /**
      * Runs a single version using the specified options
      *
-     * @param VersionInterface $version
+     * @param DeltaInterface $version
      * @param OptionsInterface $options
      *
      * @return false|MigrateAfterEvent
      *
      * @throws RunnerException
      */
-    public function run(VersionInterface $version, OptionsInterface $options)
+    public function run(DeltaInterface $version, OptionsInterface $options)
     {
         if (!$this->shouldMigrate($version, $options)) {
             if ($options->isExceptionOnSkip()) {
                 throw new RunnerException(sprintf(
-                    'Cowardly refusing to run %s() on a version that is already "%s" (ID: %s).',
+                    'Cowardly refusing to run %s() on a delta that is already "%s" (ID: %s).',
                     $options->getDirection(),
                     $options->getDirection(),
                     $version->getId()
@@ -103,12 +103,12 @@ final class MigrationRunner implements MigrationRunnerInterface
     /**
      * Returns true if the operation is forced, or if the direction is the opposite to the state of the migration.
      *
-     * @param VersionInterface $version
+     * @param DeltaInterface $version
      * @param OptionsInterface $options
      *
      * @return bool
      */
-    protected function shouldMigrate(VersionInterface $version, OptionsInterface $options)
+    protected function shouldMigrate(DeltaInterface $version, OptionsInterface $options)
     {
         return $options->isForced()
         || ($options->getDirection()->isUp() ^ $version->isMigrated()); // direction is opposite to state

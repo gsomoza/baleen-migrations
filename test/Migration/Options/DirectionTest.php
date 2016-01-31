@@ -21,7 +21,7 @@ namespace BaleenTest\Migrations\Migration\Options;
 
 use Baleen\Migrations\Exception\InvalidArgumentException;
 use Baleen\Migrations\Migration\Options\Direction;
-use Baleen\Migrations\Version\VersionId;
+use Baleen\Migrations\Delta\DeltaId;
 use BaleenTest\Migrations\BaseTestCase;
 use Mockery as m;
 
@@ -59,7 +59,7 @@ class DirectionTest extends BaseTestCase
         $d1 = new Direction(1);
         $d2 = new Direction(2);
         $d3 = new Direction(-1);
-        $id = new VersionId('v1');
+        $id = new DeltaId('v1');
 
         $this->assertTrue($d1->isSameValueAs($d2));
         $this->assertFalse($d2->isSameValueAs($d3));

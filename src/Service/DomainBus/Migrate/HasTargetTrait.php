@@ -19,7 +19,7 @@
 
 namespace Baleen\Migrations\Service\DomainBus\Migrate;
 
-use Baleen\Migrations\Version\VersionInterface;
+use Baleen\Migrations\Delta\DeltaInterface;
 
 /**
  * Class HasTargetTrait
@@ -28,11 +28,11 @@ use Baleen\Migrations\Version\VersionInterface;
  */
 trait HasTargetTrait
 {
-    /** @var VersionInterface */
+    /** @var DeltaInterface */
     private $target;
 
     /**
-     * @return VersionInterface
+     * @return DeltaInterface
      */
     final public function getTarget()
     {
@@ -40,9 +40,9 @@ trait HasTargetTrait
     }
 
     /**
-     * @param VersionInterface $target
+     * @param DeltaInterface $target
      */
-    final protected function setTarget(VersionInterface $target)
+    final protected function setTarget(DeltaInterface $target)
     {
         $this->target = $target;
     }

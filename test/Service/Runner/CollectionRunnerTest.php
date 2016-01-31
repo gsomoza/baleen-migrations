@@ -27,9 +27,9 @@ use Baleen\Migrations\Service\Runner\Event\Collection\CollectionBeforeEvent;
 use Baleen\Migrations\Service\Runner\Event\Migration\MigrateBeforeEvent;
 use Baleen\Migrations\Service\Runner\Event\Migration\MigrationEvent;
 use Baleen\Migrations\Common\Event\PublisherInterface;
-use Baleen\Migrations\Version\Collection\Collection;
-use Baleen\Migrations\Version\Comparator\IdComparator;
-use Baleen\Migrations\Version\VersionInterface;
+use Baleen\Migrations\Delta\Collection\Collection;
+use Baleen\Migrations\Delta\Comparator\IdComparator;
+use Baleen\Migrations\Delta\DeltaInterface;
 use Mockery as m;
 
 /**
@@ -99,7 +99,7 @@ class CollectionRunnerTest extends RunnerTestCase
         $runner->run($target, $options);
 
         // ASSERTS
-        $map = $collection->map(function(VersionInterface $v) {
+        $map = $collection->map(function(DeltaInterface $v) {
             return $v->isMigrated();
         });
         $resultMatrix = array_map(function($item) {

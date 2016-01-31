@@ -1,5 +1,5 @@
 --------------------------------------------
-Baleen\\Migrations\\Version\\VersionRepository\\VersionRepository
+Baleen\\Migrations\\Delta\\VersionRepository\\VersionRepository
 --------------------------------------------
 
 .. php:namespace: Baleen\\Migrations\\Storage
@@ -14,14 +14,14 @@ Baleen\\Migrations\\Version\\VersionRepository\\VersionRepository
 
         :returns: Migrated
 
-    .. php:method:: update(VersionInterface $version)
+    .. php:method:: update(DeltaInterface $version)
 
-        :type $version: VersionInterface
+        :type $version: DeltaInterface
         :param $version:
 
     .. php:method:: doFetchAll()
 
-        :returns: VersionInterface[]|Migrated
+        :returns: DeltaInterface[]|Migrated
 
     .. php:method:: setComparator(ComparatorInterface $comparator)
 
@@ -40,18 +40,18 @@ Baleen\\Migrations\\Version\\VersionRepository\\VersionRepository
         :param $versions:
         :returns: bool Returns false on failure.
 
-    .. php:method:: save(VersionInterface $version)
+    .. php:method:: save(DeltaInterface $version)
 
         Adds a version into storage
 
-        :type $version: VersionInterface
+        :type $version: DeltaInterface
         :param $version:
         :returns: bool
 
-    .. php:method:: delete(VersionInterface $version)
+    .. php:method:: delete(DeltaInterface $version)
 
         Removes a version from storage
 
-        :type $version: VersionInterface
+        :type $version: DeltaInterface
         :param $version:
         :returns: bool

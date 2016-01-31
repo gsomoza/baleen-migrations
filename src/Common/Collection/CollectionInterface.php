@@ -19,8 +19,8 @@
 
 namespace Baleen\Migrations\Common\Collection;
 
-use Baleen\Migrations\Version\Comparator\ComparatorInterface;
-use Baleen\Migrations\Version\VersionInterface;
+use Baleen\Migrations\Delta\Comparator\ComparatorInterface;
+use Baleen\Migrations\Delta\DeltaInterface;
 use Closure;
 use Countable;
 use IteratorAggregate;
@@ -39,11 +39,11 @@ interface CollectionInterface extends Countable, IteratorAggregate
     /**
      * Adds an element at the end of the collection.
      *
-     * @param VersionInterface $element The element to add.
+     * @param DeltaInterface $element The element to add.
      *
      * @return boolean Always TRUE.
      */
-    public function add(VersionInterface $element);
+    public function add(DeltaInterface $element);
 
     /**
      * Clears the collection, removing all elements.
@@ -65,11 +65,11 @@ interface CollectionInterface extends Countable, IteratorAggregate
     /**
      * Checks whether the collection contains a version with the same id as the one specified
      *
-     * @param VersionInterface $version
+     * @param DeltaInterface $version
      *
      * @return bool
      */
-    public function containsVersion(VersionInterface $version);
+    public function containsVersion(DeltaInterface $version);
 
     /**
      * Checks whether the collection is empty (contains no elements).
@@ -92,7 +92,7 @@ interface CollectionInterface extends Countable, IteratorAggregate
      *
      * @param string|integer $key The key/index of the element to retrieve.
      *
-     * @return VersionInterface|null
+     * @return DeltaInterface|null
      */
     public function get($key);
 
@@ -107,7 +107,7 @@ interface CollectionInterface extends Countable, IteratorAggregate
     /**
      * Gets all values of the collection.
      *
-     * @return VersionInterface[] The values of all elements in the collection, in the order they appear in the
+     * @return DeltaInterface[] The values of all elements in the collection, in the order they appear in the
      *                            collection.
      */
     public function getValues();
@@ -115,21 +115,21 @@ interface CollectionInterface extends Countable, IteratorAggregate
     /**
      * Gets a native PHP array representation of the collection.
      *
-     * @return VersionInterface[]
+     * @return DeltaInterface[]
      */
     public function toArray();
 
     /**
      * Sets the internal iterator to the first element in the collection and returns this element.
      *
-     * @return VersionInterface
+     * @return DeltaInterface
      */
     public function first();
 
     /**
      * Sets the internal iterator to the last element in the collection and returns this element.
      *
-     * @return VersionInterface
+     * @return DeltaInterface
      */
     public function last();
 
@@ -143,14 +143,14 @@ interface CollectionInterface extends Countable, IteratorAggregate
     /**
      * Gets the element of the collection at the current iterator getPosition.
      *
-     * @return VersionInterface
+     * @return DeltaInterface
      */
     public function current();
 
     /**
      * Moves the internal iterator getPosition to the next element and returns this element.
      *
-     * @return VersionInterface
+     * @return DeltaInterface
      */
     public function next();
 
@@ -221,11 +221,11 @@ interface CollectionInterface extends Countable, IteratorAggregate
     /**
      * Replaces a version in-place with the specified version.
      *
-     * @param VersionInterface $version
+     * @param DeltaInterface $version
      *
-     * @return VersionInterface|null The replaced element or NULL, if the collection didn't contain the element.
+     * @return DeltaInterface|null The replaced element or NULL, if the collection didn't contain the element.
      */
-    public function replace(VersionInterface $version);
+    public function replace(DeltaInterface $version);
 
     /**
      * Returns the ordinal getPosition of the item in the array.
@@ -241,7 +241,7 @@ interface CollectionInterface extends Countable, IteratorAggregate
      *
      * @param int $position
      *
-     * @return null|VersionInterface
+     * @return null|DeltaInterface
      */
     public function getByPosition($position);
 
@@ -279,9 +279,9 @@ interface CollectionInterface extends Countable, IteratorAggregate
      * Returns true if the specified version is valid (can be added) to the collection. Otherwise, it MUST throw
      * an exception.
      *
-     * @param VersionInterface $version
+     * @param DeltaInterface $version
      *
      * @return bool
      */
-    public function validate(VersionInterface $version);
+    public function validate(DeltaInterface $version);
 }

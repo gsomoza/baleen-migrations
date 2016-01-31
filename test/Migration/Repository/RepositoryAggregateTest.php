@@ -23,7 +23,7 @@ use Baleen\Migrations\Exception\InvalidArgumentException;
 use Baleen\Migrations\Migration\Factory\FactoryInterface;
 use Baleen\Migrations\Migration\Repository\AggregateMigrationRepository;
 use Baleen\Migrations\Migration\Repository\MigrationRepositoryInterface;
-use Baleen\Migrations\Version\Collection\Collection;
+use Baleen\Migrations\Delta\Collection\Collection;
 use BaleenTest\Migrations\BaseTestCase;
 use Mockery as m;
 

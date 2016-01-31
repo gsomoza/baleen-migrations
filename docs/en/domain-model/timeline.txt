@@ -39,7 +39,7 @@ When being instantiated the Timeline requires a :term:`version collection` and a
 .. glossary::
 
     ``VersionCollection $versions``
-        The :term:`version collection` must contain at least one :term:`Version`. All versions in the collection must
+        The :term:`version collection` must contain at least one :term:`Delta`. All versions in the collection must
         have a :term:`migration` assigned to them or otherwise an exception will be thrown.
 
         Something to note is that the ``VersionCollection`` object will be cloned before being stored in the Timeline.
@@ -53,7 +53,7 @@ When being instantiated the Timeline requires a :term:`version collection` and a
 
         The default comparator simply
         extracts the first number from each version and subtracts the second one from the first one. See class
-        ``Version\Comparator\DefaultComparator`` for the source code.
+        ``Delta\Comparator\DefaultComparator`` for the source code.
 
     ``MigrationBus $migrationBus`` (optional)
         The ``MigrationBus`` (colloquially "bus") is an object that can handle a ``MigrationCommand`` ("command"). The

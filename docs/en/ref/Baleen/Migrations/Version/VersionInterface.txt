@@ -1,10 +1,10 @@
 ---------------------------------------------
-Baleen\\Migrations\\Version\\Version\\Version\\VersionInterface
+Baleen\\Migrations\\Delta\\Delta\\Delta\\DeltaInterface
 ---------------------------------------------
 
-.. php:namespace: Baleen\\Migrations\\Version\\Version\\Version
+.. php:namespace: Baleen\\Migrations\\Delta\\Delta\\Delta
 
-.. php:interface:: VersionInterface
+.. php:interface:: DeltaInterface
 
     Holds meta information about a migration, especially that which is related to its status (i.e. anything that can't
     be stored in the migration itself).

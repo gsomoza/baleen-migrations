@@ -23,7 +23,7 @@ use Baleen\Migrations\Service\DomainBus\Migrate\Single;
 use Baleen\Migrations\Service\Runner\HasRunnerTrait;
 use Baleen\Migrations\Service\Runner\MigrationRunner;
 use Baleen\Migrations\Service\Runner\MigrationRunnerInterface;
-use Baleen\Migrations\Version\VersionInterface;
+use Baleen\Migrations\Delta\DeltaInterface;
 
 /**
  * Class SingleHandler
@@ -49,7 +49,7 @@ final class SingleHandler
      *
      * @param SingleCommand $command
      *
-     * @return VersionInterface
+     * @return DeltaInterface
      */
     public function handle(SingleCommand $command)
     {

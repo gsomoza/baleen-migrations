@@ -19,12 +19,12 @@ Baleen\\Migrations\\Timeline\\AbstractTimeline
         :type $migrationBus: MigrationBus
         :param $migrationBus: A CommandBus that will be used to run each individual migration.
 
-    .. php:method:: shouldMigrate(VersionInterface $version, OptionsInterface $options)
+    .. php:method:: shouldMigrate(DeltaInterface $version, OptionsInterface $options)
 
         Returns true if the operatin is forced, or if the direction is the
         opposite to the state of the migration.
 
-        :type $version: VersionInterface
+        :type $version: DeltaInterface
         :param $version:
         :type $options: OptionsInterface
         :param $options:
@@ -44,11 +44,11 @@ Baleen\\Migrations\\Timeline\\AbstractTimeline
         :param $options:
         :returns: bool
 
-    .. php:method:: runCollection(VersionInterface $goalVersion, OptionsInterface $options, Linked $collection)
+    .. php:method:: runCollection(DeltaInterface $goalVersion, OptionsInterface $options, Linked $collection)
 
         Executes migrations against a collection
 
-        :type $goalVersion: VersionInterface
+        :type $goalVersion: DeltaInterface
         :param $goalVersion:
         :type $options: OptionsInterface
         :param $options:
@@ -94,7 +94,7 @@ Baleen\\Migrations\\Timeline\\AbstractTimeline
         Runs all versions up, starting from the oldest and until (and including)
         the specified version.
 
-        :type $version: string|VersionInterface
+        :type $version: string|DeltaInterface
         :param $version:
         :type $options: OptionsInterface
         :param $options:
@@ -104,7 +104,7 @@ Baleen\\Migrations\\Timeline\\AbstractTimeline
         Runs all versions down, starting from the newest and until (and including)
         the specified version.
 
-        :type $version: string|VersionInterface
+        :type $version: string|DeltaInterface
         :param $version:
         :type $options: OptionsInterface
         :param $options:
@@ -115,19 +115,19 @@ Baleen\\Migrations\\Timeline\\AbstractTimeline
         specified version are "up" and
         all versions *after* the specified version are "down".
 
-        :type $goalVersion: string|VersionInterface
+        :type $goalVersion: string|DeltaInterface
         :param $goalVersion:
         :type $options: OptionsInterface
         :param $options:
 
-    .. php:method:: runSingle(VersionInterface $version, OptionsInterface $options, Progress $progress)
+    .. php:method:: runSingle(DeltaInterface $version, OptionsInterface $options, Progress $progress)
 
         Runs a single migration in the specified direction.
 
-        :type $version: VersionInterface
+        :type $version: DeltaInterface
         :param $version:
         :type $options: OptionsInterface
         :param $options:
         :type $progress: Progress
         :param $progress:
-        :returns: VersionInterface|false
+        :returns: DeltaInterface|false

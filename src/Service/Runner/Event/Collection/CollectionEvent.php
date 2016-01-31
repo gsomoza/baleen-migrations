@@ -22,7 +22,7 @@ namespace Baleen\Migrations\Service\Runner\Event\Collection;
 use Baleen\Migrations\Migration\OptionsInterface;
 use Baleen\Migrations\Common\Collection\CollectionInterface;
 use Baleen\Migrations\Common\Event\AbstractDomainEvent;
-use Baleen\Migrations\Version\VersionInterface;
+use Baleen\Migrations\Delta\DeltaInterface;
 use DateTime;
 
 /**
@@ -43,20 +43,20 @@ class CollectionEvent extends AbstractDomainEvent
     private $options;
 
     /**
-     * @var VersionInterface
+     * @var DeltaInterface
      */
     private $target;
 
     /**
      * CollectionEvent constructor.
      *
-     * @param VersionInterface $target
+     * @param DeltaInterface $target
      * @param OptionsInterface $options
      * @param CollectionInterface $collection
      * @param DateTime $createdOn
      */
     public function __construct(
-        VersionInterface $target,
+        DeltaInterface $target,
         OptionsInterface $options,
         CollectionInterface $collection,
         DateTime $createdOn = null
@@ -84,7 +84,7 @@ class CollectionEvent extends AbstractDomainEvent
     }
 
     /**
-     * @return VersionInterface
+     * @return DeltaInterface
      */
     final public function getTarget()
     {

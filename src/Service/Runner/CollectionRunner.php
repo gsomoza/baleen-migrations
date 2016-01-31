@@ -28,8 +28,8 @@ use Baleen\Migrations\Common\Event\Context\CollectionContext;
 use Baleen\Migrations\Common\Event\MutePublisher;
 use Baleen\Migrations\Common\Event\Publisher\HasInternalPublisherTrait;
 use Baleen\Migrations\Common\Event\PublisherInterface;
-use Baleen\Migrations\Version\Collection\Collection;
-use Baleen\Migrations\Version\VersionInterface;
+use Baleen\Migrations\Delta\Collection\Collection;
+use Baleen\Migrations\Delta\DeltaInterface;
 
 /**
  * Class CollectionRunner
@@ -66,12 +66,12 @@ final class CollectionRunner implements RunnerInterface
     /**
      * Runs a collection of versions towards the specified goal and using the specified options
      *
-     * @param VersionInterface $target
+     * @param DeltaInterface $target
      * @param OptionsInterface $options
      *
      * @return CollectionAfterEvent
      */
-    public function run(VersionInterface $target, OptionsInterface $options)
+    public function run(DeltaInterface $target, OptionsInterface $options)
     {
         $current = 1;
         $collection = $this->getCollection();

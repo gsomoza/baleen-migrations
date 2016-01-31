@@ -1,12 +1,12 @@
 '''''''''''''''''''''''''''
-Baleen\\Migrations\\Version\\Version\\Version
+Baleen\\Migrations\\Delta\\Delta\\Delta
 '''''''''''''''''''''''''''
 
-.. php:namespace: Baleen\\Migrations\\Version\\Version\\Version
+.. php:namespace: Baleen\\Migrations\\Delta\\Delta\\Delta
 
 .. toctree::
 
    Collection/index
    Collection
    Comparator/index
-   VersionInterface
+   DeltaInterface

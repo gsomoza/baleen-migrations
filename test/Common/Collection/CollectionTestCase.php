@@ -19,7 +19,7 @@
 
 namespace BaleenTest\Migrations\Common\Collection;
 
-use Baleen\Migrations\Version\Collection\Collection;
+use Baleen\Migrations\Delta\Collection\Collection;
 use BaleenTest\Migrations\BaseTestCase;
 use Mockery as m;
 use Zend\Stdlib\ArrayUtils;

@@ -22,7 +22,7 @@ namespace BaleenTest\Migrations\Service\Runner\Event;
 use Baleen\Migrations\Migration\OptionsInterface;
 use Baleen\Migrations\Service\Runner\Event\Collection\CollectionEvent;
 use Baleen\Migrations\Common\Collection\CollectionInterface;
-use Baleen\Migrations\Version\VersionInterface;
+use Baleen\Migrations\Delta\DeltaInterface;
 use BaleenTest\Migrations\BaseTestCase;
 use Mockery as m;
 
@@ -38,8 +38,8 @@ class CollectionEventTest extends BaseTestCase
      */
     public function testGetTarget()
     {
-        /** @var VersionInterface|m\Mock $target */
-        $target = m::mock(VersionInterface::class);
+        /** @var DeltaInterface|m\Mock $target */
+        $target = m::mock(DeltaInterface::class);
         $event = $this->createEvent($target);
         $actual = $event->getTarget();
         $this->assertSame($target, $actual);
@@ -92,19 +92,19 @@ class CollectionEventTest extends BaseTestCase
 
     /**
      * createEvent
-     * @param VersionInterface|null $target
+     * @param DeltaInterface|null $target
      * @param OptionsInterface|null $options
      * @param CollectionInterface|null $collection
      * @return CollectionEvent
      */
     private function createEvent(
-        VersionInterface $target = null,
+        DeltaInterface $target = null,
         OptionsInterface $options = null,
         CollectionInterface $collection = null)
     {
         if (null === $target) {
-            /** @var VersionInterface|m\Mock $target */
-            $target = m::mock(VersionInterface::class);
+            /** @var DeltaInterface|m\Mock $target */
+            $target = m::mock(DeltaInterface::class);
         }
         if (null === $options) {
             /** @var OptionsInterface|m\Mock $collection */

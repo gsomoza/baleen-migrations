@@ -18,17 +18,17 @@ Baleen\\Migrations\\Service\\Runner\\Event\\Collection\\CollectionEvent
 
     .. php:attr:: target
 
-        protected VersionInterface
+        protected DeltaInterface
 
     .. php:attr:: progress
 
         protected Progress
 
-    .. php:method:: __construct(VersionInterface $target, OptionsInterface $options, Linked $versions, Progress $progress = null)
+    .. php:method:: __construct(DeltaInterface $target, OptionsInterface $options, Linked $versions, Progress $progress = null)
 
         CollectionEvent constructor.
 
-        :type $target: VersionInterface
+        :type $target: DeltaInterface
         :param $target:
         :type $options: OptionsInterface
         :param $options:
@@ -47,7 +47,7 @@ Baleen\\Migrations\\Service\\Runner\\Event\\Collection\\CollectionEvent
 
     .. php:method:: getTarget()
 
-        :returns: VersionInterface
+        :returns: DeltaInterface
 
     .. php:method:: getProgress()
 

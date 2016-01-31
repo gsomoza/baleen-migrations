@@ -20,7 +20,7 @@
 namespace BaleenTest\Migrations\Service\Runner;
 
 use Baleen\Migrations\Migration\MigrationInterface;
-use Baleen\Migrations\Version\VersionInterface as V;
+use Baleen\Migrations\Delta\DeltaInterface as V;
 use BaleenTest\Migrations\BaseTestCase;
 use Mockery as m;
 

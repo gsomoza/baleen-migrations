@@ -14,17 +14,17 @@ Baleen\\Migrations\\Service\\Runner\\Event\\Migration\\MigrationEvent
 
     .. php:attr:: version
 
-        protected VersionInterface
+        protected DeltaInterface
 
     .. php:attr:: progress
 
         protected Progress
 
-    .. php:method:: __construct(VersionInterface $version, OptionsInterface $options, Progress $progress = null)
+    .. php:method:: __construct(DeltaInterface $version, OptionsInterface $options, Progress $progress = null)
 
         MigrationEvent constructor.
 
-        :type $version: VersionInterface
+        :type $version: DeltaInterface
         :param $version:
         :type $options: OptionsInterface
         :param $options:
@@ -37,7 +37,7 @@ Baleen\\Migrations\\Service\\Runner\\Event\\Migration\\MigrationEvent
 
     .. php:method:: getVersion()
 
-        :returns: VersionInterface
+        :returns: DeltaInterface
 
     .. php:method:: getProgress()
 

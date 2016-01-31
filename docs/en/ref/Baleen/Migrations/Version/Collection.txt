@@ -1,8 +1,8 @@
 ---------------------------------------
-Baleen\\Migrations\\Version\\Version\\Version\\Collection
+Baleen\\Migrations\\Delta\\Delta\\Delta\\Collection
 ---------------------------------------
 
-.. php:namespace: Baleen\\Migrations\\Version\\Version\\Version
+.. php:namespace: Baleen\\Migrations\\Delta\\Delta\\Delta
 
 .. php:class:: Collection
 
@@ -38,14 +38,14 @@ Baleen\\Migrations\\Version\\Version\\Version\\Collection
         :param $key: If an alias is given then it will be resolved to an element. Otherwise the $key will be used to fetch the element by index.
         :type $resolve: bool
         :param $resolve: Whether to use the resolver or not.
-        :returns: VersionInterface|null Null if not present
+        :returns: DeltaInterface|null Null if not present
 
     .. php:method:: getById($id)
 
         Gets a version by id
 
         :param $id:
-        :returns: VersionInterface
+        :returns: DeltaInterface
 
     .. php:method:: indexOfId($id)
 
@@ -62,7 +62,7 @@ Baleen\\Migrations\\Version\\Version\\Version\\Collection
 
         :type $alias: string
         :param $alias:
-        :returns: VersionInterface|null
+        :returns: DeltaInterface|null
 
     .. php:method:: has($index, $resolve = true)
 
@@ -73,13 +73,13 @@ Baleen\\Migrations\\Version\\Version\\Version\\Collection
         :param $resolve:
         :returns: bool
 
-    .. php:method:: validate(VersionInterface $element)
+    .. php:method:: validate(DeltaInterface $element)
 
         Returns true if the specified version is valid (can be added) to the
         collection. Otherwise, it MUST throw
         an exception.
 
-        :type $element: VersionInterface
+        :type $element: DeltaInterface
         :param $element:
         :returns: bool
 
@@ -98,12 +98,12 @@ Baleen\\Migrations\\Version\\Version\\Version\\Collection
     .. php:method:: remove($version)
 
         :param $version:
-        :returns: VersionInterface|null
+        :returns: DeltaInterface|null
 
-    .. php:method:: addOrReplace(VersionInterface $version)
+    .. php:method:: addOrReplace(DeltaInterface $version)
 
         Adds a new version to the collection if it doesn't exist or replaces it if
         it does.
 
-        :type $version: VersionInterface
+        :type $version: DeltaInterface
         :param $version:

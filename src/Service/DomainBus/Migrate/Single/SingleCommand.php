@@ -27,8 +27,8 @@ use Baleen\Migrations\Service\DomainBus\Migrate\HasTargetTrait;
 use Baleen\Migrations\Common\Event\Context\CollectionContext;
 use Baleen\Migrations\Common\Event\Context\CollectionContextInterface;
 use Baleen\Migrations\Common\Event\Progress;
-use Baleen\Migrations\Version\Repository\VersionRepositoryInterface;
-use Baleen\Migrations\Version\VersionInterface;
+use Baleen\Migrations\Delta\Repository\VersionRepositoryInterface;
+use Baleen\Migrations\Delta\DeltaInterface;
 
 /**
  * Class SingleCommand
@@ -47,13 +47,13 @@ final class SingleCommand implements DomainCommandInterface
     /**
      * CollectionCommand constructor.
      *
-     * @param VersionInterface $target
+     * @param DeltaInterface $target
      * @param OptionsInterface $options
      * @param VersionRepositoryInterface $versionRepository
      * @param CollectionContextInterface $context
      */
     public function __construct(
-        VersionInterface $target,
+        DeltaInterface $target,
         OptionsInterface $options,
         VersionRepositoryInterface $versionRepository,
         CollectionContextInterface $context = null

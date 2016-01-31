@@ -1,8 +1,8 @@
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Baleen\\Migrations\\Version\\Version\\Version\\Collection\\Resolver
+Baleen\\Migrations\\Delta\\Delta\\Delta\\Collection\\Resolver
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. php:namespace: Baleen\\Migrations\\Version\\Version\\Version\\Collection\\Resolver
+.. php:namespace: Baleen\\Migrations\\Delta\\Delta\\Delta\\Collection\\Resolver
 
 .. toctree::
 

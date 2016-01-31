@@ -24,7 +24,7 @@ use Baleen\Migrations\Common\Event\AbstractDomainEvent;
 use Baleen\Migrations\Common\Event\Context\CollectionContext;
 use Baleen\Migrations\Common\Event\Context\CollectionContextInterface;
 use Baleen\Migrations\Common\Event\Progress;
-use Baleen\Migrations\Version\VersionInterface;
+use Baleen\Migrations\Delta\DeltaInterface;
 use DateTime;
 
 /**
@@ -37,7 +37,7 @@ class MigrationEvent extends AbstractDomainEvent
     /** @var OptionsInterface */
     private $options;
 
-    /** @var VersionInterface */
+    /** @var DeltaInterface */
     private $target;
 
     /** @var CollectionContextInterface */
@@ -46,13 +46,13 @@ class MigrationEvent extends AbstractDomainEvent
     /**
      * MigrationEvent constructor.
      *
-     * @param VersionInterface $target
+     * @param DeltaInterface $target
      * @param OptionsInterface $options
      * @param CollectionContextInterface $context
      * @param DateTime $occurredOn
      */
     public function __construct(
-        VersionInterface $target,
+        DeltaInterface $target,
         OptionsInterface $options,
         CollectionContextInterface $context = null,
         DateTime $occurredOn = null
@@ -77,11 +77,11 @@ class MigrationEvent extends AbstractDomainEvent
     }
 
     /**
-     * Returns the Version that's being migrated.
+     * Returns the Delta that's being migrated.
      *
      * NOTE: Do not confuse this method with version()
      *
-     * @return VersionInterface
+     * @return DeltaInterface
      */
     public function getTarget()
     {

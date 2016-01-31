@@ -24,8 +24,8 @@ use Baleen\Migrations\Service\DomainBus\DomainCommandInterface;
 use Baleen\Migrations\Service\DomainBus\Migrate\AbstractMigrateCommand;
 use Baleen\Migrations\Service\DomainBus\Migrate\Collection\CollectionCommand;
 use Baleen\Migrations\Common\Collection\CollectionInterface;
-use Baleen\Migrations\Version\Repository\VersionRepositoryInterface;
-use Baleen\Migrations\Version\VersionInterface;
+use Baleen\Migrations\Delta\Repository\VersionRepositoryInterface;
+use Baleen\Migrations\Delta\DeltaInterface;
 use BaleenTest\Migrations\BaseTestCase;
 use Mockery as m;
 
@@ -43,8 +43,8 @@ class CollectionCommandTest extends BaseTestCase
     {
         /** @var CollectionInterface|m\Mock $collection */
         $collection = m::mock(CollectionInterface::class);
-        /** @var VersionInterface|m\Mock $target */
-        $target = m::mock(VersionInterface::class);
+        /** @var DeltaInterface|m\Mock $target */
+        $target = m::mock(DeltaInterface::class);
         /** @var OptionsInterface|m\Mock $options */
         $options = m::mock(OptionsInterface::class);
         /** @var VersionRepositoryInterface $versionRepository */

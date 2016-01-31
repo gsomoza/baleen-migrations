@@ -1,8 +1,8 @@
 --------------------------------------------------------------------
-Baleen\\Migrations\\Version\\Version\\Version\\Collection\\Resolver\\ResolverInterface
+Baleen\\Migrations\\Delta\\Delta\\Delta\\Collection\\Resolver\\ResolverInterface
 --------------------------------------------------------------------
 
-.. php:namespace: Baleen\\Migrations\\Version\\Version\\Version\\Collection\\Resolver
+.. php:namespace: Baleen\\Migrations\\Delta\\Delta\\Delta\\Collection\\Resolver
 
 .. php:interface:: ResolverInterface
 
@@ -10,13 +10,13 @@ Baleen\\Migrations\\Version\\Version\\Version\\Collection\\Resolver\\ResolverInt
 
     .. php:method:: resolve($alias, Collection $collection)
 
-        Resolves an alias into a Version.
+        Resolves an alias into a Delta.
 
         :type $alias: string
         :param $alias:
         :type $collection: Collection
         :param $collection:
-        :returns: \Baleen\Migrations\Version\Version\Version\VersionInterface|null
+        :returns: \Baleen\Migrations\Delta\Delta\Delta\DeltaInterface|null
 
     .. php:method:: clearCache(Collection $collection = null)
 

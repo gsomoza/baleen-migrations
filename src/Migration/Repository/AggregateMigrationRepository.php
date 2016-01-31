@@ -21,7 +21,7 @@ namespace Baleen\Migrations\Migration\Repository;
 
 use Baleen\Migrations\Exception\InvalidArgumentException;
 use Baleen\Migrations\Migration\Factory\FactoryInterface;
-use Baleen\Migrations\Version\Collection\Collection;
+use Baleen\Migrations\Delta\Collection\Collection;
 
 /**
  * A generic repository that can aggregate one or more other repositories

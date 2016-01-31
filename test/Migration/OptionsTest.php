@@ -22,7 +22,7 @@ namespace BaleenTest\Migrations\Migration\Factory;
 use Baleen\Migrations\Migration\Options;
 use Baleen\Migrations\Migration\Options\Direction;
 use Baleen\Migrations\Migration\OptionsInterface;
-use Baleen\Migrations\Version\VersionId;
+use Baleen\Migrations\Delta\DeltaId;
 use BaleenTest\Migrations\BaseTestCase;
 use Mockery as m;
 
@@ -136,7 +136,7 @@ class OptionsTest extends BaseTestCase
         $baseOptions = new Options();
         return [
             [$baseOptions, true], // same
-            [new VersionId(1), false], // another class
+            [new DeltaId(1), false], // another class
             [$baseOptions->withCustom(['test']), false], // different custom
             [$baseOptions->withDirection(Direction::down()), false], // different direction
             [$baseOptions->withDryRun(!$baseOptions->isDryRun()), false], // different dry-run

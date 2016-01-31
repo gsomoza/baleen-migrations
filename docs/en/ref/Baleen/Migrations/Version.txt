@@ -1,10 +1,10 @@
 ---------------------------
-Baleen\\Migrations\\Version\\Version\\Version
+Baleen\\Migrations\\Delta\\Delta\\Delta
 ---------------------------
 
 .. php:namespace: Baleen\\Migrations
 
-.. php:class:: Version
+.. php:class:: Delta
 
     {@inheritDoc}
 
@@ -49,7 +49,7 @@ Baleen\\Migrations\\Version\\Version\\Version
 
         :type $versionIds: mixed
         :param $versionIds:
-        :returns: VersionInterface[]
+        :returns: DeltaInterface[]
 
     .. php:method:: __toString()
 

@@ -23,12 +23,12 @@ use Baleen\Migrations\Service\MigrationBus\HasMigrationBusTrait;
 use Baleen\Migrations\Service\MigrationBus\MigrationBusInterface;
 use Baleen\Migrations\Migration\Repository\Mapper\DefinitionInterface;
 use Baleen\Migrations\Migration\Repository\Mapper\MigrationMapperInterface;
-use Baleen\Migrations\Version\Collection\Collection;
-use Baleen\Migrations\Version\Comparator\ComparatorInterface;
-use Baleen\Migrations\Version\Comparator\MigrationComparator;
-use Baleen\Migrations\Version\Repository\VersionRepositoryInterface as VersionRepositoryInterface;
-use Baleen\Migrations\Version\Version;
-use Baleen\Migrations\Version\VersionId;
+use Baleen\Migrations\Delta\Collection\Collection;
+use Baleen\Migrations\Delta\Comparator\ComparatorInterface;
+use Baleen\Migrations\Delta\Comparator\MigrationComparator;
+use Baleen\Migrations\Delta\Repository\VersionRepositoryInterface as VersionRepositoryInterface;
+use Baleen\Migrations\Delta\Delta;
+use Baleen\Migrations\Delta\DeltaId;
 
 /**
  * Class MigrationRepository.
@@ -80,7 +80,7 @@ final class MigrationRepository implements MigrationRepositoryInterface
     public function fetchAll()
     {
         $definitions = $this->mapper->fetchAll();
-        $stored = array_map(function (VersionId $id) {
+        $stored = array_map(function (DeltaId $id) {
             return $id->toString();
         }, $this->storage->fetchAll());
 
@@ -90,7 +90,7 @@ final class MigrationRepository implements MigrationRepositoryInterface
             $migration = $definition->getMigration();
             $id = $definition->getId();
             $migrated = in_array($id->toString(), $stored);
-            $version = new Version($migration, $migrated, $id, $this->getMigrationBus());
+            $version = new Delta($migration, $migrated, $id, $this->getMigrationBus());
             $collection->add($version);
         }
 

@@ -24,8 +24,8 @@ use Baleen\Migrations\Migration\Options\Direction;
 use Baleen\Migrations\Service\DomainBus\Migrate\Collection\CollectionCommand;
 use Baleen\Migrations\Timeline;
 use Baleen\Migrations\Timeline\TimelineInterface;
-use Baleen\Migrations\Version\Collection\Collection;
-use Baleen\Migrations\Version\VersionInterface;
+use Baleen\Migrations\Delta\Collection\Collection;
+use Baleen\Migrations\Delta\DeltaInterface;
 use League\Tactician\CommandBus;
 use Mockery as m;
 
@@ -46,26 +46,26 @@ class OldTimelineTestCases extends BaseTestCase
         $instance = $this->getInstance($versions);
         $collection = $instance->getVersions();
         $comparator = $collection->getComparator();
-        if (!is_object($goal) || !$goal instanceof VersionInterface) {
+        if (!is_object($goal) || !$goal instanceof DeltaInterface) {
             $goal = $collection->find($goal);
         }
         $changed = $instance->upTowards($goal);
 
-        list($before, ) = $collection->partition(function ($i, VersionInterface $v) use ($comparator, $goal) {
+        list($before, ) = $collection->partition(function ($i, DeltaInterface $v) use ($comparator, $goal) {
             return $comparator->compare($v, $goal) <= 0;
         });
         /** @var \Baleen\Migrations\Common\Collection\CollectionInterface $before */
 
         foreach ($before as $version) {
-            /** @var VersionInterface $version */
-            $this->assertTrue($version->isMigrated(), sprintf('Expected version %s to be migrated', $version->getId()));
+            /** @var DeltaInterface $version */
+            $this->assertTrue($version->isMigrated(), sprintf('Expected delta %s to be migrated', $version->getId()));
         }
 
         // assert subset doesn't work because they're not the same instances, so we're doing it manually
         foreach ($changed as $version) {
             $this->assertTrue($before->contains(
                 $version->getId()),
-                sprintf('Version %s is not after goal %s', $version->getId(), $goal->getId())
+                sprintf('Delta %s is not after goal %s', $version->getId(), $goal->getId())
             );
         }
     }
@@ -102,26 +102,26 @@ class OldTimelineTestCases extends BaseTestCase
         $instance = $this->getInstance($versions);
         $collection = $instance->getVersions();
         $comparator = $collection->getComparator();
-        if (!is_object($goal) || !$goal instanceof VersionInterface) {
+        if (!is_object($goal) || !$goal instanceof DeltaInterface) {
             $goal = $collection->find($goal);
         }
         $changed = $instance->downTowards($goal);
 
         /** @var Collection $after */
-        list(, $after) = $collection->partition(function ($i, VersionInterface $v) use ($comparator, $goal) {
+        list(, $after) = $collection->partition(function ($i, DeltaInterface $v) use ($comparator, $goal) {
             return $comparator($v, $goal) < 0; // less than goal, cause goal is included in the downTowards run
         });
 
         foreach ($after as $version) {
-            /** @var VersionInterface $version */
-            $this->assertFalse($version->isMigrated(), sprintf('Expected version %s not to be migrated', $version->getId()));
+            /** @var DeltaInterface $version */
+            $this->assertFalse($version->isMigrated(), sprintf('Expected delta %s not to be migrated', $version->getId()));
         }
 
         // assert subset doesn't work because they're not the same instances, so we're doing it manually
         foreach ($changed as $version) {
             $this->assertTrue($after->has(
                 $version->getId()),
-                sprintf('Version %s is not after goal %s', $version->getId(), $goal->getId())
+                sprintf('Delta %s is not after goal %s', $version->getId(), $goal->getId())
             );
         }
     }
@@ -155,7 +155,7 @@ class OldTimelineTestCases extends BaseTestCase
     public function testGoTowards($versions, $goal)
     {
         $instance = $this->getInstance($versions);
-        if (!is_object($goal) || !$goal instanceof VersionInterface) {
+        if (!is_object($goal) || !$goal instanceof DeltaInterface) {
             $goal = $instance->getVersions()->find($goal);
         }
         $changed = $instance->goTowards($goal);
@@ -165,18 +165,18 @@ class OldTimelineTestCases extends BaseTestCase
 
         /** @var Collection $before */
         /** @var Collection $after */
-        list($before, $after) = $changed->partition(function ($index, VersionInterface $v) use ($comparator, $goal) {
+        list($before, $after) = $changed->partition(function ($index, DeltaInterface $v) use ($comparator, $goal) {
             return $comparator($v, $goal) <= 0;
         });
 
         foreach ($before as $version) {
-            /** @var VersionInterface $version */
-            $this->assertTrue($version->isMigrated(), sprintf('Expected version %s to be migrated', $version->getId()));
+            /** @var DeltaInterface $version */
+            $this->assertTrue($version->isMigrated(), sprintf('Expected delta %s to be migrated', $version->getId()));
         }
 
         foreach ($after as $version) {
-            /** @var VersionInterface $version */
-            $this->assertFalse($version->isMigrated(), sprintf('Expected version %s not to be migrated', $version->getId()));
+            /** @var DeltaInterface $version */
+            $this->assertFalse($version->isMigrated(), sprintf('Expected delta %s not to be migrated', $version->getId()));
         }
     }
 

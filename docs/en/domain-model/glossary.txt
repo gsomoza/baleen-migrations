@@ -19,7 +19,7 @@ as to provide information about the different models that make up the "migration
              * :term:`Timeline`
              * :term:`VersionRepository`
              * :term:`Storage`
-             * :term:`Version`
+             * :term:`Delta`
              * :term:`Migration`
 
          A single application can have any number of Migration Ecosystems, but its most common to find only one or two per
@@ -52,13 +52,13 @@ as to provide information about the different models that make up the "migration
 
    Timeline
       The Timeline is an object that is in charge of executing migrations in bulk using certain pre-defined algorithms.
-      It holds an immutable :term:`Version Collection`.
+      It holds an immutable :term:`Delta Collection`.
 
-   Version
-      A Version is a lightweight entity that is persisted into the :term:`Storage` and holds state information about
-      a :term:`Migration`. Currently the only state information being saved is whether the Version is :term:`migrated`
-      or not. If a Version is present in the :term:`Storage` then it means that Version has already been migrated.
+   Delta
+      A Delta is a lightweight entity that is persisted into the :term:`Storage` and holds state information about
+      a :term:`Migration`. Currently the only state information being saved is whether the Delta is :term:`migrated`
+      or not. If a Delta is present in the :term:`Storage` then it means that Delta has already been migrated.
 
-   Version Collection
+   Delta Collection
       A special object to represent and sort a set of Collection. Its important to note that it behaves as an ordered
       set of elements.

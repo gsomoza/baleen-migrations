@@ -1,8 +1,8 @@
 -------------------------------------------------------------------
-Baleen\\Migrations\\Version\\Version\\Version\\Collection\\Resolver\\AbstractResolver
+Baleen\\Migrations\\Delta\\Delta\\Delta\\Collection\\Resolver\\AbstractResolver
 -------------------------------------------------------------------
 
-.. php:namespace: Baleen\\Migrations\\Version\\Version\\Version\\Collection\\Resolver
+.. php:namespace: Baleen\\Migrations\\Delta\\Delta\\Delta\\Collection\\Resolver
 
 .. php:class:: AbstractResolver
 
@@ -15,25 +15,25 @@ Baleen\\Migrations\\Version\\Version\\Version\\Collection\\Resolver\\AbstractRes
 
     .. php:method:: resolve($alias, Collection $collection)
 
-        Resolves an alias into a Version.
+        Resolves an alias into a Delta.
 
         :type $alias: string
         :param $alias:
         :type $collection: Collection
         :param $collection:
-        :returns: VersionInterface|null
+        :returns: DeltaInterface|null
 
     .. php:method:: cacheGet($alias, Collection $collection)
 
         Gets an alias from the cache. Returns false if nothing could be found, a
-        Version if the alias was previously
+        Delta if the alias was previously
         resolved to a version, and null if the alias couldn't be resolved in a
         previous call.
 
         :param $alias:
         :type $collection: Collection
         :param $collection:
-        :returns: bool|null|VersionInterface
+        :returns: bool|null|DeltaInterface
 
     .. php:method:: cacheSet($alias, $collection, $result)
 
@@ -56,4 +56,4 @@ Baleen\\Migrations\\Version\\Version\\Version\\Collection\\Resolver\\AbstractRes
         :param $alias:
         :type $collection: Collection
         :param $collection:
-        :returns: VersionInterface|null
+        :returns: DeltaInterface|null

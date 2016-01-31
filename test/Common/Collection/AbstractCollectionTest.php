@@ -21,7 +21,7 @@ namespace BaleenTest\Migrations\Common\Collection;
 
 use Baleen\Migrations\Common\Collection\AbstractCollection;
 use Baleen\Migrations\Common\Collection\CollectionInterface;
-use Baleen\Migrations\Version\VersionInterface;
+use Baleen\Migrations\Delta\DeltaInterface;
 use BaleenTest\Migrations\BaseTestCase;
 use Mockery as m;
 
@@ -51,7 +51,7 @@ class AbstractCollectionTest extends BaseTestCase
         $col = $this->createCollection($this->buildVersions(['v1']));
 
         $v = $col->remove('v1');
-        $this->assertInstanceOf(VersionInterface::class, $v);
+        $this->assertInstanceOf(DeltaInterface::class, $v);
         $this->assertEquals('v1', $v->getId()->toString());
     }
 

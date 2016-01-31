@@ -20,9 +20,9 @@
 namespace BaleenTest\Migrations;
 
 use Baleen\Migrations\Migration\MigrationInterface;
-use Baleen\Migrations\Version\Version;
-use Baleen\Migrations\Version\VersionId;
-use Baleen\Migrations\Version\VersionInterface;
+use Baleen\Migrations\Delta\Delta;
+use Baleen\Migrations\Delta\DeltaId;
+use Baleen\Migrations\Delta\DeltaInterface;
 use Mockery as m;
 
 /**
@@ -33,7 +33,7 @@ class BaseTestCase extends \PHPUnit_Framework_TestCase
     /**
      * buildVersionWithMigrations
      * @param $ids
-     * @return VersionInterface[]
+     * @return DeltaInterface[]
      */
     protected function buildVersionWithMigrations($ids)
     {
@@ -144,7 +144,7 @@ class BaseTestCase extends \PHPUnit_Framework_TestCase
      * buildVersions
      * @param $versions
      * @param bool $migrated
-     * @return VersionInterface[]
+     * @return DeltaInterface[]
      */
     public function buildVersions($versions, $migrated = false) {
         $self = $this;
@@ -158,7 +158,7 @@ class BaseTestCase extends \PHPUnit_Framework_TestCase
      * @param mixed $id
      * @param bool $migrated
      * @param MigrationInterface|null $migration
-     * @return Version
+     * @return Delta
      */
     public function buildVersion($id = null, $migrated = false, MigrationInterface $migration = null)
     {
@@ -168,16 +168,16 @@ class BaseTestCase extends \PHPUnit_Framework_TestCase
         }
 
         if (null === $id) {
-            $id = VersionId::fromMigration($migration);
+            $id = DeltaId::fromMigration($migration);
         } elseif (is_integer($id)) {
             $id = 'v' . $id;
-        } elseif (is_object($id) && $id instanceof VersionInterface) {
+        } elseif (is_object($id) && $id instanceof DeltaInterface) {
             $id = $id->getId();
         }
         if (!is_object($id)) {
-            $id = new VersionId($id);
+            $id = new DeltaId($id);
         }
 
-        return new Version($migration, (bool) $migrated, $id);
+        return new Delta($migration, (bool) $migrated, $id);
     }
 }

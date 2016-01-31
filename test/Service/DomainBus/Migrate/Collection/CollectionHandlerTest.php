@@ -26,9 +26,9 @@ use Baleen\Migrations\Service\Runner\Event\Collection\CollectionAfterEvent;
 use Baleen\Migrations\Service\Runner\Factory\CollectionRunnerFactoryInterface;
 use Baleen\Migrations\Service\Runner\RunnerInterface;
 use Baleen\Migrations\Common\Collection\CollectionInterface;
-use Baleen\Migrations\Version\Comparator\ComparatorInterface;
-use Baleen\Migrations\Version\Repository\VersionRepositoryInterface;
-use Baleen\Migrations\Version\VersionInterface;
+use Baleen\Migrations\Delta\Comparator\ComparatorInterface;
+use Baleen\Migrations\Delta\Repository\VersionRepositoryInterface;
+use Baleen\Migrations\Delta\DeltaInterface;
 use BaleenTest\Migrations\Service\DomainBus\Migrate\HandlerTestCase;
 use Mockery as m;
 
@@ -62,7 +62,7 @@ class CollectionHandlerTest extends HandlerTestCase
         /** @var ComparatorInterface|m\Mock $comparator */
         $comparator = m::mock(ComparatorInterface::class);
         $comparator->shouldReceive('compare')
-            ->with(m::type(VersionInterface::class), $command->getTarget())
+            ->with(m::type(DeltaInterface::class), $command->getTarget())
             ->once()
             ->andReturn(0);
         if ($direction->isDown()) {
@@ -78,8 +78,8 @@ class CollectionHandlerTest extends HandlerTestCase
             ->andReturn($comparator);
         $collection->shouldReceive('filter')
             ->with(m::on(function (callable $func) {
-                /** @var VersionInterface|m\Mock $v */
-                $v = m::mock(VersionInterface::class);
+                /** @var DeltaInterface|m\Mock $v */
+                $v = m::mock(DeltaInterface::class);
                 $v->shouldReceive('isMigrated')->once()->withNoArgs()->andReturn(true);
 
                 $res = $func($v);
@@ -93,14 +93,14 @@ class CollectionHandlerTest extends HandlerTestCase
         $collection->shouldReceive('sort')
             ->once()->with($comparator)->andReturn($filteredCollection);
 
-        /** @var VersionInterface|m\Mock $target */
-        $target = m::mock(VersionInterface::class);
+        /** @var DeltaInterface|m\Mock $target */
+        $target = m::mock(DeltaInterface::class);
 
         /** @var RunnerInterface|m\Mock $runner */
         $runner = $this->invokeMethod('createRunnerFor', $handler, [$collection]);
         $runner->shouldReceive('run')
             ->with(
-                m::type(VersionInterface::class),
+                m::type(DeltaInterface::class),
                 m::type(OptionsInterface::class)
             )
             ->once()
