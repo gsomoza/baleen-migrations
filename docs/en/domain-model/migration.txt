@@ -159,7 +159,7 @@ File :file:`./migrations/v001_AddHireDateToStaff.php`:
         }
 
         public function down() {
-            $this->connection->exec("ALTER TABLE staff ADD hire_date date");
+            $this->connection->exec("ALTER TABLE staff REMOVE hire_date date");
         }
     }
 
