@@ -16,7 +16,7 @@ production-critical environments. Refer to the [LICENSE](https://github.com/bale
 for more information.
 
 Introduction
-======
+============
 Baleen Migrations is a project that seeks to abstract the domain logic of performing migrations of any kind into a 
 single package. Its simple goal is to excel at one single task: provide an intuitive, well-tested framework to migrate 
 from point A to point B (or vice-versa if going down).
@@ -28,6 +28,14 @@ implementation:
 * HOW its going to be migrated? You can wrap each migration into DB transactions. Or not, its up to you.
 * What to do when a migration fails? We'll let you know WHEN it happens, but its up to you to the implementation to
 decide what to do (e.g. cancel the transaction).
+
+Baleen CLI: Our Command-Line Tool
+---------------------------------
+Are you looking for a framework-agnostic migration tool that can be used right out of the box? Then you're almost at the right place: go visit [baleen/cli](https://github.com/baleen/cli) and get started immediately after requiring it into your project.
+
+Once you're there you'll see that its much more than just a migrations tool: its also a migrations *framework* that you can use to build a customized migration experience for your projects and their unique use-cases.
+
+If you're interested in creating another tool around the core domain then you're invited to read on.
 
 Installation (Composer)
 =======================
@@ -41,7 +49,13 @@ For more documentation please refer to the [online documentation](http://baleen.
 
 Contributing
 ============
-See CONTRIBUTING.md
+See [CONTRIBUTING.md](https://github.com/baleen/migrations/blob/master/CONTRIBUTING.md)
+
+Roadmap
+============
+* We're still working on making some changes to this core domain. See branch `ddd-changes` for the latest progress. Code reviews / constructive critiques are more than welcome, and so are of course PRs!
+* Once we're happy with the core API we'll release `v1.0`.
+* With a stable core we'll shift our focus to `baleen/cli` and its future specializations (i.e. Doctrine Migrations, etc).
 
 LICENSE
 =======
