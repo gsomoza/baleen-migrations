@@ -41,7 +41,9 @@ abstract class AbstractStorage implements StorageInterface
     {
         $collection = $this->doFetchAll();
         if (!$collection instanceof Migrated) {
-            StorageException::throwInvalidObjectException($collection, Migrated::class);
+            StorageException::invalidObjectException($collection, Migrated::class);
+            // @codeCoverageIgnoreStart
+            // because execution will never reach this point
         }
         return $collection;
     }

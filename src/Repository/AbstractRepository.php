@@ -85,7 +85,9 @@ abstract class AbstractRepository implements RepositoryInterface
     {
         $collection = $this->doFetchAll();
         if (!$collection instanceof Linked) {
-            RepositoryException::throwInvalidObjectException($collection, Linked::class);
+            RepositoryException::invalidObjectException($collection, Linked::class);
+            // @codeCoverageIgnoreStart
+            // because execution will never reach this point
         }
 
         return $collection->sort($this->getComparator());
