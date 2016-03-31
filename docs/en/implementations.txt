@@ -8,5 +8,5 @@ that are already using it. You could be the first one to build one!
       to execute simple migrations. Still in active development.
     * `Pimcore Migrations <https://github.com/Cube-Solutions/pimcore-migrations>`_:
       a migrations library for Pimcore 3.x.
-    * `Doctrine Migrations (pre-alpha) <https://github.com/gabrielsomoza/migrations/branch/baleen>`_:
+    * `Doctrine Migrations (pre-alpha) <https://github.com/gabrielsomoza/migrations/tree/baleen>`_:
       a soon-to-be PR for Doctrine Migrations. Still in progress :)
