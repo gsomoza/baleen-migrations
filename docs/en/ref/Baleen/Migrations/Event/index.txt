@@ -7,7 +7,7 @@ Baleen\\Migrations\\Event
 .. toctree::
 
    CanDispatchEventsTrait
-   EmitterInterface
-   EventInterface
+   PublisherInterface
+   DomainEventInterface
    HasEmitterTrait
    Timeline/index

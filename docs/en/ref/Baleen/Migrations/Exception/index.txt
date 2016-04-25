@@ -15,5 +15,5 @@ Baleen\\Migrations\\Exception
    MigrationMissingException
    RepositoryException
    ResolverException
-   StorageException
+   RepositoryException
    TimelineException

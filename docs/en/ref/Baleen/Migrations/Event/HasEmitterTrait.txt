@@ -11,7 +11,7 @@ Baleen\\Migrations\\Event\\HasEmitterTrait
 
     .. php:attr:: emitter
 
-        protected EmitterInterface
+        protected PublisherInterface
 
     .. php:method:: setEventDispatcher(EventDispatcherInterface $eventDispatcher)
 
@@ -25,20 +25,20 @@ Baleen\\Migrations\\Event\\HasEmitterTrait
 
         Returns the emitter for the class. Creates one if necessary.
 
-        :returns: EmitterInterface
+        :returns: PublisherInterface
 
-    .. php:method:: setEmitter(EmitterInterface $emitter)
+    .. php:method:: setEmitter(PublisherInterface $emitter)
 
         Sets the emitter for the class.
 
-        :type $emitter: EmitterInterface
+        :type $emitter: PublisherInterface
         :param $emitter:
 
     .. php:method:: createEmitter()
 
         Must create and return a default emitter.
 
-        :returns: EmitterInterface
+        :returns: PublisherInterface
 
     .. php:method:: getEventDispatcher()
 

@@ -1,8 +1,8 @@
 """""""""""""""""""""""""""""""""""""""
-Baleen\\Migrations\\Version\\Comparator
+Baleen\\Migrations\\Delta\\Delta\\Delta\\Comparator
 """""""""""""""""""""""""""""""""""""""
 
-.. php:namespace: Baleen\\Migrations\\Version\\Comparator
+.. php:namespace: Baleen\\Migrations\\Delta\\Delta\\Delta\\Comparator
 
 .. toctree::
 

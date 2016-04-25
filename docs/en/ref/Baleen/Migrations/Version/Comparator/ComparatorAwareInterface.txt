@@ -1,8 +1,8 @@
 -----------------------------------------------------------------
-Baleen\\Migrations\\Version\\Comparator\\ComparatorAwareInterface
+Baleen\\Migrations\\Delta\\Delta\\Delta\\Comparator\\ComparatorAwareInterface
 -----------------------------------------------------------------
 
-.. php:namespace: Baleen\\Migrations\\Version\\Comparator
+.. php:namespace: Baleen\\Migrations\\Delta\\Delta\\Delta\\Comparator
 
 .. php:interface:: ComparatorAwareInterface
 

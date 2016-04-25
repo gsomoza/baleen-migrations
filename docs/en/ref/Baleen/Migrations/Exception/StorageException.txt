@@ -1,12 +1,12 @@
 -----------------------------------------------
-Baleen\\Migrations\\Exception\\StorageException
+Baleen\\Migrations\\Exception\\Migration\\VersionRepository\\RepositoryException
 -----------------------------------------------
 
 .. php:namespace: Baleen\\Migrations\\Exception
 
-.. php:class:: StorageException
+.. php:class:: RepositoryException
 
-    Class StorageException.
+    Class RepositoryException.
 
     .. php:attr:: message
 

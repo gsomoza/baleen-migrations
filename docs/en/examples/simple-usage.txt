@@ -12,7 +12,7 @@ The following example illustrates how you can use Baleen migrations from within 
     require __DIR__ . '/vendor/autoload.php';
 
     // The repository is in charge of loading all available migrations.
-    $repository = new DirectoryRepository(__DIR__ . '/migrations');
+    $repository = new DirectoryRepositoryMapper(__DIR__ . '/migrations');
     $available = $repository->getAllAvailableMigrations();
 
     /* The Storage retrieves a list of versions that have already been run.
@@ -40,7 +40,7 @@ The following example illustrates how you can use Baleen migrations from within 
     ]);
     $timeline->runSingle('v100', $options);
 
-    /* Version 'v100' will receive an instance of RunOptions through the setOptions
+    /* Delta 'v100' will receive an instance of RunOptions through the setOptions
        method. You can also pass RunOptions to most of the other Timeline methods. */
 
 

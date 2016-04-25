@@ -12,9 +12,9 @@ Baleen\\Migrations\\Timeline\\TimelineEmitter
 
         protected null|EventDispatcherInterface
 
-    .. php:method:: dispatchCollectionBefore(VersionInterface $targetVersion, OptionsInterface $options, Linked $versions, Progress $progress = null)
+    .. php:method:: dispatchCollectionBefore(DeltaInterface $targetVersion, OptionsInterface $options, Linked $versions, Progress $progress = null)
 
-        :type $targetVersion: VersionInterface
+        :type $targetVersion: DeltaInterface
         :param $targetVersion:
         :type $options: OptionsInterface
         :param $options:
@@ -24,11 +24,11 @@ Baleen\\Migrations\\Timeline\\TimelineEmitter
         :param $progress:
         :returns: \Symfony\Component\EventDispatcher\Event|void
 
-    .. php:method:: dispatchCollectionAfter(VersionInterface $targetVersion, OptionsInterface $options, Linked $versions, Progress $progress = null)
+    .. php:method:: dispatchCollectionAfter(DeltaInterface $targetVersion, OptionsInterface $options, Linked $versions, Progress $progress = null)
 
         dispatchCollectionAfter.
 
-        :type $targetVersion: VersionInterface
+        :type $targetVersion: DeltaInterface
         :param $targetVersion:
         :type $options: OptionsInterface
         :param $options:
@@ -38,11 +38,11 @@ Baleen\\Migrations\\Timeline\\TimelineEmitter
         :param $progress:
         :returns: \Symfony\Component\EventDispatcher\Event|void
 
-    .. php:method:: dispatchMigrationBefore(VersionInterface $version, OptionsInterface $options, Progress $progress = null)
+    .. php:method:: dispatchMigrationBefore(DeltaInterface $version, OptionsInterface $options, Progress $progress = null)
 
         dispatchMigrationBefore.
 
-        :type $version: VersionInterface
+        :type $version: DeltaInterface
         :param $version:
         :type $options: OptionsInterface
         :param $options:
@@ -50,11 +50,11 @@ Baleen\\Migrations\\Timeline\\TimelineEmitter
         :param $progress:
         :returns: \Symfony\Component\EventDispatcher\Event|void
 
-    .. php:method:: dispatchMigrationAfter(VersionInterface $version, OptionsInterface $options, Progress $progress = null)
+    .. php:method:: dispatchMigrationAfter(DeltaInterface $version, OptionsInterface $options, Progress $progress = null)
 
         dispatchMigrationAfter.
 
-        :type $version: VersionInterface
+        :type $version: DeltaInterface
         :param $version:
         :type $options: OptionsInterface
         :param $options:

@@ -1,12 +1,12 @@
 --------------------------------------------
-Baleen\\Migrations\\Storage\\AbstractStorage
+Baleen\\Migrations\\Delta\\VersionRepository\\VersionRepository
 --------------------------------------------
 
 .. php:namespace: Baleen\\Migrations\\Storage
 
-.. php:class:: AbstractStorage
+.. php:class:: VersionRepository
 
-    Class AbstractStorage.
+    Class VersionRepository.
 
     .. php:method:: fetchAll()
 
@@ -14,14 +14,14 @@ Baleen\\Migrations\\Storage\\AbstractStorage
 
         :returns: Migrated
 
-    .. php:method:: update(VersionInterface $version)
+    .. php:method:: update(DeltaInterface $version)
 
-        :type $version: VersionInterface
+        :type $version: DeltaInterface
         :param $version:
 
     .. php:method:: doFetchAll()
 
-        :returns: VersionInterface[]|Migrated
+        :returns: DeltaInterface[]|Migrated
 
     .. php:method:: setComparator(ComparatorInterface $comparator)
 
@@ -32,7 +32,7 @@ Baleen\\Migrations\\Storage\\AbstractStorage
 
         :returns: ComparatorInterface
 
-    .. php:method:: saveCollection(Migrated $versions)
+    .. php:method:: updateAll(Migrated $versions)
 
         Write a collection of versions to the storage file.
 
@@ -40,18 +40,18 @@ Baleen\\Migrations\\Storage\\AbstractStorage
         :param $versions:
         :returns: bool Returns false on failure.
 
-    .. php:method:: save(VersionInterface $version)
+    .. php:method:: save(DeltaInterface $version)
 
         Adds a version into storage
 
-        :type $version: VersionInterface
+        :type $version: DeltaInterface
         :param $version:
         :returns: bool
 
-    .. php:method:: delete(VersionInterface $version)
+    .. php:method:: delete(DeltaInterface $version)
 
         Removes a version from storage
 
-        :type $version: VersionInterface
+        :type $version: DeltaInterface
         :param $version:
         :returns: bool

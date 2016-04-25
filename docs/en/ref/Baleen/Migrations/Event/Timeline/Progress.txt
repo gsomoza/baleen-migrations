@@ -1,5 +1,5 @@
 ---------------------------------------------
-Baleen\\Migrations\\Event\\Timeline\\Progress
+Baleen\\Migrations\\Shared\\Event\\Progress
 ---------------------------------------------
 
 .. php:namespace: Baleen\\Migrations\\Event\\Timeline
@@ -33,7 +33,7 @@ Baleen\\Migrations\\Event\\Timeline\\Progress
 
         :returns: int
 
-    .. php:method:: setCurrent($current)
+    .. php:method:: update($current)
 
         :type $current: int
         :param $current:

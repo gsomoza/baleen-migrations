@@ -9,9 +9,9 @@ Baleen\\Migrations
    Event/index
    Exception/index
    Migration/index
-   Repository/index
+   VersionRepository/index
    Storage/index
    Timeline/index
    Timeline
-   Version/index
-   Version
+   Delta/index
+   Delta

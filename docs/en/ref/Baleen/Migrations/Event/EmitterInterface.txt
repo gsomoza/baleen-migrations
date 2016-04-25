@@ -1,12 +1,12 @@
 -------------------------------------------
-Baleen\\Migrations\\Event\\EmitterInterface
+Baleen\\Migrations\\Shared\\Event\\PublisherInterface
 -------------------------------------------
 
 .. php:namespace: Baleen\\Migrations\\Event
 
-.. php:interface:: EmitterInterface
+.. php:interface:: PublisherInterface
 
-    Interface EmitterInterface.
+    Interface PublisherInterface.
 
     .. php:method:: setEventDispatcher(EventDispatcherInterface $eventDispatcher)
 
